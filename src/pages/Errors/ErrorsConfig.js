@@ -4,13 +4,13 @@ const errors = [
         code: '404',
         message: 'Sorry, we could not find that page!',
         link: '/apps/dashboards',
-        des: 'Go back to dashboard',
+        des: 'Go back to Dashboards',
     },
     {
         code: '500',
-        message: 'Well, you broke the internet!',
+        message: 'Well, you broke the Internet!',
         link: '/apps/dashboards',
-        des: 'Go back to dashboard',
+        des: 'Go back to Dashboards',
     },
 ]
 

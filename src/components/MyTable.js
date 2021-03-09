@@ -21,7 +21,7 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import { data as schoolsData } from '../../data/Schools'
+import { data as schoolsData } from '../data/Schools'
 import PropTypes from 'prop-types'
 import classes from './MyTable.module.scss'
 

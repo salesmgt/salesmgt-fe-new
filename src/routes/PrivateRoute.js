@@ -12,7 +12,7 @@ function PrivateRoute({ component: Component, ...rest }) {
                 // return currentUser ? (
                 //     <Component {...props} />
                 // ) : (
-                ;<Redirect to={{ pathname: '/', state: { from: location } }} />
+                <Redirect to={{ pathname: '/', state: { from: location } }} />
                 // )
             }}
         ></Route>
