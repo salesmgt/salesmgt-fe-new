@@ -1,0 +1,174 @@
+@import '../../styles/Variables.module.scss';
+
+$drawer-width: 16rem;
+$drawer-width-close: 4.25rem;
+$logo: url(../../img/logo-major-edu.png);
+$banner: url(../../img/banner-major-edu.png);
+
+.root {
+    display: flex;
+    justify-content: flex-start;
+}
+/* Navbar */
+.appBar {
+    background-color: $main-info !important;
+    width: calc(100% - #{$drawer-width-close}) !important;
+    z-index: 1201 !important;
+    transition-property: width, margin !important;
+    transition-duration: $leaving-screen !important;
+    transition-timing-function: $sharp !important;
+}
+.appBarShift {
+    width: calc(100% - #{$drawer-width}) !important;
+    transition-property: width, margin !important;
+    transition-duration: $entering-screen !important;
+    transition-timing-function: $sharp !important;
+}
+@media (max-width: $md) {
+    .appBar {
+        width: 100% !important;
+    }
+}
+.toolbar {
+    .menuBtn {
+        display: none !important;
+    }
+    .grow {
+        flex-grow: 1;
+        display: none;
+    }
+    .title {
+        flex-grow: 1;
+    }
+    @media (max-width: $md) {
+        .menuBtn {
+            display: inline-flex !important;
+        }
+        .grow {
+            display: inline-flex;
+        }
+        .title {
+            display: none;
+        }
+    }
+}
+.notif {
+    height: 3rem;
+}
+/* Side menu */
+.drawerPaper {
+    background-color: $main-primary !important;
+    width: $drawer-width;
+    white-space: nowrap;
+    transition-property: width !important;
+    transition-duration: $entering-screen !important;
+    transition-timing-function: $sharp !important;
+    .drawerHeader {
+        justify-content: flex-start;
+        .majorImg {
+            content: $banner;
+            width: 6.48rem;
+            height: 1.75rem;
+            margin-left: 0.6rem;
+        }
+    }
+    .drawerFooter {
+        justify-content: flex-end;
+    }
+}
+.drawerPaperClose {
+    width: $drawer-width-close;
+    overflow-x: hidden;
+    transition-property: width !important;
+    transition-duration: $leaving-screen !important;
+    transition-timing-function: $sharp !important;
+    .drawerHeader {
+        justify-content: center;
+        .majorImg {
+            content: $logo;
+            width: 1.98rem;
+            height: 1.75rem;
+            margin-left: 0rem;
+        }
+    }
+    .drawerFooter {
+        justify-content: center;
+        .chevron {
+            transform: rotate(180deg);
+        }
+    }
+}
+@media (max-width: $md) {
+    .drawerPaperClose {
+        width: 0;
+    }
+}
+.drawerHeader {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    min-height: 3.5rem;
+    @media (min-width: $xs) and (orientation: landscape) {
+        min-height: 3rem;
+    }
+    @media (min-width: $sm) {
+        min-height: 4rem;
+    }
+}
+.drawerFooter {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-top: 1px solid $divider;
+    @media (max-width: $md) {
+        display: none;
+    }
+}
+.menuItem {
+    &:hover {
+        background-color: $light-primary;
+    }
+
+    .menuIcon {
+        padding-left: 0.6rem;
+    }
+    .menuText {
+        color: $common-white;
+    }
+}
+/* Page load */
+.content {
+    background-color: $background;
+    flex-grow: 1;
+    height: 100vh;
+    margin-left: $drawer-width-close;
+    overflow: auto;
+    transition-property: margin;
+    transition-duration: $leaving-screen;
+    transition-timing-function: $sharp;
+}
+.contentShift {
+    margin-left: $drawer-width;
+    transition-property: margin;
+    transition-duration: $entering-screen;
+    transition-timing-function: $sharp;
+}
+@media (max-width: $md) {
+    .content {
+        margin-left: 0rem;
+    }
+}
+.appBarSpacer {
+    min-height: 3.5rem;
+    @media (min-width: $xs) and (orientation: landscape) {
+        min-height: 3rem;
+    }
+    @media (min-width: $sm) {
+        min-height: 4rem;
+    }
+}
+.container {
+    background-color: $background;
+    padding: 1.5rem;
+    height: 100vh;
+}

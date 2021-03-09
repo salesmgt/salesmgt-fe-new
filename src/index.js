@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
 import { CssBaseline } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/core/styles'
-import { theme } from './styles'
+import theme from './styles/theme'
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>

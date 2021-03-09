@@ -1,0 +1,17 @@
+@import '../../styles/Variables.module.scss';
+
+.root {
+  flex-shrink: 0;
+}
+
+.table {
+  min-width: 650;
+
+  .tcell {
+    background-color: $light-primary; // !important
+    color: $light-secondary;
+    font-weight: bold;
+    // text-align: center;
+    // position: sticky;
+  }
+}
