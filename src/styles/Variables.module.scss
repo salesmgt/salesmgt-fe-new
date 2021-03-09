@@ -1,0 +1,60 @@
+/* Breakpoints */
+$xs: 0px;
+$sm: 600px;
+$md: 960px;
+$lg: 1280px;
+$xl: 1920px;
+
+/* Palette */
+$common-black: #000;
+$common-white: #fff;
+
+$light-primary: #2a4865;
+$main-primary: #1b3a57;
+$dark-primary: #051e34;
+
+$light-secondary: #ffecb3;
+$main-secondary: #ffc107;
+$dark-secondary: #ffa000;
+
+$light-error: #e57373;
+$main-error: #f44336;
+$dark-error: #d33f3f;
+
+$light-warning: #ffb74b;
+$main-warning: #ff9800;
+$dark-warning: #f57c00;
+
+$light-info: #64b5f6;
+$main-info: #2196f3;
+$dark-info: #1976d2;
+
+$light-success: #81c784;
+$main-success: #4caf50;
+$dark-success: #388e3c;
+
+$background: #eeeeee;
+$surface: #fff;
+
+$text-icon: #616161;
+
+$primary-text: rgba(0, 0, 0, 0.87);
+$secondary-text: rgba(0, 0, 0, 0.54);
+$disabled: rgba(0, 0, 0, 0.38);
+$hint: rgba(0, 0, 0, 0.38);
+$divider: rgba(0, 0, 0, 0.12);
+
+/* Trasitions easing */
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-out: cubic-bezier(0, 0, 0.2, 1);
+$ease-in: cubic-bezier(0.4, 0, 1, 1);
+$sharp: cubic-bezier(0.4, 0, 0.6, 1);
+
+/* Trasitions duration */
+$shortest: 150ms;
+$shorter: 200ms;
+$short: 250ms;
+$standard: 300ms;
+$complex: 375ms;
+$entering-screen: 225ms;
+$leaving-screen: 195ms;

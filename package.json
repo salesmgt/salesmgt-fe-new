@@ -1,0 +1,58 @@
+{
+    "name": "salesmgt-fe",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@material-ui/core": "^4.11.3",
+        "@testing-library/jest-dom": "^5.11.9",
+        "@testing-library/react": "^11.2.5",
+        "@testing-library/user-event": "^12.8.1",
+        "moment": "^2.29.1",
+        "node-sass": "^5.0.0",
+        "react": "^17.0.1",
+        "react-big-calendar": "^0.33.2",
+        "react-dom": "^17.0.1",
+        "react-icons": "^4.2.0",
+        "react-router-dom": "^5.2.0",
+        "react-scripts": "4.0.3",
+        "recharts": "^1.8.5",
+        "velocity-animate": "^1.5.2",
+        "velocity-react": "^1.4.3",
+        "web-vitals": "^1.1.0"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "plugins": [
+            "react-hooks"
+        ],
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ],
+        "rules": {
+            "prefer-const": "warn",
+            "react-hooks/rules-of-hooks": "error",
+            "react-hooks/exhaustive-deps": "warn"
+        }
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "eslint-plugin-react-hooks": "^4.2.0"
+    }
+}
