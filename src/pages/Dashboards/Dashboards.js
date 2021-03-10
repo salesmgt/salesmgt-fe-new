@@ -2,20 +2,19 @@ import React from 'react'
 import clsx from 'clsx'
 import { Grid, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import Charts from './Charts'
-import Cards from './Cards'
+import { Cards, Charts } from '.'
 // import classes from '../styles/Dashboards.module.scss'
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        padding: theme.spacing(2),
-        display: 'flex',
-        overflow: 'auto',
-        flexDirection: 'column',
-    },
-    fixedHeight: {
-        height: 240,
-    },
+    // paper: {
+    //     padding: theme.spacing(2),
+    //     display: 'flex',
+    //     overflow: 'auto',
+    //     flexDirection: 'column',
+    // },
+    // fixedHeight: {
+    //     height: 240,
+    // },
 }))
 
 // function createCardsData(title, des, date, link) {
@@ -33,28 +32,38 @@ function Dashboards() {
 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
     return (
-        <Grid container spacing={3}>
-            {/* Cards */}
-            <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                    <Cards />
-                </Paper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                    <Cards />
-                </Paper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                    <Cards />
-                </Paper>
+        <Grid container>
+            <Grid item container xs={12} md={12} lg={10} spacing={3}>
+                {/* Cards */}
+                <Grid item xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                        <Cards />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                        <Cards />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                        <Cards />
+                    </Paper>
+                </Grid>
+
+                {/* Charts */}
+                <Grid item xs={12} md={8} lg={9}>
+                    <Paper className={fixedHeightPaper}>
+                        <Charts />
+                    </Paper>
+                </Grid>
             </Grid>
 
-            {/* Charts */}
-            <Grid item xs={12} md={8} lg={9}>
+
+            {/* Ha nghich */}
+            <Grid item xs={12} md={12} lg={2}>
                 <Paper className={fixedHeightPaper}>
-                    <Charts />
+                    <Cards />
                 </Paper>
             </Grid>
         </Grid>

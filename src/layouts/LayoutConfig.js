@@ -10,13 +10,13 @@ import {
 } from 'react-icons/md'
 import {
     Dashboards,
-    Users,
+    Accounts,
     TargetSchools,
     WorkPlans,
     Schools,
     Salesmen,
     Reports,
-} from '../../pages'
+} from '../pages'
 
 const rootPath = '/apps'
 
@@ -29,11 +29,11 @@ const data = [
         component: <Dashboards />,
     },
     {
-        title: 'Users',
-        path: `${rootPath}/users`,
-        // path: '/users',
+        title: 'Accounts',
+        path: `${rootPath}/accounts`,
+        // path: '/accounts',
         icon: <MdPerson />,
-        component: <Users />,
+        component: <Accounts />,
     },
     {
         title: 'Target Schools',
@@ -75,7 +75,7 @@ const data = [
 function getMenuItems(role) {
     const [
         dashboards,
-        users,
+        accounts,
         targetSchools,
         workPlans,
         schools,
@@ -84,7 +84,7 @@ function getMenuItems(role) {
     ] = data
     switch (role) {
         case 'admin':
-            return [dashboards, users, schools]
+            return [dashboards, accounts, schools]
         case 'manager':
             return [dashboards, workPlans, targetSchools, salesmen, reports]
         case 'salesman':

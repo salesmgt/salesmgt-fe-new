@@ -1,10 +1,10 @@
 import React from 'react'
-import MyTable from '../../components/MyArea/MyTable'
+import Tables from '../../components/Tables'
 
 function Reports() {
     return (
         <div>
-            <MyTable />
+            <Tables />
         </div>
     )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import { Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import Animate from '../../styles/Animate'
+import Animate from '../../utils/Animate'
 import classes from './Errors.module.scss'
 
 function Errors(props) {

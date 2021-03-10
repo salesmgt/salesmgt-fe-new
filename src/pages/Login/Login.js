@@ -2,7 +2,7 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 // import { makeStyles } from '@material-ui/core/styles'
 import { MajorBanner } from '../../img'
-import classes from './SignIn.module.scss'
+import classes from './Login.module.scss'
 import * as Const from './LoginConfig'
 import {
     Container,

@@ -23,7 +23,7 @@ import {
 } from 'react-icons/md'
 import { data as schoolsData } from '../data/Schools'
 import PropTypes from 'prop-types'
-import classes from './MyTable.module.scss'
+import classes from './Tables.module.scss'
 
 // Customize CSS of MUI
 const useStyles = makeStyles(() => ({
@@ -105,7 +105,7 @@ TablePaginationActions.propTypes = {
 }
 
 // Customize component Table
-function MyTable() {
+function Tables() {
     // const classes = useStyles()
     const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
@@ -245,9 +245,9 @@ function MyTable() {
     )
 }
 
-MyTable.propTypes = {
+Tables.propTypes = {
     rows: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
 }
 
-export default MyTable
+export default Tables

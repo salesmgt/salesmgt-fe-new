@@ -1,9 +1,9 @@
-@import '../../styles/Variables.module.scss';
+@import '../styles/Variables.module.scss';
 
 $drawer-width: 16rem;
 $drawer-width-close: 4.25rem;
-$logo: url(../../img/logo-major-edu.png);
-$banner: url(../../img/banner-major-edu.png);
+$logo: url(../img/logo-major-edu.png);
+$banner: url(../img/banner-major-edu.png);
 
 .root {
     display: flex;

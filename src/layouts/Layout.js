@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import { Link, Route, Switch, useLocation } from 'react-router-dom'
+import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { IconContext } from 'react-icons'
 import {
     MdMenu,
@@ -22,13 +22,13 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import { PageTitle } from '../../components/Title'
-import { Profiles, Errors } from '../../pages'
-import { getError } from '../../pages/Errors/ErrorsConfig'
-import { useToggle } from '../../hooks'
-import classes from './MyLayout.module.scss'
+import PageTitle from './components/PageTitle'
+import { Profiles, Errors } from '../pages'
+import { getError } from '../pages/Errors'
+import { useToggle } from '../hooks'
+import classes from './Layout.module.scss'
 
-function MyLayout(props) {
+function Layout(props) {
     const ERRORCODE = '404'
 
     const { menuItems, children } = props
@@ -39,85 +39,16 @@ function MyLayout(props) {
 
     const location = useLocation()
 
-    // const setDefaultIndex = () => {
-    //     let path
-    //     menuItems.forEach((m) => {
-    //         if (location.pathname === m.path) {
-    //             console.log('check path', m.path === location.pathname)
-    //             path = m.path
-    //         }
-    //     })
-    //     console.log('path', path)
-    //     return path
-    // }
-
     const [selectedIndex, setSelectedIndex] = useState(location.pathname)
+
     const handleSelectedItem = (item) => {
         if (window.matchMedia('(max-width: 960px)').matches) {
             setOpen()
         }
-        // if (item !== location.pathname) {
-        //     console.log('x', location.pathname)
-        //     console.log('is differ', item !== location.pathname)
-        //     console.log('changed item', (item = location.pathname))
-        //     setSelectedIndex(location.pathname)
-        // }
         setSelectedIndex(item)
     }
 
     useEffect(() => setSelectedIndex(location.pathname), [location.pathname])
-
-    // const selectedRef = React.useRef('')
-    // const setSelected = () => {
-    //     console.log('test', selectedRef.current)
-    // }
-
-    // const setDefaultPath = () => {
-    //     let path = location.pathname
-    //     if (path === '/') {
-    //         path = '/dashboards'
-    //     }
-    //     return path
-    // }
-    // console.log('path', setDefaultPath())
-
-    // const handleSelectedIndex = () => {
-    //     // if (selectedIndex === location.pathname) {
-    //     //     return selectedIndex
-    //     // }
-    // }
-
-    // const [open, setOpen] = useState(
-    //     window.matchMedia('(max-width: 960px)').matches ? false : true
-    // )
-    // const handleDrawerToggle = useCallback(() => setOpen(!open), [open])
-
-    // const Title =
-    //         React.useCallback(
-    //         () => {
-    //             let title = ''
-    //             // const path = setDefaultPath()
-    //             const path = location.pathname
-    //             const page = path.split('/').pop()
-    //             const strings = page.split('-')
-    //             strings.forEach((string) => {
-    //                 title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
-    //             })
-    //             return title
-    //         },
-    //         [location.pathname],
-    //     )
-    // () => {
-    //     let title = ''
-    //     // const path = setDefaultPath()
-    //     const path = location.pathname
-    //     const page = path.split('/').pop()
-    //     const strings = page.split('-')
-    //     strings.forEach((string) => {
-    //         title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
-    //     })
-    //     return title
-    // }
 
     const getTitle = useMemo(() => {
         let title = ''
@@ -180,10 +111,6 @@ function MyLayout(props) {
             })}
         </Menu>
     )
-
-    // React.useEffect(() => {
-    //     console.log('has changed')
-    // }, [handleNotifMenuOpen])
 
     //----------------------------------------------------------------------------------------------
 
@@ -259,19 +186,6 @@ function MyLayout(props) {
                                     onClick={
                                         () => handleSelectedItem(item.path)
 
-                                        // () => {
-                                        // setSelectedIndex(item.path)
-                                        // // setSelectedIndex(location.pathname)
-                                        // console.log('set index')
-
-                                        // if (
-                                        //     window.matchMedia(
-                                        //         '(max-width: 960px)'
-                                        //     ).matches
-                                        // ) {
-                                        //     setOpen()
-                                        // }
-                                        // }
                                     }
                                 >
                                     <ListItemIcon className={classes.menuIcon}>
@@ -309,12 +223,13 @@ function MyLayout(props) {
                             </Route>
                         ))}
                         <Route path="/apps/profiles" component={Profiles} />
-                        <Route
+                        <Redirect from="*" to="/errors"/>
+                        {/* <Route
                             path="*"
                             render={() => (
                                 <Errors error={getError(ERRORCODE)} />
                             )}
-                        />
+                        /> */}
                     </Switch>
                     {/* {children} */}
                 </div>
@@ -323,8 +238,8 @@ function MyLayout(props) {
     )
 }
 
-export default MyLayout
+export default Layout
 
-MyLayout.prototype = {
+Layout.prototype = {
     menuItems: PropTypes.array.isRequired,
 }
