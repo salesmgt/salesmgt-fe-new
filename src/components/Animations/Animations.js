@@ -3,7 +3,7 @@ import React from 'react'
 import { VelocityComponent } from 'velocity-react'
 import 'velocity-animate/velocity.ui'
 
-const Animate = React.forwardRef((props, ref) => {
+const Animations = React.forwardRef((props, ref) => {
     const children = React.cloneElement(props.children, {
         style: {
             ...props.children.style,
@@ -17,11 +17,11 @@ const Animate = React.forwardRef((props, ref) => {
     )
 })
 
-Animate.propTypes = {
+Animations.propTypes = {
     children: PropTypes.element.isRequired,
 }
 
-Animate.defaultProps = {
+Animations.defaultProps = {
     animation: 'transition.fadeIn',
     runOnMount: true,
     targetQuerySelector: null,
@@ -34,4 +34,4 @@ Animate.defaultProps = {
     setRef: undefined,
 }
 
-export default React.memo(Animate)
+export default React.memo(Animations)

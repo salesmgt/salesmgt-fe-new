@@ -1,3 +1,3 @@
-export { default as Layout } from './Layout'
-export { default as PageTitle } from './components/PageTitle'
-export { getMenuItems } from './LayoutConfig'
+export { default as Titles } from './components/Titles'
+export { default as Layouts } from './Layouts'
+export { getMenuItems } from './LayoutsConfig'

@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import {
+    Link,
+    Redirect,
+    Route,
+    Switch,
+    useLocation,
+    useRouteMatch,
+} from 'react-router-dom'
 import { IconContext } from 'react-icons'
 import {
     MdMenu,
@@ -22,16 +29,18 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import PageTitle from './components/PageTitle'
-import { Profiles, Errors } from '../pages'
-import { getError } from '../pages/Errors'
-import { useToggle } from '../hooks'
-import classes from './Layout.module.scss'
+import { Titles } from '.'
+import { Profiles } from '../pages'
+import useToggle from '../hooks/useToggle'
+import { useAuth } from '../hooks/AuthProvider'
+import classes from './Layouts.module.scss'
 
 function Layout(props) {
-    const ERRORCODE = '404'
+    const { url } = useRouteMatch()
 
-    const { menuItems, children } = props
+    // const auth = useAuth()
+
+    const { menuItems } = props
 
     const [open, setOpen] = useToggle(
         window.matchMedia('(max-width: 960px)').matches ? false : true
@@ -116,7 +125,7 @@ function Layout(props) {
 
     return (
         <div className={classes.root}>
-            {/* Navbar area */}
+            {/* AppBar area */}
             <IconContext.Provider value={{ color: '#fff' }}>
                 <AppBar
                     className={clsx(
@@ -132,10 +141,10 @@ function Layout(props) {
                         >
                             <MdMenu />
                         </IconButton>
+
                         <div className={classes.grow} />
-                        <PageTitle className={classes.title}>
-                            {getTitle}
-                        </PageTitle>
+
+                        <Titles className={classes.title}>{getTitle}</Titles>
 
                         {/* Remember to set badge content */}
                         <IconButton onClick={handleNotifMenuOpen}>
@@ -146,7 +155,7 @@ function Layout(props) {
                         <IconButton
                             edge="end"
                             component={Link}
-                            to="/apps/profiles"
+                            to={`${url}/profiles`}
                         >
                             <MdAccountCircle />
                         </IconButton>
@@ -177,15 +186,11 @@ function Layout(props) {
                                     className={classes.menuItem}
                                     key={index}
                                     alignItems="flex-start"
-                                    selected={
-                                        // item.path === handleSelectedIndex()
-                                        item.path === selectedIndex
-                                    }
+                                    selected={item.path === selectedIndex}
                                     component={Link}
-                                    to={item.path}
-                                    onClick={
-                                        () => handleSelectedItem(item.path)
-
+                                    to={`${url}/${item.path}`}
+                                    onClick={() =>
+                                        handleSelectedItem(item.path)
                                     }
                                 >
                                     <ListItemIcon className={classes.menuIcon}>
@@ -218,20 +223,17 @@ function Layout(props) {
                 <div className={classes.container}>
                     <Switch>
                         {menuItems.map((item, index) => (
-                            <Route exact path={item.path} key={index}>
+                            <Route
+                                exact
+                                path={`${url}/${item.path}`}
+                                key={index}
+                            >
                                 {item.component}
                             </Route>
                         ))}
-                        <Route path="/apps/profiles" component={Profiles} />
-                        <Redirect from="*" to="/errors"/>
-                        {/* <Route
-                            path="*"
-                            render={() => (
-                                <Errors error={getError(ERRORCODE)} />
-                            )}
-                        /> */}
+                        <Route path={`${url}/profiles`} component={Profiles} />
+                        <Redirect from="*" to="/errors" />
                     </Switch>
-                    {/* {children} */}
                 </div>
             </main>
         </div>

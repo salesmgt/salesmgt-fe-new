@@ -7,6 +7,7 @@ import {
     MdSchool,
     MdGroup,
     MdDescription,
+    MdAccountCircle,
 } from 'react-icons/md'
 import {
     Dashboards,
@@ -16,63 +17,55 @@ import {
     Schools,
     Salesmen,
     Reports,
+    Profiles,
 } from '../pages'
 
-const rootPath = '/apps'
-
-const data = [
+const menuData = [
     {
         title: 'Dashboards',
-        path: `${rootPath}/dashboards`,
-        // path: '/dashboards',
+        path: 'dashboards',
         icon: <MdDashboard />,
         component: <Dashboards />,
     },
     {
         title: 'Accounts',
-        path: `${rootPath}/accounts`,
-        // path: '/accounts',
+        path: 'accounts',
         icon: <MdPerson />,
         component: <Accounts />,
     },
     {
         title: 'Target Schools',
-        path: `${rootPath}/target-schools`,
-        // path: '/target-schools',
+        path: 'target-schools',
         icon: <MdAssignment />,
         component: <TargetSchools />,
     },
     {
         title: 'Work Plans',
-        path: `${rootPath}/work-plans`,
-        // path: '/work-plans',
+        path: 'work-plans',
         icon: <MdDateRange />,
         component: <WorkPlans />,
     },
     {
         title: 'Schools',
-        path: `${rootPath}/schools`,
-        // path: '/schools',
+        path: 'schools',
         icon: <MdSchool />,
         component: <Schools />,
     },
     {
         title: 'Salesmen',
-        path: `${rootPath}/salesmen`,
-        // path: '/salesmen',
+        path: 'salesmen',
         icon: <MdGroup />,
         component: <Salesmen />,
     },
     {
         title: 'Reports',
-        path: `${rootPath}/reports`,
-        // path: '/reports',
+        path: 'reports',
         icon: <MdDescription />,
         component: <Reports />,
     },
 ]
 
-function getMenuItems(role) {
+export function getMenuItems(role) {
     const [
         dashboards,
         accounts,
@@ -81,12 +74,19 @@ function getMenuItems(role) {
         schools,
         salesmen,
         reports,
-    ] = data
+    ] = menuData
     switch (role) {
         case 'admin':
-            return [dashboards, accounts, schools]
+            return [accounts, schools]
         case 'manager':
-            return [dashboards, workPlans, targetSchools, salesmen, reports]
+            return [
+                dashboards,
+                workPlans,
+                targetSchools,
+                salesmen,
+                reports,
+                schools,
+            ]
         case 'salesman':
             return [dashboards, workPlans, targetSchools, reports]
         default:
@@ -94,4 +94,17 @@ function getMenuItems(role) {
     }
 }
 
-export { getMenuItems }
+const navData = [
+    {
+        title: 'Profiles',
+        path: 'profiles',
+        icon: <MdAccountCircle />,
+        component: <Profiles />,
+    },
+    {
+        title: 'Log out',
+        path: '/',
+        icon: <MdPerson />,
+        component: <Accounts />,
+    },
+]

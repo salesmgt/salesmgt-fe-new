@@ -1,0 +1,9 @@
+@import '../../styles/Variables.module.scss';
+
+.wrapper {
+    display: flex;
+    height: 100%;
+    // width: 100%;
+    background-color: $surface;
+    border-radius: $default-radius;
+}

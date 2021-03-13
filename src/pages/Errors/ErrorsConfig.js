@@ -1,6 +1,12 @@
 // import _ from 'lodash'
 const errors = [
     {
+        code: '403',
+        message: 'Sorry, this is THAT restricted area!',
+        link: '/',
+        des: 'Go back to Logins',
+    },
+    {
         code: '404',
         message: 'Sorry, we could not find that page!',
         link: '/apps/dashboards',
@@ -14,9 +20,9 @@ const errors = [
     },
 ]
 
-function getError(code) {
+export function getError(code) {
     const result = errors.filter((error) => error.code === code)
     return result
 }
 
-export { getError }
+

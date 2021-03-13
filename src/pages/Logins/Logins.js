@@ -1,38 +1,11 @@
-import React from 'react'
-// import PropTypes from 'prop-types'
-// import { makeStyles } from '@material-ui/core/styles'
+import React, { useState } from 'react'
 import { MajorBanner } from '../../img'
-import classes from './Login.module.scss'
-import * as Const from './LoginConfig'
-import {
-    Container,
-    Button,
-    TextField,
-    // FormControlLabel,
-    // Checkbox,
-    Paper,
-} from '@material-ui/core'
-
-// const useStyles = makeStyles((theme) => ({
-//     wrapper: {
-//         marginTop: theme.spacing(8),
-//         display: 'flex',
-//         flexDirection: 'column',
-//         alignItems: 'center',
-//     },
-//     logo: {
-//         backgroundColor: '#fafafa',
-//         borderStyle: 'none',
-//         padding: theme.spacing(1),
-//     },
-//     form: {
-//         width: '100%', // Fix IE 11 issue.
-//         marginTop: theme.spacing(1),
-//     },
-//     submit: {
-//         margin: theme.spacing(3, 0, 2),
-//     },
-// }))
+import { Container, Button, TextField, Paper } from '@material-ui/core'
+import { useHistory } from 'react-router-dom'
+import * as LoginsConfig from './LoginsConfig'
+import * as LoginsServices from './LoginsServices'
+import * as Cookies from '../../utils/Cookies'
+import classes from './Logins.module.scss'
 
 // For sign in API
 /* async function onSignIn(credentials) {
@@ -45,44 +18,42 @@ import {
     }).then((data) => data.json())
 } */
 
-function SignIn({ setToken }) {
-    // const classes = useStyles()
+function Logins({ errors }) {
+    const history = useHistory()
 
-    // const [usr, setUsr] = useState('')
+    const [usr, setUsr] = useState('')
+    const [pwd, setPwd] = useState('')
+    // const [authTokens, setAuthTokens] = useState('')
 
     // For validate usr filed
-    /* const [usrError, setUsrError] = useState(false)
-    const [usrHelper, setUsrHelper] = useState('')
+    // const [usrError, setUsrError] = useState(false)
+    // const [usrHelper, setUsrHelper] = useState('')
 
     const handleUsrChange = (e) => {
-        console.log(e.target.value)
         setUsr(e.target.value)
-        if (e.target.value.match('gia')) {
-            setUsrError(true)
-            setUsrHelper('Incorrect entry.')
-        } else {
-            setUsrError(false)
-            setUsrHelper('')
-        }
-    } */
-
-    // const [pwd, setPwd] = useState('')
+        // if (e.target.value.match('gia')) {
+        //     setUsrError(true)
+        //     setUsrHelper('Incorrect entry.')
+        // } else {
+        //     setUsrError(false)
+        //     setUsrHelper('')
+        // }
+    }
 
     // For validate pwd filed
-    /* const [pwdError, setPwdError] = useState(false)
-    const [pwdHelper, setPwdHelper] = useState('')
+    // const [pwdError, setPwdError] = useState(false)
+    // const [pwdHelper, setPwdHelper] = useState('')
 
     const handlePwdChange = (e) => {
-        console.log(e.target.value)
         setPwd(e.target.value)
-        if (e.target.value.match('gia')) {
-            setPwdError(true)
-            setPwdHelper('Incorrect entry.')
-        } else {
-            setPwdError(false)
-            setPwdHelper('')
-        }
-    } */
+        // if (e.target.value.match('gia')) {
+        //     setPwdError(true)
+        //     setPwdHelper('Incorrect entry.')
+        // } else {
+        //     setPwdError(false)
+        //     setPwdHelper('')
+        // }
+    }
 
     //For sign in API
     /* const handleSubmit = async (e) => {
@@ -94,9 +65,35 @@ function SignIn({ setToken }) {
         setToken(token)
     } */
 
+    // React.useEffect(() => {
+    //     console.log('has changed')
+    // }, [usr])
+
+    const checkLogins = () => {
+        LoginsServices.getUser(usr, pwd)
+            .then((data) => {
+                // console.log(response.data.token)
+                // Cookies.saveTokens(data.token)
+                Cookies.setCookie('accessToken', data.token, 30)
+
+                // console.log('check cookie', Cookies.getCookie('accessToken'))
+                // setAuthTokens(response.data.token)
+
+                return data.role
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    console.log(error.response.status)
+                    // errors = error.response.status
+                    history.push('/errors')
+                }
+            })
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        // setToken({ usr, pwd })
+        checkLogins()
     }
 
     return (
@@ -110,19 +107,20 @@ function SignIn({ setToken }) {
                     className={classes.form}
                     method="get"
                     onSubmit={handleSubmit}
+                    noValidate
                 >
                     <TextField
                         id="username"
                         name="username"
-                        label={Const.USERNAME_LB}
+                        label={LoginsConfig.SIGN_IN_LB}
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
                         autoFocus
                         autoComplete="username"
-                        // value={usr}
-                        // onChange={handleUsrChange}
+                        value={usr}
+                        onChange={handleUsrChange}
                         // error={usrError}
                         // helperText={usrHelper}
                         // onChange={(e) => setUsr(e.target.value)}
@@ -130,23 +128,19 @@ function SignIn({ setToken }) {
                     <TextField
                         id="password"
                         name="password"
-                        label={Const.PWD_LB}
+                        label={LoginsConfig.PWD_LB}
                         type="password"
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
                         autoComplete="current-password"
-                        // value={pwd}
-                        // onChange={handlePwdChange}
+                        value={pwd}
+                        onChange={handlePwdChange}
                         // error={pwdError}
                         // helperText={pwdHelper}
                         // onChange={(e) => setPwd(e.target.value)}
                     />
-                    {/* <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label={Const.CKB_LB}
-                    /> */}
                     <Button
                         className={classes.submit}
                         type="submit"
@@ -154,7 +148,7 @@ function SignIn({ setToken }) {
                         color="primary"
                         fullWidth
                     >
-                        {Const.SIGN_IN_LB}
+                        {LoginsConfig.SIGN_IN_LB}
                     </Button>
                 </form>
             </div>
@@ -162,8 +156,8 @@ function SignIn({ setToken }) {
     )
 }
 
-export default SignIn
+export default Logins
 
-// SignIn.propTypes = {
+// Logins.propTypes = {
 //     setToken: PropTypes.func.isRequired,
 // }

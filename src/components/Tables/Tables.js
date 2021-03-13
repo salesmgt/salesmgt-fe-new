@@ -21,7 +21,7 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import { data as schoolsData } from '../data/Schools'
+// import { data as schoolsData } from '../../data/Schools'
 import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
@@ -105,7 +105,9 @@ TablePaginationActions.propTypes = {
 }
 
 // Customize component Table
-function Tables() {
+function Tables(props) {
+    const { data } = props
+
     // const classes = useStyles()
     const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
@@ -122,7 +124,7 @@ function Tables() {
         'Actions',
     ]
 
-    const rows = [...schoolsData]
+    const rows = [...data]
 
     // function createData(name, calories, fat) {
     //     return { name, calories, fat }
@@ -245,9 +247,9 @@ function Tables() {
     )
 }
 
+export default Tables
+
 Tables.propTypes = {
     rows: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
 }
-
-export default Tables

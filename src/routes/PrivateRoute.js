@@ -1,21 +1,24 @@
 import React from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
+import { useAuth } from '../hooks/AuthProvider'
 
 function PrivateRoute({ component: Component, ...rest }) {
     const location = useLocation()
-    // const { currentUser } = useAuth()
+    const isAuthenticated = useAuth()
 
     return (
         <Route
             {...rest}
             render={(props) => {
-                // return currentUser ? (
-                //     <Component {...props} />
-                // ) : (
-                <Redirect to={{ pathname: '/', state: { from: location } }} />
-                // )
+                return isAuthenticated ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect
+                        to={{ pathname: '/', state: { from: location } }}
+                    />
+                )
             }}
-        ></Route>
+        />
     )
 }
 

@@ -1,7 +1,6 @@
 const now = new Date()
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default [
+export const data = [
     {
         id: 0,
         title: 'All Day Event very long title',

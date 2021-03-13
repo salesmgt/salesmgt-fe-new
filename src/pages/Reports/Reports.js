@@ -1,10 +1,11 @@
 import React from 'react'
-import Tables from '../../components/Tables'
+import { Tables } from '../../components'
+import { data } from './ReportsConfig'
 
 function Reports() {
     return (
         <div>
-            <Tables />
+            <Tables data={data} />
         </div>
     )
 }

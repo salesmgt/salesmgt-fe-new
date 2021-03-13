@@ -1,23 +1,36 @@
 import React from 'react'
-import { Route, Switch, Redirect} from 'react-router-dom'
-import { Login, Errors } from './pages'
-import { getError } from './pages/Errors'
-import { Layout, getMenuItems } from './layouts'
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { Logins, Errors, getError } from './pages'
+import { Layouts, getMenuItems } from './layouts'
+import AuthProvider from './hooks/AuthProvider'
+import ErrorProvider from './hooks/ErrorProvider'
 
 function App() {
     const ROLE = 'salesman'
     const ERRORCODE = '404'
+    // const errors = ERRORCODE
 
     return (
-        <Switch>
-            <Route exact path="/" component={Login} />
-            {/* <Route path="/apps" component={<Layout menuItems={getMenuItems(ROLE)} />} /> */}
-            <Route path="/apps"
-                render={() => <Layout menuItems={getMenuItems(ROLE)} />} />
-            {/* <Route component={<Errors error={ getError(ERRORCODE)}/>}/> */}
-            <Route path="/errors" render={() => <Errors error={ getError(ERRORCODE)}/>}/>
-            <Redirect from="*" to="/errors"/>
-        </Switch>
+        <AuthProvider>
+            <Switch>
+                <Route exact path="/" component={Logins} />
+                <Route
+                    path="/apps"
+                    render={() => <Layouts menuItems={getMenuItems(ROLE)} />}
+                />
+                <ErrorProvider>
+                    <Route
+                        path="/errors"
+                        render={() => (
+                            <Errors
+                            error={getError(ERRORCODE)}
+                            />
+                        )}
+                    />
+                </ErrorProvider>
+                <Redirect from="*" to="/errors" />
+            </Switch>
+        </AuthProvider>
     )
 }
 

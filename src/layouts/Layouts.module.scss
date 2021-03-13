@@ -9,7 +9,7 @@ $banner: url(../img/banner-major-edu.png);
     display: flex;
     justify-content: flex-start;
 }
-/* Navbar */
+/* App bar */
 .appBar {
     background-color: $main-info !important;
     width: calc(100% - #{$drawer-width-close}) !important;
@@ -39,6 +39,7 @@ $banner: url(../img/banner-major-edu.png);
     }
     .title {
         flex-grow: 1;
+        align-self: center;
     }
     @media (max-width: $md) {
         .menuBtn {
@@ -169,6 +170,10 @@ $banner: url(../img/banner-major-edu.png);
 }
 .container {
     background-color: $background;
-    padding: 1.5rem;
-    height: 100vh;
+    height: calc(100% - 4rem);
+    padding: 1.2rem;
+    @media (max-width: $md) {
+        height: calc(100% - 3rem);
+        padding: 1rem 0.3rem 1rem 1rem;
+    }
 }
