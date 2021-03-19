@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import clsx from 'clsx'
-import PropTypes from 'prop-types'
 import {
     Link,
     Redirect,
-    Route,
     Switch,
     useLocation,
     useRouteMatch,
@@ -28,19 +26,25 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    withStyles,
+    Typography,
 } from '@material-ui/core'
 import { Titles } from '.'
 import { Profiles } from '../pages'
 import useToggle from '../hooks/useToggle'
-import { useAuth } from '../hooks/AuthProvider'
+import PrivateRoute from '../routes/PrivateRoute'
 import classes from './Layouts.module.scss'
+import { getMenuItems } from './LayoutsConfig'
+import { useAuth } from '../hooks/AuthContext'
 
-function Layout(props) {
+function Layout() {
     const { url } = useRouteMatch()
 
-    // const auth = useAuth()
+    const { user } = useAuth()
 
-    const { menuItems } = props
+    const { roles } = user
+
+    const menuItems = getMenuItems(roles[0])
 
     const [open, setOpen] = useToggle(
         window.matchMedia('(max-width: 960px)').matches ? false : true
@@ -57,6 +61,14 @@ function Layout(props) {
         setSelectedIndex(item)
     }
 
+    const handleProfileClick = () => {
+        if (window.matchMedia('(max-width: 960px)').matches) {
+            if (open === false) {
+                setOpen()
+            }
+        }
+    }
+
     useEffect(() => setSelectedIndex(location.pathname), [location.pathname])
 
     const getTitle = useMemo(() => {
@@ -70,11 +82,14 @@ function Layout(props) {
         return title
     }, [location.pathname])
 
-    // React.useEffect(() => {
-    //     console.log('has changed')
-    // }, [selectedIndex])
+    const StyledBadge = withStyles({
+        badge: {
+            backgroundColor: '#ffb74b',
+        },
+    })(Badge)
 
     //----------------------------------------------------------------------------------------------
+
     const notifData = 'notif-'.repeat(20).split('-')
 
     const ITEM_HEIGHT = 48
@@ -121,6 +136,10 @@ function Layout(props) {
         </Menu>
     )
 
+    // React.useEffect(() => {
+    //     console.log('has changed')
+    // }, [notifAnchorEl])
+
     //----------------------------------------------------------------------------------------------
 
     return (
@@ -148,14 +167,15 @@ function Layout(props) {
 
                         {/* Remember to set badge content */}
                         <IconButton onClick={handleNotifMenuOpen}>
-                            <Badge badgeContent={17} color="secondary">
+                            <StyledBadge badgeContent={17}>
                                 <MdNotifications />
-                            </Badge>
+                            </StyledBadge>
                         </IconButton>
                         <IconButton
                             edge="end"
                             component={Link}
                             to={`${url}/profiles`}
+                            onClick={handleProfileClick}
                         >
                             <MdAccountCircle />
                         </IconButton>
@@ -168,13 +188,13 @@ function Layout(props) {
             <IconContext.Provider value={{ color: '#fff' }}>
                 <Drawer
                     variant="permanent"
+                    open={open}
                     classes={{
                         paper: clsx(
                             classes.drawerPaper,
                             !open && classes.drawerPaperClose
                         ),
                     }}
-                    open={open}
                 >
                     <div className={classes.drawerHeader}>
                         <img className={classes.majorImg} alt="major-logos" />
@@ -185,7 +205,7 @@ function Layout(props) {
                                 <ListItem
                                     className={classes.menuItem}
                                     key={index}
-                                    alignItems="flex-start"
+                                    // alignItems="flex-start"
                                     selected={item.path === selectedIndex}
                                     component={Link}
                                     to={`${url}/${item.path}`}
@@ -197,8 +217,14 @@ function Layout(props) {
                                         {item.icon}
                                     </ListItemIcon>
                                     <ListItemText
-                                        className={classes.menuText}
-                                        primary={item.title}
+                                        disableTypography
+                                        primary={
+                                            <Typography
+                                                className={classes.menuText}
+                                            >
+                                                {item.title}
+                                            </Typography>
+                                        }
                                     />
                                 </ListItem>
                             )
@@ -223,15 +249,20 @@ function Layout(props) {
                 <div className={classes.container}>
                     <Switch>
                         {menuItems.map((item, index) => (
-                            <Route
+                            <PrivateRoute
                                 exact
                                 path={`${url}/${item.path}`}
                                 key={index}
-                            >
-                                {item.component}
-                            </Route>
+                                component={item.component}
+                            />
+                            //     {/* {<item.component />}
+                            //     {console.log(item.component)}
+                            // </PrivateRoute> */}
                         ))}
-                        <Route path={`${url}/profiles`} component={Profiles} />
+                        <PrivateRoute
+                            path={`${url}/profiles`}
+                            component={Profiles}
+                        />
                         <Redirect from="*" to="/errors" />
                     </Switch>
                 </div>
@@ -241,7 +272,3 @@ function Layout(props) {
 }
 
 export default Layout
-
-Layout.prototype = {
-    menuItems: PropTypes.array.isRequired,
-}

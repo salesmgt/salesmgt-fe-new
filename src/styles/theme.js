@@ -18,19 +18,19 @@ const theme = createMuiTheme({
         MuiCssBaseline: {
             '@global': {
                 '*::-webkit-scrollbar': {
-                    width: '10px',
+                    width: '8px',
                 },
                 '*::-webkit-scrollbar-track': {
-                    background: 'inherit',
+                    background: '#ffffff',
                     boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
                     borderRadius: '4px',
                 },
                 '*::-webkit-scrollbar-thumb': {
-                    backgroundColor: 'inherit',
+                    backgroundColor: '#ffffff',
                     borderRadius: '4px',
 
                     '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
                     },
                 },
                 '*::-webkit-scrollbar-corner': {

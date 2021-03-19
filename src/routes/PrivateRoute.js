@@ -1,10 +1,12 @@
 import React from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
-import { useAuth } from '../hooks/AuthProvider'
+import { useAuth } from '../hooks/AuthContext'
 
 function PrivateRoute({ component: Component, ...rest }) {
     const location = useLocation()
-    const isAuthenticated = useAuth()
+    const { user } = useAuth()
+
+    const isAuthenticated = user != null ? true : false
 
     return (
         <Route

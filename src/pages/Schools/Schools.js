@@ -6,13 +6,16 @@ function Schools() {
 
     const refreshSchools = () => {
         SchoolsServices.getSchools().then((data) => {
-            // console.log(response.data.list)
-            // setSchools(response.data.list)
-           setSchools(data.list)
+            console.log(data.list)
+
+            setSchools(data.list)
         })
     }
 
-    useEffect(refreshSchools, [])
+    useEffect(() => {
+        refreshSchools()
+        console.log('rerender')
+    }, [])
 
     return (
         <div className="schools">
@@ -55,7 +58,7 @@ function Schools() {
                             <td>{school.reprName}</td>
                             <td>{school.reprPhone}</td>
                             <td>{school.reprEmail}</td>
-                            <td>{school.reprGender?'Nam':'Nu'}</td>
+                            <td>{school.reprGender ? 'Nam' : 'Nu'}</td>
                         </tr>
                     ))}
                 </tbody>

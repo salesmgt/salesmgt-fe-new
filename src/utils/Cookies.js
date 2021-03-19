@@ -1,13 +1,8 @@
-export function saveTokens(tokens) {
-    document.cookie = `'accessToken=' ${tokens}`
-    // document.cookie = 'accessToken=' + tokens
-}
-
 export function setCookie(cName, cValue, exDays) {
     const d = new Date()
     d.setTime(d.getTime() + exDays * 24 * 60 * 60 * 1000)
     const expires = 'expires=' + d.toUTCString()
-    document.cookie = cName + '=' + cValue + ';' + expires
+    document.cookie = cName + '=' + cValue + ';' + expires + ';path=/'
 }
 
 export function getCookie(cName) {

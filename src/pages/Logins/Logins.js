@@ -1,99 +1,82 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { MajorBanner } from '../../img'
 import { Container, Button, TextField, Paper } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import * as LoginsConfig from './LoginsConfig'
 import * as LoginsServices from './LoginsServices'
 import * as Cookies from '../../utils/Cookies'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { useAuth } from '../../hooks/AuthContext'
 import classes from './Logins.module.scss'
 
-// For sign in API
-/* async function onSignIn(credentials) {
-    return fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-    }).then((data) => data.json())
-} */
+const validationSchema = yup.object().shape({
+    username: yup.string().required('Incorrect entry'),
+    password: yup.string().required('Incorrect entry'),
+})
 
-function Logins({ errors }) {
+function Logins() {
+    const { register, handleSubmit, getValues, errors } = useForm({
+        resolver: yupResolver(validationSchema),
+    })
+
     const history = useHistory()
 
-    const [usr, setUsr] = useState('')
-    const [pwd, setPwd] = useState('')
-    // const [authTokens, setAuthTokens] = useState('')
+    const { setUser } = useAuth()
 
-    // For validate usr filed
-    // const [usrError, setUsrError] = useState(false)
-    // const [usrHelper, setUsrHelper] = useState('')
-
-    const handleUsrChange = (e) => {
-        setUsr(e.target.value)
-        // if (e.target.value.match('gia')) {
-        //     setUsrError(true)
-        //     setUsrHelper('Incorrect entry.')
-        // } else {
-        //     setUsrError(false)
-        //     setUsrHelper('')
-        // }
+    const onSubmit = (data) => {
+        login()
+        // const me = JSON.parse(localStorage.getItem('notMe'))
+        // console.log('me', me.username)
+        // console.log('me', me.roles)
     }
-
-    // For validate pwd filed
-    // const [pwdError, setPwdError] = useState(false)
-    // const [pwdHelper, setPwdHelper] = useState('')
-
-    const handlePwdChange = (e) => {
-        setPwd(e.target.value)
-        // if (e.target.value.match('gia')) {
-        //     setPwdError(true)
-        //     setPwdHelper('Incorrect entry.')
-        // } else {
-        //     setPwdError(false)
-        //     setPwdHelper('')
-        // }
-    }
-
-    //For sign in API
-    /* const handleSubmit = async (e) => {
-        e.preventDefault()
-        const token = await onSignIn({
-            username,
-            password,
-        })
-        setToken(token)
-    } */
 
     // React.useEffect(() => {
-    //     console.log('has changed')
-    // }, [usr])
+    //     console.log('rerender')
+    // }, [])
 
-    const checkLogins = () => {
-        LoginsServices.getUser(usr, pwd)
+    // const getUserObj = (username, roles) => {
+    //     return {
+    //         username: username,
+    //         roles: roles,
+    //     }
+    // }
+
+    const getUser = (username, password) => {
+        const userObj = (username, roles) => {
+            return {
+                username: username,
+                roles: roles,
+            }
+        }
+
+        LoginsServices.checkUser(username, password)
             .then((data) => {
-                // console.log(response.data.token)
-                // Cookies.saveTokens(data.token)
-                Cookies.setCookie('accessToken', data.token, 30)
+                Cookies.setCookie('accessToken', data.token, 7)
+                localStorage.setItem(
+                    'notMe',
+                    JSON.stringify(userObj(data.username, data.roles))
+                )
 
-                // console.log('check cookie', Cookies.getCookie('accessToken'))
-                // setAuthTokens(response.data.token)
-
-                return data.role
+                // setUser({ username: data.username, roles: data.roles })
+                setUser(userObj(data.username, data.roles))
+                history.push('/apps/dashboards')
             })
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    console.log(error.response.status)
-                    // errors = error.response.status
-                    history.push('/errors')
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
                 }
             })
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        checkLogins()
+    const login = () => {
+        getUser(getValues('username'), getValues('password'))
+        // getAccessToken(getValues('username'), getValues('password'))
     }
 
     return (
@@ -105,8 +88,8 @@ function Logins({ errors }) {
 
                 <form
                     className={classes.form}
-                    method="get"
-                    onSubmit={handleSubmit}
+                    // method="post"
+                    onSubmit={handleSubmit(onSubmit)}
                     noValidate
                 >
                     <TextField
@@ -119,11 +102,9 @@ function Logins({ errors }) {
                         fullWidth
                         autoFocus
                         autoComplete="username"
-                        value={usr}
-                        onChange={handleUsrChange}
-                        // error={usrError}
-                        // helperText={usrHelper}
-                        // onChange={(e) => setUsr(e.target.value)}
+                        inputRef={register}
+                        error={errors.username ? true : false}
+                        helperText={errors.username?.message}
                     />
                     <TextField
                         id="password"
@@ -135,11 +116,9 @@ function Logins({ errors }) {
                         required
                         fullWidth
                         autoComplete="current-password"
-                        value={pwd}
-                        onChange={handlePwdChange}
-                        // error={pwdError}
-                        // helperText={pwdHelper}
-                        // onChange={(e) => setPwd(e.target.value)}
+                        inputRef={register}
+                        error={errors.password ? true : false}
+                        helperText={errors.password?.message}
                     />
                     <Button
                         className={classes.submit}
@@ -157,7 +136,3 @@ function Logins({ errors }) {
 }
 
 export default Logins
-
-// Logins.propTypes = {
-//     setToken: PropTypes.func.isRequired,
-// }
