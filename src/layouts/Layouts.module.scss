@@ -11,7 +11,7 @@ $banner: url(../img/banner-major-edu.png);
 }
 /* App bar */
 .appBar {
-    background-color: $main-info !important;
+    background-color: $navy-a700 !important;
     width: calc(100% - #{$drawer-width-close}) !important;
     z-index: 1201 !important;
     transition-property: width, margin !important;
@@ -38,6 +38,8 @@ $banner: url(../img/banner-major-edu.png);
         display: none;
     }
     .title {
+        font-weight: 700;
+        color: $common-white;
         flex-grow: 1;
         align-self: center;
     }
@@ -56,6 +58,10 @@ $banner: url(../img/banner-major-edu.png);
 .notif {
     height: 3rem;
 }
+.badge {
+    background-color: $main-info;
+    color: $main-info;
+}
 /* Side menu */
 .drawerPaper {
     background-color: $main-primary !important;
@@ -68,8 +74,8 @@ $banner: url(../img/banner-major-edu.png);
         justify-content: flex-start;
         .majorImg {
             content: $banner;
-            width: 6.48rem;
-            height: 1.75rem;
+            width: 10.5rem;
+            height: 2.73rem;
             margin-left: 0.6rem;
         }
     }
@@ -87,8 +93,8 @@ $banner: url(../img/banner-major-edu.png);
         justify-content: center;
         .majorImg {
             content: $logo;
-            width: 1.98rem;
-            height: 1.75rem;
+            width: 2.98rem;
+            height: 2.73rem;
             margin-left: 0rem;
         }
     }
@@ -126,15 +132,20 @@ $banner: url(../img/banner-major-edu.png);
     }
 }
 .menuItem {
+    margin: 1rem 0rem;
+    align-items: center;
     &:hover {
         background-color: $light-primary;
     }
-
     .menuIcon {
-        padding-left: 0.6rem;
+        margin: 0.25rem 0rem;
+        padding-left: 0.45rem;
+        font-size: 1.25rem;
     }
     .menuText {
-        color: $common-white;
+        color: $common-white !important;
+        font-size: 1.25rem;
+        font-weight: 500;
     }
 }
 /* Page load */
@@ -169,8 +180,9 @@ $banner: url(../img/banner-major-edu.png);
     }
 }
 .container {
-    background-color: $background;
     height: calc(100% - 4rem);
+    overflow: hidden;
+    background-color: $background;
     padding: 1.2rem;
     @media (max-width: $md) {
         height: calc(100% - 3rem);

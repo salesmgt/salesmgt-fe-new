@@ -1,32 +1,39 @@
 import React from 'react'
 import { Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { Animations } from '../../components'
+import { Animation } from '../../components'
 import classes from './Errors.module.scss'
-// import { useError } from '../../hooks/ErrorProvider'
-// import { getError } from './ErrorsConfig'
+import { getError } from './ErrorsConfig'
+import { useLocation } from 'react-router-dom'
 
 function Errors(props) {
-    const { error } = props
-    // const { errors } = useError()
-    // console.log(errors)
-    // const error = getError('404')
+    const { defaultError } = props
+    const location = useLocation()
+
+    const getCurrError = () => {
+        if (typeof location.state !== 'undefined') {
+            return getError(location.state.error)
+        } else {
+            return defaultError
+        }
+    }
+
+    const error = getCurrError()
 
     return (
         <div className={classes.root}>
             {error.map((item, index) => (
                 <div className={classes.main} key={index}>
-                    <Animations animation="transition.expandIn" delay={100}>
+                    <Animation animation="transition.expandIn" delay={100}>
                         <Typography variant="h1" className={classes.code}>
                             {item.code}
                         </Typography>
-                    </Animations>
-                    <Animations delay={500}>
+                    </Animation>
+                    <Animation delay={500}>
                         <Typography variant="h5" className={classes.message}>
                             {item.message}
                         </Typography>
-                    </Animations>
+                    </Animation>
                     <Link className={classes.link} to={item.link}>
                         {item.des}
                     </Link>
@@ -34,10 +41,6 @@ function Errors(props) {
             ))}
         </div>
     )
-}
-
-Errors.prototype = {
-    error: PropTypes.array.isRequired,
 }
 
 export default Errors

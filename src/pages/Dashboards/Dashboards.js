@@ -2,7 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { Grid, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Cards, Charts } from '.'
+import { Cards, Charts } from './components'
 // import classes from '../styles/Dashboards.module.scss'
 
 const useStyles = makeStyles((theme) => ({

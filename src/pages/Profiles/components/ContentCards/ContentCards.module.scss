@@ -1,0 +1,21 @@
+@import '../../../../styles/Variables.module.scss';
+
+.cardText {
+    margin-bottom: 1rem;
+    padding: 0rem 1rem;
+}
+.titles {
+    font-weight: 700 !important;
+    font-size: 1.4rem !important;
+}
+.detailZone {
+    display: flex;
+    flex-direction: row;
+    .details {
+        font-size: 1.3rem !important;
+        margin-right: 0.5rem !important;
+        input:disabled {
+            color: $common-black !important;
+        }
+    }
+}

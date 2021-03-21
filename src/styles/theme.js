@@ -31,7 +31,7 @@ const theme = createMuiTheme({
                     borderRadius: '4px',
 
                     '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
                     },
                 },
                 '*::-webkit-scrollbar-corner': {
