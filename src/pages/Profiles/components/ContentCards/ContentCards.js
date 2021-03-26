@@ -6,12 +6,34 @@ import classes from './ContentCards.module.scss'
 
 function ContentCards(props) {
     const { title, detail, icon } = props
+    console.log(detail)
+    console.log(typeof detail)
 
-    const checkGender = (gender) => {
-        if (gender === 'Male') {
-            return <AiOutlineMan />
-        } else if (gender === 'Female') {
-            return <AiOutlineWoman />
+    const configElement = (icon, detail) => {
+        if (icon === 'none') {
+            return (
+                <div className={classes.detailZone}>
+                    <Typography className={classes.details}>
+                        {detail}
+                    </Typography>
+                    <Icon style={{ display: icon }}>{detail}</Icon>
+                </div>
+            )
+        } else {
+            return (
+                <div className={classes.detailZone}>
+                    <Typography className={classes.details}>
+                        {detail ? 'Male' : 'Female'}
+                    </Typography>
+                    <Icon style={{ display: icon }}>
+                        {detail === true ? (
+                            <AiOutlineMan color="#005BB5" />
+                        ) : (
+                            <AiOutlineWoman color="#E26A89" />
+                        )}
+                    </Icon>
+                </div>
+            )
         }
     }
 
@@ -22,14 +44,16 @@ function ContentCards(props) {
                     <Typography className={classes.titles}>{title}</Typography>
                 </Grid>
                 <Grid item sm={6} md={6} lg={6}>
-                    <div className={classes.detailZone}>
+                    {/* <div className={classes.detailZone}>
                         <Typography className={classes.details}>
                             {detail}
                         </Typography>
                         <Icon style={{ display: icon }}>
-                            {checkGender(detail)}
+                            {detail}
                         </Icon>
-                    </div>
+                    </div> */}
+
+                    {configElement(icon, detail)}
                 </Grid>
             </Grid>
         </div>
@@ -44,6 +68,6 @@ ContentCards.defaultProps = {
 
 ContentCards.propTypes = {
     title: PropTypes.string.isRequired,
-    detail: PropTypes.string.isRequired,
+    // detail: PropTypes.string.isRequired,
     icon: PropTypes.string,
 }

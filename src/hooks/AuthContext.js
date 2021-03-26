@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
-import * as LoginsServices from '../pages/Logins/LoginsServices'
-import * as Cookies from '../utils/Cookies'
+import * as Milks from '../utils/Milks'
 
 const AuthContext = createContext()
 
@@ -9,28 +8,9 @@ export function useAuth() {
 }
 
 function useAuthProvider() {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('notMe')))
+    const [user, setUser] = useState(Milks.getWithExpiry('notMe'))
+
     const [authToken, setAuthToken] = useState(null)
-
-    // const getAccessToken = (username, password) => {
-    //     LoginsServices.checkUser(username, password).then((data) => {
-    //         return data.token
-    //     })
-    //     // .catch((error) => {
-    //     //     if (error.response) {
-    //     //         console.log(error)
-    //     //     }
-    //     // })
-    // }
-
-    // const cookie = Cookies.getCookie('accessToken')
-    // if (cookie != null) {
-    //     setAuthToken(cookie)
-    // } else {
-    //     setAuthToken(getAccessToken())
-    // }
-
-    // React.useEffect(getAccessToken, [])
 
     return { user, setUser, authToken, setAuthToken }
 }

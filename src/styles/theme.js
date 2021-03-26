@@ -19,6 +19,7 @@ const theme = createMuiTheme({
             '@global': {
                 '*::-webkit-scrollbar': {
                     width: '8px',
+                    height: '8px',
                 },
                 '*::-webkit-scrollbar-track': {
                     background: '#ffffff',
@@ -43,7 +44,7 @@ const theme = createMuiTheme({
         MuiListItem: {
             root: {
                 '&$selected': {
-                    backgroundColor: '#051e34',
+                    backgroundColor: '#042a4a',
                 },
                 '&$selected:hover': {
                     backgroundColor: '#2a4865',

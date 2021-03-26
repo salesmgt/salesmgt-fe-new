@@ -1,15 +1,17 @@
+@import '../../styles/Variables.module.scss';
+
 .wrapper {
     margin-top: 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     .logo {
-        background-color: #fafafa !important;
+        background-color: $grey-50 !important;
         border-style: none !important;
         padding: 0.5em;
     }
     .form {
-        margin-top: 4rem;
+        margin-top: 2rem;
     }
     .submit {
         margin: 1.5rem 0rem 1rem !important;
