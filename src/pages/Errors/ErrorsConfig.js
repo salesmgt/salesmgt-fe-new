@@ -1,6 +1,12 @@
 // import _ from 'lodash'
 const errors = [
     {
+        code: 400,
+        message: 'What is this? Is it a cake?',
+        link: '',
+        des: '',
+    },
+    {
         code: 401,
         message: 'Who are you now?',
         link: '/',

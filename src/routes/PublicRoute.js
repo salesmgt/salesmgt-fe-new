@@ -2,8 +2,8 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { useAuth } from '../hooks/AuthContext'
 
-function PrivateRoute(props) {
-    const { component: Component, ...rest } = props
+function PublicRoute(props) {
+    const { component: Component, restricted, ...rest } = props
 
     const { user } = useAuth()
 
@@ -14,14 +14,14 @@ function PrivateRoute(props) {
         <Route
             {...rest}
             render={(props) => {
-                return isAuthenticated ? (
-                    <Component {...props} />
+                return isAuthenticated && restricted ? (
+                    <Redirect to="/apps/dashboards" />
                 ) : (
-                    <Redirect to="/" />
+                    <Component {...props} />
                 )
             }}
         />
     )
 }
 
-export default PrivateRoute
+export default PublicRoute

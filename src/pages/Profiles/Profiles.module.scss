@@ -61,9 +61,9 @@
     }
     .about {
         margin-top: 4.6rem;
-        // .appBar {
-        //     background-color: $light-primary;
-        // }
+        .appBar {
+            background-color: $light-primary;
+        }
         // .cardContent {
         //     background-color: $common-white;
         //     padding: 1rem;
@@ -71,15 +71,20 @@
         //         padding: 0rem 1rem;
         //     }
         // }
-        // .cardText {
-        //     margin-bottom: 1rem;
-        // }
+        .cardText {
+            margin-bottom: 1rem;
+            padding: 0rem 1rem;
+        }
         .titles {
             font-weight: 700;
             font-size: 1.4rem;
         }
+        .detailZone {
+            display: flex;
+            flex-direction: row;
+        }
         .details {
-            font-size: 1.3rem;
+            font-size: 1.3rem !important;
             margin-right: 0.5rem;
             input:disabled {
                 color: $common-black !important;
@@ -94,19 +99,15 @@
             }
         }
         .inputZone {
-            margin-bottom: 2rem;
+            // margin: 1rem 0rem;
             .inputField {
+                margin: 1rem 0rem;
                 width: 100%;
             }
         }
         .saveBtn {
             color: $dark-info;
         }
-
-        // .test {
-        //     display: flex;
-        //     flex-direction: row;
-        // }
         .account {
             margin-bottom: 1.6rem;
         }

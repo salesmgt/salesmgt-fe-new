@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
 import {
     Avatar,
@@ -13,106 +14,318 @@ import {
     Button,
     Divider,
     Grid,
-    InputBase,
     TextField,
-    withStyles,
+    Icon,
 } from '@material-ui/core'
 import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
 import { Animation, AnimationGroup } from '../../components'
-import { data } from './ProfilesConfig'
-// import * as ProfilesServices from './ProfilesServices'
-import { HaAvatar } from '../../img'
-import { CardHeaders, ContentCards } from './components'
+import * as ProfilesServices from './ProfilesServices'
+import { Consts } from './ProfilesConfig'
+import { CardHeaders } from './components'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import * as Cookies from '../../utils/Cookies'
 import { useAuth } from '../../hooks/AuthContext'
+import { storage } from '../../services/firebase'
+import Resizer from 'react-image-file-resizer'
 import classes from './Profiles.module.scss'
+import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 
-const validationSchema = yup.object().shape({
-    oldPassword: yup.string().required('Incorrect entry'),
-    // .matches(
-    //     pwdRegex,
-    //     'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character'
-    // ),
-    newPassword: yup.string().required('Incorrect entry'),
-    // .matches(
-    //     pwdRegex,
-    //     'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character'
-    // ),
+const pwdSchema = yup.object().shape({
+    oldPassword: yup.string().required('Password is required'),
+    newPassword: yup
+        .string()
+        .notOneOf(
+            [yup.ref('oldPassword'), null],
+            'The new password you entered is the same as your old password. Enter a different password'
+        )
+        .matches(
+            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+            'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character'
+        ),
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref('newPassword')], "Password's not match")
-        .required('Incorrect entry'),
-    email: yup.string().email('Invalid email'),
+        .oneOf([yup.ref('newPassword'), null], "Password's not match")
+        .required('Confirm is required'),
+})
+
+const emailSchema = yup.object().shape({
+    email: yup
+        .string()
+        .email('Invalid email')
+        .trim()
+        .required('Email is required'),
+})
+
+const phoneSchema = yup.object().shape({
     phone: yup
         .string()
-        .required('Incorrect entry')
-        .matches(/^0[0-9]{8}$/),
-    address: yup.string(),
+        .required('Phone is required')
+        .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
 })
+
+const addrSchema = yup.object().shape({
+    address: yup.string().trim(),
+})
+
+const serverSchema = [
+    {
+        type: 'server',
+        name: 'oldPassword',
+        message: null,
+    },
+    {
+        type: 'server',
+        name: 'credential',
+        message: 'Invalid password',
+    },
+]
 
 function Profiles() {
     const { user, setUser } = useAuth()
-    // const [data, setData] = useState(null)
 
-    // const refreshPage = () => {
-    //     ProfilesServices.getProfile().then((data) => {
-    //         setData(data)
-    //     })
-    // }
+    const history = useHistory()
 
-    // React.useEffect(refreshPage, [])
-
-    // if (!data) {
-    //     return null
-    // }
-
-    // const { list } = data
-
-    // const [selectedFile, setSelectedFile] = useState(null)
-    // const handleUploadAvatar = (e) => {
-    //     const file = e.target.files[0]
-    //     const reader = new FileReader()
-    //     const url = reader.readAsDataURL(file)
-
-    //     reader.onloadend = function (e) {
-    //         setSelectedFile(reader.result)
-    //     }
-    //     console.log(url)
-    // }
+    const [data, setData] = useState(null)
 
     const [expanded, setExpanded] = useState(false)
 
-    const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false)
-    }
-
-    const CustomAccordion = withStyles({
-        root: {
-            '&:before': {
-                display: 'none',
-            },
-        },
-    })(Accordion)
-
-    const { handleSubmit, errors, register } = useForm({
-        resolver: yupResolver(validationSchema),
+    const {
+        handleSubmit: pwdSubmit,
+        errors: pwdErrors,
+        register: pwdRegister,
+        reset: pwdReset,
+        setError: setPwdError,
+    } = useForm({
+        resolver: yupResolver(pwdSchema),
     })
 
-    const onSubmit = (data) => {
+    const {
+        handleSubmit: emailSubmit,
+        errors: emailErrors,
+        register: emailRegister,
+        reset: emailReset,
+    } = useForm({
+        resolver: yupResolver(emailSchema),
+    })
+
+    const {
+        handleSubmit: phoneSubmit,
+        errors: phoneErrors,
+        register: phoneRegister,
+        reset: phoneReset,
+    } = useForm({
+        resolver: yupResolver(phoneSchema),
+    })
+
+    const {
+        handleSubmit: addrSubmit,
+        errors: addrErrors,
+        register: addrRegister,
+        reset: addrReset,
+    } = useForm({
+        resolver: yupResolver(addrSchema),
+    })
+
+    const refreshPage = () => {
+        ProfilesServices.getProfile(user.username)
+            .then((data) => {
+                setData(data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(refreshPage, [])
+
+    if (!data) {
+        return null
+    }
+
+    const {
+        username,
+        fullName,
+        email,
+        phone,
+        avatar,
+        gender,
+        address,
+        birthDate,
+    } = data
+
+    const handleUploadAvatar = async (event) => {
+        const file = event.target.files[0]
+        const resizeFile = (file) =>
+            new Promise((resolve) => {
+                Resizer.imageFileResizer(
+                    file,
+                    300,
+                    300,
+                    'JPEG',
+                    100,
+                    0,
+                    (uri) => {
+                        resolve(uri)
+                    },
+                    'file'
+                )
+            })
+        const finalFile = await resizeFile(file)
+
+        // const reader = new FileReader()
+        // const url = reader.readAsDataURL(file)
+        // reader.readAsDataURL(file)
+
+        const url = await uploadAvatarToFirebase(finalFile)
+        saveAvatarToDb(url)
+    }
+
+    const uploadAvatarToFirebase = async (file) => {
+        return new Promise((resolve, reject) => {
+            const uploadImageTask = storage
+                .ref(`images/avatars/${file.name}`)
+                .put(file)
+            uploadImageTask.on(
+                'stage_changed',
+                (snapshot) => {},
+                (error) => {
+                    console.log(error)
+                    reject('Upload Image to firebase failed: ' + error)
+                },
+                () => {
+                    storage
+                        .ref('images/avatars/')
+                        .child(file.name)
+                        .getDownloadURL()
+                        .then((url) => {
+                            resolve(url)
+                        })
+                }
+            )
+        })
+    }
+
+    const saveAvatarToDb = (url) => {
+        ProfilesServices.updateGeneral(user.username, 'avatar', url)
+            .then((data) => {
+                refreshPage()
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+    }
+
+    const onPwdSubmit = (data) => {
+        console.log('new', data.newPassword)
+        console.log('old', data.oldPassword)
+        ProfilesServices.updateAccount(
+            user.username,
+            data.newPassword,
+            data.oldPassword
+        )
+            .then((data) => {
+                refreshPage()
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    if (error.response.status === 500) {
+                        serverSchema.forEach(({ name, type, message }) =>
+                            setPwdError(name, { type, message })
+                        )
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
+                }
+            })
+
+        pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
         alert(JSON.stringify(data))
     }
 
-    console.log('rerender')
+    const onEmailSubmit = (data) => {
+        ProfilesServices.updateGeneral(user.username, 'email', data.email)
+            .then((data) => {
+                refreshPage()
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
 
-    const onLogout = () => {
-        // document.cookie =
-        //     'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        emailReset({ email: '' })
+    }
+
+    const onPhoneSubmit = (data) => {
+        ProfilesServices.updateGeneral(user.username, 'phone', data.phone)
+            .then((data) => {
+                refreshPage()
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+
+        phoneReset({ phone: '' })
+    }
+
+    const onAddrSubmit = (data) => {
+        ProfilesServices.updateGeneral(user.username, 'address', data.address)
+            .then((data) => {
+                refreshPage()
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+        addrReset({ address: '' })
+    }
+
+    const handleLogout = () => {
         Cookies.setCookie('accessToken', '', 0)
         localStorage.removeItem('notMe')
         setUser()
+    }
+
+    // -------------------------------------------Page config-------------------------------------------
+
+    const { headers, operations, fields } = Consts
+
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false)
     }
 
     return (
@@ -122,26 +335,26 @@ function Profiles() {
                     <Button
                         startIcon={<MdExitToApp />}
                         className={classes.logoutBtn}
-                        onClick={onLogout}
+                        onClick={handleLogout}
                     >
-                        Logout
+                        {operations.logout}
                     </Button>
                 </div>
                 <div className={classes.infoAvatar}>
                     <Animation animation="transition.expandIn" delay={300}>
-                        <Avatar className={classes.avatar} src={HaAvatar} />
+                        <Avatar className={classes.avatar} src={avatar} />
                     </Animation>
                     <input
-                        accept="image/*"
                         className={classes.inputAvatar}
+                        accept="image/*"
                         id="icon-button-file"
                         type="file"
+                        onChange={(event) => handleUploadAvatar(event)}
                     />
                     <label htmlFor="icon-button-file">
                         <IconButton
-                            // color="primary"
-                            component="span"
                             className={classes.uploadBtn}
+                            component="span"
                         >
                             <MdPhotoCamera />
                         </IconButton>
@@ -149,7 +362,7 @@ function Profiles() {
                 </div>
                 <Animation animation="transition.slideLeftIn" delay={300}>
                     <Typography className={classes.infoName} variant="h4">
-                        {data.fullName}
+                        {fullName}
                     </Typography>
                 </Animation>
             </div>
@@ -157,44 +370,65 @@ function Profiles() {
             <div className={classes.about}>
                 <AnimationGroup>
                     <Card className={classes.account} elevation={1}>
-                        <CardHeaders header="Account Information" />
-
+                        <CardHeaders header={headers.account} />
                         <CardContent className={classes.cardContent}>
                             {/* Username section */}
-                            <ContentCards
-                                title="Username"
-                                detail={data.username}
-                            />
+                            <div className={classes.cardText}>
+                                <Grid container spacing={2}>
+                                    <Grid item sm={3} md={3} lg={3}>
+                                        <Typography className={classes.titles}>
+                                            {fields.username.title}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} md={6} lg={6}>
+                                        <div className={classes.detailZone}>
+                                            <Typography
+                                                className={classes.details}
+                                            >
+                                                {username}
+                                            </Typography>
+                                        </div>
+                                    </Grid>
+                                </Grid>
+                            </div>
+
                             {/* Password section */}
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <CustomAccordion
-                                    elevation={0}
+                            <form onSubmit={pwdSubmit(onPwdSubmit)}>
+                                <Accordion
                                     className={classes.accor}
+                                    elevation={0}
                                     expanded={expanded === 'password'}
                                     onChange={handleChange('password')}
                                 >
                                     <AccordionSummary
+                                        className={classes.accorSum}
                                         id="password"
                                         expandIcon={<MdEdit />}
-                                        className={classes.accorSum}
                                     >
                                         <Grid container spacing={2}>
                                             <Grid item sm={3} md={3} lg={3}>
                                                 <Typography
                                                     className={classes.titles}
                                                 >
-                                                    Password
+                                                    {fields.password.title}
                                                 </Typography>
                                             </Grid>
                                             <Grid item sm={6} md={6} lg={6}>
-                                                <InputBase
+                                                <TextField
                                                     className={clsx(
                                                         classes.details,
                                                         classes.detailsAccor
                                                     )}
                                                     type="password"
-                                                    defaultValue={data.password}
+                                                    defaultValue={
+                                                        fields.password
+                                                            .defaultValue
+                                                    }
+                                                    fullWidth
                                                     disabled
+                                                    InputProps={{
+                                                        disableUnderline: true,
+                                                    }}
                                                 />
                                             </Grid>
                                         </Grid>
@@ -210,6 +444,14 @@ function Profiles() {
                                                 lg={6}
                                                 className={classes.inputZone}
                                             >
+                                                {pwdErrors.credential && (
+                                                    <Typography color="error">
+                                                        {
+                                                            pwdErrors.credential
+                                                                .message
+                                                        }
+                                                    </Typography>
+                                                )}
                                                 <TextField
                                                     className={
                                                         classes.inputField
@@ -217,17 +459,20 @@ function Profiles() {
                                                     fullWidth
                                                     autoFocus
                                                     name="oldPassword"
-                                                    label="Old Password"
+                                                    label={
+                                                        fields.password.labels
+                                                            .old
+                                                    }
                                                     variant="outlined"
                                                     type="password"
-                                                    inputRef={register}
+                                                    inputRef={pwdRegister}
                                                     error={
-                                                        errors.oldPassword
+                                                        pwdErrors.oldPassword
                                                             ? true
                                                             : false
                                                     }
                                                     helperText={
-                                                        errors.oldPassword
+                                                        pwdErrors.oldPassword
                                                             ?.message
                                                     }
                                                 />
@@ -239,46 +484,26 @@ function Profiles() {
                                                 lg={6}
                                                 className={classes.inputZone}
                                             >
-                                                {/* <Controller
-                                                    control={control}
-                                                    name="newPassword"
-                                                    defaultValue=""
-                                                    render={(props) => (
-                                                        <TextField
-                                                            className={
-                                                                classes.inputField
-                                                            }
-                                                            label="New Password"
-                                                            variant="outlined"
-                                                            type="password"
-                                                            // error={
-                                                            //     errors.newPassword
-                                                            // }
-                                                            // helperText={
-                                                            //     errors
-                                                            //         .newPassword
-                                                            //         ?.message
-                                                            // }
-                                                        />
-                                                    )}
-                                                /> */}
                                                 <TextField
                                                     className={
                                                         classes.inputField
                                                     }
                                                     fullWidth
                                                     name="newPassword"
-                                                    label="New Password"
+                                                    label={
+                                                        fields.password.labels
+                                                            .new
+                                                    }
                                                     variant="outlined"
                                                     type="password"
-                                                    inputRef={register}
+                                                    inputRef={pwdRegister}
                                                     error={
-                                                        errors.newPassword
+                                                        pwdErrors.newPassword
                                                             ? true
                                                             : false
                                                     }
                                                     helperText={
-                                                        errors.newPassword
+                                                        pwdErrors.newPassword
                                                             ?.message
                                                     }
                                                 />
@@ -296,17 +521,21 @@ function Profiles() {
                                                     }
                                                     fullWidth
                                                     name="confirmPassword"
-                                                    label="Confirm Password"
+                                                    label={
+                                                        fields.password.labels
+                                                            .confirm
+                                                    }
                                                     variant="outlined"
                                                     type="password"
-                                                    inputRef={register}
+                                                    inputRef={pwdRegister}
                                                     error={
-                                                        errors.confirmPassword
+                                                        pwdErrors.confirmPassword
                                                             ? true
                                                             : false
                                                     }
                                                     helperText={
-                                                        errors.confirmPassword
+                                                        pwdErrors
+                                                            .confirmPassword
                                                             ?.message
                                                     }
                                                 />
@@ -318,83 +547,137 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            size="small"
                                             className={classes.cancelBtn}
+                                            size="small"
+                                            onClick={() =>
+                                                pwdReset({ pwdErrors: false })
+                                            }
                                         >
-                                            Cancel
+                                            {operations.cancel}
                                         </Button>
                                         <Button
-                                            size="small"
                                             className={classes.saveBtn}
+                                            size="small"
                                             type="submit"
                                         >
-                                            Save
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
-                                </CustomAccordion>
+                                </Accordion>
                             </form>
-
-                            {/* <ContentAccordions
-                                title={accorData.password.title}
-                                detail={data.password}
-                                type={accorData.password.type}
-                                data={accorData.password.passwordData}
-                            /> */}
                         </CardContent>
                     </Card>
                 </AnimationGroup>
 
                 <AnimationGroup>
                     <Card className={classes.me} elevation={1}>
-                        <CardHeaders header=" General Information" />
-
+                        <CardHeaders header={headers.general} />
                         <CardContent className={classes.cardContent}>
                             {/* Full name section */}
-                            <ContentCards
-                                title="Full name"
-                                detail={data.fullName}
-                            />
+                            <div className={classes.cardText}>
+                                <Grid container spacing={2}>
+                                    <Grid item sm={3} md={3} lg={3}>
+                                        <Typography className={classes.titles}>
+                                            {fields.fullName.title}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} md={6} lg={6}>
+                                        <div className={classes.detailZone}>
+                                            <Typography
+                                                className={classes.details}
+                                            >
+                                                {fullName}
+                                            </Typography>
+                                        </div>
+                                    </Grid>
+                                </Grid>
+                            </div>
+
                             {/* Birth date section */}
-                            <ContentCards
-                                title="Birth date"
-                                detail={data.dob}
-                            />
+                            <div className={classes.cardText}>
+                                <Grid container spacing={2}>
+                                    <Grid item sm={3} md={3} lg={3}>
+                                        <Typography className={classes.titles}>
+                                            {fields.dob.title}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} md={6} lg={6}>
+                                        <div className={classes.detailZone}>
+                                            <Typography
+                                                className={classes.details}
+                                            >
+                                                {new Date(
+                                                    birthDate
+                                                ).toLocaleDateString()}
+                                            </Typography>
+                                        </div>
+                                    </Grid>
+                                </Grid>
+                            </div>
+
                             {/* Gender section */}
-                            <ContentCards
-                                title="Gender"
-                                icon="inline-block"
-                                detail={data.gender}
-                            />
+                            <div className={classes.cardText}>
+                                <Grid container spacing={2}>
+                                    <Grid item sm={3} md={3} lg={3}>
+                                        <Typography className={classes.titles}>
+                                            {fields.gender.title}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6} md={6} lg={6}>
+                                        <div className={classes.detailZone}>
+                                            <Typography
+                                                className={classes.details}
+                                            >
+                                                {gender ? 'Male' : 'Female'}
+                                            </Typography>
+                                            <Icon>
+                                                {gender ? (
+                                                    <AiOutlineMan color="#005BB5" />
+                                                ) : (
+                                                    <AiOutlineWoman color="#E26A89" />
+                                                )}
+                                            </Icon>
+                                        </div>
+                                    </Grid>
+                                </Grid>
+                            </div>
+
                             {/* Email section */}
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <CustomAccordion
-                                    elevation={0}
+                            <form onSubmit={emailSubmit(onEmailSubmit)}>
+                                <Accordion
                                     className={classes.accor}
+                                    elevation={0}
                                     expanded={expanded === 'email'}
                                     onChange={handleChange('email')}
                                 >
                                     <AccordionSummary
-                                        expandIcon={<MdEdit />}
                                         className={classes.accorSum}
                                         id="email"
+                                        expandIcon={<MdEdit />}
                                     >
                                         <Grid container spacing={2}>
                                             <Grid item sm={3} md={3} lg={3}>
                                                 <Typography
                                                     className={classes.titles}
                                                 >
-                                                    Email
+                                                    {fields.email.title}
                                                 </Typography>
                                             </Grid>
                                             <Grid item sm={6} md={6} lg={6}>
-                                                <InputBase
+                                                <TextField
                                                     className={clsx(
                                                         classes.details,
                                                         classes.detailsAccor
                                                     )}
                                                     type="text"
-                                                    defaultValue={data.email}
+                                                    value={email}
+                                                    fullWidth
                                                     disabled
+                                                    InputProps={{
+                                                        disableUnderline: true,
+                                                        className:
+                                                            classes.details,
+                                                    }}
                                                 />
                                             </Grid>
                                         </Grid>
@@ -417,17 +700,18 @@ function Profiles() {
                                                     fullWidth
                                                     autoFocus
                                                     name="email"
-                                                    label="Your email"
+                                                    label={fields.email.label}
                                                     variant="outlined"
                                                     type="text"
-                                                    inputRef={register}
+                                                    inputRef={emailRegister}
                                                     error={
-                                                        errors.email
+                                                        emailErrors.email
                                                             ? true
                                                             : false
                                                     }
                                                     helperText={
-                                                        errors.email?.message
+                                                        emailErrors.email
+                                                            ?.message
                                                     }
                                                 />
                                             </Grid>
@@ -438,51 +722,63 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            size="small"
                                             className={classes.cancelBtn}
+                                            size="small"
+                                            onClick={() =>
+                                                emailReset({
+                                                    emailErrors: false,
+                                                })
+                                            }
                                         >
-                                            Cancel
+                                            {operations.cancel}
                                         </Button>
                                         <Button
-                                            size="small"
                                             className={classes.saveBtn}
+                                            size="small"
                                             type="submit"
                                         >
-                                            Save
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
-                                </CustomAccordion>
+                                </Accordion>
                             </form>
+
                             {/* Phone section */}
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <CustomAccordion
-                                    elevation={0}
+                            <form onSubmit={phoneSubmit(onPhoneSubmit)}>
+                                <Accordion
                                     className={classes.accor}
+                                    elevation={0}
                                     expanded={expanded === 'phone'}
                                     onChange={handleChange('phone')}
                                 >
                                     <AccordionSummary
-                                        expandIcon={<MdEdit />}
                                         className={classes.accorSum}
                                         id="phone"
+                                        expandIcon={<MdEdit />}
                                     >
                                         <Grid container spacing={2}>
                                             <Grid item sm={3} md={3} lg={3}>
                                                 <Typography
                                                     className={classes.titles}
                                                 >
-                                                    Phone number
+                                                    {fields.phone.title}
                                                 </Typography>
                                             </Grid>
                                             <Grid item sm={6} md={6} lg={6}>
-                                                <InputBase
+                                                <TextField
                                                     className={clsx(
                                                         classes.details,
                                                         classes.detailsAccor
                                                     )}
                                                     type="text"
-                                                    defaultValue={data.phone}
+                                                    value={phone}
+                                                    fullWidth
                                                     disabled
+                                                    InputProps={{
+                                                        disableUnderline: true,
+                                                        className:
+                                                            classes.details,
+                                                    }}
                                                 />
                                             </Grid>
                                         </Grid>
@@ -505,17 +801,18 @@ function Profiles() {
                                                     fullWidth
                                                     autoFocus
                                                     name="phone"
-                                                    label="Your number"
+                                                    label={fields.phone.label}
                                                     variant="outlined"
                                                     type="text"
-                                                    inputRef={register}
+                                                    inputRef={phoneRegister}
                                                     error={
-                                                        errors.phone
+                                                        phoneErrors.phone
                                                             ? true
                                                             : false
                                                     }
                                                     helperText={
-                                                        errors.phone?.message
+                                                        phoneErrors.phone
+                                                            ?.message
                                                     }
                                                 />
                                             </Grid>
@@ -526,51 +823,63 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            size="small"
                                             className={classes.cancelBtn}
+                                            size="small"
+                                            onClick={() =>
+                                                phoneReset({
+                                                    phoneErrors: false,
+                                                })
+                                            }
                                         >
-                                            Cancel
+                                            {operations.cancel}
                                         </Button>
                                         <Button
-                                            size="small"
                                             className={classes.saveBtn}
+                                            size="small"
                                             type="submit"
                                         >
-                                            Save
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
-                                </CustomAccordion>
+                                </Accordion>
                             </form>
+
                             {/* Address section */}
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <CustomAccordion
-                                    elevation={0}
+                            <form onSubmit={addrSubmit(onAddrSubmit)}>
+                                <Accordion
                                     className={classes.accor}
+                                    elevation={0}
                                     expanded={expanded === 'address'}
                                     onChange={handleChange('address')}
                                 >
                                     <AccordionSummary
-                                        expandIcon={<MdEdit />}
                                         className={classes.accorSum}
                                         id="address"
+                                        expandIcon={<MdEdit />}
                                     >
                                         <Grid container spacing={2}>
                                             <Grid item sm={3} md={3} lg={3}>
                                                 <Typography
                                                     className={classes.titles}
                                                 >
-                                                    Address
+                                                    {fields.address.title}
                                                 </Typography>
                                             </Grid>
                                             <Grid item sm={6} md={6} lg={6}>
-                                                <InputBase
+                                                <TextField
                                                     className={clsx(
                                                         classes.details,
                                                         classes.detailsAccor
                                                     )}
                                                     type="text"
-                                                    defaultValue={data.address}
+                                                    value={address}
+                                                    fullWidth
                                                     disabled
+                                                    InputProps={{
+                                                        disableUnderline: true,
+                                                        className:
+                                                            classes.details,
+                                                    }}
                                                 />
                                             </Grid>
                                         </Grid>
@@ -593,17 +902,18 @@ function Profiles() {
                                                     fullWidth
                                                     autoFocus
                                                     name="address"
-                                                    label="Your address"
+                                                    label={fields.address.label}
                                                     variant="outlined"
                                                     type="text"
-                                                    inputRef={register}
+                                                    inputRef={addrRegister}
                                                     error={
-                                                        errors.address
+                                                        addrErrors.address
                                                             ? true
                                                             : false
                                                     }
                                                     helperText={
-                                                        errors.address?.message
+                                                        addrErrors.address
+                                                            ?.message
                                                     }
                                                 />
                                             </Grid>
@@ -614,43 +924,24 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            size="small"
                                             className={classes.cancelBtn}
+                                            size="small"
+                                            onClick={() =>
+                                                addrReset({ addrErrors: false })
+                                            }
                                         >
-                                            Cancel
+                                            {operations.cancel}
                                         </Button>
                                         <Button
-                                            size="small"
                                             className={classes.saveBtn}
+                                            size="small"
                                             type="submit"
                                         >
-                                            Save
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
-                                </CustomAccordion>
+                                </Accordion>
                             </form>
-
-                            {/* <ContentAccordions
-                                title="Email"
-                                detail={data.email}
-                                type="text"
-                                name={['email']}
-                                labels={['Your email']}
-                            />
-                            <ContentAccordions
-                                title="Phone number"
-                                detail={data.phone}
-                                type="text"
-                                name={['phone']}
-                                labels={['Your number']}
-                            />
-                            <ContentAccordions
-                                title="Address"
-                                detail={data.address}
-                                type="text"
-                                name={['address']}
-                                labels={['Your address']}
-                            /> */}
                         </CardContent>
                     </Card>
                 </AnimationGroup>

@@ -4,12 +4,17 @@ import { Logins, Errors, getError } from './pages'
 import { Layouts } from './layouts'
 import AuthProvider from './hooks/AuthContext'
 import PrivateRoute from './routes/PrivateRoute'
-
+import PublicRoute from './routes/PublicRoute'
 function App() {
     return (
         <AuthProvider>
             <Switch>
-                <Route exact path="/" component={Logins} />
+                <PublicRoute
+                    exact
+                    path="/"
+                    restricted={true}
+                    component={Logins}
+                />
                 <PrivateRoute path="/apps" component={Layouts} />
                 <Route
                     path="/errors"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import clsx from 'clsx'
 import {
     Link,
@@ -29,7 +29,6 @@ import {
     withStyles,
     Typography,
 } from '@material-ui/core'
-import { Titles } from '.'
 import { Profiles } from '../pages'
 import useToggle from '../hooks/useToggle'
 import PrivateRoute from '../routes/PrivateRoute'
@@ -39,9 +38,9 @@ import { useAuth } from '../hooks/AuthContext'
 
 function Layout() {
     const { url } = useRouteMatch()
+    const location = useLocation()
 
     const { user } = useAuth()
-
     const { roles } = user
 
     const menuItems = getMenuItems(roles[0])
@@ -50,9 +49,9 @@ function Layout() {
         window.matchMedia('(max-width: 960px)').matches ? false : true
     )
 
-    const location = useLocation()
-
-    const [selectedIndex, setSelectedIndex] = useState(location.pathname)
+    const [selectedIndex, setSelectedIndex] = useState(
+        location.pathname.split('/').pop()
+    )
 
     const handleSelectedItem = (item) => {
         if (window.matchMedia('(max-width: 960px)').matches) {
@@ -60,22 +59,16 @@ function Layout() {
         }
         setSelectedIndex(item)
     }
+    useEffect(() => setSelectedIndex(location.pathname.split('/').pop()), [
+        location.pathname,
+    ])
 
-    const handleProfileClick = () => {
-        if (window.matchMedia('(max-width: 960px)').matches) {
-            if (open === false) {
-                setOpen()
-            }
-        }
-    }
-
-    useEffect(() => setSelectedIndex(location.pathname), [location.pathname])
-
-    const getTitle = useMemo(() => {
+    const getTitle = React.useMemo(() => {
         let title = ''
         const path = location.pathname
-        const page = path.split('/').pop()
-        const strings = page.split('-')
+        // const page = path.split('/').pop()
+        const page = path.split('/')
+        const strings = page[2].split('-')
         strings.forEach((string) => {
             title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
         })
@@ -163,7 +156,14 @@ function Layout() {
 
                         <div className={classes.grow} />
 
-                        <Titles className={classes.title}>{getTitle}</Titles>
+                        <Typography
+                            component="h1"
+                            variant="h6"
+                            noWrap
+                            className={classes.title}
+                        >
+                            {getTitle}
+                        </Typography>
 
                         {/* Remember to set badge content */}
                         <IconButton onClick={handleNotifMenuOpen}>
@@ -174,8 +174,7 @@ function Layout() {
                         <IconButton
                             edge="end"
                             component={Link}
-                            to={`${url}/profiles`}
-                            onClick={handleProfileClick}
+                            to={`${url}/profiles/${user.username}`}
                         >
                             <MdAccountCircle />
                         </IconButton>
@@ -187,8 +186,14 @@ function Layout() {
             {/* Side menu area */}
             <IconContext.Provider value={{ color: '#fff' }}>
                 <Drawer
-                    variant="permanent"
+                    variant={
+                        window.matchMedia('(max-width: 960px)').matches
+                            ? 'temporary'
+                            : 'permanent'
+                    }
+                    anchor="left"
                     open={open}
+                    onClose={setOpen}
                     classes={{
                         paper: clsx(
                             classes.drawerPaper,
@@ -205,7 +210,6 @@ function Layout() {
                                 <ListItem
                                     className={classes.menuItem}
                                     key={index}
-                                    // alignItems="flex-start"
                                     selected={item.path === selectedIndex}
                                     component={Link}
                                     to={`${url}/${item.path}`}
@@ -260,7 +264,7 @@ function Layout() {
                             // </PrivateRoute> */}
                         ))}
                         <PrivateRoute
-                            path={`${url}/profiles`}
+                            path={`${url}/profiles/:username`}
                             component={Profiles}
                         />
                         <Redirect from="*" to="/errors" />

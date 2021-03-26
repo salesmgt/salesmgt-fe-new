@@ -1,49 +1,67 @@
 import React from 'react'
 import { MajorBanner } from '../../img'
-import { Container, Button, TextField, Paper } from '@material-ui/core'
+import {
+    Container,
+    Button,
+    TextField,
+    Paper,
+    Typography,
+} from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
-import * as LoginsConfig from './LoginsConfig'
+import { Consts } from './LoginsConfig'
 import * as LoginsServices from './LoginsServices'
 import * as Cookies from '../../utils/Cookies'
+import * as Milks from '../../utils/Milks'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
 import classes from './Logins.module.scss'
 
-const validationSchema = yup.object().shape({
-    username: yup.string().required('Incorrect entry'),
-    password: yup.string().required('Incorrect entry'),
+const clientSchema = yup.object().shape({
+    username: yup.string().required('Username is required'),
+    password: yup.string().required('Password is required'),
 })
 
+const serverSchema = [
+    {
+        type: 'server',
+        name: 'username',
+        message: null,
+    },
+    {
+        type: 'server',
+        name: 'password',
+        message: null,
+    },
+    {
+        type: 'server',
+        name: 'credential',
+        message: 'Invalid username or password',
+    },
+]
+
 function Logins() {
-    const { register, handleSubmit, getValues, errors } = useForm({
-        resolver: yupResolver(validationSchema),
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        errors,
+        setError,
+        clearErrors,
+    } = useForm({
+        resolver: yupResolver(clientSchema),
     })
 
     const history = useHistory()
 
     const { setUser } = useAuth()
 
-    const onSubmit = (data) => {
-        login()
-        // const me = JSON.parse(localStorage.getItem('notMe'))
-        // console.log('me', me.username)
-        // console.log('me', me.roles)
-    }
-
     // React.useEffect(() => {
     //     console.log('rerender')
     // }, [])
 
-    // const getUserObj = (username, roles) => {
-    //     return {
-    //         username: username,
-    //         roles: roles,
-    //     }
-    // }
-
-    const getUser = (username, password) => {
+    const handleLogin = (username, password) => {
         const userObj = (username, roles) => {
             return {
                 username: username,
@@ -54,29 +72,38 @@ function Logins() {
         LoginsServices.checkUser(username, password)
             .then((data) => {
                 Cookies.setCookie('accessToken', data.token, 7)
-                localStorage.setItem(
+                // localStorage.setItem(
+                //     'notMe',
+                //     JSON.stringify(userObj(data.username, data.roles))
+                // )
+                Milks.setWithExpiry(
                     'notMe',
-                    JSON.stringify(userObj(data.username, data.roles))
+                    userObj(data.username, data.roles),
+                    2
                 )
 
-                // setUser({ username: data.username, roles: data.roles })
-                setUser(userObj(data.username, data.roles))
+                setUser(Milks.getWithExpiry('notMe'))
                 history.push('/apps/dashboards')
             })
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+                    if (error.response.status === 500) {
+                        serverSchema.forEach(({ name, type, message }) =>
+                            setError(name, { type, message })
+                        )
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                 }
             })
     }
 
-    const login = () => {
-        getUser(getValues('username'), getValues('password'))
-        // getAccessToken(getValues('username'), getValues('password'))
+    const onSubmit = () => {
+        handleLogin(getValues('username'), getValues('password'))
     }
 
     return (
@@ -88,14 +115,18 @@ function Logins() {
 
                 <form
                     className={classes.form}
-                    // method="post"
                     onSubmit={handleSubmit(onSubmit)}
                     noValidate
                 >
+                    {errors.credential && (
+                        <Typography color="error">
+                            {errors.credential.message}
+                        </Typography>
+                    )}
                     <TextField
                         id="username"
                         name="username"
-                        label={LoginsConfig.SIGN_IN_LB}
+                        label={Consts.username}
                         variant="outlined"
                         margin="normal"
                         required
@@ -103,13 +134,14 @@ function Logins() {
                         autoFocus
                         autoComplete="username"
                         inputRef={register}
-                        error={errors.username ? true : false}
-                        helperText={errors.username?.message}
+                        error={!!errors.username}
+                        helperText={errors?.username?.message}
+                        onClick={() => clearErrors(['username', 'credential'])}
                     />
                     <TextField
                         id="password"
                         name="password"
-                        label={LoginsConfig.PWD_LB}
+                        label={Consts.password}
                         type="password"
                         variant="outlined"
                         margin="normal"
@@ -117,9 +149,11 @@ function Logins() {
                         fullWidth
                         autoComplete="current-password"
                         inputRef={register}
-                        error={errors.password ? true : false}
-                        helperText={errors.password?.message}
+                        error={!!errors.password}
+                        helperText={errors?.password?.message}
+                        onClick={() => clearErrors(['password', 'credential'])}
                     />
+
                     <Button
                         className={classes.submit}
                         type="submit"
@@ -127,7 +161,7 @@ function Logins() {
                         color="primary"
                         fullWidth
                     >
-                        {LoginsConfig.SIGN_IN_LB}
+                        {Consts.login}
                     </Button>
                 </form>
             </div>
