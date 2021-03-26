@@ -3,30 +3,24 @@ import * as FilterActions from './reducer-action-type'
 export const FilterReducer = (listFilters, action) => {
     const { type, payload } = action
     switch (type) {
-        case FilterActions.ADD_SCHOOL_YEAR:
-        case FilterActions.ADD_DISTRICT:
-        case FilterActions.ADD_SCHOOL_TYPE:
-        case FilterActions.ADD_SCHOOL_LEVEL:
-        case FilterActions.ADD_SCHOOL_SCALE:
-        case FilterActions.ADD_PIC:
-        case FilterActions.ADD_PURPOSE:
-        case FilterActions.ADD_SEARCH_KEYWORD:
+        case FilterActions.ADD_FILTER_SCHOOL_YEAR:
+        case FilterActions.ADD_FILTER_DISTRICT:
+        case FilterActions.ADD_FILTER_SCHOOL_TYPE:
+        case FilterActions.ADD_FILTER_SCHOOL_LEVEL:
+        case FilterActions.ADD_FILTER_SCHOOL_SCALE:
+        case FilterActions.ADD_FILTER_PIC:
+        case FilterActions.ADD_FILTER_PURPOSE:
             return [...addItem(listFilters, payload.filterType, payload.filterValue)]      
 
-        case FilterActions.REMOVE_SCHOOL_YEAR:
-        case FilterActions.REMOVE_DISTRICT:
-        case FilterActions.REMOVE_SCHOOL_TYPE:
-        case FilterActions.REMOVE_SCHOOL_LEVEL:
-        case FilterActions.REMOVE_SCHOOL_SCALE:
-        case FilterActions.REMOVE_PIC:
-        case FilterActions.REMOVE_PURPOSE:
-        case FilterActions.REMOVE_SEARCH_KEYWORD:
+        case FilterActions.REMOVE_FILTER_SCHOOL_YEAR:
+        case FilterActions.REMOVE_FILTER_DISTRICT:
+        case FilterActions.REMOVE_FILTER_SCHOOL_TYPE:
+        case FilterActions.REMOVE_FILTER_SCHOOL_LEVEL:
+        case FilterActions.REMOVE_FILTER_SCHOOL_SCALE:
+        case FilterActions.REMOVE_FILTER_PIC:
+        case FilterActions.REMOVE_FILTER_PURPOSE:
             return [...removeItem(listFilters, 'filterType', payload.filterType)]
     
-        // case FilterActions.SORT:
-            // action.payload { columnName: , direction:  }
-            // return;
-        
         default:
             throw new Error();
     }
@@ -62,52 +56,52 @@ function removeItem(listFilters, attributeName, attributeValue) {
 // export const FilterReducer = (listFilters, action) => {
 //     const { type, payload } = action
 //     switch (type) {
-//         case FilterActions.ADD_SCHOOL_YEAR:
+//         case FilterActions.ADD_FILTER_SCHOOL_YEAR:
 //             return [...listFilters, addItem('schoolYear', payload.schoolYear)]
         
-//         case FilterActions.REMOVE_SCHOOL_YEAR:
+//         case FilterActions.REMOVE_FILTER_SCHOOL_YEAR:
 //             return [...removeItem(listFilters, 'schoolYear', payload.schoolYear)]
 
-//         case FilterActions.ADD_DISTRICT:
+//         case FilterActions.ADD_FILTER_DISTRICT:
 //             return [...listFilters, addItem('district', payload.district)]
         
-//         case FilterActions.REMOVE_DISTRICT:
+//         case FilterActions.REMOVE_FILTER_DISTRICT:
 //             return [...removeItem(listFilters, 'district', payload.district)]
 
-//         case FilterActions.ADD_SCHOOL_TYPE:
+//         case FilterActions.ADD_FILTER_SCHOOL_TYPE:
 //             return [...listFilters, addItem('schoolType', payload.schoolType)]
 
-//         case FilterActions.REMOVE_SCHOOL_TYPE:
+//         case FilterActions.REMOVE_FILTER_SCHOOL_TYPE:
 //             return [...removeItem(listFilters, 'schoolType', payload.schoolType)]
 
-//         case FilterActions.ADD_SCHOOL_LEVEL:
+//         case FilterActions.ADD_FILTER_SCHOOL_LEVEL:
 //             return [...listFilters, addItem('schoolLevel', payload.schoolLevel)]
         
-//         case FilterActions.REMOVE_SCHOOL_LEVEL:
+//         case FilterActions.REMOVE_FILTER_SCHOOL_LEVEL:
 //             return [...removeItem(listFilters, 'schoolLevel', payload.schoolLevel)]
         
-//         case FilterActions.ADD_SCHOOL_SCALE:
+//         case FilterActions.ADD_FILTER_SCHOOL_SCALE:
 //             return [...listFilters, addItem('schoolScale', payload.schoolScale)]
         
-//         case FilterActions.REMOVE_SCHOOL_SCALE:
+//         case FilterActions.REMOVE_FILTER_SCHOOL_SCALE:
 //             return [...removeItem(listFilters, 'schoolScale', payload.schoolScale)]
         
-//         case FilterActions.ADD_PIC:
+//         case FilterActions.ADD_FILTER_PIC:
 //             return [...listFilters, addItem('PIC', payload.PIC)]
         
-//         case FilterActions.REMOVE_PIC:
+//         case FilterActions.REMOVE_FILTER_PIC:
 //             return [...removeItem(listFilters, 'PIC', payload.PIC)]
         
-//         case FilterActions.ADD_PURPOSE:
+//         case FilterActions.ADD_FILTER_PURPOSE:
 //             return [...listFilters, addItem('purpose', payload.purpose)]
         
-//         case FilterActions.REMOVE_PURPOSE:
+//         case FilterActions.REMOVE_FILTER_PURPOSE:
 //             return [...removeItem(listFilters, 'purpose', payload.purpose)]
         
-//         case FilterActions.ADD_SEARCH_KEYWORD:
+//         case FilterActions.ADD_FILTER_SEARCH_KEYWORD:
 //             return [...listFilters, addItem('searchKey', payload.searchKey)]
         
-//         case FilterActions.REMOVE_SEARCH_KEYWORD:
+//         case FilterActions.REMOVE_FILTER_SEARCH_KEYWORD:
 //             return [...removeItem(listFilters, 'searchKey', payload.searchKey)]
     
 //         default:

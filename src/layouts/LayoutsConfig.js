@@ -84,8 +84,8 @@ export function getMenuItems(role) {
     ] = menuData
     switch (role) {
         case 'ADMIN':
-            return [accounts, schools, dashboards]
-        case 'MANAGER':
+            return [accounts, schools, dashboards, targetSchools]
+        case 'SALES MANAGER':
             return [
                 dashboards,
                 workPlans,

@@ -2,7 +2,7 @@ import Api from '../../services/Api'
 
 export async function getTargetSchools() {
     try {
-        const response = await Api.get('/target-schools')
+        const response = await Api.get('/targets')
         const data = await response.data
 
         return data
@@ -13,7 +13,7 @@ export async function getTargetSchools() {
 
 export async function getTargetSchoolsByKeys(...keys) {
     try {
-        const response = await Api.get('/target-schools', { ...keys })
+        const response = await Api.get('/targets', { ...keys })
         const data = await response.data
 
         return data
@@ -24,7 +24,7 @@ export async function getTargetSchoolsByKeys(...keys) {
 
 export async function addTargetSchools(newTargetSchools) {
     try {
-        const response = await Api.post('/target-schools', { newTargetSchools })
+        const response = await Api.post('/targets', { newTargetSchools })
         const data = await response.data
 
         return data
@@ -34,14 +34,14 @@ export async function addTargetSchools(newTargetSchools) {
 }
 
 export async function updateTargetSchool(targetSchool) {
-    const response = await Api.put('/target-schools', { targetSchool })
+    const response = await Api.put('/targets', { targetSchool })
     const data = await response.data
 
     return data
 }
 
 export async function removeTargetSchool(targetSchoolId) {
-    const response = await Api.delete('/target-schools', { targetSchoolId })
+    const response = await Api.delete('/targets', { targetSchoolId })
     const data = await response.data
 
     return data
