@@ -1,0 +1,51 @@
+@import '../../../../styles/Variables.module.scss';
+
+.root {
+  // display: flex;
+  flex-shrink: 0;
+  // width: 1000;
+}
+
+// .customTableContainer {
+//   overflow-x: 'auto'  !important
+// }
+
+.table {
+  // width: 440;
+  // min-width: 200px;
+  height: 100%;
+  // height: fit-content;
+  // max-height: 100%;
+  // overflow-x: scroll;
+  // overflow-y: scroll;
+  padding: 0;
+
+  .thead {
+    // sticky-header: true;
+    border-radius: 8px !important;
+    height: 3rem !important;
+    // position: relative;
+    // position: sticky;
+    // top: 0;
+  }
+
+  .tcell {
+    background-color: $light-primary; // !important
+    color: $common-white;
+    font-weight: bold;
+    font-size: large;
+    // text-align: center;
+    // position: sticky;
+  }
+
+  .tbody {
+    height: 3rem !important;
+  }
+}
+
+.sortLabel {
+  color: #ffffff; 
+}
+.sortLabel.active {
+      color: #ffffff; 
+}
