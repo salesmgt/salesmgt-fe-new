@@ -19,8 +19,7 @@ import {
 } from '@material-ui/core'
 import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
-import { Paw } from '../../assets/icons'
-import { Animation, AnimationGroup } from '../../components'
+import { Animation, AnimationGroup, NotFound } from '../../components'
 import * as ProfilesServices from './ProfilesServices'
 import { Consts } from './ProfilesConfig'
 import { CardHeaders } from './components'
@@ -169,16 +168,7 @@ function Profiles() {
     }, [])
 
     if (!data) {
-        return (
-            <div className={classes.nf}>
-                <div className={classes.nfImgContainer}>
-                    <img src={Paw} alt="Not found" className={classes.nfImg} />
-                </div>
-                <Typography className={classes.nfTitle}>
-                    Oopsy Daisy!
-                </Typography>
-            </div>
-        )
+        return <NotFound title="User not found!" />
     }
 
     const {

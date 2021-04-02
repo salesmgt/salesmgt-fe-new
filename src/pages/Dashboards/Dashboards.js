@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 import { Grid, Typography } from '@material-ui/core'
 import { CardNow, CardRanks, CardJack, MixedCharts } from './components'
-import { Animation, AnimationGroup } from '../../components'
+import { Animation, AnimationGroup, NotFound } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import * as DashboardsServices from './DashboardsServices'
 import { rankData, chartData as ChartData, cardData } from './DashboardsConfig'
@@ -58,7 +58,7 @@ function Dashboards() {
     }, [])
 
     if (!userData) {
-        return null
+        return <NotFound />
     }
 
     const { fullName, birthDate } = userData
@@ -91,6 +91,7 @@ function Dashboards() {
     }
 
     const handleChartView = (keyName) => {
+        // eslint-disable-next-line array-callback-return
         chartData?.datasets.map((val) => {
             if (val.name === keyName) {
                 setChartView(val)

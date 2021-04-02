@@ -20,7 +20,6 @@ export const roleRoutes = {
         { path: 'accounts/:id', component: () => <AccountsDetail /> },
         { path: 'schools', component: () => <Schools /> },
         { path: 'schools/:id', component: () => <SchoolsDetail /> },
-        // { path: 'dashboards', component: () => <Dashboards /> },
     ],
     'SALES MANAGER': [
         { path: 'dashboards', component: () => <Dashboards /> },
@@ -34,6 +33,8 @@ export const roleRoutes = {
         { path: 'salesmen/:id', component: () => <SalesmenDetail /> },
         { path: 'reports', component: () => <Reports /> },
         { path: 'reports/:id', component: () => <ReportsDetail /> },
+        { path: 'schools', component: () => <Schools /> },
+        { path: 'schools/:id', component: () => <SchoolsDetail /> },
     ],
     SALESMAN: [
         { path: 'dashboards', component: () => <Dashboards /> },
