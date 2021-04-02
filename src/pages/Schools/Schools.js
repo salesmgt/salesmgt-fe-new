@@ -1,68 +1,50 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Filters, Tables } from './components'
+import { columns } from './SchoolsConfig';
+import { useSchool } from './hooks/SchoolContext';
 import * as SchoolsServices from './SchoolsServices'
+import classes from './Schools.module.scss'
 
 function Schools() {
-    const [schools, setSchools] = useState([])
+    const history = useHistory()
 
-    const refreshSchools = () => {
-        SchoolsServices.getSchools().then((data) => {
-            console.log(data.list)
+    const { params } = useSchool()
+    const { listFilters, page, limit, column, direction, searchKey } = params
 
-            setSchools(data.list)
+    const [data, setData] = useState({})
+
+    function refreshSchools(page = 0, limit = 10, column = "id", direction = "asc", searchKey, listFilters) {
+        SchoolsServices.getSchools(page, limit, column, direction, searchKey, listFilters).then((res) => {
+            setData(res.data)
+        }).catch(error => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
         })
     }
 
     useEffect(() => {
-        refreshSchools()
-        console.log('rerender')
-    }, [])
+        refreshSchools(page, limit, column, direction, searchKey, listFilters)
+    }, [params])
+
+    if (!data) {
+        return null;
+    }
 
     return (
-        <div className="schools">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>District</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Educational Level</th>
-                        <th>Scale</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                        <th>Active</th>
-                        <th>Status</th>
-                        <th>Representative Name</th>
-                        <th>Representative Phone</th>
-                        <th>Representative Email</th>
-                        <th>Representative Gender</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {schools.map((school) => (
-                        <tr key={school.id}>
-                            <td>{school.id}</td>
-                            <td>{school.name}</td>
-                            <td>{school.address}</td>
-                            <td>{school.district}</td>
-                            <td>{school.phone}</td>
-                            <td>{school.email}</td>
-                            <td>{school.educationalLevel}</td>
-                            <td>{school.scale}</td>
-                            <td>{school.type}</td>
-                            <td>{school.description}</td>
-                            <td>{school.active}</td>
-                            <td>{school.status}</td>
-                            <td>{school.reprName}</td>
-                            <td>{school.reprPhone}</td>
-                            <td>{school.reprEmail}</td>
-                            <td>{school.reprGender ? 'Nam' : 'Nu'}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className={classes.wrapper}>
+            <Filters className={classes.filter} />
+            <Tables columns={columns}
+                rows={data.list}
+                className={classes.table}
+                totalRecord={data.totalElements}
+                totalPage={data.totalPage}
+            />
         </div>
     )
 }
