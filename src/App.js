@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { Logins, Errors, getError } from './pages'
-import { Layouts } from './layouts'
+import { AppLayouts } from './layouts'
 import AuthProvider from './hooks/AuthContext'
 import PrivateRoute from './routes/PrivateRoute'
 import PublicRoute from './routes/PublicRoute'
@@ -15,7 +15,7 @@ function App() {
                     restricted={true}
                     component={Logins}
                 />
-                <PrivateRoute path="/apps" component={Layouts} />
+                <PrivateRoute path="/apps" component={AppLayouts} />
                 <Route
                     path="/errors"
                     component={() => <Errors defaultError={getError(404)} />}

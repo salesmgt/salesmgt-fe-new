@@ -31,14 +31,14 @@ import {
     withStyles,
     Typography,
 } from '@material-ui/core'
-import useToggle from '../hooks/useToggle'
-import { getMenuItems } from './LayoutsConfig'
-import { Profiles } from '../pages'
-import { useAuth } from '../hooks/AuthContext'
-import { roleRoutes } from '../routes/routes'
-import classes from './Layouts.module.scss'
+import useToggle from '../../hooks/useToggle'
+import { getMenuItems } from './AppLayoutsConfig'
+import { Profiles } from '../../pages'
+import { useAuth } from '../../hooks/AuthContext'
+import { roleRoutes } from '../../routes/routes'
+import classes from './AppLayouts.module.scss'
 
-function Layout() {
+function AppLayouts() {
     const { url } = useRouteMatch()
     const location = useLocation()
     const history = useHistory()
@@ -282,4 +282,4 @@ function Layout() {
     )
 }
 
-export default Layout
+export default AppLayouts

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 import { Paw } from '../../assets/icons'
 import classes from './NotFound.module.scss'
@@ -20,4 +21,8 @@ export default React.memo(NotFound)
 
 NotFound.defaultProps = {
     title: 'Oopsy Daisy!',
+}
+
+NotFound.propTypes = {
+    title: PropTypes.string,
 }
