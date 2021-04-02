@@ -2,10 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react'
 import clsx from 'clsx'
 import {
     Link,
+    Route,
     Redirect,
     Switch,
     useLocation,
     useRouteMatch,
+    useHistory,
 } from 'react-router-dom'
 import { IconContext } from 'react-icons'
 import {
@@ -29,16 +31,17 @@ import {
     withStyles,
     Typography,
 } from '@material-ui/core'
-import { Profiles } from '../pages'
 import useToggle from '../hooks/useToggle'
-import PrivateRoute from '../routes/PrivateRoute'
-import classes from './Layouts.module.scss'
 import { getMenuItems } from './LayoutsConfig'
+import { Profiles } from '../pages'
 import { useAuth } from '../hooks/AuthContext'
+import { roleRoutes } from '../routes/routes'
+import classes from './Layouts.module.scss'
 
 function Layout() {
     const { url } = useRouteMatch()
     const location = useLocation()
+    const history = useHistory()
 
     const { user } = useAuth()
     const { roles } = user
@@ -68,10 +71,12 @@ function Layout() {
         const path = location.pathname
         // const page = path.split('/').pop()
         const page = path.split('/')
-        const strings = page[2].split('-')
-        strings.forEach((string) => {
-            title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
-        })
+        if (page.length > 2) {
+            const strings = page[2].split('-')
+            strings.forEach((string) => {
+                title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
+            })
+        }
         return title
     }, [location.pathname])
 
@@ -157,8 +162,7 @@ function Layout() {
                         <div className={classes.grow} />
 
                         <Typography
-                            component="h1"
-                            variant="h6"
+                            variant="h5"
                             noWrap
                             className={classes.title}
                         >
@@ -202,7 +206,11 @@ function Layout() {
                     }}
                 >
                     <div className={classes.drawerHeader}>
-                        <img className={classes.majorImg} alt="major-logos" />
+                        <img
+                            className={classes.majorImg}
+                            alt="major-logos"
+                            onClick={() => history.push(`${url}/dashboards`)}
+                        />
                     </div>
                     <List component="nav">
                         {menuItems.map((item, index) => {
@@ -224,6 +232,7 @@ function Layout() {
                                         disableTypography
                                         primary={
                                             <Typography
+                                                variant="h6"
                                                 className={classes.menuText}
                                             >
                                                 {item.title}
@@ -252,19 +261,17 @@ function Layout() {
                 <div className={classes.appBarSpacer} />
                 <div className={classes.container}>
                     <Switch>
-                        {menuItems.map((item, index) => (
-                            <PrivateRoute
+                        {roleRoutes[roles[0]].map((route, index) => (
+                            <Route
                                 exact
-                                path={`${url}/${item.path}`}
+                                path={`${url}/${route.path}`}
                                 key={index}
-                                component={item.component}
+                                component={route.component}
                             />
-                            //     {/* {<item.component />}
-                            //     {console.log(item.component)}
-                            // </PrivateRoute> */}
                         ))}
-                        <PrivateRoute
-                            path={`${url}/profiles/:username`}
+                        <Route
+                            path={`${url}/profiles/:id`}
+                            // path={`${url}/profiles/${user.username}`}
                             component={Profiles}
                         />
                         <Redirect from="*" to="/errors" />

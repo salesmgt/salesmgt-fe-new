@@ -1,0 +1,39 @@
+@import '../../../../styles/Variables.module.scss';
+
+.paper {
+    border-radius: $default-radius !important;
+    overflow: hidden;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 1.2rem;
+        .title {
+            font-size: 1rem;
+            line-height: 1.75;
+            font-weight: 500;
+            overflow: hidden;
+        }
+    }
+    .body {
+        padding: 1.2rem;
+        text-align: center;
+        .month {
+            font-size: 1.5rem;
+            line-height: 1.334;
+            color: $secondary-text;
+            overflow: hidden;
+        }
+        .day {
+            font-size: 6rem;
+            line-height: 1.167;
+            overflow: hidden;
+        }
+        .year {
+            font-size: 1.5rem;
+            line-height: 1.334;
+            color: $secondary-text;
+            overflow: hidden;
+        }
+    }
+}

@@ -1,0 +1,38 @@
+@import '../../styles/Variables.module.scss';
+
+.wrapper {
+    display: flex;
+    height: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+    border-radius: $default-radius;
+    .leftSide {
+        padding: 0.5rem;
+        .header {
+            display: flex;
+            height: 7rem;
+            margin-bottom: 1rem;
+            padding: 1.2rem !important;
+            background: linear-gradient(
+                to left,
+                $main-primary 0%,
+                $light-primary 100%
+            );
+            background-size: cover;
+            background-color: $light-primary;
+            color: $common-white;
+            justify-content: flex-start;
+            align-items: center;
+            border-radius: $default-radius;
+        }
+        .body {
+            margin-bottom: 1rem;
+        }
+    }
+    .rightSide {
+        padding: 0.5rem;
+        @media (max-width: $lg) {
+            padding: 0 0.5rem;
+        }
+    }
+}

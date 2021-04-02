@@ -1,0 +1,29 @@
+@import '../../../../styles/Variables.module.scss';
+
+.paper {
+    padding: 1.6rem;
+    border-radius: $default-radius !important;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem;
+        .title {
+            font-size: 1rem;
+            line-height: 1.75;
+            font-weight: 500;
+            overflow: hidden;
+        }
+    }
+    .table {
+        max-height: 25rem;
+    }
+    .medalIcon {
+        width: 2rem;
+        height: 2rem;
+    }
+    .avatar {
+        width: 2rem;
+        height: 2rem;
+    }
+}

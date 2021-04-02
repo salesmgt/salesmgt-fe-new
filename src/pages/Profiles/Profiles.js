@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
+import { useHistory, useParams } from 'react-router-dom'
 import {
     Avatar,
     Card,
@@ -18,6 +18,8 @@ import {
     Icon,
 } from '@material-ui/core'
 import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
+import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
+import { Paw } from '../../assets/icons'
 import { Animation, AnimationGroup } from '../../components'
 import * as ProfilesServices from './ProfilesServices'
 import { Consts } from './ProfilesConfig'
@@ -29,8 +31,9 @@ import * as Cookies from '../../utils/Cookies'
 import { useAuth } from '../../hooks/AuthContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
+import moment from 'moment'
+import { Notifications } from '../../components'
 import classes from './Profiles.module.scss'
-import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 
 const pwdSchema = yup.object().shape({
     oldPassword: yup.string().required('Password is required'),
@@ -86,8 +89,15 @@ function Profiles() {
     const { user, setUser } = useAuth()
 
     const history = useHistory()
+    const { id } = useParams()
 
     const [data, setData] = useState(null)
+
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
 
     const [expanded, setExpanded] = useState(false)
 
@@ -128,27 +138,47 @@ function Profiles() {
         resolver: yupResolver(addrSchema),
     })
 
+    let isMounted = true
     const refreshPage = () => {
-        ProfilesServices.getProfile(user.username)
-            .then((data) => {
-                setData(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+        if (id === user.username) {
+            ProfilesServices.getProfile(user.username)
+                .then((data) => {
+                    if (isMounted) {
+                        setData(data)
+                    }
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error)
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
+                })
+        }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(refreshPage, [])
+    useEffect(() => {
+        refreshPage()
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            isMounted = false
+        }
+    }, [])
 
     if (!data) {
-        return null
+        return (
+            <div className={classes.nf}>
+                <div className={classes.nfImgContainer}>
+                    <img src={Paw} alt="Not found" className={classes.nfImg} />
+                </div>
+                <Typography className={classes.nfTitle}>
+                    Oopsy Daisy!
+                </Typography>
+            </div>
+        )
     }
 
     const {
@@ -164,6 +194,25 @@ function Profiles() {
 
     const handleUploadAvatar = async (event) => {
         const file = event.target.files[0]
+
+        if (!file) {
+            setNotify({
+                isOpen: true,
+                message: 'Update Unsuccessful',
+                type: 'error',
+            })
+            return false
+        }
+
+        if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
+            setNotify({
+                isOpen: true,
+                message: 'Update Unsuccessful',
+                type: 'error',
+            })
+            return false
+        }
+
         const resizeFile = (file) =>
             new Promise((resolve) => {
                 Resizer.imageFileResizer(
@@ -180,19 +229,19 @@ function Profiles() {
                 )
             })
         const finalFile = await resizeFile(file)
-
-        // const reader = new FileReader()
-        // const url = reader.readAsDataURL(file)
-        // reader.readAsDataURL(file)
-
         const url = await uploadAvatarToFirebase(finalFile)
         saveAvatarToDb(url)
+        setNotify({
+            isOpen: true,
+            message: 'Updated Successfully',
+            type: 'success',
+        })
     }
 
     const uploadAvatarToFirebase = async (file) => {
         return new Promise((resolve, reject) => {
             const uploadImageTask = storage
-                .ref(`images/avatars/${file.name}`)
+                .ref(`images/avatars/${`${user.username}-${file.name}`}`)
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
@@ -231,8 +280,6 @@ function Profiles() {
     }
 
     const onPwdSubmit = (data) => {
-        console.log('new', data.newPassword)
-        console.log('old', data.oldPassword)
         ProfilesServices.updateAccount(
             user.username,
             data.newPassword,
@@ -240,6 +287,11 @@ function Profiles() {
         )
             .then((data) => {
                 refreshPage()
+                setNotify({
+                    isOpen: true,
+                    message: 'Updated Successfully',
+                    type: 'success',
+                })
             })
             .catch((error) => {
                 if (error.response) {
@@ -255,6 +307,11 @@ function Profiles() {
                         })
                     }
                 }
+                setNotify({
+                    isOpen: true,
+                    message: 'Update Unsuccessful',
+                    type: 'error',
+                })
             })
 
         pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
@@ -265,6 +322,11 @@ function Profiles() {
         ProfilesServices.updateGeneral(user.username, 'email', data.email)
             .then((data) => {
                 refreshPage()
+                setNotify({
+                    isOpen: true,
+                    message: 'Updated Successfully',
+                    type: 'success',
+                })
             })
             .catch((error) => {
                 if (error.response) {
@@ -274,6 +336,11 @@ function Profiles() {
                         state: { error: error.response.status },
                     })
                 }
+                setNotify({
+                    isOpen: true,
+                    message: 'Update Unsuccessful',
+                    type: 'error',
+                })
             })
 
         emailReset({ email: '' })
@@ -283,6 +350,11 @@ function Profiles() {
         ProfilesServices.updateGeneral(user.username, 'phone', data.phone)
             .then((data) => {
                 refreshPage()
+                setNotify({
+                    isOpen: true,
+                    message: 'Updated Successfully',
+                    type: 'success',
+                })
             })
             .catch((error) => {
                 if (error.response) {
@@ -292,6 +364,11 @@ function Profiles() {
                         state: { error: error.response.status },
                     })
                 }
+                setNotify({
+                    isOpen: true,
+                    message: 'Update Unsuccessful',
+                    type: 'error',
+                })
             })
 
         phoneReset({ phone: '' })
@@ -301,6 +378,11 @@ function Profiles() {
         ProfilesServices.updateGeneral(user.username, 'address', data.address)
             .then((data) => {
                 refreshPage()
+                setNotify({
+                    isOpen: true,
+                    message: 'Updated Successfully',
+                    type: 'success',
+                })
             })
             .catch((error) => {
                 if (error.response) {
@@ -310,6 +392,11 @@ function Profiles() {
                         state: { error: error.response.status },
                     })
                 }
+                setNotify({
+                    isOpen: true,
+                    message: 'Update Unsuccessful',
+                    type: 'error',
+                })
             })
         addrReset({ address: '' })
     }
@@ -368,7 +455,11 @@ function Profiles() {
             </div>
 
             <div className={classes.about}>
-                <AnimationGroup>
+                <AnimationGroup
+                    enter={{
+                        animation: 'transition.slideUpBigIn',
+                    }}
+                >
                     <Card className={classes.account} elevation={1}>
                         <CardHeaders header={headers.account} />
                         <CardContent className={classes.cardContent}>
@@ -393,7 +484,7 @@ function Profiles() {
                             </div>
 
                             {/* Password section */}
-                            <form onSubmit={pwdSubmit(onPwdSubmit)}>
+                            <form noValidate onSubmit={pwdSubmit(onPwdSubmit)}>
                                 <Accordion
                                     className={classes.accor}
                                     elevation={0}
@@ -458,6 +549,7 @@ function Profiles() {
                                                     }
                                                     fullWidth
                                                     autoFocus
+                                                    required
                                                     name="oldPassword"
                                                     label={
                                                         fields.password.labels
@@ -467,12 +559,10 @@ function Profiles() {
                                                     type="password"
                                                     inputRef={pwdRegister}
                                                     error={
-                                                        pwdErrors.oldPassword
-                                                            ? true
-                                                            : false
+                                                        !!pwdErrors.oldPassword
                                                     }
                                                     helperText={
-                                                        pwdErrors.oldPassword
+                                                        pwdErrors?.oldPassword
                                                             ?.message
                                                     }
                                                 />
@@ -489,6 +579,7 @@ function Profiles() {
                                                         classes.inputField
                                                     }
                                                     fullWidth
+                                                    required
                                                     name="newPassword"
                                                     label={
                                                         fields.password.labels
@@ -498,12 +589,10 @@ function Profiles() {
                                                     type="password"
                                                     inputRef={pwdRegister}
                                                     error={
-                                                        pwdErrors.newPassword
-                                                            ? true
-                                                            : false
+                                                        !!pwdErrors.newPassword
                                                     }
                                                     helperText={
-                                                        pwdErrors.newPassword
+                                                        pwdErrors?.newPassword
                                                             ?.message
                                                     }
                                                 />
@@ -520,6 +609,7 @@ function Profiles() {
                                                         classes.inputField
                                                     }
                                                     fullWidth
+                                                    required
                                                     name="confirmPassword"
                                                     label={
                                                         fields.password.labels
@@ -529,13 +619,11 @@ function Profiles() {
                                                     type="password"
                                                     inputRef={pwdRegister}
                                                     error={
-                                                        pwdErrors.confirmPassword
-                                                            ? true
-                                                            : false
+                                                        !!pwdErrors.confirmPassword
                                                     }
                                                     helperText={
                                                         pwdErrors
-                                                            .confirmPassword
+                                                            ?.confirmPassword
                                                             ?.message
                                                     }
                                                 />
@@ -550,7 +638,9 @@ function Profiles() {
                                             className={classes.cancelBtn}
                                             size="small"
                                             onClick={() =>
-                                                pwdReset({ pwdErrors: false })
+                                                pwdReset({
+                                                    pwdErrors: false,
+                                                })
                                             }
                                         >
                                             {operations.cancel}
@@ -569,7 +659,11 @@ function Profiles() {
                     </Card>
                 </AnimationGroup>
 
-                <AnimationGroup>
+                <AnimationGroup
+                    enter={{
+                        animation: 'transition.slideUpBigIn',
+                    }}
+                >
                     <Card className={classes.me} elevation={1}>
                         <CardHeaders header={headers.general} />
                         <CardContent className={classes.cardContent}>
@@ -606,9 +700,12 @@ function Profiles() {
                                             <Typography
                                                 className={classes.details}
                                             >
-                                                {new Date(
+                                                {/* {new Date(
                                                     birthDate
-                                                ).toLocaleDateString()}
+                                                ).toLocaleDateString()} */}
+                                                {moment(birthDate).format(
+                                                    'DD/MM/YYYY'
+                                                )}
                                             </Typography>
                                         </div>
                                     </Grid>
@@ -643,7 +740,10 @@ function Profiles() {
                             </div>
 
                             {/* Email section */}
-                            <form onSubmit={emailSubmit(onEmailSubmit)}>
+                            <form
+                                noValidate
+                                onSubmit={emailSubmit(onEmailSubmit)}
+                            >
                                 <Accordion
                                     className={classes.accor}
                                     elevation={0}
@@ -699,18 +799,15 @@ function Profiles() {
                                                     }
                                                     fullWidth
                                                     autoFocus
+                                                    required
                                                     name="email"
                                                     label={fields.email.label}
                                                     variant="outlined"
                                                     type="text"
                                                     inputRef={emailRegister}
-                                                    error={
-                                                        emailErrors.email
-                                                            ? true
-                                                            : false
-                                                    }
+                                                    error={!!emailErrors.email}
                                                     helperText={
-                                                        emailErrors.email
+                                                        emailErrors?.email
                                                             ?.message
                                                     }
                                                 />
@@ -744,7 +841,10 @@ function Profiles() {
                             </form>
 
                             {/* Phone section */}
-                            <form onSubmit={phoneSubmit(onPhoneSubmit)}>
+                            <form
+                                noValidate
+                                onSubmit={phoneSubmit(onPhoneSubmit)}
+                            >
                                 <Accordion
                                     className={classes.accor}
                                     elevation={0}
@@ -800,18 +900,15 @@ function Profiles() {
                                                     }
                                                     fullWidth
                                                     autoFocus
+                                                    required
                                                     name="phone"
                                                     label={fields.phone.label}
                                                     variant="outlined"
                                                     type="text"
                                                     inputRef={phoneRegister}
-                                                    error={
-                                                        phoneErrors.phone
-                                                            ? true
-                                                            : false
-                                                    }
+                                                    error={!!phoneErrors.phone}
                                                     helperText={
-                                                        phoneErrors.phone
+                                                        phoneErrors?.phone
                                                             ?.message
                                                     }
                                                 />
@@ -845,7 +942,10 @@ function Profiles() {
                             </form>
 
                             {/* Address section */}
-                            <form onSubmit={addrSubmit(onAddrSubmit)}>
+                            <form
+                                noValidate
+                                onSubmit={addrSubmit(onAddrSubmit)}
+                            >
                                 <Accordion
                                     className={classes.accor}
                                     elevation={0}
@@ -901,18 +1001,15 @@ function Profiles() {
                                                     }
                                                     fullWidth
                                                     autoFocus
+                                                    required
                                                     name="address"
                                                     label={fields.address.label}
                                                     variant="outlined"
                                                     type="text"
                                                     inputRef={addrRegister}
-                                                    error={
-                                                        addrErrors.address
-                                                            ? true
-                                                            : false
-                                                    }
+                                                    error={!!addrErrors.address}
                                                     helperText={
-                                                        addrErrors.address
+                                                        addrErrors?.address
                                                             ?.message
                                                     }
                                                 />
@@ -927,7 +1024,9 @@ function Profiles() {
                                             className={classes.cancelBtn}
                                             size="small"
                                             onClick={() =>
-                                                addrReset({ addrErrors: false })
+                                                addrReset({
+                                                    addrErrors: false,
+                                                })
                                             }
                                         >
                                             {operations.cancel}
@@ -946,6 +1045,7 @@ function Profiles() {
                     </Card>
                 </AnimationGroup>
             </div>
+            <Notifications notify={notify} setNotify={setNotify} />
         </div>
     )
 }

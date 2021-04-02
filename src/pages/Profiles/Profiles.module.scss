@@ -1,17 +1,25 @@
 @import '../../styles/Variables.module.scss';
 
 .wrapper {
-    display: flex !important;
+    display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: scroll;
+    min-height: 100%;
+    overflow-y: auto;
     border-radius: $default-radius;
+    padding: 0.5rem;
     .infoContent {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 1rem;
+        background: linear-gradient(
+            to left,
+            $main-primary 0%,
+            $light-primary 100%
+        );
+        background-size: cover;
         background-color: $light-primary;
         border-radius: $default-radius !important;
         .logout {
@@ -53,9 +61,9 @@
         .infoName {
             color: $common-white;
             margin: 0.5rem 0rem;
-            font-size: 2.4rem;
+            font-size: 2.1rem;
             @media (min-width: $md) {
-                font-size: 3.2rem;
+                font-size: 2.8rem;
             }
         }
     }
@@ -114,6 +122,44 @@
 
         .me {
             margin-bottom: 1.6rem;
+        }
+    }
+}
+.nf {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+    border-radius: $default-radius;
+    padding: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    .nfImgContainer {
+        padding: 3rem;
+        border-radius: 50%;
+        background-color: $grey-300;
+        @media (max-width: $sm) {
+            padding: 2rem;
+        }
+        .nfImg {
+            width: 9rem;
+            height: 9rem;
+            opacity: 0.4;
+            @media (max-width: $sm) {
+                width: 6rem;
+                height: 6rem;
+            }
+        }
+    }
+    .nfTitle {
+        padding: 1.2rem;
+        color: $secondary-text;
+        font-size: 3rem;
+        line-height: 1.167;
+        @media (max-width: $sm) {
+            font-size: 2.135rem;
+            line-height: 1.235;
         }
     }
 }

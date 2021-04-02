@@ -77,11 +77,7 @@ function ContentAccordions(props) {
     }
 
     return (
-        <form
-            // className={classes.form}
-            // method="put"
-            onSubmit={handleSubmit(onSubmit)}
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
             <CustomAccordion elevation={0} className={classes.accor}>
                 <AccordionSummary
                     expandIcon={<MdEdit />}
@@ -201,7 +197,6 @@ ContentAccordions.propTypes = {
     detail: PropTypes.string.isRequired,
     type: PropTypes.string,
 }
-
 
 // const accorData = {
 //     password: {
