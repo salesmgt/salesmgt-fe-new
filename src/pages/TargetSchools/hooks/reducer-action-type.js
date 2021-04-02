@@ -1,22 +1,27 @@
-//======================FilterReducer======================
-export const ADD_SCHOOL_YEAR = 'ADD_SCHOOL_YEAR'
-export const REMOVE_SCHOOL_YEAR = 'REMOVE_SCHOOL_YEAR'
-export const ADD_SCHOOL_TYPE = 'ADD_SCHOOL_TYPE'
-export const REMOVE_SCHOOL_TYPE = 'REMOVE_SCHOOL_TYPE'
-export const ADD_SCHOOL_LEVEL = 'ADD_SCHOOL_LEVEL'
-export const REMOVE_SCHOOL_LEVEL = 'REMOVE_SCHOOL_LEVEL'
-export const ADD_SCHOOL_SCALE = 'ADD_SCHOOL_SCALE'
-export const REMOVE_SCHOOL_SCALE = 'REMOVE_SCHOOL_SCALE'
-export const ADD_DISTRICT = 'ADD_DISTRICT'
-export const REMOVE_DISTRICT = 'REMOVE_DISTRICT'
-export const ADD_PIC = 'ADD_PIC'
-export const REMOVE_PIC = 'REMOVE_PIC'
-export const ADD_PURPOSE = 'ADD_PURPOSE'
-export const REMOVE_PURPOSE = 'REMOVE_PURPOSE'
-export const ADD_SEARCH_KEYWORD = 'ADD_SEARCH_KEYWORD'
-export const REMOVE_SEARCH_KEYWORD = 'REMOVE_SEARCH_KEYWORD'
+//===========================Filter===========================
+export const ADD_FILTER_SCHOOL_YEAR = 'ADD_FILTER_SCHOOL_YEAR'
+export const REMOVE_FILTER_SCHOOL_YEAR = 'REMOVE_FILTER_SCHOOL_YEAR'
+export const ADD_FILTER_SCHOOL_TYPE = 'ADD_FILTER_SCHOOL_TYPE'
+export const REMOVE_FILTER_SCHOOL_TYPE = 'REMOVE_FILTER_SCHOOL_TYPE'
+export const ADD_FILTER_SCHOOL_LEVEL = 'ADD_FILTER_SCHOOL_LEVEL'
+export const REMOVE_FILTER_SCHOOL_LEVEL = 'REMOVE_FILTER_SCHOOL_LEVEL'
+export const ADD_FILTER_SCHOOL_SCALE = 'ADD_FILTER_SCHOOL_SCALE'
+export const REMOVE_FILTER_SCHOOL_SCALE = 'REMOVE_FILTER_SCHOOL_SCALE'
+export const ADD_FILTER_DISTRICT = 'ADD_FILTER_DISTRICT'
+export const REMOVE_FILTER_DISTRICT = 'REMOVE_FILTER_DISTRICT'
+export const ADD_FILTER_PIC = 'ADD_FILTER_PIC'
+export const REMOVE_FILTER_PIC = 'REMOVE_FILTER_PIC'
+export const ADD_FILTER_PURPOSE = 'ADD_FILTER_PURPOSE'
+export const REMOVE_FILTER_PURPOSE = 'REMOVE_FILTER_PURPOSE'
 
-//======================FilterReducer======================
-// export const SORT = 'SORT'
+//===========================Search field===========================
+export const ENTER_SEARCH_KEYWORD = 'ENTER_SEARCH_KEYWORD'
 
-export const GET_SCHOOLS = "GET_SCHOOLS"
+//===========================Sorting===========================
+export const SORT_BY = 'SORT_BY'
+
+//==========================Pagination==========================
+
+
+//============================Others============================
+export const GET_SCHOOLS = "GET_SCHOOLS"    //Có dùng tới ko??

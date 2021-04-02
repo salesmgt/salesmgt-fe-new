@@ -1,27 +1,55 @@
-import React from 'react'
-import { Grid, Paper } from '@material-ui/core'
+import React, {useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
+import { columns } from './TargetSchoolsConfig';
+import * as TargetSchoolsServices from './TargetSchoolsServices'
 import classes from './TargetSchools.module.scss'
+import TargetSchoolProvider from './hooks/TargetSchoolContext'
 
 function TargetSchools() {
+    const history = useHistory()
+
+    const [data, setData] = useState(null)
+
+    const refreshTargetSchools = () => {
+        TargetSchoolsServices.getTargetSchools().then((data) => {
+           setData(data)    
+        }).catch (error=> {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    
+    useEffect(() => {
+        refreshTargetSchools()
+       
+    }, [])
+    
+    if (!data) {
+        return null
+    }
+
+    const { list, totalElements, totalPage } = data
+    const rows = list
+    console.log('list trường: ', list)
+
     return (
-        <div className={classes.wrapper}>
-            <Grid container>
-                <Grid item xs={12} sm={12} md={12} lg={9}>
-                    <Filters />
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={9}>
-                    <Tables />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={3} style={{paddingLeft: '1rem'}}>
-                    <Paper
-                        variant="outlined"
-                        style={{ width: '100%', height: 407, backgroundColor: 'white' }}
-                    >
-                    </Paper>
-                </Grid>
-            </Grid>
-        </div>
+        <TargetSchoolProvider>
+            <div className={classes.wrapper}>
+                <Filters className={classes.filter}/>
+                <Tables columns={columns} rows={rows} className={classes.table} />
+                {/* <Paper
+                    variant="outlined"
+                    style={{ width: '100%', height: 407, backgroundColor: 'white' }}
+                >
+                </Paper> */}
+            </div>
+        </TargetSchoolProvider>
     )
 }
 

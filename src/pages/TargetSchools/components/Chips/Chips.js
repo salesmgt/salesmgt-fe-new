@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Avatar, Button, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
-import * as FilterActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../hooks/reducer-action-type'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   ul: {
     // width: '100%',
-    maxWidth: 650,
+    maxWidth: 810,
     overflowX: 'scroll',
     // whiteSpace: 'nowrap',
     // height: '100%',
@@ -45,49 +45,49 @@ function Chips(props) {
         switch (chipToDelete.filterType) {
             case 'schoolYear':
                 dispatch({
-                    type: FilterActions.REMOVE_SCHOOL_YEAR,
+                    type: ReducerActions.REMOVE_FILTER_SCHOOL_YEAR,
                     payload: { filterType: 'schoolYear' }
                 })
                 break;
         
             case 'district':
                 dispatch({
-                    type: FilterActions.REMOVE_DISTRICT,
+                    type: ReducerActions.REMOVE_FILTER_DISTRICT,
                     payload: { filterType: 'district' }
                 })
                 break;
         
             case 'schoolType':
                 dispatch({
-                    type: FilterActions.REMOVE_SCHOOL_TYPE,
+                    type: ReducerActions.REMOVE_FILTER_SCHOOL_TYPE,
                     payload: { filterType: 'schoolType' }
                 })
                 break;
         
             case 'schoolLevel':
                 dispatch({
-                    type: FilterActions.REMOVE_SCHOOL_LEVEL,
+                    type: ReducerActions.REMOVE_FILTER_SCHOOL_LEVEL,
                     payload: { filterType: 'schoolLevel' }
                 })
                 break;
         
             case 'schoolScale':
                 dispatch({
-                    type: FilterActions.REMOVE_SCHOOL_SCALE,
+                    type: ReducerActions.REMOVE_FILTER_SCHOOL_SCALE,
                     payload: { filterType: 'schoolScale' }
                 })
                 break;
         
             case 'PIC':
                 dispatch({
-                    type: FilterActions.REMOVE_PIC,
+                    type: ReducerActions.REMOVE_FILTER_PIC,
                     payload: { filterType: 'PIC' }
                 })                
                 break;
         
             case 'purpose':
                 dispatch({
-                    type: FilterActions.REMOVE_PURPOSE,
+                    type: ReducerActions.REMOVE_FILTER_PURPOSE,
                     payload: { filterType: 'purpose' }
                 })                
                 break;
@@ -113,31 +113,31 @@ function Chips(props) {
             return;
 
         dispatch({
-            type: FilterActions.REMOVE_SCHOOL_YEAR,
+            type: ReducerActions.REMOVE_FILTER_SCHOOL_YEAR,
             payload: { filterType: 'schoolYear' }
         })
         dispatch({
-            type: FilterActions.REMOVE_DISTRICT,
+            type: ReducerActions.REMOVE_FILTER_DISTRICT,
             payload: { filterType: 'district' }
         })
         dispatch({
-            type: FilterActions.REMOVE_SCHOOL_TYPE,
+            type: ReducerActions.REMOVE_FILTER_SCHOOL_TYPE,
             payload: { filterType: 'schoolType' }
         })
         dispatch({
-            type: FilterActions.REMOVE_SCHOOL_LEVEL,
+            type: ReducerActions.REMOVE_FILTER_SCHOOL_LEVEL,
             payload: { filterType: 'schoolLevel' }
         })
         dispatch({
-            type: FilterActions.REMOVE_SCHOOL_SCALE,
+            type: ReducerActions.REMOVE_FILTER_SCHOOL_SCALE,
             payload: { filterType: 'schoolScale' }
         })
         dispatch({
-            type: FilterActions.REMOVE_PIC,
+            type: ReducerActions.REMOVE_FILTER_PIC,
             payload: { filterType: 'PIC' }
         })
         dispatch({
-            type: FilterActions.REMOVE_PURPOSE,
+            type: ReducerActions.REMOVE_FILTER_PURPOSE,
             payload: { filterType: 'purpose' }
         })
 

@@ -3,8 +3,7 @@ import * as Cookies from '../utils/Cookies'
 
 const instance = axios.create({
     // baseURL: 'http://192.168.1.8:8080',
-    baseURL:
-        'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com',
+    baseURL: 'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com',
     headers: {
         'Content-type': 'application/json',
         'Access-Control-Allow-Origin': '*',
