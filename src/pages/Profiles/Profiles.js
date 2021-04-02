@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import {
     Avatar,
@@ -17,6 +17,7 @@ import {
     TextField,
     Icon,
 } from '@material-ui/core'
+import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
 import { Animation, AnimationGroup } from '../../components'
 import * as ProfilesServices from './ProfilesServices'
@@ -29,8 +30,8 @@ import * as Cookies from '../../utils/Cookies'
 import { useAuth } from '../../hooks/AuthContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
+// import queryString from 'query-string'
 import classes from './Profiles.module.scss'
-import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 
 const pwdSchema = yup.object().shape({
     oldPassword: yup.string().required('Password is required'),
@@ -86,6 +87,12 @@ function Profiles() {
     const { user, setUser } = useAuth()
 
     const history = useHistory()
+
+    // let { search } = useLocation()
+    // search = '?key=123&haaaaaaaa=aaaaaaaa'
+    // const values = queryString.parse(search)
+    // console.log('search', values.key)
+  
 
     const [data, setData] = useState(null)
 

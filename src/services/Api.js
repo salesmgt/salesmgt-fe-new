@@ -33,4 +33,8 @@ instance.interceptors.request.use(
     { synchronous: true }
 )
 
+// instance.interceptors.response.use(res => {
+//     return res.data
+// })
+
 export default instance

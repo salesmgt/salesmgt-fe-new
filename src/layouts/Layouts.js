@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import clsx from 'clsx'
 import {
+    Route,
     Link,
     Redirect,
     Switch,
@@ -253,7 +254,7 @@ function Layout() {
                 <div className={classes.container}>
                     <Switch>
                         {menuItems.map((item, index) => (
-                            <PrivateRoute
+                            <Route
                                 exact
                                 path={`${url}/${item.path}`}
                                 key={index}
@@ -263,7 +264,7 @@ function Layout() {
                             //     {console.log(item.component)}
                             // </PrivateRoute> */}
                         ))}
-                        <PrivateRoute
+                        <Route
                             path={`${url}/profiles/:username`}
                             component={Profiles}
                         />

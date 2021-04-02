@@ -1,31 +1,39 @@
 import Api from './Api'
 
+//===========Schools & Target Schools===========
+export async function getSchoolYears() {
+    return await Api.get('/school-years')
+}
+
 export async function getDistricts() {
-    const response = await Api.get('/districts')
-    const data = await response.data
-    return data
-}
-
-export async function getEducationalLevels() {
-    const response = await Api.get('/levels')
-    const data = await response.data
-    return data   
-}
-
-export async function getSchoolStatuses() {
-    const response = await Api.get('/school-status')
-    const data = await response.data
-    return data
+    return await Api.get('/districts')
 }
 
 export async function getSchoolTypes() {
-    const response = await Api.get('/school-type')
-    const data = await response.data
-    return data
+    return await Api.get('/types')
 }
 
-export async function getPurposes() {
-    const response = await Api.get('/purposes')
-    const data = await response.data
-    return data
+export async function getEducationalLevels() {
+    return await Api.get('/levels')
+}
+
+export async function getSchoolScales() {
+    return await Api.get('/scales')
+}
+
+export async function getPICs() {
+    return await Api.get('/users?active=true')
+}
+
+export async function getSchoolStatuses() {
+    return await Api.get('/school-status')
+}
+
+// export async function getPurposes() {
+//     return await Api.get('/purposes')
+// }
+
+//================Users & Salesmen================
+export async function getRoles() {
+    return await Api.get('/roles')
 }
