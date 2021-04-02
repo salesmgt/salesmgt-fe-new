@@ -15,7 +15,14 @@ function PublicRoute(props) {
             {...rest}
             render={(props) => {
                 return isAuthenticated && restricted ? (
-                    <Redirect to="/apps/dashboards" />
+                    // <Redirect to="/apps/accounts" />
+                    <Redirect
+                        to={
+                            user.roles[0] !== 'ADMIN'
+                                ? '/apps/dashboards'
+                                : '/apps/accounts'
+                        }
+                    />
                 ) : (
                     <Component {...props} />
                 )

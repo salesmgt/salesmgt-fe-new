@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom'
 import { Animation } from '../../components'
 import classes from './Errors.module.scss'
 import { getError } from './ErrorsConfig'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 
 function Errors(props) {
     const { defaultError } = props
     const location = useLocation()
+    const history = useHistory()
 
     const getCurrError = () => {
         if (typeof location.state !== 'undefined') {
@@ -34,9 +35,23 @@ function Errors(props) {
                             {item.message}
                         </Typography>
                     </Animation>
-                    <Link className={classes.link} to={item.link}>
+                    {item.link !== '' ? (
+                        <Link className={classes.link} to={item.link}>
+                            {item.des}
+                        </Link>
+                    ) : (
+                        <Typography
+                            className={classes.link}
+                            component="a"
+                            onClick={() => history.goBack()}
+                        >
+                            {item.des}
+                        </Typography>
+                    )}
+
+                    {/* <Link className={classes.link} to={item.link}>
                         {item.des}
-                    </Link>
+                    </Link> */}
                 </div>
             ))}
         </div>

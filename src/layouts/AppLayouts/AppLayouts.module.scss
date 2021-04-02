@@ -1,9 +1,9 @@
-@import '../styles/Variables.module.scss';
+@import '../../styles/Variables.module.scss';
 
 $drawer-width: 16rem;
 $drawer-width-close: 4.25rem;
-$logo: url(../img/logo-major-edu.png);
-$banner: url(../img/banner-major-edu.png);
+$logo: url(../../assets/images/major/logo-major-edu.png);
+$banner: url(../../assets/images/major/banner-major-edu.png);
 
 .root {
     display: flex;
@@ -38,7 +38,7 @@ $banner: url(../img/banner-major-edu.png);
         display: none;
     }
     .title {
-        font-weight: 700;
+        font-weight: 500;
         color: $common-white;
         flex-grow: 1;
         align-self: center;
@@ -78,7 +78,7 @@ $banner: url(../img/banner-major-edu.png);
         .majorImg {
             content: $banner;
             width: 10.5rem;
-            height: 2.73rem;
+            height: 2.6rem;
             margin-left: 0.6rem;
         }
     }
@@ -97,7 +97,7 @@ $banner: url(../img/banner-major-edu.png);
         .majorImg {
             content: $logo;
             width: 2.98rem;
-            height: 2.73rem;
+            height: 2.6rem;
             margin-left: 0rem;
         }
     }
@@ -147,8 +147,8 @@ $banner: url(../img/banner-major-edu.png);
     }
     .menuText {
         color: $common-white !important;
-        font-size: 1.25rem;
-        font-weight: 500;
+        // font-size: 1.25rem;
+        // font-weight: 500;
     }
 }
 /* Page load */
@@ -186,9 +186,9 @@ $banner: url(../img/banner-major-edu.png);
     height: calc(100% - 4rem);
     overflow: hidden;
     background-color: $background;
-    padding: 1.2rem;
+    // padding: 1.2rem;
     @media (max-width: $md) {
         height: calc(100% - 3rem);
-        padding: 1rem 0.3rem 1rem 1rem;
+        // padding: 1rem 0.3rem 1rem 1rem;
     }
 }

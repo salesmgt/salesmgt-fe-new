@@ -1,5 +1,5 @@
 import React from 'react'
-import { MajorBanner } from '../../img'
+import { MajorBanner } from '../../assets/images'
 import {
     Container,
     Button,
@@ -83,7 +83,9 @@ function Logins() {
                 )
 
                 setUser(Milks.getWithExpiry('notMe'))
-                history.push('/apps/dashboards')
+                // user.roles[0] !== 'ADMIN'
+                //     ? history.push('/apps/dashboards')
+                //     : history.push('/apps/accounts')
             })
             .catch((error) => {
                 if (error.response) {

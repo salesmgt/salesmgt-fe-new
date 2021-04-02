@@ -4,7 +4,7 @@ const errors = [
         code: 400,
         message: 'What is this? Is it a cake?',
         link: '',
-        des: '',
+        des: 'Go back',
     },
     {
         code: 401,
@@ -22,13 +22,13 @@ const errors = [
         code: 404,
         message: 'Sorry, we could not find that page!',
         link: '',
-        des: '',
+        des: 'Go back',
     },
     {
         code: 500,
         message: 'Well, you broke the Internet!',
         link: '',
-        des: '',
+        des: 'Go back',
     },
 ]
 

@@ -1,0 +1,41 @@
+@import '../../../../styles/Variables.module.scss';
+
+.paper {
+    border-radius: $default-radius !important;
+    overflow: hidden;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 1.2rem;
+        color: $common-black;
+        .title {
+            font-size: 1rem;
+            line-height: 1.75;
+            font-weight: 500;
+            overflow: hidden;
+        }
+        .action {
+            font-size: 1rem;
+            line-height: 1.75;
+            font-weight: 500;
+            color: $common-black;
+            height: 28px;
+        }
+    }
+    .body {
+        padding: 1.2rem;
+        text-align: center;
+        .detail {
+            font-size: 3.75rem;
+            line-height: 1.2;
+            overflow: hidden;
+        }
+        .subDetail {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: $secondary-text;
+            overflow: hidden;
+        }
+    }
+}
