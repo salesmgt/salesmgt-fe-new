@@ -1,5 +1,5 @@
 export { default as Accounts } from './Accounts/Accounts'
-export { default as AccountsConfig } from './Accounts/AccountsConfig'
+// export { default as AccountsConfig } from './Accounts/AccountsConfig'
 
 export { default as Dashboards } from './Dashboards/Dashboards'
 export { default as DashboardsConfig } from './Dashboards/DashboardsConfig'
