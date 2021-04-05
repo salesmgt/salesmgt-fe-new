@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core'
-import { MdMoreVert } from 'react-icons/md'
+import { MdEdit, MdMoreVert } from 'react-icons/md'
 import PropTypes from 'prop-types'
+import { Link, useRouteMatch } from 'react-router-dom'
+import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { options } = props
+    const { username } = props
+    const { url } = useRouteMatch()
+
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleOpen = (event) => {
@@ -18,15 +22,17 @@ function MenuOptions(props) {
     return (
         <div>
             <IconButton color='primary' onClick={handleOpen}>
-                <MdMoreVert/>
+                <MdMoreVert />
             </IconButton>
             <Menu anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
-                {options.map(option => (
-                    <MenuItem key={option.text} onClick={handleClose}>
-                        <ListItemIcon style={{ minWidth: '1.7rem' }}>{option.icon}</ListItemIcon>
-                        <ListItemText style={{ margin: 0, padding: 0 }}>{option.text}</ListItemText>
-                    </MenuItem>
-                ))}
+                <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to={{ pathname: `${url}/${username}`, state: { username: username } }}
+                >
+                    <ListItemIcon className={classes.icon}><MdEdit fontSize="large" /></ListItemIcon>
+                    <ListItemText className={classes.text}>Edit info</ListItemText>
+                </MenuItem>
             </Menu>
         </div>
     )
@@ -35,5 +41,5 @@ function MenuOptions(props) {
 export default MenuOptions
 
 MenuOptions.propTypes = {
-    options: PropTypes.array.isRequired
+    username: PropTypes.array.isRequired
 }

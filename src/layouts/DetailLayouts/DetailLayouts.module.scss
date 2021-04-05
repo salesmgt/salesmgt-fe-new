@@ -41,6 +41,7 @@
             flex-direction: column;
             .header {
                 display: flex;
+                flex-direction: row;
                 min-height: 7.2rem;
                 height: 7.2rem;
                 color: $common-white;

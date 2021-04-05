@@ -19,7 +19,7 @@ function TargetSchools() {
     function onGetTargets(page = 0, limit = 10, column = "id", direction = "asc", searchKey, listFilters) {
         TargetSchoolsServices.getTargetSchools(page, limit, column, direction, searchKey, listFilters).then((res) => {
             setData(res.data)
-            console.log('new list: ', res.data);
+            // console.log('new list: ', res.data);
         }).catch(error => {
             if (error.response) {
                 console.log(error)
@@ -46,7 +46,7 @@ function TargetSchools() {
 
     return (
         // <TargetSchoolProvider>        onGetTargets={onGetTargets}
-        <div className={classes.wrapper}>
+        <div className={classes.panel}>
             <Filters className={classes.filter} />
             <Tables columns={columns}
                 rows={data.list}

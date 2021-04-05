@@ -1,0 +1,22 @@
+@import '../../styles/Variables.module.scss';
+
+.wrapper {
+    padding: 0.9rem 0.5rem;
+}
+
+.divider {
+    margin: 1rem 0;
+}
+
+.header {
+    background-color: $light-secondary;
+}
+
+.detailZone {
+    display: flex;
+    flex-direction: row;
+}
+
+.titles {
+    font-weight: 700;
+}

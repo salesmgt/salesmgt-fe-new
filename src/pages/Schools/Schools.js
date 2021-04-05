@@ -65,7 +65,7 @@ function Schools() {
     }
 
     return (
-        <div className={classes.wrapper}>
+        <div className={classes.panel}>
             <Filters className={classes.filter} />
             <Tables columns={columns}
                 rows={data.list}

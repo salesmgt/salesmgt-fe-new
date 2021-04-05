@@ -174,63 +174,6 @@ function Chips(props) {
         return count;
     }
 
-    // const showClearAllButton = (listChips) => {
-    //     if (listChips.length <== 0) {
-    //         return (
-    //             <Button className={classes.btnClear} size='small' onClick={handleClearAllChips}>
-    //                 Clear all
-    //             </Button>
-    //         );
-    //     }
-    // }
-
-    // function generateChipsArray() {
-    //     // console.log('helluuuuuuuuu');
-    //     const listChips = [];
-    //     for (const chip in chips) {
-    //         console.log('chipsssssss: ', chips);
-    //         console.log(`1 chipppppp: ${chip}: ${chips[chip].filterValue}`);
-    //         listChips.push(chips[chip]);
-
-    //         // if (chips[chip] !== '' || chips[chip] !== null) {
-    //         // if (chips[chip]) {
-    //         //     console.log('voooooooo');
-    //         //     li.push(
-    //         //         <.li key={chip}>
-    //         //             {(chip === 'PIC')
-    //         //                 ? <Chip
-    //         //                     label={chips[chip].name}
-    //         //                     avatar={<Avatar src={chips[chip].avatar} />}
-    //         //                     onDelete={handleChipDelete(chip)}
-    //         //                     className={classes.chip}
-    //         //                     color="secondary"
-    //         //                 />
-    //         //                 : <Chip
-    //         //                     label={chips[chip]}
-    //         //                     onDelete={handleChipDelete(chip)}
-    //         //                     className={classes.chip}
-    //         //                     color="secondary"
-    //         //                 />
-    //         //             }
-    //         //         </.li>
-    //         //     )
-    //         // }
-    //     }
-    //     setChipData(listChips);
-    //     return listChips;
-    // }
-    // const chipsArray = generateChipsArray();
-
-
-    // const chipLabel = Object.keys(chips)
-    // console.log('Chips.js ---> chips = ', chips)
-    // console.log('chipData = ', chipData);
-    // console.log('chipLabel = ', chipLabel);
-    // for (const chip in chips) {
-    //     console.log('1 cái chip tên = ', chip);
-    //     console.log('chip value = ', chips[chip]);
-    // }
-
     return (
         <>
             {(handleShowClearAllButton() !== 7) &&

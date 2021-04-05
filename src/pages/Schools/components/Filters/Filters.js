@@ -8,18 +8,10 @@ import {
     Select,
     Grid, Box,
     InputLabel,
-    ListSubheader,
     MenuItem,
     FormControl,
-    TextField,
-    InputAdornment,
-    Avatar,
-    ListItem,
-    ListItemAvatar,
-    ListItemText
 } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
-import { MdAccountCircle, MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
@@ -121,7 +113,6 @@ function Filters() {
     //================Handle useState() of filters================
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value;
-        console.log('selectedDistrict: ', selectedDistrict);
         setDistrict(selectedDistrict);
 
         if (selectedDistrict) { // !== ''
