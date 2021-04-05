@@ -15,9 +15,9 @@ export const columns = [
 export const menuOptions = [
     { icon: <MdInfo fontSize="large" />, text: 'View details' },
     { icon: <MdDescription fontSize="large" />, text: 'View reports' },
-    { icon: <MdAssignment fontSize="large" />, text: 'View contracts' },
     { icon: <MdPersonAdd fontSize="large" />, text: 'Assign' },
     { icon: <MdDelete fontSize="large" />, text: 'Remove this' },
+    // { icon: <MdAssignment fontSize="large" />, text: 'View contracts' },
 ]
 
 export function getMenuItems(role) {

@@ -184,40 +184,42 @@ function Tables(props) {
   };
 
   return (
-    <TableContainer className={classes.container}>
-      <Table className={classes.table} stickyHeader size="small" aria-label="sticky table">
-        <SortableTableHeaders columns={columns} direction={direction} column={column} onRequestSort={onSortBy} />
-        <TableBody className={classes.tBody}>
-          {rows?.length > 0 ? (
-            rows.map((row, index) => (
-              <TableRow key={row.id} className={classes.tBodyRow}>
-                <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
-                <TableCell className={classes.tBodyCell}>{row.username}</TableCell>
-                <TableCell className={classes.tBodyCell}>
-                  <ListItem style={{ padding: 0, margin: 0 }}>
-                    <ListItemAvatar>
-                      <Avatar src={row.avatar} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      className={classes.picName}
-                      primary={row.fullName}
-                      primaryTypographyProps={{ style: { fontSize: '0.925rem' } }}
-                    />
-                  </ListItem>
-                </TableCell>
-                <TableCell className={classes.tBodyCell}>{row.phone}</TableCell>
-                <TableCell className={classes.tBodyCell}>{row.email}</TableCell>
-                <TableCell className={classes.tBodyCell}>{setRoleChipColor(row.roleName)}</TableCell>
-                <TableCell className={classes.tBodyCell} align="right">
-                  <MenuOptions options={menuOptions} />
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <i style={{ color: 'gray', fontSize: '1.3em' }}>No records found.</i>
-          )}
-        </TableBody>
-      </Table>
+    <div className={classes.wrapper}>
+      <TableContainer className={classes.container} component='div'>
+        <Table className={classes.table} stickyHeader size="small" aria-label="sticky table">
+          <SortableTableHeaders columns={columns} direction={direction} column={column} onRequestSort={onSortBy} />
+          <TableBody className={classes.tBody}>
+            {rows?.length > 0 ? (
+              rows.map((row, index) => (
+                <TableRow key={row.username} className={classes.tBodyRow}>
+                  <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
+                  <TableCell className={classes.tBodyCell}>{row.username}</TableCell>
+                  <TableCell className={classes.tBodyCell}>
+                    <ListItem style={{ padding: 0, margin: 0 }}>
+                      <ListItemAvatar>
+                        <Avatar src={row.avatar} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        className={classes.picName}
+                        primary={row.fullName}
+                        primaryTypographyProps={{ style: { fontSize: '0.925rem' } }}
+                      />
+                    </ListItem>
+                  </TableCell>
+                  <TableCell className={classes.tBodyCell}>{row.phone}</TableCell>
+                  <TableCell className={classes.tBodyCell}>{row.email}</TableCell>
+                  <TableCell className={classes.tBodyCell}>{setRoleChipColor(row.roleName)}</TableCell>
+                  <TableCell className={classes.tBodyCell} align="right">
+                    <MenuOptions username={row.username} />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <i style={{ color: 'gray', fontSize: '1.3em' }}>No records found.</i>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 20, 50]}
         component="div"
@@ -242,7 +244,7 @@ function Tables(props) {
           />
         }
       />
-    </TableContainer>
+    </div>
   );
 }
 

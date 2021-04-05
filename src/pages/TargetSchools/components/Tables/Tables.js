@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import {
   TableContainer,
@@ -8,6 +8,7 @@ import {
   TableRow,
   TableCell,
   TablePagination,
+  Checkbox,
   IconButton,
   Avatar,
   ListItem,
@@ -277,51 +278,46 @@ function Tables(props) {
   };
 
   //=========================Handle Hover Popover=========================
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
 
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-    console.log('handlePopoverOpen: ', event.currentTarget)
-  };
+  // const handlePopoverOpen = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  //   console.log('handlePopoverOpen: ', event.currentTarget)
+  // };
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
+  // const handlePopoverClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   // const open = Boolean(anchorEl);
 
-  // Cần tính toán kĩ lại
-  // const generateIndex = (page, limit, index) => {
-  //   let no = 0;
-  //   if ()
-  //   no = page * limit + index + 1
-  // }
-
   return (
-    <TableContainer className={classes.container}>
-      <Table className={classes.table} stickyHeader size="small" aria-label="sticky table">
-        <SortableTableHeaders columns={columns} direction={direction} column={column} onRequestSort={onSortBy} />
-        <TableBody className={classes.tBody}>
-          {rows?.length > 0 ? (
-            rows.map((row, index) => (
-              <TableRow key={row.id} className={classes.tBodyRow}>
-                <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
-                <TableCell className={classes.tBodyCell} style={{ fontSize: '1rem' }}>{row.type} {row.schoolName}</TableCell>
-                <TableCell className={classes.tBodyCell}>{row.district}</TableCell>
-                <TableCell
-                  className={classes.tBodyCell}
-                // onMouseEnter={handlePopoverOpen}
-                // onMouseLeave={handlePopoverClose}
-                >
-                  {/* <Typography
+    <div className={classes.wrapper}>
+      <TableContainer className={classes.container} component='div'>
+        <Table className={classes.table} stickyHeader size="small" aria-label="sticky table">
+          <SortableTableHeaders columns={columns} direction={direction} column={column} onRequestSort={onSortBy} />
+          <TableBody className={classes.tBody}>
+            {rows?.length > 0 ? (
+              rows.map((row, index) => (
+                <TableRow key={row.id} className={classes.tBodyRow}>
+                  {/* <TableCell>Checkbox</TableCell> */}
+                  <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
+                  <TableCell className={classes.tBodyCell} style={{ fontSize: '1rem' }}>{row.type} {row.schoolName}</TableCell>
+                  <TableCell className={classes.tBodyCell}>{row.district}</TableCell>
+                  <TableCell
+                    className={classes.tBodyCell}
+                  // onMouseEnter={handlePopoverOpen}
+                  // onMouseLeave={handlePopoverClose}
+                  >
+                    {/* <Typography
                     aria-owns={!!anchorEl ? 'mouse-over-popover' : undefined}
                     aria-haspopup="true"
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                   > */}
-                  {row.reprGender ? `Mr. ${row.reprName}` : `Ms. ${row.reprName}`}
-                  {/* </Typography> */}
-                  {/* <Popover
+                    {row.reprGender ? `Mr. ${row.reprName}` : `Ms. ${row.reprName}`}
+                    {/* </Typography> */}
+                    {/* <Popover
                     className={classes.popover}
                     classes={{
                       paper: classes.paper,
@@ -343,34 +339,35 @@ function Tables(props) {
                     <Typography>{row.reprEmail}</Typography>
                     <Typography>{row.reprPhone}</Typography>
                   </Popover> */}
-                </TableCell>
-                <TableCell className={classes.tBodyCell}>
-                  <ListItem style={{ padding: 0, margin: 0 }}>
-                    <ListItemAvatar>
-                      {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
-                      <Avatar src={row.avatar} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      className={classes.picName}
-                      primary={row.fullName}
-                      primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
-                      secondary={row.username}
-                      secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
-                    />
-                  </ListItem>
-                </TableCell>
-                <TableCell className={classes.tBodyCell}>{row.schoolYear}</TableCell>
-                <TableCell className={classes.tBodyCell}>{setPurposeChipColor(row.purpose)}</TableCell>
-                <TableCell className={classes.tBodyCell} align="right">
-                  <MenuOptions options={menuOptions} />
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <i style={{ color: 'gray', fontSize: '1.3em' }}>No records found.</i>
-          )}
-        </TableBody>
-      </Table>
+                  </TableCell>
+                  <TableCell className={classes.tBodyCell}>
+                    <ListItem style={{ padding: 0, margin: 0 }}>
+                      <ListItemAvatar>
+                        {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
+                        <Avatar src={row.avatar} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        className={classes.picName}
+                        primary={row.fullName}
+                        primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                        secondary={row.username}
+                        secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
+                      />
+                    </ListItem>
+                  </TableCell>
+                  <TableCell className={classes.tBodyCell}>{row.schoolYear}</TableCell>
+                  <TableCell className={classes.tBodyCell}>{setPurposeChipColor(row.purpose)}</TableCell>
+                  <TableCell className={classes.tBodyCell} align="right">
+                    <MenuOptions options={menuOptions} />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <i style={{ color: 'gray', fontSize: '1.3em' }}>No records found.</i>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 20, 50]}
         component="div"
@@ -397,7 +394,7 @@ function Tables(props) {
           />
         }
       />
-    </TableContainer>
+    </div>
   );
 }
 

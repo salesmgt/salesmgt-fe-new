@@ -18,3 +18,7 @@ export async function getAccounts(
     console.log('url = ', url);
     return await Api.get(url)
 }
+
+export async function getAccount(username) {
+    return await Api.get(`/users/${username}`)
+}

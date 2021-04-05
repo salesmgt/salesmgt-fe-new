@@ -102,6 +102,7 @@ function Dashboards() {
     const renderLeftBody = (role) => {
         switch (role) {
             case 'SALES MANAGER':
+            case 'SALES SUPERVISOR':
                 return (
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>

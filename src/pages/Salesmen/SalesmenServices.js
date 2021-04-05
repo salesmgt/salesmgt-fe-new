@@ -18,3 +18,7 @@ export async function getSalesmen(
     console.log('url = ', url);
     return await Api.get(url)
 }
+
+export async function getSalesman(username) {
+    return await Api.get(`/users/${username}`)
+}

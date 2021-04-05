@@ -66,7 +66,6 @@ function useTargetSchoolProvider() {
     // Get filters' data
     const getSchoolYearsFilter = () => {
         FiltersServices.getSchoolYears().then((res) => {
-            console.log('schoolYears = ', res.data)
             setSchoolYears(res.data)
         }).catch((error) => {
             if (error.response) {

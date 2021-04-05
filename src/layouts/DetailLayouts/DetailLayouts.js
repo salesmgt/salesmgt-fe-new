@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Tab, Tabs, Typography } from '@material-ui/core'
+import { Avatar, makeStyles, Tab, Tabs, Typography } from '@material-ui/core'
 import classes from './DetailLayouts.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function DetailLayouts(props) {
-    const { header, tabs, tabValue, handleChangeTab, children } = props
+    const { avatar, header, tabs, tabValue, handleChangeTab, children } = props
 
     const styles = useStyles()
 
@@ -18,6 +18,9 @@ function DetailLayouts(props) {
             <div className={classes.container}>
                 <div className={classes.content}>
                     <div className={classes.header}>
+                        {avatar &&
+                            <Avatar src={avatar} className={classes.avatar} />
+                        }
                         <Typography variant="h4">{header}</Typography>
                     </div>
                     <div className={classes.body}>

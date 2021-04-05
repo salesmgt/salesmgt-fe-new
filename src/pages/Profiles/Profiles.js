@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
-import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { Animation, AnimationGroup, NotFound } from '../../components'
 import * as ProfilesServices from './ProfilesServices'
 import { Consts } from './ProfilesConfig'
