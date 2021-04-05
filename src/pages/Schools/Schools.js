@@ -32,8 +32,36 @@ function Schools() {
         refreshSchools(page, limit, column, direction, searchKey, listFilters)
     }, [params])
 
+    // let isMounted = true
+    // const refreshPage = () => {
+    //     SchoolsServices.getSchools()
+    //         .then((data) => {
+    //             if (isMounted) {
+    //                 setData(data)
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
+
+    // useEffect(() => {
+    //     refreshPage()
+    //     return () => {
+    //         // eslint-disable-next-line react-hooks/exhaustive-deps
+    //         isMounted = false
+    //     }
+    // }, [location.pathname])
+
     if (!data) {
-        return null;
+        // return <NotFound title="Schools not found!" />
+        return null
     }
 
     return (

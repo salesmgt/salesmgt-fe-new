@@ -60,7 +60,7 @@ const validationSchema = yup.object().shape({
 function ContentAccordions(props) {
     const { title, detail, type, data } = props
 
-    const { handleSubmit, control, errors } = useForm({
+    const { handleSubmit, control } = useForm({
         resolver: yupResolver(validationSchema),
     })
 
@@ -197,60 +197,3 @@ ContentAccordions.propTypes = {
     detail: PropTypes.string.isRequired,
     type: PropTypes.string,
 }
-
-// const accorData = {
-//     password: {
-//         title: 'Password',
-//         type: 'password',
-//         passwordData: [
-//             {
-//                 name: 'oldPassword',
-//                 label: 'Old Password',
-//                 type: 'password',
-//             },
-//             {
-//                 name: 'newPassword',
-//                 label: 'New Password',
-//                 type: 'password',
-//             },
-//             {
-//                 name: 'confirmPassword',
-//                 label: 'Confirm Password',
-//                 type: 'password',
-//             },
-//         ],
-//     },
-//     email: {
-//         title: 'Email',
-//         type: 'text',
-//         emailData: [
-//             {
-//                 name: 'email',
-//                 label: 'Your email',
-//                 type: 'text',
-//             },
-//         ],
-//     },
-//     phone: {
-//         title: 'Phone number',
-//         type: 'text',
-//         phoneData: [
-//             {
-//                 name: 'phone',
-//                 label: 'Your number',
-//                 type: 'text',
-//             },
-//         ],
-//     },
-//     address: {
-//         title: 'Address',
-//         type: 'text',
-//         addressData: [
-//             {
-//                 name: 'address',
-//                 label: 'Your address',
-//                 type: 'text',
-//             },
-//         ],
-//     },
-// }

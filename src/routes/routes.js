@@ -7,11 +7,11 @@ import {
     Schools,
     Salesmen,
     Reports,
-    AccountsDetail,
-    SchoolsDetail,
-    TargetSchoolsDetail,
-    SalesmenDetail,
-    ReportsDetail,
+    Account,
+    School,
+    TargetSchool,
+    Salesman,
+    Report,
 } from '../pages'
 import AccountProvider from '../pages/Accounts/hooks/AccountContext'
 import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
@@ -27,7 +27,7 @@ export const roleRoutes = {
                 </AccountProvider>
             )
         },
-        { path: 'accounts/:id', component: () => <AccountsDetail /> },
+        { path: 'accounts/:id', component: () => <Account /> },
         {
             path: 'schools', component: () => (
                 <SchoolProvider>
@@ -35,7 +35,7 @@ export const roleRoutes = {
                 </SchoolProvider>
             )
         },
-        { path: 'schools/:id', component: () => <SchoolsDetail /> },
+        { path: 'schools/:id', component: () => <School /> },
     ],
     'SALES MANAGER': [
         { path: 'dashboards', component: () => <Dashboards /> },
@@ -49,7 +49,7 @@ export const roleRoutes = {
         },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchoolsDetail />,
+            component: () => <TargetSchool />,
         },
         {
             path: 'salesmen', component: () => (
@@ -58,9 +58,9 @@ export const roleRoutes = {
                 </SalesmanProvider>
             )
         },
-        { path: 'salesmen/:id', component: () => <SalesmenDetail /> },
+        { path: 'salesmen/:id', component: () => <Salesman /> },
         { path: 'reports', component: () => <Reports /> },
-        { path: 'reports/:id', component: () => <ReportsDetail /> },
+        { path: 'reports/:id', component: () => <Report /> },
         {
             path: 'schools', component: () => (
                 <SchoolProvider>
@@ -68,7 +68,7 @@ export const roleRoutes = {
                 </SchoolProvider>
             )
         },
-        { path: 'schools/:id', component: () => <SchoolsDetail /> },
+        { path: 'schools/:id', component: () => <School /> },
     ],
     'SALES SUPERVISOR': [
         { path: 'dashboards', component: () => <Dashboards /> },
@@ -82,7 +82,7 @@ export const roleRoutes = {
         },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchoolsDetail />,
+            component: () => <TargetSchool />,
         },
         {
             path: 'salesmen', component: () => (
@@ -91,9 +91,9 @@ export const roleRoutes = {
                 </SalesmanProvider>
             )
         },
-        { path: 'salesmen/:id', component: () => <SalesmenDetail /> },
+        { path: 'salesmen/:id', component: () => <Salesman /> },
         { path: 'reports', component: () => <Reports /> },
-        { path: 'reports/:id', component: () => <ReportsDetail /> },
+        { path: 'reports/:id', component: () => <Report /> },
         {
             path: 'schools', component: () => (
                 <SchoolProvider>
@@ -101,7 +101,7 @@ export const roleRoutes = {
                 </SchoolProvider>
             )
         },
-        { path: 'schools/:id', component: () => <SchoolsDetail /> },
+        { path: 'schools/:id', component: () => <School /> },
     ],
     'SALESMAN': [
         { path: 'dashboards', component: () => <Dashboards /> },
@@ -115,9 +115,9 @@ export const roleRoutes = {
         },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchoolsDetail />,
+            component: () => <TargetSchool />,
         },
         { path: 'reports', component: () => <Reports /> },
-        { path: 'reports/:id', component: () => <ReportsDetail /> },
+        { path: 'reports/:id', component: () => <Report /> },
     ],
 }

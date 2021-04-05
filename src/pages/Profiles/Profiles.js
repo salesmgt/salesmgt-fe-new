@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
 import {
     Avatar,
     Card,
@@ -87,6 +87,7 @@ const serverSchema = [
 function Profiles() {
     const { user, setUser } = useAuth()
 
+    const location = useLocation()
     const history = useHistory()
     const { id } = useParams()
 
@@ -171,10 +172,13 @@ function Profiles() {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             isMounted = false
         }
-    }, [])
+    }, [location.pathname])
 
     if (!data) {
-        return <NotFound title="User not found!" />
+        if (id !== user.username) {
+            return <NotFound title="User not found!" />
+        }
+        return null
     }
 
     const {

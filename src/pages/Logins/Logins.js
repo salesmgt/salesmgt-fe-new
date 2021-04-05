@@ -57,10 +57,6 @@ function Logins() {
 
     const { setUser } = useAuth()
 
-    // React.useEffect(() => {
-    //     console.log('rerender')
-    // }, [])
-
     const handleLogin = (username, password) => {
         const userObj = (username, roles) => {
             return {

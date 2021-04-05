@@ -1,6 +1,25 @@
-import { Card, CardContent, CardHeader, Divider, Grid, Typography } from '@material-ui/core'
-import React from 'react'
+// import { Card, CardContent, CardHeader, Divider, Grid, Typography } from '@material-ui/core'
 import { DetailLayouts } from '../../layouts'
+import React, { useState } from 'react'
+import clsx from 'clsx'
+import {
+    Tab,
+    Tabs,
+    Typography,
+    makeStyles,
+    Grid,
+    Card,
+    CardContent,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    TextField,
+    AccordionActions,
+    Button,
+    Divider,
+} from '@material-ui/core'
+import { MdEdit } from 'react-icons/md'
+import { CardHeaders } from '../../../Profiles/components'
 import classes from './SchoolsDetail.module.scss'
 
 function SchoolsDetail() {
@@ -33,7 +52,7 @@ function SchoolsDetail() {
     const renderInfoCard = (school) => {
         return (
             <Card>
-                <CardHeader title="Basic info"
+                <CardHeaders title="Basic info"
                     titleTypographyProps={{ style: { fontSize: '1.15rem', fontWeight: 700 } }}
                     className={classes.header}
                 />
