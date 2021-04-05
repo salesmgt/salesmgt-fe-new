@@ -34,6 +34,10 @@ export async function getSchoolStatuses() {
     return data
 }
 
+export async function getPICs() {
+    return await Api.get('/users?active=true')
+}
+
 // export async function getPurposes() {
 //     const response = await Api.get('/purposes')
 //     const data = await response.data
