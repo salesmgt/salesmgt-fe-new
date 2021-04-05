@@ -17,6 +17,7 @@ import {
     TextField,
     Icon,
 } from '@material-ui/core'
+import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { Animation, AnimationGroup, NotFound } from '../../components'
@@ -90,6 +91,12 @@ function Profiles() {
     const location = useLocation()
     const history = useHistory()
     const { id } = useParams()
+
+    // let { search } = useLocation()
+    // search = '?key=123&haaaaaaaa=aaaaaaaa'
+    // const values = queryString.parse(search)
+    // console.log('search', values.key)
+
 
     const [data, setData] = useState(null)
 
@@ -239,7 +246,7 @@ function Profiles() {
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
-                (snapshot) => {},
+                (snapshot) => { },
                 (error) => {
                     console.log(error)
                     reject('Upload Image to firebase failed: ' + error)

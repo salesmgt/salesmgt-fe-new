@@ -1,9 +1,12 @@
 import Api from './Api'
 
+//===========Schools & Target Schools===========
+export async function getSchoolYears() {
+    return await Api.get('/school-years')
+}
+
 export async function getDistricts() {
-    const response = await Api.get('/districts')
-    const data = await response.data
-    return data
+    return await Api.get('/districts')
 }
 
 export async function getEducationalLevels() {

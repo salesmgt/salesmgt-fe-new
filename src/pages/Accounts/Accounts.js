@@ -1,60 +1,50 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from '@material-ui/core'
-import { useRouteMatch, Link, useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { Filters, Tables } from './components'
+import { columns } from './AccountsConfig';
+import { useAccount } from './hooks/AccountContext';
 import * as AccountsServices from './AccountsServices'
-import { NotFound } from '../../components'
+import classes from './Accounts.module.scss'
 
 function Accounts() {
-    const { url } = useRouteMatch()
     const history = useHistory()
-    const location = useLocation()
 
-    const [data, setData] = useState(null)
+    const { params } = useAccount()
+    const { listFilters, page, limit, column, direction, searchKey } = params
 
-    let isMounted = true
-    const refreshPage = () => {
-        AccountsServices.getAccounts()
-            .then((data) => {
-                if (isMounted) {
-                    setData(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+    const [data, setData] = useState({})
+
+    function refreshAccount(page = 0, limit = 10, column = "username", direction = "asc", searchKey, listFilters) {
+        AccountsServices.getAccounts(page, limit, column, direction, searchKey, listFilters).then((res) => {
+            setData(res.data)
+        }).catch(error => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
     }
 
     useEffect(() => {
-        refreshPage()
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            isMounted = false
-        }
-    }, [location.pathname])
+        refreshAccount(page, limit, column, direction, searchKey, listFilters)
+    }, [params])
 
     if (!data) {
-        return <NotFound title="Accounts not found!" />
+        return null;
     }
 
-    const accts = data.list
-
     return (
-        <div>
-            <Button
-                component={Link}
-                to={{
-                    pathname: `${url}/${accts[0].username}`,
-                    state: { data: accts[0] },
-                }}
-            >
-                Go to Detail
-            </Button>
+        <div className={classes.wrapper}>
+            <Filters className={classes.filter} />
+            <Tables columns={columns}
+                rows={data.list}
+                className={classes.table}
+                totalRecord={data.totalElements}
+                totalPage={data.totalPage}
+            />
         </div>
     )
 }

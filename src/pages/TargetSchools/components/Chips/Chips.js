@@ -3,188 +3,272 @@ import { Avatar, Button, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
 import * as ReducerActions from '../../hooks/reducer-action-type'
+// import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-  },
-  ul: {
-    // width: '100%',
-    maxWidth: 810,
-    overflowX: 'scroll',
-    // whiteSpace: 'nowrap',
-    // height: '100%',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexWrap: 'nowrap',
-    listStyle: 'none',
-    margin: 0,
-    paddingLeft: '0.5rem',
-  },
-  chip: {
-    margin: theme.spacing(0.5),
-  },
+    root: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap',
+    },
+    ul: {
+        // width: '100%',
+        maxWidth: 810,
+        overflowX: 'scroll',
+        // whiteSpace: 'nowrap',
+        // height: '100%',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        flexWrap: 'nowrap',
+        listStyle: 'none',
+        margin: 0,
+        paddingLeft: '0.5rem',
+    },
+    btnClear: {
+        fontSize: '0.75rem'
+    },
+    chip: {
+        margin: theme.spacing(0.5),
+    },
 }));
 
 function Chips(props) {
     const classes = useStyles();
     const { chips, dispatch, handleChipsRemoved } = props;
-    
+
     //================Generate chips according to filters================
-    const [chipData, setChipData] = useState(chips);
-    const [schowClearAllButton, setSchowClearAllButton] = useState(false);
-        
+    // const [chipData, setChipData] = useState(chips);
+    const [btnClearAll, setBtnClearAll] = useState(false);
+
     const handleChipDelete = (chipToDelete) => () => {
-        setChipData((listChips) => listChips.filter((chip) => chip.filterType !== chipToDelete.filterType));
-        
-        if (!handleChipsRemoved)
-            return;
+        // console.log('chipToDelete = ', chipToDelete);
+        // setChipData((listChips) => listChips.filter((chip) => chip.filterType !== chipToDelete.filterType));
 
         switch (chipToDelete.filterType) {
             case 'schoolYear':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_SCHOOL_YEAR,
-                    payload: { filterType: 'schoolYear' }
+                    type: ReducerActions.FILTER_SCHOOL_YEAR,
+                    payload: { filterType: 'schoolYear', filterValue: '' }
                 })
                 break;
-        
+
             case 'district':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_DISTRICT,
-                    payload: { filterType: 'district' }
+                    type: ReducerActions.FILTER_DISTRICT,
+                    payload: { filterType: 'district', filterValue: '' }
                 })
                 break;
-        
-            case 'schoolType':
+
+            case 'type':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_SCHOOL_TYPE,
-                    payload: { filterType: 'schoolType' }
+                    type: ReducerActions.FILTER_SCHOOL_TYPE,
+                    payload: { filterType: 'type', filterValue: '' }
                 })
                 break;
-        
-            case 'schoolLevel':
+
+            case 'level':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_SCHOOL_LEVEL,
-                    payload: { filterType: 'schoolLevel' }
+                    type: ReducerActions.FILTER_SCHOOL_LEVEL,
+                    payload: { filterType: 'level', filterValue: '' }
                 })
                 break;
-        
-            case 'schoolScale':
+
+            case 'scale':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_SCHOOL_SCALE,
-                    payload: { filterType: 'schoolScale' }
+                    type: ReducerActions.FILTER_SCHOOL_SCALE,
+                    payload: { filterType: 'scale', filterValue: '' }
                 })
                 break;
-        
+
             case 'PIC':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_PIC,
-                    payload: { filterType: 'PIC' }
-                })                
+                    type: ReducerActions.FILTER_PIC,
+                    payload: { filterType: 'PIC', filterValue: null }
+                })
                 break;
-        
+
             case 'purpose':
                 dispatch({
-                    type: ReducerActions.REMOVE_FILTER_PURPOSE,
-                    payload: { filterType: 'purpose' }
-                })                
+                    type: ReducerActions.FILTER_PURPOSE,
+                    payload: { filterType: 'purpose', filterValue: '' }
+                })
                 break;
-        
+
             default:
-                throw new Error();
-        }
-        
-        if (chips.length === 0) {
-            setSchowClearAllButton(false);
+                // throw new Error();
+                break;
         }
 
+        // console.log('chipData.length = ', chipData.length)
+        // if (chipData.length === 0) {
+        //     setBtnClearAll(false);
+        // }
+
+        if (!handleChipsRemoved)
+            return;
         // Reset corresponding filters' value to "All" / null
         const removedFilters = [chipToDelete.filterType]
         handleChipsRemoved(removedFilters);
+
+        // handleShowClearAllButton();
     }
 
     const handleClearAllChips = () => {
-        setChipData([]);
-        setSchowClearAllButton(false);
+        // setChipData([]);
+        setBtnClearAll(false);
+
+        // console.log('chipData = ', chipData)
+        // console.log('chipData.length = ', chipData.length)
 
         if (!handleChipsRemoved)
             return;
 
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_SCHOOL_YEAR,
-            payload: { filterType: 'schoolYear' }
+            type: ReducerActions.FILTER_SCHOOL_YEAR,
+            payload: { filterType: 'schoolYear', filterValue: '' }
         })
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_DISTRICT,
-            payload: { filterType: 'district' }
+            type: ReducerActions.FILTER_DISTRICT,
+            payload: { filterType: 'district', filterValue: '' }
         })
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_SCHOOL_TYPE,
-            payload: { filterType: 'schoolType' }
+            type: ReducerActions.FILTER_SCHOOL_TYPE,
+            payload: { filterType: 'type', filterValue: '' }
         })
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_SCHOOL_LEVEL,
-            payload: { filterType: 'schoolLevel' }
+            type: ReducerActions.FILTER_SCHOOL_LEVEL,
+            payload: { filterType: 'level', filterValue: '' }
         })
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_SCHOOL_SCALE,
-            payload: { filterType: 'schoolScale' }
+            type: ReducerActions.FILTER_SCHOOL_SCALE,
+            payload: { filterType: 'scale', filterValue: '' }
         })
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_PIC,
-            payload: { filterType: 'PIC' }
+            type: ReducerActions.FILTER_PIC,
+            payload: { filterType: 'PIC', filterValue: null }
         })
         dispatch({
-            type: ReducerActions.REMOVE_FILTER_PURPOSE,
-            payload: { filterType: 'purpose' }
+            type: ReducerActions.FILTER_PURPOSE,
+            payload: { filterType: 'purpose', filterValue: '' }
         })
 
         const removedFilters = [
-            'schoolYear',
-            'district',
-            'schoolType',
-            'schoolLevel',
-            'schoolScale',
-            'PIC',
-            'purpose'
+            'schoolYear', 'district', 'type', 'level', 'scale', 'PIC', 'purpose'
         ]
 
         handleChipsRemoved(removedFilters);
     }
 
+    const handleShowClearAllButton = () => {
+        let count = 0;
+        chips.forEach(chip => {
+            if (chip.filterValue === '' || chip.filterValue === null)
+                count++;
+        });
+        // if (count === 7) {
+        //     setBtnClearAll(false)
+        // } else {
+        //     setBtnClearAll(true)
+        // }
+        // console.log('count empty chip = ', count);
+        return count;
+    }
+
+    // const showClearAllButton = (listChips) => {
+    //     if (listChips.length <== 0) {
+    //         return (
+    //             <Button className={classes.btnClear} size='small' onClick={handleClearAllChips}>
+    //                 Clear all
+    //             </Button>
+    //         );
+    //     }
+    // }
+
+    // function generateChipsArray() {
+    //     // console.log('helluuuuuuuuu');
+    //     const listChips = [];
+    //     for (const chip in chips) {
+    //         console.log('chipsssssss: ', chips);
+    //         console.log(`1 chipppppp: ${chip}: ${chips[chip].filterValue}`);
+    //         listChips.push(chips[chip]);
+
+    //         // if (chips[chip] !== '' || chips[chip] !== null) {
+    //         // if (chips[chip]) {
+    //         //     console.log('voooooooo');
+    //         //     li.push(
+    //         //         <.li key={chip}>
+    //         //             {(chip === 'PIC')
+    //         //                 ? <Chip
+    //         //                     label={chips[chip].name}
+    //         //                     avatar={<Avatar src={chips[chip].avatar} />}
+    //         //                     onDelete={handleChipDelete(chip)}
+    //         //                     className={classes.chip}
+    //         //                     color="secondary"
+    //         //                 />
+    //         //                 : <Chip
+    //         //                     label={chips[chip]}
+    //         //                     onDelete={handleChipDelete(chip)}
+    //         //                     className={classes.chip}
+    //         //                     color="secondary"
+    //         //                 />
+    //         //             }
+    //         //         </.li>
+    //         //     )
+    //         // }
+    //     }
+    //     setChipData(listChips);
+    //     return listChips;
+    // }
+    // const chipsArray = generateChipsArray();
+
+
+    // const chipLabel = Object.keys(chips)
+    // console.log('Chips.js ---> chips = ', chips)
+    // console.log('chipData = ', chipData);
+    // console.log('chipLabel = ', chipLabel);
+    // for (const chip in chips) {
+    //     console.log('1 cái chip tên = ', chip);
+    //     console.log('chip value = ', chips[chip]);
+    // }
+
     return (
-        <> 
-            {
-                chips.length > 0 &&
-                <div className={classes.root}>
-                    <Button onClick={handleClearAllChips}>Clear all</Button>
+        <>
+            {(handleShowClearAllButton() !== 7) &&
+                <div className={classes.root}>      {/* {(chips !== null && chips !== undefined) && */}
+                    {/* {showClearAllButton(chipData)} */}
+                    <Button size='small' className={classes.btnClear} onClick={handleClearAllChips}>
+                        Clear all
+                    </Button>
+                    {/* {chips.length > 0 && */}
                     <ul className={classes.ul}>
+                        {/* {generateChips(chips).map(chip => {})} */}
                         {chips.map((chip) => {
                             return (
-                                <li key={chip.filterType}>
-                                    {
-                                        //{/* (chip.filterType === 'searchKey') && null */}
-                                        (chip.filterType === 'PIC')
-                                        ? <Chip
-                                            label={chip.filterValue.name}
-                                            avatar={<Avatar src={chip.filterValue.avatar} />}
-                                            onDelete={handleChipDelete(chip)}
-                                            className={classes.chip}
-                                            color="secondary"
-                                        />
-                                        : <Chip
-                                            label={chip.filterValue}
-                                            onDelete={handleChipDelete(chip)}
-                                            className={classes.chip}
-                                            color="secondary"
-                                        />
+                                <>
+                                    {chip.filterValue &&
+                                        <li key={chip.filterType}>
+                                            {(chip.filterType === 'PIC')
+                                                ? <Chip
+                                                    label={chip.filterValue.fullName}
+                                                    avatar={<Avatar src={chip.filterValue.avatar} />}
+                                                    onDelete={handleChipDelete(chip)}
+                                                    className={classes.chip}
+                                                    color="secondary"
+                                                />
+                                                : <Chip
+                                                    label={chip.filterValue}
+                                                    onDelete={handleChipDelete(chip)}
+                                                    className={classes.chip}
+                                                    color="secondary"
+                                                />
+                                            }
+                                        </li>
                                     }
-                                </li>
+                                </>
                             );
                         })}
                     </ul>
+                    {/* } */}
                 </div>
             }
         </>

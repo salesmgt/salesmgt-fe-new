@@ -1,20 +1,26 @@
-import React, {useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
 import { columns } from './TargetSchoolsConfig';
+import { useTargetSchool } from './hooks/TargetSchoolContext'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
 import classes from './TargetSchools.module.scss'
-import TargetSchoolProvider from './hooks/TargetSchoolContext'
 
 function TargetSchools() {
+    // console.log('aaaaaaaaaaaaaaaaa rerender')
     const history = useHistory()
 
-    const [data, setData] = useState(null)
+    const { params } = useTargetSchool()
+    const { listFilters, page, limit, column, direction, searchKey } = params
+    // const { schoolYear, district, PIC, purpose, level, scale, type } = listFilters
 
-    const refreshTargetSchools = () => {
-        TargetSchoolsServices.getTargetSchools().then((data) => {
-           setData(data)    
-        }).catch (error=> {
+    const [data, setData] = useState({})
+
+    function onGetTargets(page = 0, limit = 10, column = "id", direction = "asc", searchKey, listFilters) {
+        TargetSchoolsServices.getTargetSchools(page, limit, column, direction, searchKey, listFilters).then((res) => {
+            setData(res.data)
+            console.log('new list: ', res.data);
+        }).catch(error => {
             if (error.response) {
                 console.log(error)
                 history.push({
@@ -24,32 +30,38 @@ function TargetSchools() {
             }
         })
     }
-    
-    useEffect(() => {
-        refreshTargetSchools()
-       
-    }, [])
-    
-    if (!data) {
-        return null
-    }
 
-    const { list, totalElements, totalPage } = data
-    const rows = list
-    console.log('list trường: ', list)
+    useEffect(() => {
+        onGetTargets(page, limit, column, direction, searchKey, listFilters)
+    }, [params])  // params
+
+    if (!data) {
+        return null;
+    }
+    // const { list } = data   // totalElements, totalPage
+    // const rows = list
+    // console.log('list trường: ', rows)
+    // console.log("TargetSchool.js - params: ", params);
+    // console.log("TargetSchool.js - data: ", data.list);
 
     return (
-        <TargetSchoolProvider>
-            <div className={classes.wrapper}>
-                <Filters className={classes.filter}/>
-                <Tables columns={columns} rows={rows} className={classes.table} />
-                {/* <Paper
+        // <TargetSchoolProvider>        onGetTargets={onGetTargets}
+        <div className={classes.wrapper}>
+            <Filters className={classes.filter} />
+            <Tables columns={columns}
+                rows={data.list}
+                totalRecord={data.totalElements}
+                totalPage={data.totalPage}
+            // className={classes.table}
+            // onGetTargets={onGetTargets}
+            />
+            {/* <Paper
                     variant="outlined"
                     style={{ width: '100%', height: 407, backgroundColor: 'white' }}
                 >
                 </Paper> */}
-            </div>
-        </TargetSchoolProvider>
+        </div>
+        // </TargetSchoolProvider>
     )
 }
 

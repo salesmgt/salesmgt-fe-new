@@ -16,7 +16,12 @@ import {
 //     Schools,
 //     Salesmen,
 //     Reports,
+//     Profiles,
 // } from '../pages'
+// import AccountProvider from '../pages/Accounts/hooks/AccountContext'
+// import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
+// import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
+// import TargetSchoolProvider from '../pages/TargetSchools/hooks/TargetSchoolContext'
 
 const menuData = [
     {
@@ -30,14 +35,22 @@ const menuData = [
         title: 'Accounts',
         path: 'accounts',
         icon: <MdPerson />,
-        // component: () => <Accounts />,
+        // component: () => (
+        //     <AccountProvider>
+        //         <Accounts />
+        //     </AccountProvider>
+        // ),
         // component: <Accounts />,
     },
     {
         title: 'Target Schools',
         path: 'target-schools',
         icon: <MdAssignment />,
-        // component: () => <TargetSchools />,
+        // component: () => (
+        //     <TargetSchoolProvider>
+        //         <TargetSchools />
+        //     </TargetSchoolProvider>
+        // ),
         // component: <TargetSchools />,
     },
     {
@@ -51,14 +64,22 @@ const menuData = [
         title: 'Schools',
         path: 'schools',
         icon: <MdSchool />,
-        // component: () => <Schools />,
+        // component: () => (
+        //     <SchoolProvider>
+        //         <Schools />
+        //     </SchoolProvider>
+        // ),
         // component: <Schools />,
     },
     {
         title: 'Salesmen',
         path: 'salesmen',
         icon: <MdGroup />,
-        // component: () => <Salesmen />,
+        // component: () => (
+        //     <SalesmanProvider>
+        //         <Salesmen />
+        //     </SalesmanProvider>
+        // ),
         // component: <Salesmen />,
     },
     {
