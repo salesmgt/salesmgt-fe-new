@@ -1,0 +1,37 @@
+@import '../../../../styles/Variables.module.scss';
+
+.panel {
+    height: auto;
+    padding: 1rem;
+    .action {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0.75rem;
+        .submit {
+            color: $common-white;
+            background-color: $main-info;
+            &:hover {
+                background-color: $dark-info;
+            }
+            &:disabled {
+                background-color: $divider;
+            }
+        }
+    }
+    .content {
+        padding: 0.75rem;
+        .child {
+            padding: 0.75rem;
+        }
+        .titleZone {
+            padding: 0.75rem;
+            .title {
+                font-weight: 600;
+                color: $secondary-text;
+            }
+        }
+        .detailZone {
+            padding: 0.75rem;
+        }
+    }
+}

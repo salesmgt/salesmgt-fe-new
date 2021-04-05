@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TargetSchoolsDetail() {
+function TargetSchool() {
     return (
         <div>
             <h1>Target Schools Detail</h1>
@@ -8,4 +8,4 @@ function TargetSchoolsDetail() {
     )
 }
 
-export default TargetSchoolsDetail
+export default TargetSchool

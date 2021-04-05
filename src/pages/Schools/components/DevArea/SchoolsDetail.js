@@ -17,7 +17,7 @@ import {
     Divider,
 } from '@material-ui/core'
 import { MdEdit } from 'react-icons/md'
-import { CardHeaders } from '../Profiles/components'
+import { CardHeaders } from '../../../Profiles/components'
 import classes from './SchoolsDetail.module.scss'
 
 const useStyles = makeStyles((theme) => ({

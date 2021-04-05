@@ -7,8 +7,8 @@ function MixedCharts(props) {
     const { title, labels, chartView, handleChartView } = props
 
     const opts = [
-        { name: 'Week', keyName: 'week' },
-        { name: 'Month', keyName: 'month' },
+        { name: 'Weekly', keyName: 'weekly' },
+        { name: 'Monthly', keyName: 'monthly' },
     ]
 
     return (

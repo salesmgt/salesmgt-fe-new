@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import moment from 'moment'
 import { Grid, Typography } from '@material-ui/core'
 import { CardNow, CardRanks, CardJack, MixedCharts } from './components'
-import { Animation, AnimationGroup, NotFound } from '../../components'
+import { Animation, AnimationGroup } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import * as DashboardsServices from './DashboardsServices'
 import { rankData, chartData as ChartData, cardData } from './DashboardsConfig'
@@ -13,6 +13,7 @@ function Dashboards() {
     const { user } = useAuth()
     const { username, roles } = user
 
+    const location = useLocation()
     const history = useHistory()
 
     const [userData, setUserData] = useState(null)
@@ -55,10 +56,10 @@ function Dashboards() {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             isMounted = false
         }
-    }, [])
+    }, [location.pathname])
 
     if (!userData) {
-        return <NotFound />
+        return null
     }
 
     const { fullName, birthDate } = userData
@@ -138,7 +139,7 @@ function Dashboards() {
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <MixedCharts
-                                title="Sales Targets"
+                                title="Sales Targets Result"
                                 labels={chartData.labels}
                                 chartView={chartView}
                                 handleChartView={handleChartView}
@@ -268,7 +269,7 @@ function Dashboards() {
                             </Grid>
                             <Grid item xs={12} sm={12} md={9} lg={12}>
                                 <CardRanks
-                                    title="Top Salesman"
+                                    title="Monthly Salesman Rank"
                                     columns={['Rank', 'Person']}
                                     data={rankData}
                                 />

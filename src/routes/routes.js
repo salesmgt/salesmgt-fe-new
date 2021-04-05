@@ -7,19 +7,19 @@ import {
     Schools,
     Salesmen,
     Reports,
-    AccountsDetail,
-    SchoolsDetail,
-    TargetSchoolsDetail,
-    SalesmenDetail,
-    ReportsDetail,
+    Account,
+    School,
+    TargetSchool,
+    Salesman,
+    Report,
 } from '../pages'
 
 export const roleRoutes = {
     ADMIN: [
         { path: 'accounts', component: () => <Accounts /> },
-        { path: 'accounts/:id', component: () => <AccountsDetail /> },
+        { path: 'accounts/:id', component: () => <Account /> },
         { path: 'schools', component: () => <Schools /> },
-        { path: 'schools/:id', component: () => <SchoolsDetail /> },
+        { path: 'schools/:id', component: () => <School /> },
     ],
     'SALES MANAGER': [
         { path: 'dashboards', component: () => <Dashboards /> },
@@ -27,14 +27,12 @@ export const roleRoutes = {
         { path: 'target-schools', component: () => <TargetSchools /> },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchoolsDetail />,
+            component: () => <TargetSchool />,
         },
         { path: 'salesmen', component: () => <Salesmen /> },
-        { path: 'salesmen/:id', component: () => <SalesmenDetail /> },
+        { path: 'salesmen/:id', component: () => <Salesman /> },
         { path: 'reports', component: () => <Reports /> },
-        { path: 'reports/:id', component: () => <ReportsDetail /> },
-        { path: 'schools', component: () => <Schools /> },
-        { path: 'schools/:id', component: () => <SchoolsDetail /> },
+        { path: 'reports/:id', component: () => <Report /> },
     ],
     SALESMAN: [
         { path: 'dashboards', component: () => <Dashboards /> },
@@ -42,9 +40,9 @@ export const roleRoutes = {
         { path: 'target-schools', component: () => <TargetSchools /> },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchoolsDetail />,
+            component: () => <TargetSchool />,
         },
         { path: 'reports', component: () => <Reports /> },
-        { path: 'reports/:id', component: () => <ReportsDetail /> },
+        { path: 'reports/:id', component: () => <Report /> },
     ],
 }
