@@ -19,7 +19,7 @@ import {
     Divider,
 } from '@material-ui/core'
 import { MdEdit } from 'react-icons/md'
-import { CardHeaders } from '../../../Profiles/components'
+import { CardHeaders } from '../pages/Profiles/components'
 import classes from './SchoolsDetail.module.scss'
 
 function SchoolsDetail() {

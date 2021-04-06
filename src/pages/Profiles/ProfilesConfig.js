@@ -1,7 +1,7 @@
 export const Consts = {
     headers: {
-        account: 'Account Info',
-        general: 'General Info',
+        child1: 'Account Info',
+        child2: 'General Info',
     },
     operations: {
         logout: 'Log Out',

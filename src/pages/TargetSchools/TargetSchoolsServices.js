@@ -30,7 +30,7 @@ export async function getTargetSchools(
         url = filters['purpose'].filterValue ? url.concat(`&purpose=${filters['purpose'].filterValue}`) : url;
     }
 
-    console.log('url = ', url)
+    // console.log('url = ', url)
     const response = await Api.get(url)
     // const response = await Api.get(`/targets?page=${page}&limit=${limit}&column=${column}&direction=${direction}`)
 

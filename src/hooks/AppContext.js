@@ -18,6 +18,7 @@ function useAppProvider() {
     const [schStatus, setSchStatus] = useState(null)
     // const [salesPurps, setSalesPurps] = useState(null)
     const [roles, setRoles] = useState(null)
+    const [pics, setPics] = useState(null)
 
     let isMounted = true
     const refreshPage = () => {
@@ -132,6 +133,22 @@ function useAppProvider() {
                     })
                 }
             })
+
+        FiltersServices.getPICs()
+            .then((data) => {
+                if (isMounted) {
+                    setPics(data)
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     useEffect(() => {
@@ -150,6 +167,7 @@ function useAppProvider() {
         schStatus,
         // salesPurps
         roles,
+        pics,
     }
 }
 

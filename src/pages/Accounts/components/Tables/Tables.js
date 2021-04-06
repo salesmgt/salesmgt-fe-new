@@ -21,7 +21,6 @@ import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } fr
 import PropTypes from 'prop-types';
 import classes from './Tables.module.scss';
 import { useAccount } from '../../hooks/AccountContext';
-import { menuOptions } from '../../AccountsConfig'
 import MenuOptions from '../MenuOptions/MenuOptions';
 import * as ReducerActions from '../../hooks/reducer-action-type';
 
@@ -210,7 +209,7 @@ function Tables(props) {
                   <TableCell className={classes.tBodyCell}>{row.email}</TableCell>
                   <TableCell className={classes.tBodyCell}>{setRoleChipColor(row.roleName)}</TableCell>
                   <TableCell className={classes.tBodyCell} align="right">
-                    <MenuOptions username={row.username} />
+                    <MenuOptions data={row} />
                   </TableCell>
                 </TableRow>
               ))

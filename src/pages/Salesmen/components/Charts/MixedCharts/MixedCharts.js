@@ -4,24 +4,30 @@ import { Bar } from 'react-chartjs-2'
 import classes from './MixedCharts.module.scss'
 
 function MixedCharts(props) {
-    const { title, labels, chartView, handleChartView } = props
+    const {
+        title,
+        labels,
+        dataLbs,
+        data,
+        // chartView, handleChartView
+    } = props
 
-    const opts = [
-        { name: 'Weekly', keyName: 'weekly' },
-        { name: 'Monthly', keyName: 'monthly' },
-    ]
+    // const opts = [
+    //     { name: 'Weekly', keyName: 'weekly' },
+    //     { name: 'Monthly', keyName: 'monthly' },
+    // ]
 
     return (
         <Paper className={classes.paper}>
             <div className={classes.header}>
                 <Typography className={classes.title}>{title}</Typography>
-                {opts.map((opt) => (
+                {/* {opts.map((opt) => (
                     <div className={classes.action} key={opt.keyName}>
                         <Button onClick={() => handleChartView(opt.keyName)}>
                             {opt.name}
                         </Button>
                     </div>
-                ))}
+                ))} */}
             </div>
 
             <div className={classes.body}>
@@ -30,8 +36,8 @@ function MixedCharts(props) {
                         labels: labels,
                         datasets: [
                             {
-                                label: 'Sales Targets',
-                                data: chartView.data,
+                                label: dataLbs.bar,
+                                data: data,
                                 order: 1,
                                 barPercentage: 0.1,
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -41,8 +47,8 @@ function MixedCharts(props) {
                             },
                             {
                                 type: 'line',
-                                label: 'Average Target',
-                                data: chartView.averageData,
+                                label: dataLbs.line,
+                                data: data,
                                 order: 2,
                                 fill: false,
                                 backgroundColor: 'rgb(255, 99, 132)',
@@ -57,14 +63,6 @@ function MixedCharts(props) {
                             display: true,
                         },
                         spanGaps: false,
-                        // elements: {
-                        //     point: {
-                        //         radius: 4,
-                        //         borderWidth: 2,
-                        //         hoverRadius: 4,
-                        //         hoverBorderWidth: 2,
-                        //     },
-                        // },
                         layout: {
                             padding: {
                                 top: 0,

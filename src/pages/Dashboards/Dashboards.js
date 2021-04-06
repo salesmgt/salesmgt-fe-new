@@ -103,6 +103,50 @@ function Dashboards() {
     const renderLeftBody = (role) => {
         switch (role) {
             case 'SALES MANAGER':
+                return (
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                            <CardJack
+                                title="Total Lead"
+                                color="rgba(33, 150, 243, 1)"
+                                isOpts={true}
+                                ranges={cardData.manager.targetLeadSum.ranges}
+                                datasets={
+                                    cardData.manager.targetLeadSum.datasets
+                                }
+                                des="Targets"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                            <CardJack
+                                title="Total Potential Lead"
+                                color="rgba(255, 152, 0, 1)"
+                                isOpts={true}
+                                ranges={cardData.manager.potLeadsum.ranges}
+                                datasets={cardData.manager.potLeadsum.datasets}
+                                des="Targets"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                            <CardJack
+                                title="Total New Lead"
+                                color="rgba(76, 175, 80, 1)"
+                                isOpts={true}
+                                ranges={cardData.manager.newLeadSum.ranges}
+                                datasets={cardData.manager.newLeadSum.datasets}
+                                des="Targets"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <MixedCharts
+                                title="Sales Targets Result"
+                                labels={chartData.labels}
+                                chartView={chartView}
+                                handleChartView={handleChartView}
+                            />
+                        </Grid>
+                    </Grid>
+                )
             case 'SALES SUPERVISOR':
                 return (
                     <Grid container spacing={2}>
@@ -185,7 +229,7 @@ function Dashboards() {
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <MixedCharts
-                                title="Sales Targets"
+                                title="Sales Targets Result"
                                 labels={chartData.labels}
                                 chartView={chartView}
                                 handleChartView={handleChartView}

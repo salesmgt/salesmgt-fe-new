@@ -1,37 +1,55 @@
 import React, { useState } from 'react'
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core'
+import {
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+} from '@material-ui/core'
 import { MdEdit, MdMoreVert } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { Link, useRouteMatch } from 'react-router-dom'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { username } = props
+    const { data } = props
     const { url } = useRouteMatch()
 
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null)
 
     const handleOpen = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget)
     }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     return (
         <div>
-            <IconButton color='primary' onClick={handleOpen}>
+            <IconButton color="primary" onClick={handleOpen}>
                 <MdMoreVert />
             </IconButton>
-            <Menu anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={!!anchorEl}
+                onClose={handleClose}
+            >
                 <MenuItem
                     onClick={handleClose}
                     component={Link}
-                    to={{ pathname: `${url}/${username}`, state: { username: username } }}
+                    to={{
+                        pathname: `${url}/${data.username}`,
+                        state: { data: data },
+                    }}
                 >
-                    <ListItemIcon className={classes.icon}><MdEdit fontSize="large" /></ListItemIcon>
-                    <ListItemText className={classes.text}>Edit info</ListItemText>
+                    <ListItemIcon className={classes.icon}>
+                        <MdEdit fontSize="large" />
+                    </ListItemIcon>
+                    <ListItemText className={classes.text}>
+                        Edit info
+                    </ListItemText>
                 </MenuItem>
             </Menu>
         </div>
@@ -41,5 +59,5 @@ function MenuOptions(props) {
 export default MenuOptions
 
 MenuOptions.propTypes = {
-    username: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
 }

@@ -461,7 +461,7 @@ function Profiles() {
                     }}
                 >
                     <Card className={classes.account} elevation={1}>
-                        <CardHeaders header={headers.account} />
+                        <CardHeaders header={headers.child1} />
                         <CardContent className={classes.cardContent}>
                             {/* Username section */}
                             <div className={classes.cardText}>
@@ -665,7 +665,7 @@ function Profiles() {
                     }}
                 >
                     <Card className={classes.me} elevation={1}>
-                        <CardHeaders header={headers.general} />
+                        <CardHeaders header={headers.child2} />
                         <CardContent className={classes.cardContent}>
                             {/* Full name section */}
                             <div className={classes.cardText}>

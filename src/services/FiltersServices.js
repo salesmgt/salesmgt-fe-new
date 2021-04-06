@@ -2,11 +2,15 @@ import Api from './Api'
 
 //===========Schools & Target Schools===========
 export async function getSchoolYears() {
-    return await Api.get('/school-years')
+    const response = await Api.get('/school-years')
+    const data = response.data
+    return data
 }
 
 export async function getDistricts() {
-    return await Api.get('/districts')
+    const response = await Api.get('/districts')
+    const data = response.data
+    return data
 }
 
 export async function getEducationalLevels() {
@@ -35,7 +39,9 @@ export async function getSchoolStatuses() {
 }
 
 export async function getPICs() {
-    return await Api.get('/users?active=true')
+    const response = await Api.get('/users?active=true')
+    const data = await response.data
+    return data.list
 }
 
 // export async function getPurposes() {

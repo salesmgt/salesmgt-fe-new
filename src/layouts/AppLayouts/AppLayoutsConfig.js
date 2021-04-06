@@ -105,7 +105,14 @@ export function getMenuItems(role) {
         case 'ADMIN':
             return [accounts, schools]
         case 'SALES MANAGER':
-            return [dashboards, workPlans, targetSchools, salesmen, reports]
+            return [
+                dashboards,
+                workPlans,
+                schools,
+                targetSchools,
+                salesmen,
+                reports,
+            ]
         case 'SALESMAN':
             return [dashboards, workPlans, targetSchools, reports]
         default:

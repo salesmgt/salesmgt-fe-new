@@ -13,6 +13,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Notifications } from '../../../../components'
+import { Consts } from './RepInfoConfig'
 import classes from './RepInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -37,6 +38,8 @@ const serverSchema = [
 ]
 
 function RepInfo(props) {
+    const { headers, operations, fields } = Consts
+
     const [notify, setNotify] = useState({
         isOpen: false,
         message: '',
@@ -69,17 +72,17 @@ function RepInfo(props) {
 
     return (
         <div className={classes.panel}>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <Grid container spacing={0} className={classes.body}>
-                    {/* Content Sector */}
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                        className={classes.content}
-                    >
+            <Grid container spacing={0} className={classes.body}>
+                {/* Content Sector */}
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    className={classes.content}
+                >
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
                         <Grid container spacing={0}>
                             {/* First child - Principal Detail*/}
                             <Grid
@@ -91,7 +94,7 @@ function RepInfo(props) {
                                 className={classes.child}
                             >
                                 <Grid container spacing={0}>
-                                    {/* Child title */}
+                                    {/* Child header */}
                                     <Grid
                                         item
                                         xs={12}
@@ -104,10 +107,10 @@ function RepInfo(props) {
                                             color="inherit"
                                             className={classes.title}
                                         >
-                                            Pricipal Detail
+                                            {headers.child1}
                                         </Typography>
                                     </Grid>
-                                    {/* Child detail */}
+                                    {/* Child body */}
                                     <Grid
                                         item
                                         xs={12}
@@ -117,6 +120,7 @@ function RepInfo(props) {
                                         className={classes.detailZone}
                                     >
                                         <Grid container spacing={3}>
+                                            {/* Detail */}
                                             <Grid
                                                 item
                                                 xs={12}
@@ -132,7 +136,10 @@ function RepInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Full Name"
+                                                            label={
+                                                                fields.fullName
+                                                                    .title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -157,7 +164,9 @@ function RepInfo(props) {
                                                 md={12}
                                                 lg={12}
                                             >
-                                                <InputLabel>Gender</InputLabel>
+                                                <InputLabel>
+                                                    {fields.gender.title}
+                                                </InputLabel>
                                                 <Controller
                                                     name="gender"
                                                     control={control}
@@ -203,7 +212,10 @@ function RepInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Phone Number"
+                                                            label={
+                                                                fields.phone
+                                                                    .title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -235,7 +247,10 @@ function RepInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Email"
+                                                            label={
+                                                                fields.email
+                                                                    .title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -256,28 +271,29 @@ function RepInfo(props) {
                                     </Grid>
                                 </Grid>
                             </Grid>
+                            {/* Action */}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={10}
+                                lg={10}
+                                className={classes.action}
+                            >
+                                <Button
+                                    className={classes.submit}
+                                    variant="contained"
+                                    disabled={!formState.isDirty}
+                                    type="submit"
+                                >
+                                    {operations.save}
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    {/* Actions Sector */}
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                        className={classes.action}
-                    >
-                        <Button
-                            className={classes.submit}
-                            variant="contained"
-                            disabled={!formState.isDirty}
-                            type="submit"
-                        >
-                            Save
-                        </Button>
-                    </Grid>
+                    </form>
                 </Grid>
-            </form>
+                {/* Another Sector */}
+            </Grid>
             <Notifications notify={notify} setNotify={setNotify} />
         </div>
     )

@@ -37,6 +37,7 @@ function School() {
 
     return (
         <DetailLayouts
+            linkBack="Schools"
             header={data.name}
             tabs={['General Info', 'Pricipal Info']}
             tabValue={tabValue}

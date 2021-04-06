@@ -16,6 +16,7 @@ function Account() {
 
     return (
         <DetailLayouts
+            linkBack='Accounts'
             avatar={data.avatar}
             header={data.fullName}
             tabs={['General Info']}

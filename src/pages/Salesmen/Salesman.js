@@ -16,6 +16,7 @@ function Salesman() {
 
     return (
         <DetailLayouts
+            linkBack="Salesmen"
             avatar={data.avatar}
             header={data.fullName}
             subHeader={data.active}

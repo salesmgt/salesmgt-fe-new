@@ -3,66 +3,43 @@
 .panel {
     height: auto;
     padding: 1rem;
-    // .action {
-    //     display: flex;
-    //     justify-content: flex-end;
-    //     padding: 0.75rem;
-    //     .submit {
-    //         color: $common-white;
-    //         background-color: $main-info;
-    //         &:hover {
-    //             background-color: $dark-info;
-    //         }
-    //         &:disabled {
-    //             background-color: $divider;
-    //         }
-    //     }
-    // }
-    // .content {
-    //     padding: 0.75rem;
-    //     .child {
-    //         padding: 0.75rem;
-    //     }
-    //     .titleZone {
-    //         padding: 0.75rem;
-    //         .title {
-    //             font-weight: 600;
-    //         }
-    //     }
-    //     .detailZone {
-    //         padding: 0.75rem;
-    //     }
-    // }
     .body {
-        .basic {
+        .content {
             padding: 0.75rem;
-            .infoChild {
+            .child {
                 padding: 0.75rem;
-                .titleZone {
-                    padding: 0rem 0.75rem;
-                    @media (max-width: $md) {
-                        padding-bottom: 0.75rem;
+                .header {
+                    padding: 0.5rem;
+                    .title {
+                        font-weight: 600;
                     }
+                }
+                .body {
+                    padding: 0.5rem;
                     .title {
                         font-weight: 600;
                         color: $secondary-text;
                     }
-                }
-                .detailZone {
-                    padding: 0rem 0.75rem;
-                    @media (max-width: $md) {
-                        padding-bottom: 0.75rem;
+                    // .detail {
+                    // }
+                    .icon {
+                        margin-left: 0.5rem;
                     }
-                    .detailItem {
-                        padding-bottom: 0.75rem;
-                        .lb {
-                            padding-bottom: 0.5rem;
-                        }
+                    .titleZone {
+                        padding: 0.25rem;
+                        // .title {
+                        //     font-weight: 600;
+                        //     color: $secondary-text;
+                        // }
+                    }
+                    .detailZone {
+                        padding: 0.25rem;
+                        display: flex;
                     }
                 }
             }
         }
-        .chart {
+        .action {
             padding: 0.75rem;
         }
     }

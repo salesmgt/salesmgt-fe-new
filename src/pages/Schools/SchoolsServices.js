@@ -17,7 +17,7 @@ export async function getSchools(
 
     // const response = await Api.get(url)
     // const data = await response.data
-    console.log('url = ', url);
+    // console.log('url = ', url);
     return await Api.get(url)
 }
 

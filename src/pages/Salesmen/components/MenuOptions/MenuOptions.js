@@ -1,24 +1,30 @@
 import React, { useState } from 'react'
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core'
+import {
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+} from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { useAuth } from '../../../../hooks/AuthContext'
 
 function MenuOptions(props) {
-    const { username } = props  //options,
-    const [anchorEl, setAnchorEl] = useState(null);
+    const { data } = props //options,
+    const [anchorEl, setAnchorEl] = useState(null)
 
-    const { user } = useAuth()
+    // const { user } = useAuth()
     const { url } = useRouteMatch()
 
     const handleOpen = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget)
     }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     // const btnViewDetail = (role) => {
     //     switch (role) {
@@ -43,13 +49,29 @@ function MenuOptions(props) {
 
     return (
         <div>
-            <IconButton color='primary' onClick={handleOpen}>
+            <IconButton color="primary" onClick={handleOpen}>
                 <MdMoreVert />
             </IconButton>
-            <Menu anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
-                <MenuItem onClick={handleClose} component={Link} to={{ pathname: `${url}/${username}`, state: { username: username } }}>
-                    <ListItemIcon style={{ minWidth: '1.7rem' }}><MdInfo /></ListItemIcon>
-                    <ListItemText style={{ margin: 0, padding: 0 }}>View Details</ListItemText>
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={!!anchorEl}
+                onClose={handleClose}
+            >
+                <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to={{
+                        pathname: `${url}/${data.username}`,
+                        state: { data: data },
+                    }}
+                >
+                    <ListItemIcon style={{ minWidth: '1.7rem' }}>
+                        <MdInfo />
+                    </ListItemIcon>
+                    <ListItemText style={{ margin: 0, padding: 0 }}>
+                        View Details
+                    </ListItemText>
                 </MenuItem>
             </Menu>
         </div>
@@ -59,5 +81,5 @@ function MenuOptions(props) {
 export default React.memo(MenuOptions)
 
 MenuOptions.propTypes = {
-    username: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
 }

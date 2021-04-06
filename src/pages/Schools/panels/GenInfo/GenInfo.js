@@ -14,7 +14,9 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
+import { useAuth } from '../../../../hooks/AuthContext'
 import { Notifications } from '../../../../components'
+import { Consts } from './GenInfoConfig'
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -71,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function GenInfo(props) {
+    const { headers, operations, fields } = Consts
     const styles = useStyles()
 
     const [notify, setNotify] = useState({
@@ -79,6 +82,7 @@ function GenInfo(props) {
         type: '',
     })
 
+    const { user } = useAuth()
     const { dists, schEduLvls, schScales, schTypes, schStatus } = useApp()
 
     const { data } = props
@@ -129,17 +133,17 @@ function GenInfo(props) {
 
     return (
         <div className={classes.panel}>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <Grid container spacing={0} className={classes.body}>
-                    {/* Content Sector */}
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                        className={classes.content}
-                    >
+            <Grid container spacing={0} className={classes.body}>
+                {/* Content Sector */}
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    className={classes.content}
+                >
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
                         <Grid container spacing={0}>
                             {/* First child - School Detail*/}
                             <Grid
@@ -151,7 +155,7 @@ function GenInfo(props) {
                                 className={classes.child}
                             >
                                 <Grid container spacing={0}>
-                                    {/* Child title */}
+                                    {/* Child header */}
                                     <Grid
                                         item
                                         xs={12}
@@ -164,10 +168,10 @@ function GenInfo(props) {
                                             color="inherit"
                                             className={classes.title}
                                         >
-                                            School Detail
+                                            {headers.child1}
                                         </Typography>
                                     </Grid>
-                                    {/* Child detail */}
+                                    {/* Child body */}
                                     <Grid
                                         item
                                         xs={12}
@@ -177,6 +181,7 @@ function GenInfo(props) {
                                         className={classes.detailZone}
                                     >
                                         <Grid container spacing={3}>
+                                            {/* Detail */}
                                             <Grid
                                                 item
                                                 xs={12}
@@ -192,7 +197,10 @@ function GenInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Name"
+                                                            label={
+                                                                fields.school
+                                                                    .name.title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -226,7 +234,10 @@ function GenInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Address"
+                                                            label={
+                                                                fields.school
+                                                                    .addr.title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -251,7 +262,7 @@ function GenInfo(props) {
                                                 lg={3}
                                             >
                                                 <InputLabel>
-                                                    District
+                                                    {fields.school.dist.title}
                                                 </InputLabel>
                                                 <Controller
                                                     name="dist"
@@ -301,7 +312,7 @@ function GenInfo(props) {
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    Educational Level
+                                                    {fields.school.eduLvl.title}
                                                 </InputLabel>
                                                 <Controller
                                                     name="eduLvl"
@@ -350,7 +361,7 @@ function GenInfo(props) {
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    School Scale
+                                                    {fields.school.scale.title}
                                                 </InputLabel>
                                                 <Controller
                                                     name="scale"
@@ -399,7 +410,7 @@ function GenInfo(props) {
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    School Type
+                                                    {fields.school.type.title}
                                                 </InputLabel>
                                                 <Controller
                                                     name="type"
@@ -448,7 +459,10 @@ function GenInfo(props) {
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    School Status
+                                                    {
+                                                        fields.school
+                                                            .salesStatus.title
+                                                    }
                                                 </InputLabel>
                                                 <Controller
                                                     name="status"
@@ -505,7 +519,10 @@ function GenInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Description"
+                                                            label={
+                                                                fields.school
+                                                                    .des.title
+                                                            }
                                                             variant="outlined"
                                                             fullWidth
                                                             multiline
@@ -523,36 +540,40 @@ function GenInfo(props) {
                                                     )}
                                                 />
                                             </Grid>
-
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <InputLabel>
-                                                    School Active
-                                                </InputLabel>
-                                                <Controller
-                                                    name="active"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Switch
-                                                            checked={value}
-                                                            onChange={(e) =>
-                                                                onChange(
-                                                                    e.target
-                                                                        .checked
-                                                                )
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
+                                            {user.roles[0] === 'ADMIN' && (
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                >
+                                                    <InputLabel>
+                                                        {
+                                                            fields.school.status
+                                                                .title
+                                                        }
+                                                    </InputLabel>
+                                                    <Controller
+                                                        name="active"
+                                                        control={control}
+                                                        render={({
+                                                            value,
+                                                            onChange,
+                                                        }) => (
+                                                            <Switch
+                                                                checked={value}
+                                                                onChange={(e) =>
+                                                                    onChange(
+                                                                        e.target
+                                                                            .checked
+                                                                    )
+                                                                }
+                                                            />
+                                                        )}
+                                                    />
+                                                </Grid>
+                                            )}
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -580,7 +601,7 @@ function GenInfo(props) {
                                             color="inherit"
                                             className={classes.title}
                                         >
-                                            Contact Detail
+                                            {headers.child2}
                                         </Typography>
                                     </Grid>
                                     {/* Child detail */}
@@ -608,7 +629,10 @@ function GenInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Tel"
+                                                            label={
+                                                                fields.contact
+                                                                    .tel.title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -638,7 +662,10 @@ function GenInfo(props) {
                                                         onChange,
                                                     }) => (
                                                         <TextField
-                                                            label="Email"
+                                                            label={
+                                                                fields.contact
+                                                                    .email.title
+                                                            }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
@@ -659,28 +686,29 @@ function GenInfo(props) {
                                     </Grid>
                                 </Grid>
                             </Grid>
+                            {/* Action */}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={10}
+                                lg={10}
+                                className={classes.action}
+                            >
+                                <Button
+                                    className={classes.submit}
+                                    variant="contained"
+                                    disabled={!formState.isDirty}
+                                    type="submit"
+                                >
+                                    {operations.save}
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    {/* Actions Sector */}
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                        className={classes.action}
-                    >
-                        <Button
-                            className={classes.submit}
-                            variant="contained"
-                            disabled={!formState.isDirty}
-                            type="submit"
-                        >
-                            Save
-                        </Button>
-                    </Grid>
+                    </form>
                 </Grid>
-            </form>
+                {/* Another Sector */}
+            </Grid>
             <Notifications notify={notify} setNotify={setNotify} />
         </div>
     )

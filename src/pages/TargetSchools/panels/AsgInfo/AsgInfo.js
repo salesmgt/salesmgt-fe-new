@@ -1,29 +1,24 @@
 import React, { useState } from 'react'
 import {
+    makeStyles,
     Button,
-    FormControlLabel,
     Grid,
     InputLabel,
-    makeStyles,
-    MenuItem,
-    Radio,
-    RadioGroup,
     Select,
-    Switch,
     TextField,
     Typography,
+    MenuItem,
 } from '@material-ui/core'
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { useApp } from '../../../../hooks/AppContext'
 import { Notifications } from '../../../../components'
-import { Consts } from './GenInfoConfig'
-import classes from './GenInfo.module.scss'
+import { Consts } from './AsgInfoConfig'
+import { useApp } from '../../../../hooks/AppContext'
+import classes from './AsgInfo.module.scss'
 
 const clientSchema = yup.object().shape({
+    fullName: yup.string().trim().required('Name is required'),
     phone: yup
         .string()
         .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
@@ -75,9 +70,9 @@ const useStyles = makeStyles((theme) => ({
     menuItemSelected: {},
 }))
 
-function GenInfo(props) {
-    const styles = useStyles()
+function AsgInfo(props) {
     const { headers, operations, fields } = Consts
+    const styles = useStyles()
 
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -85,18 +80,21 @@ function GenInfo(props) {
         type: '',
     })
 
-    const { roles } = useApp()
+    const {
+        pics,
+        // purps
+    } = useApp()
+
+    let picFullNames = pics.map((pic) => pic.fullName)
 
     const { data } = props
 
     const defaultValues = {
-        username: data.username,
-        active: data.active,
-        gender: String(data.gender),
-        dob: data.birthDate,
+        // avatar: data.avatar,
+        fullName: data.fullName,
         phone: data.phone,
         email: data.email,
-        role: data.roleName,
+        purp: data.purp,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({
@@ -104,7 +102,7 @@ function GenInfo(props) {
         defaultValues: defaultValues,
     })
 
-    if (!roles) {
+    if (!pics) {
         return null
     }
 
@@ -120,17 +118,17 @@ function GenInfo(props) {
 
     return (
         <div className={classes.panel}>
-            <Grid container spacing={0} className={classes.body}>
-                {/* Content Sector */}
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    className={classes.content}
-                >
-                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <Grid container spacing={0} className={classes.body}>
+                    {/* Content Sector */}
+                    <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        className={classes.content}
+                    >
                         <Grid container spacing={0}>
                             {/* First child - Principal Detail*/}
                             <Grid
@@ -169,7 +167,7 @@ function GenInfo(props) {
                                     >
                                         <Grid container spacing={3}>
                                             {/* Detail */}
-                                            <Grid
+                                            {/* <Grid
                                                 item
                                                 xs={12}
                                                 sm={12}
@@ -177,7 +175,7 @@ function GenInfo(props) {
                                                 lg={12}
                                             >
                                                 <Controller
-                                                    name="username"
+                                                    name="fullName"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -185,30 +183,27 @@ function GenInfo(props) {
                                                     }) => (
                                                         <TextField
                                                             label={
-                                                                fields.username
+                                                                fields.asg
+                                                                    .fullName
                                                                     .title
                                                             }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
-                                                            // autoFocus
-                                                            // inputProps={{
-                                                            //     readOnly: true,
-                                                            // }}
-                                                            disabled
+                                                            autoFocus
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
-                                                                !!errors.username
+                                                                !!errors.name
                                                             }
                                                             helperText={
-                                                                errors?.username
+                                                                errors?.name
                                                                     ?.message
                                                             }
                                                         />
                                                     )}
                                                 />
-                                            </Grid>
+                                            </Grid> */}
                                             <Grid
                                                 item
                                                 xs={12}
@@ -217,71 +212,46 @@ function GenInfo(props) {
                                                 lg={12}
                                             >
                                                 <InputLabel>
-                                                    {fields.gender.title}
+                                                    {fields.asg.fullName.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="gender"
+                                                    name="fullName"
                                                     control={control}
                                                     render={({
                                                         value,
                                                         onChange,
                                                     }) => (
-                                                        <RadioGroup
+                                                        <Select
                                                             value={value}
                                                             onChange={onChange}
-                                                            row
+                                                            MenuProps={
+                                                                MenuProps
+                                                            }
+                                                            disableUnderline
                                                         >
-                                                            <FormControlLabel
-                                                                label="Male"
-                                                                value="true"
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                            />
-                                                            <FormControlLabel
-                                                                label="Female"
-                                                                value="false"
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                            />
-                                                        </RadioGroup>
+                                                            {picFullNames.map(
+                                                                (data) => (
+                                                                    <MenuItem
+                                                                        key={
+                                                                            data
+                                                                        }
+                                                                        value={
+                                                                            data
+                                                                        }
+                                                                        classes={{
+                                                                            root:
+                                                                                styles.menuItemRoot,
+                                                                            selected:
+                                                                                styles.menuItemSelected,
+                                                                        }}
+                                                                    >
+                                                                        {data}
+                                                                    </MenuItem>
+                                                                )
+                                                            )}
+                                                        </Select>
                                                     )}
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
-                                                >
-                                                    <Controller
-                                                        name="dob"
-                                                        control={control}
-                                                        render={({
-                                                            ref,
-                                                            ...rest
-                                                        }) => (
-                                                            <DatePicker
-                                                                label={
-                                                                    fields.dob
-                                                                        .title
-                                                                }
-                                                                format={
-                                                                    fields.dob
-                                                                        .format
-                                                                }
-                                                                allowKeyboardControl
-                                                                disableFuture
-                                                                {...rest}
-                                                            />
-                                                        )}
-                                                    />
-                                                </MuiPickersUtilsProvider>
                                             </Grid>
                                             <Grid
                                                 item
@@ -299,12 +269,13 @@ function GenInfo(props) {
                                                     }) => (
                                                         <TextField
                                                             label={
-                                                                fields.phone
+                                                                fields.asg.phone
                                                                     .title
                                                             }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
+                                                            disabled
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
@@ -334,12 +305,13 @@ function GenInfo(props) {
                                                     }) => (
                                                         <TextField
                                                             label={
-                                                                fields.email
+                                                                fields.asg.email
                                                                     .title
                                                             }
                                                             variant="outlined"
                                                             required
                                                             fullWidth
+                                                            disabled
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
@@ -353,7 +325,7 @@ function GenInfo(props) {
                                                     )}
                                                 />
                                             </Grid>
-                                            <Grid
+                                            {/* <Grid
                                                 item
                                                 xs={12}
                                                 sm={12}
@@ -361,40 +333,11 @@ function GenInfo(props) {
                                                 lg={12}
                                             >
                                                 <InputLabel>
-                                                    {fields.status.title}
+                                                    {fields.asg.purp
+                                                                    .title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="active"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Switch
-                                                            checked={value}
-                                                            onChange={(e) =>
-                                                                onChange(
-                                                                    e.target
-                                                                        .checked
-                                                                )
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                                className={classes.roleZone}
-                                            >
-                                                <InputLabel>
-                                                    {fields.auth.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="role"
+                                                    name="purp"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -408,7 +351,7 @@ function GenInfo(props) {
                                                             }
                                                             disableUnderline
                                                         >
-                                                            {roles.map(
+                                                            {purps.map(
                                                                 (data) => (
                                                                     <MenuItem
                                                                         key={
@@ -431,37 +374,39 @@ function GenInfo(props) {
                                                         </Select>
                                                     )}
                                                 />
+                                            </Grid> */}
+                                            {/* Action */}
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={12}
+                                                md={12}
+                                                lg={12}
+                                                className={classes.action}
+                                            >
+                                                <Button
+                                                    className={classes.submit}
+                                                    variant="contained"
+                                                    disabled={
+                                                        !formState.isDirty
+                                                    }
+                                                    type="submit"
+                                                >
+                                                    {operations.save}
+                                                </Button>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            {/* Action */}
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={10}
-                                lg={10}
-                                className={classes.action}
-                            >
-                                <Button
-                                    className={classes.submit}
-                                    variant="contained"
-                                    disabled={!formState.isDirty}
-                                    type="submit"
-                                >
-                                    {operations.save}
-                                </Button>
-                            </Grid>
                         </Grid>
-                    </form>
+                    </Grid>
+                    {/* Actions Sector */}
                 </Grid>
-                {/* Another Sector */}
-            </Grid>
+            </form>
             <Notifications notify={notify} setNotify={setNotify} />
         </div>
     )
 }
 
-export default GenInfo
+export default AsgInfo

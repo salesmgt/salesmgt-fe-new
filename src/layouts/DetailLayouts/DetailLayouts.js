@@ -1,12 +1,16 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import {
     Avatar,
+    Button,
     Chip,
+    Icon,
     makeStyles,
     Tab,
     Tabs,
     Typography,
 } from '@material-ui/core'
+import { MdArrowBack } from 'react-icons/md'
 import { Animation } from '../../components'
 import classes from './DetailLayouts.module.scss'
 
@@ -22,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function DetailLayouts(props) {
     const {
+        linkBack,
         avatar,
         header,
         subHeader,
@@ -34,12 +39,29 @@ function DetailLayouts(props) {
 
     const styles = useStyles()
 
+    const history = useHistory()
+
     return (
         <div className={classes.root}>
             <div className={classes.topBg} />
             <div className={classes.container}>
                 <div className={classes.content}>
                     <div className={classes.header}>
+                        <Animation
+                            animation="transition.slideRightIn"
+                            delay={300}
+                        >
+                            <Typography
+                                className={classes.nav}
+                                component={Button}
+                                onClick={() => history.goBack()}
+                            >
+                                <Icon className={classes.icon}>
+                                    <MdArrowBack />
+                                </Icon>
+                                <span className={classes.text}>{linkBack}</span>
+                            </Typography>
+                        </Animation>
                         <div className={classes.headerInfo}>
                             {avatar && (
                                 <Animation
@@ -81,7 +103,7 @@ function DetailLayouts(props) {
                                                     className={
                                                         subHeader
                                                             ? classes.activeSub
-                                                            : classes.deActiveSub
+                                                            : classes.inactiveSub
                                                     }
                                                 />
                                             </Animation>
@@ -156,6 +178,6 @@ export default React.memo(DetailLayouts)
 
 DetailLayouts.defaultProps = {
     tabValue: 0,
-    handleChangeTab: () => { },
+    handleChangeTab: () => {},
     isStatus: false,
 }
