@@ -15,6 +15,7 @@ import * as yup from 'yup'
 import { Notifications } from '../../../../components'
 import { Consts } from './AsgInfoConfig'
 import { useApp } from '../../../../hooks/AppContext'
+import { useAuth } from '../../../../hooks/AuthContext'
 import classes from './AsgInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -80,12 +81,14 @@ function AsgInfo(props) {
         type: '',
     })
 
+    const { user } = useAuth()
+
     const {
         pics,
         // purps
     } = useApp()
 
-    let picFullNames = pics.map((pic) => pic.fullName)
+    const picFullNames = pics.map((pic) => pic.fullName)
 
     const { data } = props
 
@@ -118,7 +121,7 @@ function AsgInfo(props) {
 
     return (
         <div className={classes.panel}>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            {user.roles[0] === 'SALESMAN' ? (
                 <Grid container spacing={0} className={classes.body}>
                     {/* Content Sector */}
                     <Grid
@@ -130,7 +133,7 @@ function AsgInfo(props) {
                         className={classes.content}
                     >
                         <Grid container spacing={0}>
-                            {/* First child - Principal Detail*/}
+                            {/* Info Child */}
                             <Grid
                                 item
                                 xs={12}
@@ -145,9 +148,9 @@ function AsgInfo(props) {
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={3}
-                                        lg={3}
-                                        className={classes.titleZone}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.header}
                                     >
                                         <Typography
                                             color="inherit"
@@ -161,13 +164,191 @@ function AsgInfo(props) {
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={7}
-                                        lg={7}
-                                        className={classes.detailZone}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.body}
                                     >
-                                        <Grid container spacing={3}>
+                                        <Grid container spacing={0}>
                                             {/* Detail */}
-                                            {/* <Grid
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                                className={classes.titleZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.title}
+                                                >
+                                                    {fields.asg.fullName.title}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={7}
+                                                md={7}
+                                                lg={7}
+                                                className={classes.detailZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.detail}
+                                                >
+                                                    {data.fullName}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                                className={classes.titleZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.title}
+                                                >
+                                                    {fields.asg.phone.title}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={7}
+                                                md={7}
+                                                lg={7}
+                                                className={classes.detailZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.detail}
+                                                >
+                                                    {data.phone}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                                className={classes.titleZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.title}
+                                                >
+                                                    {fields.asg.email.title}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={7}
+                                                md={7}
+                                                lg={7}
+                                                className={classes.detailZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.detail}
+                                                >
+                                                    {data.email}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                                className={classes.titleZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.title}
+                                                >
+                                                    {fields.asg.purp.title}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={7}
+                                                md={7}
+                                                lg={7}
+                                                className={classes.detailZone}
+                                            >
+                                                <Typography
+                                                    color="inherit"
+                                                    className={classes.detail}
+                                                >
+                                                    {data.purp}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    {/* Another Sector */}
+                </Grid>
+            ) : (
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <Grid container spacing={0} className={classes.body}>
+                        {/* Content Sector */}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={12}
+                            md={12}
+                            lg={12}
+                            className={classes.content}
+                        >
+                            <Grid container spacing={0}>
+                                {/* First child - Principal Detail*/}
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={12}
+                                    md={12}
+                                    lg={12}
+                                    className={classes.child}
+                                >
+                                    <Grid container spacing={0}>
+                                        {/* Child header */}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={3}
+                                            lg={3}
+                                            className={classes.titleZone}
+                                        >
+                                            <Typography
+                                                color="inherit"
+                                                className={classes.title}
+                                            >
+                                                {headers.child1}
+                                            </Typography>
+                                        </Grid>
+                                        {/* Child body */}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={7}
+                                            lg={7}
+                                            className={classes.detailZone}
+                                        >
+                                            <Grid container spacing={3}>
+                                                {/* Detail */}
+                                                {/* <Grid
                                                 item
                                                 xs={12}
                                                 sm={12}
@@ -204,128 +385,143 @@ function AsgInfo(props) {
                                                     )}
                                                 />
                                             </Grid> */}
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <InputLabel>
-                                                    {fields.asg.fullName.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="fullName"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
-                                                        >
-                                                            {picFullNames.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="phone"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.asg.phone
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            disabled
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.phone
-                                                            }
-                                                            helperText={
-                                                                errors?.phone
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="email"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.asg.email
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            disabled
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.email
-                                                            }
-                                                            helperText={
-                                                                errors?.email
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                            {/* <Grid
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                >
+                                                    <InputLabel>
+                                                        {
+                                                            fields.asg.fullName
+                                                                .title
+                                                        }
+                                                    </InputLabel>
+                                                    <Controller
+                                                        name="fullName"
+                                                        control={control}
+                                                        render={({
+                                                            value,
+                                                            onChange,
+                                                        }) => (
+                                                            <Select
+                                                                value={value}
+                                                                onChange={
+                                                                    onChange
+                                                                }
+                                                                MenuProps={
+                                                                    MenuProps
+                                                                }
+                                                                disableUnderline
+                                                            >
+                                                                {picFullNames.map(
+                                                                    (data) => (
+                                                                        <MenuItem
+                                                                            key={
+                                                                                data
+                                                                            }
+                                                                            value={
+                                                                                data
+                                                                            }
+                                                                            classes={{
+                                                                                root:
+                                                                                    styles.menuItemRoot,
+                                                                                selected:
+                                                                                    styles.menuItemSelected,
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                data
+                                                                            }
+                                                                        </MenuItem>
+                                                                    )
+                                                                )}
+                                                            </Select>
+                                                        )}
+                                                    />
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                >
+                                                    <Controller
+                                                        name="phone"
+                                                        control={control}
+                                                        render={({
+                                                            value,
+                                                            onChange,
+                                                        }) => (
+                                                            <TextField
+                                                                label={
+                                                                    fields.asg
+                                                                        .phone
+                                                                        .title
+                                                                }
+                                                                variant="outlined"
+                                                                required
+                                                                fullWidth
+                                                                disabled
+                                                                value={value}
+                                                                onChange={
+                                                                    onChange
+                                                                }
+                                                                error={
+                                                                    !!errors.phone
+                                                                }
+                                                                helperText={
+                                                                    errors
+                                                                        ?.phone
+                                                                        ?.message
+                                                                }
+                                                            />
+                                                        )}
+                                                    />
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                >
+                                                    <Controller
+                                                        name="email"
+                                                        control={control}
+                                                        render={({
+                                                            value,
+                                                            onChange,
+                                                        }) => (
+                                                            <TextField
+                                                                label={
+                                                                    fields.asg
+                                                                        .email
+                                                                        .title
+                                                                }
+                                                                variant="outlined"
+                                                                required
+                                                                fullWidth
+                                                                disabled
+                                                                value={value}
+                                                                onChange={
+                                                                    onChange
+                                                                }
+                                                                error={
+                                                                    !!errors.email
+                                                                }
+                                                                helperText={
+                                                                    errors
+                                                                        ?.email
+                                                                        ?.message
+                                                                }
+                                                            />
+                                                        )}
+                                                    />
+                                                </Grid>
+                                                {/* <Grid
                                                 item
                                                 xs={12}
                                                 sm={12}
@@ -375,35 +571,39 @@ function AsgInfo(props) {
                                                     )}
                                                 />
                                             </Grid> */}
-                                            {/* Action */}
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                                className={classes.action}
-                                            >
-                                                <Button
-                                                    className={classes.submit}
-                                                    variant="contained"
-                                                    disabled={
-                                                        !formState.isDirty
-                                                    }
-                                                    type="submit"
+                                                {/* Action */}
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                    className={classes.action}
                                                 >
-                                                    {operations.save}
-                                                </Button>
+                                                    <Button
+                                                        className={
+                                                            classes.submit
+                                                        }
+                                                        variant="contained"
+                                                        disabled={
+                                                            !formState.isDirty
+                                                        }
+                                                        type="submit"
+                                                    >
+                                                        {operations.save}
+                                                    </Button>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
+                        {/* Actions Sector */}
                     </Grid>
-                    {/* Actions Sector */}
-                </Grid>
-            </form>
+                </form>
+            )}
+
             <Notifications notify={notify} setNotify={setNotify} />
         </div>
     )
