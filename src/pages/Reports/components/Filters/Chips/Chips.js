@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Avatar, Button, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../hooks/reducer-action-type'
 // import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -73,19 +73,33 @@ function Chips(props) {
                 })
                 break;
 
-            case 'fromDate':
+            case 'dateRange':
                 dispatch({
-                    type: ReducerActions.FILTER_FROM_DATE,
-                    payload: { filterType: 'fromDate', filterValue: null }  // null hay ''?
+                    type: ReducerActions.FILTER_DATE_RANGE,
+                    payload: { filterType: 'dateRange', filterValue: [null, null] }
                 })
+                // dispatch({
+                //     type: ReducerActions.FILTER_FROM_DATE,
+                //     payload: { filterType: 'fromDate', filterValue: null }
+                // })
+                // dispatch({
+                //     type: ReducerActions.FILTER_TO_DATE,
+                //     payload: { filterType: 'toDate', filterValue: null }
+                // })
                 break;
+            // case 'fromDate':
+            //     dispatch({
+            //         type: ReducerActions.FILTER_FROM_DATE,
+            //         payload: { filterType: 'fromDate', filterValue: null }
+            //     })
+            //     break;
 
-            case 'toDate':
-                dispatch({
-                    type: ReducerActions.FILTER_TO_DATE,
-                    payload: { filterType: 'toDate', filterValue: null }  // null hay ''?
-                })
-                break;
+            // case 'toDate':
+            //     dispatch({
+            //         type: ReducerActions.FILTER_TO_DATE,
+            //         payload: { filterType: 'toDate', filterValue: null }
+            //     })
+            //     break;
 
             default:
                 // throw new Error();
@@ -126,15 +140,21 @@ function Chips(props) {
             payload: { filterType: 'purpose', filterValue: '' }
         })
         dispatch({
-            type: ReducerActions.FILTER_FROM_DATE,
-            payload: { filterType: 'fromDate', filterValue: null }  // null hay ''?
+            type: ReducerActions.FILTER_DATE_RANGE,
+            payload: { filterType: 'dateRange', filterValue: [null, null] }
         })
-        dispatch({
-            type: ReducerActions.FILTER_TO_DATE,
-            payload: { filterType: 'toDate', filterValue: null }  // null hay ''?
-        })
+        // dispatch({
+        //     type: ReducerActions.FILTER_FROM_DATE,
+        //     payload: { filterType: 'fromDate', filterValue: null }
+        // })
+        // dispatch({
+        //     type: ReducerActions.FILTER_TO_DATE,
+        //     payload: { filterType: 'toDate', filterValue: null }
+        // })
 
-        const removedFilters = ['district', 'type', 'level', 'scale', 'status']
+        const removedFilters = [
+            'PIC', 'district', 'schoolYear', 'status', 'purpose', 'dateRange'   //,'fromDate', 'toDate'
+        ]
 
         handleChipsRemoved(removedFilters);
     }
@@ -142,15 +162,54 @@ function Chips(props) {
     const handleShowClearAllButton = () => {
         let count = 0;
         chips.forEach(chip => {
-            if (chip.filterValue === '' || chip.filterValue === null)
+            if (chip.filterValue === '' || chip.filterValue === null) {
                 count++;
+            } else if (chip.filterType === 'dateRange' && (typeof chip.filterValue !== 'string')) {
+                count++;
+            }
         });
+        // console.log('count = ', count);
         return count;
+    }
+
+    const renderChips = (chip) => {
+        if (chip.filterType === 'PIC') {
+            return (
+                <Chip
+                    label={chip.filterValue.fullName}
+                    avatar={<Avatar src={chip.filterValue.avatar} />}
+                    onDelete={handleChipDelete(chip)}
+                    className={classes.chip}
+                    color="secondary"
+                />
+            );
+        } else if (chip.filterType === 'dateRange') {
+            if (typeof chip.filterValue === 'string') {
+                return (
+                    <Chip
+                        label={chip.filterValue}
+                        onDelete={handleChipDelete(chip)}
+                        className={classes.chip}
+                        color="secondary"
+                    />
+                );
+            }
+        } else {
+            // } else if (chip.filterType !== 'dateRange') {
+            return (
+                <Chip
+                    label={chip.filterValue}
+                    onDelete={handleChipDelete(chip)}
+                    className={classes.chip}
+                    color="secondary"
+                />
+            );
+        }
     }
 
     return (
         <>
-            {(handleShowClearAllButton() !== 7) &&
+            {(handleShowClearAllButton() !== 6) &&
                 <div className={classes.root}>
                     <Button size='small' className={classes.btnClear} onClick={handleClearAllChips}>
                         Clear all
@@ -161,21 +220,7 @@ function Chips(props) {
                                 <>
                                     {chip.filterValue &&
                                         <li key={chip.filterType}>
-                                            {(chip.filterType === 'PIC')
-                                                ? <Chip
-                                                    label={chip.filterValue.fullName}
-                                                    avatar={<Avatar src={chip.filterValue.avatar} />}
-                                                    onDelete={handleChipDelete(chip)}
-                                                    className={classes.chip}
-                                                    color="secondary"
-                                                />
-                                                : <Chip
-                                                    label={chip.filterValue}
-                                                    onDelete={handleChipDelete(chip)}
-                                                    className={classes.chip}
-                                                    color="secondary"
-                                                />
-                                            }
+                                            {renderChips(chip)}
                                         </li>
                                     }
                                 </>

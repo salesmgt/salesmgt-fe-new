@@ -21,11 +21,12 @@ import {
 import { MdAccountCircle, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
-import { useSchool } from '../../hooks/SchoolContext'
-import Chips from '../Chips/Chips'
-import styles from './Filters.module.scss'
+import { useReport } from '../../hooks/ReportContext'
+import Chips from './Chips/Chips'
 import { Autocomplete } from '@material-ui/lab'
-import { DatePicker } from '@material-ui/pickers'
+import DateRangePickers from './DateRangePickers/DateRangePickers'
+import moment from 'moment'
+import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38;
@@ -52,6 +53,11 @@ const useStyles = makeStyles((theme) => ({
     },
     option: {
         fontSize: '0.875rem'
+    },
+    autoComplete: {
+        width: 260,
+        marginLeft: '0.5rem',
+        // padding: 0
     }
 }));
 
@@ -115,9 +121,10 @@ function Filters() {
         params, dispatchParams,
         PICs, districts, schoolYears, schoolStatuses,
         PIC, district, schoolYear, purpose, schoolStatus,
-        fromDate, toDate, setPIC, setDistrict, setSchoolYear,
-        setPurpose, setSchoolStatus, setFromDate, setToDate
-    } = useSchool()
+        setPIC, setDistrict, setSchoolYear,
+        setPurpose, setSchoolStatus, setDateRange
+        // fromDate, toDate, setFromDate, setToDate
+    } = useReport()
 
     //================Handle useState() of filters================
     const handlePICChange = (event, newPIC) => {
@@ -204,37 +211,74 @@ function Filters() {
         }
     };
 
-    const handleFromDateChange = (event) => {
-        const selectedDate = event.target.value;
-        setFromDate(selectedDate);
+    const handleDateRangeChange = (selectedDate) => {
+        // console.log('DateRange = ', selectedDate[0], selectedDate[1]);
 
+        // Tiền xử lý format của date trước khi lưu vào context
         if (selectedDate) {  // !== '' && selectedDate !== undefined
+            const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD');
+            const toDate = moment(selectedDate[1]).format('YYYY-MM-DD');
+
             dispatchParams({
-                type: ReducerActions.FILTER_FROM_DATE,
-                payload: { filterType: 'fromDate', filterValue: selectedDate }
+                type: ReducerActions.FILTER_DATE_RANGE,
+                payload: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
             })
+
+
+            // if (selectedDate[0]) {
+            //     dispatchParams({
+            //         type: ReducerActions.FILTER_FROM_DATE,
+            //         payload: {
+            //             fromDate: { filterType: 'fromDate', filterValue: fromDate },
+            //             dateRange: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
+            //         }
+            //     })
+            // } else {
+            //     dispatchParams({
+            //         type: ReducerActions.FILTER_FROM_DATE,
+            //         payload: {
+            //             fromDate: { filterType: 'fromDate', filterValue: null },
+            //             dateRange: { filterType: 'dateRange', filterValue: [null, null] }
+            //         }
+            //     })
+            // }
+
+            // if (selectedDate[1]) {
+            //     dispatchParams({
+            //         type: ReducerActions.FILTER_TO_DATE,
+            //         payload: {
+            //             toDate: { filterType: 'toDate', filterValue: toDate },
+            //             dateRange: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
+            //         }
+            //     })
+            // } else {
+            //     dispatchParams({
+            //         type: ReducerActions.FILTER_TO_DATE,
+            //         payload: {
+            //             toDate: { filterType: 'toDate', filterValue: null },
+            //             dateRange: { filterType: 'dateRange', filterValue: [null, null] }
+            //         }
+            //     })
+            // }
         } else {
             dispatchParams({
-                type: ReducerActions.FILTER_FROM_DATE,
-                payload: { filterType: 'fromDate', filterValue: null }
+                type: ReducerActions.FILTER_DATE_RANGE,
+                payload: { filterType: 'dateRange', filterValue: [null, null] }
             })
-        }
-    };
-
-    const handleToDateChange = (event) => {
-        const selectedDate = event.target.value;
-        setToDate(selectedDate);
-
-        if (selectedDate) {  // !== '' && selectedDate !== undefined
-            dispatchParams({
-                type: ReducerActions.FILTER_TO_DATE,
-                payload: { filterType: 'toDate', filterValue: selectedDate }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_TO_DATE,
-                payload: { filterType: 'toDate', filterValue: null }
-            })
+            // dispatchParams({
+            //     type: ReducerActions.FILTER_FROM_DATE,
+            //     payload: {
+            //         fromDate: { filterType: 'fromDate', filterValue: null },
+            //         dateRange: { filterType: 'dateRange', filterValue: [null, null] }
+            //     }
+            // })
+            // dispatchParams({
+            //     type: ReducerActions.FILTER_TO_DATE,
+            //     payload: {
+            //         toDate: { filterType: 'toDate', filterValue: null },
+            //         dateRange: { filterType: 'dateRange', filterValue: [null, null] }
+            //     }
+            // })
         }
     };
 
@@ -257,12 +301,15 @@ function Filters() {
                 case 'purpose':
                     setPurpose("All");
                     break;
-                case 'fromDate':
-                    setFromDate(null);
+                case 'dateRange':
+                    setDateRange([null, null]);
                     break;
-                case 'toDate':
-                    setToDate(null);
-                    break;
+                // case 'fromDate':
+                //     setFromDate(null);
+                //     break;
+                // case 'toDate':
+                //     setToDate(null);
+                //     break;
                 default:
                     break;
             }
@@ -271,9 +318,57 @@ function Filters() {
 
     const generateChipsArray = (listFilters) => {
         const listChips = [];
-        for (const chip in listFilters) {
-            listChips.push(listFilters[chip]);
+
+        // Thêm trước 1 phần tử mới chưa tồn tại trong listFilters
+        let newListFilters = { ...listFilters }
+
+        // console.log('newListFilters = ', newListFilters);
+
+        for (const chip in newListFilters) {
+            console.log('chip: ', chip);
+            // if (chip !== 'fromDate' && chip !== 'toDate') {
+            // if (chip !== 'dateRange') {
+            // listChips.push(newListFilters[chip]);
+            // } else {
+            if (chip === 'dateRange') {
+                let from = '';
+                let to = '';
+                console.log('dateRange value = ', newListFilters[chip].filterValue);
+                // if (chip === 'fromDate') {
+                from = moment(newListFilters[chip].filterValue[0]).format('MMM D, YYYY')
+                console.log('from = ', from);
+                // }
+                // if (chip === 'toDate') {
+                to = moment(newListFilters[chip].filterValue[1]).format('MMM D, YYYY')
+                console.log('to = ', to);
+                // }
+
+                if (from !== 'Invalid date' && to !== 'Invalid date') {
+                    console.log('before: ', newListFilters[chip]);
+                    newListFilters = {
+                        ...newListFilters,
+                        dateRange: {
+                            filterType: 'dateRange',
+                            filterValue: `${from} ➜ ${to}`
+                        }
+                    }
+                    console.log('after: ', newListFilters[chip]);
+                    // listChips.push(newListFilters[chip]);
+                    // listChips = [...listChips, {
+                    //     filterType: 'dateRange',
+                    //     filterValue: `${from} - ${to}`
+                    // }]
+                }
+                // else if (from === 'Invalid date' && to === 'Invalid date') {
+                //     listChips.push({
+                //         filterType: 'dateRange',
+                //         filterValue: ''
+                //     })
+                // }
+            }
+            listChips.push(newListFilters[chip]);
         }
+        console.log(listChips);
         return listChips;
     }
     //===============================================================================
@@ -309,7 +404,7 @@ function Filters() {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid item xs={12} sm={12} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={5} lg={4}>
                             <Autocomplete
                                 autoComplete
                                 autoSelect
@@ -348,12 +443,13 @@ function Filters() {
                                         </ListItem>
                                     );
                                 }}
-                                style={{ width: 250, marginLeft: '0.52rem' }}
+                                // style={{ width: 250, marginLeft: '0.52rem' }}
+                                className={classes.autoComplete}
                                 onChange={(event, newPIC) => handlePICChange(event, newPIC)}
                             />
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={4}>
+                        <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
                                 <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
@@ -365,7 +461,7 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={5}>
+                        <Grid item xs={6} sm={6} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Years</InputLabel>
                                 <Select value={schoolYear} onChange={handleSchoolYearChange} MenuProps={MenuProps}>
@@ -377,7 +473,15 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={5} lg={4}>
+                            <DateRangePickers
+                                handleDateRangeChange={handleDateRangeChange}
+                            />
+                            {/* <FormControl className={classes.formControl}>
+                            </FormControl> */}
+                        </Grid>
+
+                        <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
                                 <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
@@ -389,7 +493,7 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={3} style={{ paddingTop: '0.3rem', paddingLeft: '1.5rem' }}>
+                        <Grid item xs={6} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Purposes</InputLabel>
                                 <Select
@@ -409,28 +513,6 @@ function Filters() {
                                     <ListSubheader className={classes.option}><em>Ngưng hợp tác</em></ListSubheader>
                                 </Select>
                             </FormControl>
-                        </Grid>
-
-                        <Grid item xs={6} sm={4} md={4} lg={3}>
-                            <DatePicker
-                                autoOk
-                                orientation="landscape"
-                                variant="static"
-                                openTo="date"
-                                value={fromDate}
-                                onChange={setFromDate}
-                            />
-                        </Grid>
-
-                        <Grid item xs={6} sm={4} md={4} lg={3}>
-                            <DatePicker
-                                autoOk
-                                orientation="landscape"
-                                variant="static"
-                                openTo="date"
-                                value={toDate}
-                                onChange={setToDate}
-                            />
                         </Grid>
                     </Grid>
                 </MuiAccordionDetails>

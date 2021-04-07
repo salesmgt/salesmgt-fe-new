@@ -22,8 +22,9 @@ function useReportProvider() {
                 schoolYear: { filterType: 'schoolYear', filterValue: '' },
                 status: { filterType: 'status', filterValue: '' },
                 purpose: { filterType: 'purpose', filterValue: '' },
-                fromDate: { filterType: 'fromDate', filterValue: null },
-                toDate: { filterType: 'toDate', filterValue: null },
+                // fromDate: { filterType: 'fromDate', filterValue: null },
+                // toDate: { filterType: 'toDate', filterValue: null },
+                dateRange: { filterType: 'dateRange', filterValue: [null, null] },
             },
             searchKey: '',
             page: 0,
@@ -47,8 +48,9 @@ function useReportProvider() {
     const [schoolYear, setSchoolYear] = useState('');
     const [purpose, setPurpose] = useState('');
     const [schoolStatus, setSchoolStatus] = useState('');
-    const [fromDate, setFromDate] = useState((new Date()).getDate() - 7);
-    const [toDate, setToDate] = useState((new Date()).getDate());
+    const [dateRange, setDateRange] = useState([null, null]);
+    // const [fromDate, setFromDate] = useState((new Date()).getDate() - 7);
+    // const [toDate, setToDate] = useState((new Date()).getDate());
 
     // APIs
     const [PICs, setPICs] = useState([]);
@@ -60,8 +62,8 @@ function useReportProvider() {
 
     // Get filters' data
     const getPICsFilter = () => {
-        FiltersServices.getPICs().then((res) => {
-            setPICs(res.data.list)
+        FiltersServices.getPICs().then((data) => {
+            setPICs(data)
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -74,8 +76,8 @@ function useReportProvider() {
     }
 
     const getDistrictsFilter = () => {
-        FiltersServices.getDistricts().then((res) => {
-            setDistricts(res.data)
+        FiltersServices.getDistricts().then((data) => {
+            setDistricts(data)
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -88,8 +90,8 @@ function useReportProvider() {
     }
 
     const getSchoolYearsFilter = () => {
-        FiltersServices.getSchoolYears().then((res) => {
-            setSchoolYears(res.data)
+        FiltersServices.getSchoolYears().then((data) => {
+            setSchoolYears(data)
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -102,8 +104,8 @@ function useReportProvider() {
     }
 
     const getSchoolStatusesFilter = () => {
-        FiltersServices.getSchoolStatuses().then((res) => {
-            setSchoolStatuses(res.data)
+        FiltersServices.getSchoolStatuses().then((data) => {
+            setSchoolStatuses(data)
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -129,7 +131,8 @@ function useReportProvider() {
         direction, setDirection, column, setColumn,
         PIC, setPIC, district, setDistrict, schoolYear, setSchoolYear,
         purpose, setPurpose, schoolStatus, setSchoolStatus,
-        fromDate, setFromDate, toDate, setToDate
+        dateRange, setDateRange
+        // fromDate, setFromDate, toDate, setToDate
     }
 }
 

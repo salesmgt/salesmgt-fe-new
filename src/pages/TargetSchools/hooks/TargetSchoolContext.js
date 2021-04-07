@@ -153,7 +153,7 @@ function useTargetSchoolProvider() {
     const getPICsFilter = () => {
         FiltersServices.getPICs()
             .then((data) => {
-                setPICs(data.list)
+                setPICs(data)
             })
             .catch((error) => {
                 if (error.response) {

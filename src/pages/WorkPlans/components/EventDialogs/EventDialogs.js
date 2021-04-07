@@ -13,7 +13,7 @@ import {
     FormControlLabel,
     Switch,
 } from '@material-ui/core'
-import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
+import { MuiPickersUtilsProvider, DateTimePicker } from 'mui-pickers-v3'
 import { MdDelete } from 'react-icons/md'
 import moment from 'moment'
 // import 'date-fns'
@@ -92,7 +92,7 @@ function EventDialogs() {
                                     // checked={form.allDay}
                                     id="allDay"
                                     name="allDay"
-                                    // onChange={handleChange}
+                                // onChange={handleChange}
                                 />
                             }
                         />
@@ -103,9 +103,9 @@ function EventDialogs() {
                                 inputVariant="outlined"
                                 value={selectedDate}
                                 onChange={handleDateChange}
-                                // value={form.start}
-                                // onChange={(date) => setInForm('start', date)}
-                                // maxDate={form.end}
+                            // value={form.start}
+                            // onChange={(date) => setInForm('start', date)}
+                            // maxDate={form.end}
                             />
                             <DateTimePicker
                                 label="End"
@@ -113,9 +113,9 @@ function EventDialogs() {
                                 inputVariant="outlined"
                                 value={selectedDate}
                                 onChange={handleDateChange}
-                                // value={form.end}
-                                // onChange={(date) => setInForm('end', date)}
-                                // minDate={form.start}
+                            // value={form.end}
+                            // onChange={(date) => setInForm('end', date)}
+                            // minDate={form.start}
                             />
                         </MuiPickersUtilsProvider>
 
@@ -139,8 +139,8 @@ function EventDialogs() {
                             rows={5}
                             fullWidth
                             inputRef={register}
-                            // error={!!errors.des}
-                            // helperText={errors?.des?.message}
+                        // error={!!errors.des}
+                        // helperText={errors?.des?.message}
                         />
                     </DialogContent>
                     <DialogActions className="">

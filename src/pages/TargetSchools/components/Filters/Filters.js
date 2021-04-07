@@ -23,7 +23,7 @@ import { MdAccountCircle, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
-import Chips from '../Chips/Chips'
+import Chips from './Chips/Chips'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============

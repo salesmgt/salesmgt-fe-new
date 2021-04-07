@@ -13,7 +13,7 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core'
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
+import { MuiPickersUtilsProvider, DatePicker } from 'mui-pickers-v3' // '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -30,18 +30,18 @@ const clientSchema = yup.object().shape({
     email: yup.string().email('Invalid email').trim(),
 })
 
-const serverSchema = [
-    // {
-    //     type: 'server',
-    //     name: 'name',
-    //     message: null,
-    // },
-    // {
-    //     type: 'server',
-    //     name: 'credential',
-    //     message: 'Invalid username or password',
-    // },
-]
+// const serverSchema = [
+//     {
+//         type: 'server',
+//         name: 'name',
+//         message: null,
+//     },
+//     {
+//         type: 'server',
+//         name: 'credential',
+//         message: 'Invalid username or password',
+//     },
+// ]
 
 const ITEM_HEIGHT = 120
 const MenuProps = {

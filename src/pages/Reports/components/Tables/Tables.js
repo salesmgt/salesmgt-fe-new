@@ -20,8 +20,8 @@ import {
 import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import classes from './Tables.module.scss';
-import { useSchool } from '../../hooks/SchoolContext';
-import MenuOptions from '../MenuOptions/MenuOptions';
+import { useReport } from '../../hooks/ReportContext';
+import MenuOptions from './MenuOptions/MenuOptions';
 import * as ReducerActions from '../../hooks/reducer-action-type';
 
 // Customize component TablePagination
@@ -127,7 +127,7 @@ function Tables(props) {
     params, dispatchParams,
     limit, direction, column,
     setColumn, setLimit, setPage, setDirection
-  } = useSchool();
+  } = useReport();
 
   // ====================Paging====================
   const handleChangePage = (event, newPage) => {
@@ -185,7 +185,7 @@ function Tables(props) {
   };
 
   const truncateString = (str) => {
-    return str.length > 10 ? str.substring(0, 7) + "..." : str;
+    return str.length > 30 ? str.substring(0, 27) + "..." : str;
   }
 
   return (
@@ -197,12 +197,14 @@ function Tables(props) {
             {rows?.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow key={row.id} className={classes.tBodyRow}>
-                  <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
-                  <TableCell className={classes.tBodyCell} style={{ fontSize: '1rem' }}>{row.date}</TableCell>
-                  <TableCell className={classes.tBodyCell} style={{ fontSize: '1rem' }}>
+                  <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell>
+                  <TableCell className={classes.tBodyCell}>{row.date}</TableCell>
+                  <TableCell className={classes.tBodyCell}>
                     <ListItemText
-                      primary={`${row.educationalLevel} ${row.name}`}
+                      primary={`${row.educationalLevel} ${row.schoolName}`}
+                      primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                       secondary={row.district}
+                      secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
                     />
                   </TableCell>
                   <TableCell className={classes.tBodyCell}>

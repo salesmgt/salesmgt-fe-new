@@ -21,7 +21,7 @@ import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } fr
 import PropTypes from 'prop-types';
 import classes from './Tables.module.scss';
 import { useAccount } from '../../hooks/AccountContext';
-import MenuOptions from '../MenuOptions/MenuOptions';
+import MenuOptions from './MenuOptions/MenuOptions';
 import * as ReducerActions from '../../hooks/reducer-action-type';
 
 // Customize component TablePagination

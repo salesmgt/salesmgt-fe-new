@@ -9,7 +9,7 @@ import {
 import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdEdit, MdInfo } from 'react-icons/md'
 import PropTypes from 'prop-types'
-import { useAuth } from '../../../../hooks/AuthContext'
+import { useAuth } from '../../../../../hooks/AuthContext'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {

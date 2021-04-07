@@ -1,25 +1,26 @@
 import React from 'react'
 import {
     Dashboards,
+    Account,
     Accounts,
+    TargetSchool,
     TargetSchools,
     WorkPlans,
-    Schools,
-    Salesmen,
-    Reports,
-    Account,
     School,
-    TargetSchool,
+    Schools,
     Salesman,
+    Salesmen,
     Report,
+    Reports,
 } from '../pages'
 import AccountProvider from '../pages/Accounts/hooks/AccountContext'
+import ReportProvider from '../pages/Reports/hooks/ReportContext'
 import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
 import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
 import TargetSchoolProvider from '../pages/TargetSchools/hooks/TargetSchoolContext'
 
 export const roleRoutes = {
-    ADMIN: [
+    'ADMIN': [
         {
             path: 'accounts',
             component: () => (
@@ -63,7 +64,13 @@ export const roleRoutes = {
             ),
         },
         { path: 'salesmen/:id', component: () => <Salesman /> },
-        { path: 'reports', component: () => <Reports /> },
+        {
+            path: 'reports', component: () => (
+                <ReportProvider>
+                    <Reports />
+                </ReportProvider>
+            )
+        },
         { path: 'reports/:id', component: () => <Report /> },
         {
             path: 'schools',
@@ -75,7 +82,7 @@ export const roleRoutes = {
         },
         { path: 'schools/:id', component: () => <School /> },
     ],
-    SALESMAN: [
+    'SALESMAN': [
         { path: 'dashboards', component: () => <Dashboards /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
         {
@@ -90,7 +97,13 @@ export const roleRoutes = {
             path: 'target-schools/:id',
             component: () => <TargetSchool />,
         },
-        { path: 'reports', component: () => <Reports /> },
+        {
+            path: 'reports', component: () => (
+                <ReportProvider>
+                    <Reports />
+                </ReportProvider>
+            )
+        },
         { path: 'reports/:id', component: () => <Report /> },
     ],
 }
