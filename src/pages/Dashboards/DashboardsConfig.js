@@ -88,12 +88,12 @@ export const chartData = {
 
     datasets: [
         {
-            name: 'week',
+            name: 'weekly',
             data: [7, 6, 17, 9, 13, 11, 8, 15, 7],
             averageData: [15, 15, 15, 15, 15, 15, 15, 15, 15],
         },
         {
-            name: 'month',
+            name: 'monthly',
             data: [15, 25, 20, 17, 18, 23, 31, 15, 26],
             averageData: [15, 15, 15, 15, 15, 15, 15, 15, 15],
         },
