@@ -9,24 +9,27 @@ import PrivateRoute from './routes/PrivateRoute'
 function App() {
     return (
         <AuthProvider>
-            <AppProvider>
-                <Switch>
-                    <PublicRoute
-                        exact
-                        path="/"
-                        restricted={true}
-                        component={Logins}
-                    />
-                    <PrivateRoute path="/apps" component={AppLayouts} />
-                    <Route
-                        path="/errors"
-                        component={() => (
-                            <Errors defaultError={getError(404)} />
-                        )}
-                    />
-                    <Redirect from="*" to="/errors" />
-                </Switch>
-            </AppProvider>
+            <Switch>
+                <PublicRoute
+                    exact
+                    path="/"
+                    restricted={true}
+                    component={Logins}
+                />
+                <PrivateRoute
+                    path="/apps"
+                    component={() => (
+                        <AppProvider>
+                            <AppLayouts />
+                        </AppProvider>
+                    )}
+                />
+                <Route
+                    path="/errors"
+                    component={() => <Errors defaultError={getError(404)} />}
+                />
+                <Redirect from="*" to="/errors" />
+            </Switch>
         </AuthProvider>
     )
 }
