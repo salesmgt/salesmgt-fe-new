@@ -19,7 +19,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
-import { Notifications } from '../../../../components'
+import { NotFound, Notifications } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import classes from './GenInfo.module.scss'
 
@@ -90,13 +90,13 @@ function GenInfo(props) {
     const { data } = props
 
     const defaultValues = {
-        username: data.username,
-        active: data.active,
-        gender: String(data.gender),
-        dob: data.birthDate,
-        phone: data.phone,
-        email: data.email,
-        role: data.roleName,
+        username: data?.username,
+        active: data?.active,
+        gender: String(data?.gender),
+        dob: data?.birthDate,
+        phone: data?.phone,
+        email: data?.email,
+        role: data?.roleName,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({
@@ -107,6 +107,10 @@ function GenInfo(props) {
     if (!roles) {
         return null
     }
+
+     if (!data) {
+         return <NotFound />
+     }
 
     const onSubmit = (data) => {
         const rs = { ...data, gender: data.gender === 'true' ? true : false }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, AsgInfo } from './panels'
+import { NotFound } from '../../components'
 
 function TargetSchool() {
     const [tabValue, setTabValue] = useState(0)
@@ -10,39 +11,27 @@ function TargetSchool() {
 
     const data = location.state?.data
 
-    const schData = {
-        schName: data.schoolName,
-        dist: data.district,
-        year: data.schoolYear,
-        // active: data.active,
-        // addr: data.address,
-        // tel: data.phone,
-        // email: data.email,
-        // eduLvl: data.educationalLevel,
-        // scale: data.scale,
-        // status: data.status,
-        // type: data.type,
-        // des: data.description,
-        repName: data.reprName,
-        repGender: data.reprGender,
-        repPhone: data.reprPhone,
-        repEmail: data.reprEmail,
+    if (!data) {
+        return <NotFound />
     }
 
-    // const repData = {
-    //     name: data.reprName,
-    //     gender: data.reprGender,
-    //     phone: data.reprPhone,
-    //     email: data.reprEmail,
-    // }
+    const schData = {
+        schName: data?.schoolName,
+        dist: data?.district,
+        year: data?.schoolYear,
+        repName: data?.reprName,
+        repGender: data?.reprGender,
+        repPhone: data?.reprPhone,
+        repEmail: data?.reprEmail,
+    }
 
     const asgData = {
-        avatar: data.avatar,
-        name: data.username,
-        fullName: data.fullName,
-        phone: data.userPhone,
-        email: data.userEmail,
-        purp: data.purpose,
+        avatar: data?.avatar,
+        name: data?.username,
+        fullName: data?.fullName,
+        phone: data?.userPhone,
+        email: data?.userEmail,
+        purp: data?.purpose,
     }
 
     const handleChangeTab = (event, value) => {

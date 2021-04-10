@@ -1,13 +1,17 @@
 import React from 'react'
 import { Grid, Icon, Typography } from '@material-ui/core'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
-import { MixedCharts } from '../../components'
+// import { MixedCharts } from '../../components'
 import { Consts } from './GenConfig'
 import classes from './GenInfo.module.scss'
 
 function GenInfo(props) {
     const { data } = props
-    const { headers, fields, charts } = Consts
+    const {
+        headers,
+        fields,
+        // charts
+    } = Consts
 
     return (
         <div className={classes.panel}>
@@ -86,7 +90,7 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.detail}
                                             >
-                                                {data.username}
+                                                {data?.username}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -121,7 +125,7 @@ function GenInfo(props) {
                                                     : 'Female'}
                                             </Typography>
                                             <Icon className={classes.icon}>
-                                                {data.gender ? (
+                                                {data?.gender ? (
                                                     <AiOutlineMan color="#005BB5" />
                                                 ) : (
                                                     <AiOutlineWoman color="#E26A89" />
@@ -155,7 +159,7 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.detail}
                                             >
-                                                {data.birthDate}
+                                                {data?.birthDate}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -185,7 +189,7 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.detail}
                                             >
-                                                {data.phone}
+                                                {data?.phone}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -215,7 +219,7 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.detail}
                                             >
-                                                {data.email}
+                                                {data?.email}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -245,7 +249,7 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.detail}
                                             >
-                                                {data.address}
+                                                {data?.address}
                                             </Typography>
                                         </Grid>
                                     </Grid>

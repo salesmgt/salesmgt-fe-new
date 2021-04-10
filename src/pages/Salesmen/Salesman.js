@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { NotFound } from '../../components'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo } from './panels'
 
@@ -9,6 +10,10 @@ function Salesman() {
     const location = useLocation()
 
     const data = location.state?.data
+
+    if (!data) {
+        return <NotFound />
+    }
 
     const handleChangeTab = (event, value) => {
         setTabValue(value)

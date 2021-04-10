@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { NotFound } from '../../components'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, RepInfo } from './panels'
 
@@ -10,25 +11,29 @@ function School() {
 
     const data = location.state?.data
 
+    if (!data) {
+        return <NotFound />
+    }
+
     const schData = {
-        name: data.name,
-        active: data.active,
-        addr: data.address,
-        tel: data.phone,
-        email: data.email,
-        dist: data.district,
-        eduLvl: data.educationalLevel,
-        scale: data.scale,
-        status: data.status,
-        type: data.type,
-        des: data.description,
+        name: data?.name,
+        active: data?.active,
+        addr: data?.address,
+        tel: data?.phone,
+        email: data?.email,
+        dist: data?.district,
+        eduLvl: data?.educationalLevel,
+        scale: data?.scale,
+        status: data?.status,
+        type: data?.type,
+        des: data?.description,
     }
 
     const repData = {
-        name: data.reprName,
-        gender: data.reprGender,
-        phone: data.reprPhone,
-        email: data.reprEmail,
+        name: data?.reprName,
+        gender: data?.reprGender,
+        phone: data?.reprPhone,
+        email: data?.reprEmail,
     }
 
     const handleChangeTab = (event, value) => {

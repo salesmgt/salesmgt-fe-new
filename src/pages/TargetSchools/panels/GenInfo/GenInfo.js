@@ -16,7 +16,6 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
-// import { useAuth } from '../../../../hooks/AuthContext'
 import { Notifications } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import classes from './GenInfo.module.scss'
@@ -85,25 +84,17 @@ function GenInfo(props) {
         type: '',
     })
 
-    // const { user } = useAuth()
     const { dists } = useApp()
 
     const { data } = props
 
     const defaultValues = {
-        schName: data.schName,
-        dist: data.dist,
-        repName: data.repName,
-        repGender: String(data.repGender),
-        repPhone: data.repPhone,
-        repEmail: data.repEmail,
-        // active: data.active,
-        // addr: data.addr,
-        // eduLvl: data.eduLvl,
-        // scale: data.scale,
-        // type: data.type,
-        // status: data.status,
-        // des: data.des,
+        schName: data?.schName,
+        dist: data?.dist,
+        repName: data?.repName,
+        repGender: String(data?.repGender),
+        repPhone: data?.repPhone,
+        repEmail: data?.repEmail,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({

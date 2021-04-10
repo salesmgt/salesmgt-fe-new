@@ -88,17 +88,17 @@ function GenInfo(props) {
     const { data } = props
 
     const defaultValues = {
-        name: data.name,
-        active: data.active,
-        addr: data.addr,
-        tel: data.tel,
-        email: data.email,
-        dist: data.dist,
-        eduLvl: data.eduLvl,
-        scale: data.scale,
-        type: data.type,
-        status: data.status,
-        des: data.des,
+        name: data?.name,
+        active: data?.active,
+        addr: data?.addr,
+        tel: data?.tel,
+        email: data?.email,
+        dist: data?.dist,
+        eduLvl: data?.eduLvl,
+        scale: data?.scale,
+        type: data?.type,
+        status: data?.status,
+        des: data?.des,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({

@@ -49,10 +49,10 @@ function RepInfo(props) {
     const { data } = props
 
     const defaultValues = {
-        name: data.name,
-        gender: String(data.gender),
-        phone: data.phone,
-        email: data.email,
+        name: data?.name,
+        gender: String(data?.gender),
+        phone: data?.phone,
+        email: data?.email,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({

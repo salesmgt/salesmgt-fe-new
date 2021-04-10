@@ -93,11 +93,11 @@ function AsgInfo(props) {
     const { data } = props
 
     const defaultValues = {
-        // avatar: data.avatar,
-        fullName: data.fullName,
-        phone: data.phone,
-        email: data.email,
-        purp: data.purp,
+        // avatar: data?.avatar,
+        fullName: data?.fullName,
+        phone: data?.phone,
+        email: data?.email,
+        purp: data?.purp,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({
