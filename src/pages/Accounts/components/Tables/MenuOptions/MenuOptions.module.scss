@@ -1,8 +1,23 @@
-.icon {
-    min-width: 1.7rem
+@import '../../../../../styles/Variables.module.scss';
+
+.itemIcon {
+    min-width: 1.7rem !important
 }
 
-.text {
-    margin: 0;
-    padding: 0;
+.itemText {
+    margin: 0 !important;
+    padding: 0 !important;
 }
+
+// .dialogText {
+//     color: $common-black !important;
+// }
+
+// .btnRemove {
+//     color: $common-white !important;
+//     background-color: $main-error !important;
+//     // text-transform: none;
+//     &:hover {
+//         background-color: $dark-error !important;
+//     }
+// }

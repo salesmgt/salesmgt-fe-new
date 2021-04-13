@@ -44,14 +44,14 @@ function School() {
         <DetailLayouts
             linkBack="Schools"
             header={data.name}
-            tabs={['General Info', 'Pricipal Info']}
+            tabs={['General Info', 'Principal Info']}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >
             {/* General Info */}
             {tabValue === 0 && <GenInfo data={schData} />}
 
-            {/* Pricipal Info */}
+            {/* Principal Info */}
             {tabValue === 1 && <RepInfo data={repData} />}
         </DetailLayouts>
     )

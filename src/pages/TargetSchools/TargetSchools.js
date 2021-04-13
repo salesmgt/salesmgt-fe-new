@@ -33,8 +33,8 @@ function TargetSchools() {
             listFilters
         )
             .then((res) => {
-                setData(res.data)
-                // console.log('new list: ', res.data)
+                setData(res)
+                // console.log('target schools: ', res)
             })
             .catch((error) => {
                 if (error.response) {
@@ -69,8 +69,8 @@ function TargetSchools() {
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
-                // className={classes.table}
-                // onGetTargets={onGetTargets}
+            // className={classes.table}
+            // onGetTargets={onGetTargets}
             />
             {/* <Paper
                     variant="outlined"

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -17,8 +17,9 @@ import {
     ListItemText,
     Avatar,
     ListSubheader,
+    Button,
 } from '@material-ui/core'
-import { MdAccountCircle, MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useReport } from '../../hooks/ReportContext'
@@ -26,6 +27,7 @@ import Chips from './Chips/Chips'
 import { Autocomplete } from '@material-ui/lab'
 import DateRangePickers from './DateRangePickers/DateRangePickers'
 import moment from 'moment'
+import CreateReport from '../../dialogs/CreateReport'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -58,13 +60,18 @@ const useStyles = makeStyles((theme) => ({
         width: 260,
         marginLeft: '0.5rem',
         // padding: 0
+    },
+    btn: {
+        padding: '0.5rem 1rem',
+        margin: '0 0.3rem',
+        borderRadius: '50px'
+        // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     }
 }));
 
 const MuiAccordion = withStyles({
     root: {
         backgroundColor: 'rgb(238, 238, 238)',
-        // backgroundColor: 'rgb(255, 255, 255)',
         borderRadius: '8px',
         marginBottom: '0.5rem',
         boxShadow: 'none',
@@ -90,12 +97,13 @@ const MuiAccordionSummary = withStyles({
         maxWidth: 120,
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
-        borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        borderRadius: '8px',
+        // borderBottom: '1px solid rgba(0, 0, 0, .125)',
+        boxShadow: '1px 1px 2px gray',
+        borderRadius: '50px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '8px',
+            borderRadius: '50px',
         },
     },
     content: {
@@ -106,9 +114,11 @@ const MuiAccordionSummary = withStyles({
     expanded: {},
 })(AccordionSummary);
 
-const MuiAccordionDetails = withStyles((theme) => ({
+const MuiAccordionDetails = withStyles(() => ({
     root: {
-        margin: '0.2rem 0 0.7rem 0',
+        backgroundColor: 'rgb(255, 255, 255)',
+        margin: '0.2rem 0 0.5rem 0',
+        padding: '0.3rem 0 0.3rem 1.5rem',
         borderRadius: '8px',
     },
 }))(AccordionDetails);
@@ -123,8 +133,9 @@ function Filters() {
         PIC, district, schoolYear, purpose, schoolStatus,
         setPIC, setDistrict, setSchoolYear,
         setPurpose, setSchoolStatus, setDateRange
-        // fromDate, toDate, setFromDate, setToDate
     } = useReport()
+
+    const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handlePICChange = (event, newPIC) => {
@@ -212,8 +223,6 @@ function Filters() {
     };
 
     const handleDateRangeChange = (selectedDate) => {
-        // console.log('DateRange = ', selectedDate[0], selectedDate[1]);
-
         // Tiền xử lý format của date trước khi lưu vào context
         if (selectedDate) {  // !== '' && selectedDate !== undefined
             const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD');
@@ -223,62 +232,11 @@ function Filters() {
                 type: ReducerActions.FILTER_DATE_RANGE,
                 payload: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
             })
-
-
-            // if (selectedDate[0]) {
-            //     dispatchParams({
-            //         type: ReducerActions.FILTER_FROM_DATE,
-            //         payload: {
-            //             fromDate: { filterType: 'fromDate', filterValue: fromDate },
-            //             dateRange: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
-            //         }
-            //     })
-            // } else {
-            //     dispatchParams({
-            //         type: ReducerActions.FILTER_FROM_DATE,
-            //         payload: {
-            //             fromDate: { filterType: 'fromDate', filterValue: null },
-            //             dateRange: { filterType: 'dateRange', filterValue: [null, null] }
-            //         }
-            //     })
-            // }
-
-            // if (selectedDate[1]) {
-            //     dispatchParams({
-            //         type: ReducerActions.FILTER_TO_DATE,
-            //         payload: {
-            //             toDate: { filterType: 'toDate', filterValue: toDate },
-            //             dateRange: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
-            //         }
-            //     })
-            // } else {
-            //     dispatchParams({
-            //         type: ReducerActions.FILTER_TO_DATE,
-            //         payload: {
-            //             toDate: { filterType: 'toDate', filterValue: null },
-            //             dateRange: { filterType: 'dateRange', filterValue: [null, null] }
-            //         }
-            //     })
-            // }
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_DATE_RANGE,
                 payload: { filterType: 'dateRange', filterValue: [null, null] }
             })
-            // dispatchParams({
-            //     type: ReducerActions.FILTER_FROM_DATE,
-            //     payload: {
-            //         fromDate: { filterType: 'fromDate', filterValue: null },
-            //         dateRange: { filterType: 'dateRange', filterValue: [null, null] }
-            //     }
-            // })
-            // dispatchParams({
-            //     type: ReducerActions.FILTER_TO_DATE,
-            //     payload: {
-            //         toDate: { filterType: 'toDate', filterValue: null },
-            //         dateRange: { filterType: 'dateRange', filterValue: [null, null] }
-            //     }
-            // })
         }
     };
 
@@ -304,12 +262,6 @@ function Filters() {
                 case 'dateRange':
                     setDateRange([null, null]);
                     break;
-                // case 'fromDate':
-                //     setFromDate(null);
-                //     break;
-                // case 'toDate':
-                //     setToDate(null);
-                //     break;
                 default:
                     break;
             }
@@ -318,57 +270,25 @@ function Filters() {
 
     const generateChipsArray = (listFilters) => {
         const listChips = [];
-
-        // Thêm trước 1 phần tử mới chưa tồn tại trong listFilters
         let newListFilters = { ...listFilters }
 
-        // console.log('newListFilters = ', newListFilters);
-
         for (const chip in newListFilters) {
-            console.log('chip: ', chip);
-            // if (chip !== 'fromDate' && chip !== 'toDate') {
-            // if (chip !== 'dateRange') {
-            // listChips.push(newListFilters[chip]);
-            // } else {
             if (chip === 'dateRange') {
-                let from = '';
-                let to = '';
-                console.log('dateRange value = ', newListFilters[chip].filterValue);
-                // if (chip === 'fromDate') {
-                from = moment(newListFilters[chip].filterValue[0]).format('MMM D, YYYY')
-                console.log('from = ', from);
-                // }
-                // if (chip === 'toDate') {
-                to = moment(newListFilters[chip].filterValue[1]).format('MMM D, YYYY')
-                console.log('to = ', to);
-                // }
+                const fromDate = moment(newListFilters[chip].filterValue[0]).format('MMM D, YYYY')
+                const toDate = moment(newListFilters[chip].filterValue[1]).format('MMM D, YYYY')
 
-                if (from !== 'Invalid date' && to !== 'Invalid date') {
-                    console.log('before: ', newListFilters[chip]);
+                if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
                     newListFilters = {
                         ...newListFilters,
                         dateRange: {
                             filterType: 'dateRange',
-                            filterValue: `${from} ➜ ${to}`
+                            filterValue: `${fromDate} ➜ ${toDate}`
                         }
                     }
-                    console.log('after: ', newListFilters[chip]);
-                    // listChips.push(newListFilters[chip]);
-                    // listChips = [...listChips, {
-                    //     filterType: 'dateRange',
-                    //     filterValue: `${from} - ${to}`
-                    // }]
                 }
-                // else if (from === 'Invalid date' && to === 'Invalid date') {
-                //     listChips.push({
-                //         filterType: 'dateRange',
-                //         filterValue: ''
-                //     })
-                // }
             }
             listChips.push(newListFilters[chip]);
         }
-        console.log(listChips);
         return listChips;
     }
     //===============================================================================
@@ -400,6 +320,20 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields placeholder="Search..." onChange={handleSearch} />
+                    </Box>
+                    <Box className={classes.flexItem}>
+                        <Button
+                            className={classes.btn}
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => setOpenCreateDialog(true)}
+                        >
+                            <MdAdd fontSize="large" />&nbsp;Create
+                        </Button>
+                        <CreateReport
+                            open={openCreateDialog}
+                            onClose={() => setOpenCreateDialog(false)}
+                        />
                     </Box>
                 </Box>
                 <MuiAccordionDetails>

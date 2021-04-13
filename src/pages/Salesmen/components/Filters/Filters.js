@@ -93,7 +93,9 @@ const MuiAccordionSummary = withStyles({
 
 const MuiAccordionDetails = withStyles((theme) => ({
     root: {
-        margin: '0.2rem 0 0.7rem 0',
+        backgroundColor: 'rgb(255, 255, 255)',
+        margin: '0.2rem 0 0.5rem 0',
+        padding: '0.3rem 0 1rem 1.5rem',
         borderRadius: '8px',
     },
 }))(AccordionDetails);

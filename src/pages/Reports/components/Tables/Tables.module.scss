@@ -50,3 +50,23 @@
 .paging {
   flex-shrink: 0;
 }
+
+.chipSalesMoi {
+  background-color: $dark-warning !important;
+  color: $common-white !important;
+}
+
+.chipChamSoc {
+  background-color: $main-success !important;
+  color: $common-white !important;
+}
+
+.chipTaiKy {
+  background-color: $dark-info !important;
+  color: $common-white !important;
+}
+
+.chipKyMoi {
+  background-color: #6d33ff !important;
+  color: $common-white !important;
+}

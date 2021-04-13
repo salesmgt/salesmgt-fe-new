@@ -209,7 +209,11 @@ function AppLayouts() {
                         <img
                             className={classes.majorImg}
                             alt="major-logos"
-                            onClick={() => history.push(`${url}/dashboards`)}
+                            onClick={() => {
+                                if (roles[0] === 'ADMIN') { history.push(`${url}/accounts`) }
+                                else { history.push(`${url}/dashboards`) }
+                            }
+                            }
                         />
                     </div>
                     <List component="nav">

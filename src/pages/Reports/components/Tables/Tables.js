@@ -16,13 +16,14 @@ import {
   ListItem,
   ListItemAvatar,
   Avatar,
+  Badge,
 } from '@material-ui/core';
-import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
+import { MdChat, MdEmail, MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
 import PropTypes from 'prop-types';
-import classes from './Tables.module.scss';
 import { useReport } from '../../hooks/ReportContext';
 import MenuOptions from './MenuOptions/MenuOptions';
 import * as ReducerActions from '../../hooks/reducer-action-type';
+import classes from './Tables.module.scss';
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -171,21 +172,22 @@ function Tables(props) {
   const setPurposeChipColor = (purpose) => {
     switch (purpose) {
       case 'Sales mới':
-        return <Chip label={purpose} style={{ backgroundColor: '#f57c00', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipSalesMoi} />;
       case 'Chăm sóc':
-        return <Chip label={purpose} style={{ backgroundColor: '#4caf50', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipChamSoc} />;
       case 'Tái ký hợp đồng':
-        return <Chip label={purpose} style={{ backgroundColor: '#1976d2', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipTaiKy} />;
       case 'Ký mới hợp đồng':
-        return <Chip label={purpose} style={{ backgroundColor: '#6d33ff', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipKyMoi} />;
       default:
-        // #5c21f3
-        return <Chip label={purpose} />;
+        return <Chip label={purpose} />;  // #5c21f3
     }
   };
 
   const truncateString = (str) => {
-    return str.length > 30 ? str.substring(0, 27) + "..." : str;
+    if (str)
+      return str.length > 30 ? str.substring(0, 27) + "..." : str;
+    else return '';
   }
 
   return (
@@ -197,8 +199,15 @@ function Tables(props) {
             {rows?.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow key={row.id} className={classes.tBodyRow}>
-                  <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell>
-                  <TableCell className={classes.tBodyCell}>{row.date}</TableCell>
+                  {/* <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell> */}
+                  <TableCell className={classes.tBodyCell}>
+                    {row.comment ? (
+                      <Badge color="secondary" variant="dot">
+                        {row.date} &nbsp;
+                        <MdChat />
+                      </Badge>
+                    ) : row.date}
+                  </TableCell>
                   <TableCell className={classes.tBodyCell}>
                     <ListItemText
                       primary={`${row.educationalLevel} ${row.schoolName}`}
@@ -226,8 +235,9 @@ function Tables(props) {
                   </TableCell>
                   <TableCell className={classes.tBodyCell}>{row.result}</TableCell>
                   <TableCell className={classes.tBodyCell}>{truncateString(row.description)}</TableCell>
+                  {/* <TableCell className={classes.tBodyCell}>{truncateString(row.comment?.content)}</TableCell> */}
                   <TableCell className={classes.tBodyCell} align="right">
-                    <MenuOptions id={row.id} />
+                    <MenuOptions data={row} />
                   </TableCell>
                 </TableRow>
               ))

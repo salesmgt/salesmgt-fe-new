@@ -10,6 +10,7 @@ import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo } from 'react-icons/md'
 import PropTypes from 'prop-types'
 // import { useAuth } from '../../../../../hooks/AuthContext'
+import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props //options,
@@ -31,15 +32,15 @@ function MenuOptions(props) {
     //         case 'SALES MANAGER':
     //             return (
     //                 <MenuItem onClick={handleClose} >
-    //                     <ListItemIcon style={{ minWidth: '1.7rem' }}></ListItemIcon>
-    //                     <ListItemText style={{ margin: 0, padding: 0 }}></ListItemText>
+    //                     <ListItemIcon className={classes.itemIcon}></ListItemIcon>
+    //                     <ListItemText className={classes.itemText}></ListItemText>
     //                 </MenuItem >
     //             )
     //         case 'SALES SUPERVISOR':
     //             return (
     //                 <MenuItem onClick={handleClose} >
-    //                     <ListItemIcon style={{ minWidth: '1.7rem' }}></ListItemIcon>
-    //                     <ListItemText style={{ margin: 0, padding: 0 }}></ListItemText>
+    //                     <ListItemIcon className={classes.itemIcon}></ListItemIcon>
+    //                     <ListItemText className={classes.itemText}></ListItemText>
     //                 </MenuItem >
     //             )
     //         default:
@@ -66,10 +67,10 @@ function MenuOptions(props) {
                         state: { data: data },
                     }}
                 >
-                    <ListItemIcon style={{ minWidth: '1.7rem' }}>
-                        <MdInfo />
+                    <ListItemIcon className={classes.itemIcon}>
+                        <MdInfo fontSize="large" />
                     </ListItemIcon>
-                    <ListItemText style={{ margin: 0, padding: 0 }}>
+                    <ListItemText className={classes.itemText}>
                         View Details
                     </ListItemText>
                 </MenuItem>

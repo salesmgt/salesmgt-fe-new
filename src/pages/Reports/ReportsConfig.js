@@ -1,12 +1,13 @@
 export const columns = [
     // { key: "checkbox", name: '', sortable: false },
-    { key: "no", name: 'No', sortable: false },
+    // { key: "no", name: 'No', sortable: false },
     { key: "date", name: 'Date', sortable: true },
     { key: "schoolName", name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
     { key: "user.fullName", name: 'PIC', sortable: true },
     { key: "targetPurposeName", name: 'Purpose', sortable: true },  // Purpose - primary
     { key: "result", name: 'Result', sortable: false },
-    { key: "description", name: 'Description', sortable: false }, // truncate ... kí tự thôi
+    { key: "description", name: 'Description', sortable: false }, // truncate 30 kí tự thôi
+    // { key: "comment", name: 'Comment', sortable: false }, // truncate 30 kí tự thôi
     { key: "", name: '', sortable: false }
 ]
 
@@ -53,13 +54,18 @@ export const data = {
             positivity: '',
             difficulty: '',
             futurePlan: '',
-            comments: [{
+            comment: {
                 fullName: 'Phạm Duy Tiến',
-                username: 'duytien01',
-                avatar: 'https://arawal.files.wordpress.com/2015/07/flat-faces-icons-circle-3.png',
-                date: '26/12/2020',
                 content: 'OK'
-            }],
+            },
+            // comment: '[Phạm Duy Tiến] OK',
+            // comments: [{
+            //     fullName: 'Phạm Duy Tiến',
+            //     username: 'duytien01',
+            //     avatar: 'https://arawal.files.wordpress.com/2015/07/flat-faces-icons-circle-3.png',
+            //     date: '26/12/2020',
+            //     content: 'OK'
+            // }],
             schoolYear: '2020-2021'
         },
         {
@@ -81,20 +87,24 @@ export const data = {
             positivity: '',
             difficulty: 'Cô đang cân nhắc',
             futurePlan: '',
-            comments: [{
-                fullName: 'Phạm Duy Tiến',
-                username: 'duytien01',
-                avatar: 'https://arawal.files.wordpress.com/2015/07/flat-faces-icons-circle-3.png',
-                date: '26/12/2020',
+            comment: {
+                fullName: 'Lê Quý Mai Huyên',
                 content: 'Xúc tiến chăm sóc'
             },
-            {
-                fullName: 'Lê Quý Mai Huyên',
-                username: 'huyenle01',
-                avatar: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-                date: '27/12/2020',
-                content: 'Xúc tiến chăm sóc'
-            }],
+            // comments: [{
+            //     fullName: 'Phạm Duy Tiến',
+            //     username: 'duytien01',
+            //     avatar: 'https://arawal.files.wordpress.com/2015/07/flat-faces-icons-circle-3.png',
+            //     date: '26/12/2020',
+            //     content: 'Xúc tiến chăm sóc'
+            // },
+            // {
+            //     fullName: 'Lê Quý Mai Huyên',
+            //     username: 'huyenle01',
+            //     avatar: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
+            //     date: '27/12/2020',
+            //     content: 'Tặng quà Tết cho cô'
+            // }],
             schoolYear: '2020-2021'
         },
     ],

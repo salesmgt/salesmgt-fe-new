@@ -12,7 +12,7 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Notifications } from '../../../../components'
+import { Snackbars } from '../../../../components'
 import { Consts } from './RepInfoConfig'
 import classes from './RepInfo.module.scss'
 
@@ -294,7 +294,7 @@ function RepInfo(props) {
                 </Grid>
                 {/* Another Sector */}
             </Grid>
-            <Notifications notify={notify} setNotify={setNotify} />
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

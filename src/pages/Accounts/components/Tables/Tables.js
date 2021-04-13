@@ -19,10 +19,10 @@ import {
 } from '@material-ui/core';
 import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
 import PropTypes from 'prop-types';
-import classes from './Tables.module.scss';
 import { useAccount } from '../../hooks/AccountContext';
 import MenuOptions from './MenuOptions/MenuOptions';
 import * as ReducerActions from '../../hooks/reducer-action-type';
+import classes from './Tables.module.scss';
 
 // Customize component TablePagination
 function TablePaginationActions(props) {

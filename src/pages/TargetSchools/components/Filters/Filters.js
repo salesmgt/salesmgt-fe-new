@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -16,14 +16,22 @@ import {
     Avatar,
     ListItem,
     ListItemAvatar,
-    ListItemText
+    ListItemText,
+    Button,
+    Dialog,
+    DialogTitle,
+    Divider,
+    DialogContent,
+    DialogContentText,
+    DialogActions
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import { MdAccountCircle, MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
+import AssignDialog from '../../dialogs/AssignDialog'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -50,10 +58,16 @@ const useStyles = makeStyles((theme) => ({
         // borderRadius: '8px'
     },
     flexItem: {
-        padding: 0
+        padding: 0  //'0 0.2rem'
     },
     option: {
         fontSize: '0.875rem'
+    },
+    btn: {
+        padding: '0.5rem 1rem',
+        margin: '0 0.3rem',
+        borderRadius: '50px'
+        // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     }
 }));
 
@@ -86,12 +100,13 @@ const MuiAccordionSummary = withStyles({
         maxWidth: 120,
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
-        borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        borderRadius: '8px',
+        // borderBottom: '1px solid rgba(0, 0, 0, .125)',
+        boxShadow: '1px 1px 2px gray',
+        borderRadius: '50px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '8px',
+            borderRadius: '50px',
         },
     },
     content: {
@@ -104,9 +119,10 @@ const MuiAccordionSummary = withStyles({
 
 const MuiAccordionDetails = withStyles((theme) => ({
     root: {
-        // backgroundColor: 'rgba(238, 238, 238)',
+        // backgroundColor: 'rgb(238, 238, 238)',
         // backgroundColor: 'rgb(255, 255, 255)',
-        margin: '0.2rem 0 0.7rem 0',
+        margin: '0.5rem 0',
+        padding: '0.3rem 0 1rem 1.5rem',  // top (right-left) bottom
         borderRadius: '8px',
     },
 }))(AccordionDetails);
@@ -127,8 +143,62 @@ function Filters() {
         setSchoolYear, setDistrict, setSchoolType,
         setSchoolLevel, setSchoolScale, setPIC, setPurpose
     } = useTargetSchool()
-
     // const { listFilters } = params  //, searchKey, sorting, paging
+
+    const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
+    const [openAssignDialog, setOpenAssignDialog] = useState(false)
+    // const [openCreateDialog, setOpenCreateDialog] = useState(false)
+
+    const selectedSchools = [
+        {
+            id: 10,
+            schoolName: 'THCS Hiệp Thành',
+            district: 'Quận 4',
+            purpose: ''
+        },
+        {
+            id: 12,
+            schoolName: 'Tiểu học Xuân Thu',
+            district: 'Quận Bình Tân',
+            purpose: ''
+        },
+        {
+            id: 13,
+            schoolName: 'THCS Võ Trường Toản',
+            district: 'Quận 1',
+            purpose: ''
+        },
+        {
+            id: 16,
+            schoolName: 'THPT Nguyễn Thượng Hiền',
+            district: 'Quận Phú Nhuận',
+            purpose: ''
+        },
+        {
+            id: 20,
+            schoolName: 'THPT Marie Cuire',
+            district: 'Quận 10',
+            purpose: ''
+        },
+        {
+            id: 21,
+            schoolName: 'Tiểu học Đặng Trần Côn',
+            district: 'Quận 12',
+            purpose: ''
+        },
+        {
+            id: 30,
+            schoolName: 'THPT Nguyễn Trãi',
+            district: 'Quận 3',
+            purpose: ''
+        },
+        {
+            id: 34,
+            schoolName: 'Tiểu học Nguyễn Văn Cừ',
+            district: 'Quận 5',
+            purpose: ''
+        },
+    ]  // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
 
     //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
@@ -146,9 +216,6 @@ function Filters() {
                 payload: { filterType: 'schoolYear', filterValue: '' }
             })
         }
-
-        // console.log('updated filters: ', params.listFilters);
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     const handleDistrictChange = (event) => {
@@ -167,8 +234,6 @@ function Filters() {
                 payload: { filterType: 'district', filterValue: '' }
             })
         }
-
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     const handleSchoolTypeChange = (event) => {
@@ -186,8 +251,6 @@ function Filters() {
                 payload: { filterType: 'type', filterValue: '' }
             })
         }
-
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     const handleSchoolLevelChange = (event) => {
@@ -205,8 +268,6 @@ function Filters() {
                 payload: { filterType: 'level', filterValue: '' }
             })
         }
-
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     const handleSchoolScaleChange = (event) => {
@@ -224,8 +285,6 @@ function Filters() {
                 payload: { filterType: 'scale', filterValue: '' }
             })
         }
-
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     const handlePICChange = (event, newPIC) => {
@@ -242,8 +301,6 @@ function Filters() {
                 payload: { filterType: 'PIC', filterValue: null }
             })
         }
-
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     const handlePurposeChange = (event) => {
@@ -261,14 +318,10 @@ function Filters() {
                 payload: { filterType: 'purpose', filterValue: '' }
             })
         }
-
-        // onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
     };
 
     //==============Handle action delete from Chips and btn "Clear all"==============
     const handleChipsRemoved = (removedFilters) => {
-        // console.log('removedFilters', removedFilters);
-
         removedFilters.forEach(removedFilter => {
             switch (removedFilter) {
                 case 'schoolYear':
@@ -302,8 +355,6 @@ function Filters() {
     const generateChipsArray = (listFilters) => {
         const listChips = [];
         for (const chip in listFilters) {
-            // console.log('Filter.js ---> chipsssssss: ', listFilters);
-            // console.log(`1 chipppppp: ${chip}: ${listFilters[chip].filterValue}`);
             listChips.push(listFilters[chip]);
         }
         return listChips;
@@ -316,23 +367,22 @@ function Filters() {
             type: ReducerActions.ENTER_SEARCH_KEYWORD,
             payload: keyword
         })
-        // console.log('page = ', params.page);
-        // console.log('limit = ', params.limit);
-        // console.log('column = ', params.column);
-        // console.log('direction = ', params.direction);
-        // console.log('keyword: ', keyword);
-        // onGetTargets(params.page, params.limit, params.column, params.direction, keyword, params.listFilters);
     }
 
-    // const refetchAPI = () => {
-    //     onGetTargets(params.page, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
-    // }
+    const handleOpenCreateDialog = () => {
+        console.log('create dialog');
 
-    // console.log('12 params nè: ', params)
-    // console.log('filters nè: ', params.listFilters)
-    // console.log('filter purpose nè: ', params.listFilters['purpose'].filterValue)
-    // console.log('filter PIC nè: ', params.listFilters['PIC'].filterValue.name)
+    }
 
+    const handleOpenAssignDialog = () => {
+        if (selectedSchools.length > 0) {
+            console.log('assign dialog');
+            setOpenAssignDialog(true);
+        } else {
+            console.log('noti dialog: ');
+            setOpenNotifyDialog(true);
+        }
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -354,6 +404,61 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields placeholder="Search..." onChange={handleSearch} />
+                    </Box>
+                    <Box className={classes.flexItem}>
+                        <Button
+                            className={classes.btn}
+                            variant="contained"
+                            color="secondary"
+
+                            onClick={handleOpenCreateDialog}
+                        >
+                            <MdAdd fontSize="large" />&nbsp;Create
+                        </Button>
+                    </Box>
+                    <Box className={classes.flexItem}>
+                        <Button
+                            className={classes.btn}
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleOpenAssignDialog}
+                        >
+                            <MdPersonAdd fontSize="large" /> &nbsp; Assign
+                        </Button>
+                        {/* Have checked target schools */}
+                        <AssignDialog
+                            open={openAssignDialog}
+                            onClose={() => setOpenAssignDialog(false)}
+                            rows={selectedSchools}
+                        />
+                        {/* Have not checked target schools */}
+                        <Dialog
+                            open={openNotifyDialog}
+                            onClose={() => setOpenNotifyDialog(false)}
+                        >
+                            <DialogTitle>Notify</DialogTitle>
+                            <Divider />
+                            <DialogContent>
+                                <DialogContentText className={classes.dialogText}>
+                                    <p>
+                                        In the Target School table, please choose target schools you want to assign.
+                                    </p>
+                                    <p><i><b>Tips:</b> Filters and search box may help you find schools faster.</i></p>
+                                </DialogContentText>
+                            </DialogContent>
+                            <Divider />
+                            <DialogActions>
+                                <Button
+                                    variant="contained"
+                                    disableElevation
+                                    autoFocus
+                                    className={classes.btnRemove}
+                                    onClick={() => setOpenNotifyDialog(false)}
+                                >
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </Box>
                 </Box>
                 <MuiAccordionDetails>

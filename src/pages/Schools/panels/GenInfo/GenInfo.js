@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { Notifications } from '../../../../components'
+import { Snackbars } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import classes from './GenInfo.module.scss'
 
@@ -709,7 +709,7 @@ function GenInfo(props) {
                 </Grid>
                 {/* Another Sector */}
             </Grid>
-            <Notifications notify={notify} setNotify={setNotify} />
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

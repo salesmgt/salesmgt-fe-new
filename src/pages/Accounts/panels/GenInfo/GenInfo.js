@@ -19,7 +19,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
-import { NotFound, Notifications } from '../../../../components'
+import { NotFound, Snackbars } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import classes from './GenInfo.module.scss'
 
@@ -108,9 +108,9 @@ function GenInfo(props) {
         return null
     }
 
-     if (!data) {
-         return <NotFound />
-     }
+    if (!data) {
+        return <NotFound />
+    }
 
     const onSubmit = (data) => {
         const rs = { ...data, gender: data.gender === 'true' ? true : false }
@@ -463,7 +463,7 @@ function GenInfo(props) {
                 </Grid>
                 {/* Another Sector */}
             </Grid>
-            <Notifications notify={notify} setNotify={setNotify} />
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

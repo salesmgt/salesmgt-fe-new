@@ -8,9 +8,9 @@ import PropTypes from 'prop-types'
 
 const useStyles = makeStyles((theme) => ({
   search: {
-    maxHeight:'2.5rem',
+    maxHeight: '2.5rem',
     position: 'relative',
-    borderRadius: '8px',  //theme.shape.borderRadius
+    borderRadius: '50px',  //theme.shape.borderRadius
     backgroundColor: '#ffffff',
     marginLeft: 0,
     height: '100%',
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 SearchFields.propTypes = {
   onChange: PropTypes.func,
-  placeholder: PropTypes.string, 
+  placeholder: PropTypes.string,
 }
 
 SearchFields.defaultProps = {
@@ -65,7 +65,7 @@ function SearchFields(props) {
   const handleChange = (e) => {
     e.preventDefault(true);
     const searchValue = e.target.value
-    
+
     setSearchSchool(searchValue)
     if (!onChange) {
       return;
@@ -85,7 +85,7 @@ function SearchFields(props) {
       </div>
       <InputBase
         value={searchSchool}
-        placeholder={ placeholder }
+        placeholder={placeholder}
         classes={{
           root: classes.inputRoot,
           input: classes.inputInput,
