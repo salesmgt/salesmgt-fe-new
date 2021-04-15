@@ -66,10 +66,13 @@ function Schools() {
 
     return (
         <div className={classes.panel}>
+            {/* <Fab size="medium" variant="extended" color="primary" className={classes.fab}>
+                <MdAdd fontSize="large" />&nbsp; Add School
+            </Fab> */}
             <Filters className={classes.filter} />
-            <Tables columns={columns}
+            <Tables className={classes.table}
+                columns={columns}
                 rows={data.list}
-                className={classes.table}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
             />

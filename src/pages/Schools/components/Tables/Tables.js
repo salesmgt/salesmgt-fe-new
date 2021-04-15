@@ -12,6 +12,7 @@ import {
     Chip,
     TableSortLabel,
     withStyles,
+    ListItemText,
 } from '@material-ui/core'
 import {
     MdFirstPage,
@@ -20,10 +21,10 @@ import {
     MdLastPage,
 } from 'react-icons/md'
 import PropTypes from 'prop-types'
-import classes from './Tables.module.scss'
 import { useSchool } from '../../hooks/SchoolContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../hooks/reducer-action-type'
+import classes from './Tables.module.scss'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -211,26 +212,9 @@ function Tables(props) {
     const setStatusChipColor = (purpose) => {
         switch (purpose) {
             case 'Chưa hợp tác':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#f57c00', color: 'white' }}
-                    />
-                )
+                return <Chip label={purpose} className={classes.chipLead} />
             case 'Đang hợp tác':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#4caf50', color: 'white' }}
-                    />
-                )
-            case 'Tiềm năng':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#1976d2', color: 'white' }}
-                    />
-                )
+                return <Chip label={purpose} className={classes.chipCustomer} />
             default:
                 // #5c21f3
                 return <Chip label={purpose} />
@@ -265,17 +249,22 @@ function Tables(props) {
                                     >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
-                                    <TableCell
-                                        className={classes.tBodyCell}
-                                        style={{ fontSize: '1rem' }}
-                                    >
+                                    <TableCell className={classes.tCellSchoolName}>
                                         {row.educationalLevel} {row.name}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    {/* <TableCell className={classes.tBodyCell}>
                                         {row.district}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {row.address}
+                                    </TableCell> */}
+                                    <TableCell className={classes.tBodyCell}>
+                                        <ListItemText
+                                            primary={row.address}
+                                            primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                            secondary={row.district}
+                                            secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                        />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {row.reprGender

@@ -26,11 +26,11 @@ import {
 } from 'react-icons/md'
 // import { schools as schoolsData } from '../../data/mock-data'
 import PropTypes from 'prop-types'
-import classes from './Tables.module.scss'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 // import { Pagination } from '@material-ui/lab';
+import classes from './Tables.module.scss'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -308,36 +308,15 @@ function Tables(props) {
     const setPurposeChipColor = (purpose) => {
         switch (purpose) {
             case 'Sales mới':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#f57c00', color: 'white' }}
-                    />
-                )
+                return <Chip label={purpose} className={classes.chipSalesMoi} />;
             case 'Chăm sóc':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#4caf50', color: 'white' }}
-                    />
-                )
+                return <Chip label={purpose} className={classes.chipChamSoc} />;
             case 'Tái ký hợp đồng':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#1976d2', color: 'white' }}
-                    />
-                )
+                return <Chip label={purpose} className={classes.chipTaiKy} />;
             case 'Ký mới hợp đồng':
-                return (
-                    <Chip
-                        label={purpose}
-                        style={{ backgroundColor: '#6d33ff', color: 'white' }}
-                    />
-                )
+                return <Chip label={purpose} className={classes.chipKyMoi} />;
             default:
-                // #5c21f3
-                return <Chip label={purpose} />
+                return <Chip label={purpose} /> // #5c21f3
         }
     }
 
@@ -379,20 +358,26 @@ function Tables(props) {
                                 >
                                     {/* <TableCell>Checkbox</TableCell> */}
                                     <TableCell
-                                        className={classes.tableCell}
+                                        className={classes.tBodyCell}
                                         align="center"
                                     >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
-                                    <TableCell
-                                        className={classes.tBodyCell}
-                                        style={{ fontSize: '1rem' }}
-                                    >
-                                        {/**row.type*/} {row.schoolName}
-                                    </TableCell>
+                                    {/* <TableCell className={classes.tCellSchoolName}>
+                                        {/**row.type*./} {row.schoolName}
+                                    </TableCell> */}
                                     <TableCell className={classes.tBodyCell}>
-                                        {row.district}
+                                        <ListItemText
+                                            primary={row.schoolName}
+                                            primaryTypographyProps={{ style: { fontSize: '1rem' } }}
+                                            // primaryTypographyProps={classes.tCellPrimaryText}
+                                            secondary={row.district}
+                                            secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                        />
                                     </TableCell>
+                                    {/* <TableCell className={classes.tBodyCell}>
+                                        {row.district}
+                                    </TableCell> */}
                                     <TableCell
                                         className={classes.tBodyCell}
                                     // onMouseEnter={handlePopoverOpen}

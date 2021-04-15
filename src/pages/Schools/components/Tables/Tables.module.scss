@@ -33,6 +33,11 @@
     .tBodyCell {
       padding: 0.1rem 1rem
     }
+    
+    .tCellSchoolName {
+      @extend .tBodyCell;
+      font-size: 1rem;
+    }
 
     .picName {
       font-size: 0.875rem !important;
@@ -49,4 +54,14 @@
 
 .paging {
   flex-shrink: 0;
+}
+
+.chipLead {
+  background-color: $dark-info !important;
+  color: $common-white !important;
+}
+
+.chipCustomer {
+  background-color: $main-success !important;
+  color: $common-white !important;
 }

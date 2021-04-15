@@ -10,6 +10,7 @@ import classes from './WorkPlans.module.scss'
 
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import EventDialogs from './components/EventDialogs/EventDialogs'
 
 // const useStyles = makeStyles((theme) => ({
 //     root: {
@@ -290,45 +291,46 @@ function WorkPlans() {
     }
 
     return (
-        <div className={classes.wrapper}>
-            {/* <div ref={(el) => setHeaderEl(el)} /> */}
+        // <.div className={classes.wrapper}>
+        //     {/* <.div ref={(el) => setHeaderEl(el)} /> */}
 
-            <DragAndDropCalendar
-                localizer={localizer}
-                defaultView={Views.MONTH}
-                defaultDate={moment().toDate()}
-                views={['month', 'week', 'day']}
-                events={events}
-                step={30}
-                resizable
-                selectable
-                onEventDrop={handleEventDrop}
-                onEventResize={handleEventResize}
-                onSelectEvent={handleSlectEvent}
-                onSelectSlot={handleSlectSlot}
-                // showMultiDayTimes
-                startAccessor="start"
-                endAccessor="end"
-                // components={{
-                //     toolbar: (props) => {
-                //         console.log('tam linh', headerEl)
-                //         return headerEl
-                //             ? ReactDOM.createPortal(
-                //                   <WorkPlansHeaders {...props} />,
-                //                   headerEl
-                //               )
-                //             : null
-                //     },
-                // }}
+        //     <DragAndDropCalendar
+        //         localizer={localizer}
+        //         defaultView={Views.MONTH}
+        //         defaultDate={moment().toDate()}
+        //         views={['month', 'week', 'day']}
+        //         events={events}
+        //         step={30}
+        //         resizable
+        //         selectable
+        //         onEventDrop={handleEventDrop}
+        //         onEventResize={handleEventResize}
+        //         onSelectEvent={handleSlectEvent}
+        //         onSelectSlot={handleSlectSlot}
+        //         // showMultiDayTimes
+        //         startAccessor="start"
+        //         endAccessor="end"
+        //         // components={{
+        //         //     toolbar: (props) => {
+        //         //         console.log('tam linh', headerEl)
+        //         //         return headerEl
+        //         //             ? ReactDOM.createPortal(
+        //         //                   <WorkPlansHeaders {...props} />,
+        //         //                   headerEl
+        //         //               )
+        //         //             : null
+        //         //     },
+        //         // }}
 
-                // popup={true}
-                // dragFromOutsideItem={
-                //     displayDragItemInCell ? dragFromOutsideItem : null
-                // }
-                // onDropFromOutside={onDropFromOutside}
-                // handleDragStart={handleDragStart}
-            />
-        </div>
+        //         // popup={true}
+        //         // dragFromOutsideItem={
+        //         //     displayDragItemInCell ? dragFromOutsideItem : null
+        //         // }
+        //         // onDropFromOutside={onDropFromOutside}
+        //         // handleDragStart={handleDragStart}
+        //     />
+        // </.div>
+        <EventDialogs />
     )
 }
 

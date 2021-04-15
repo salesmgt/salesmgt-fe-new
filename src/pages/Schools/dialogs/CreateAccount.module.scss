@@ -1,0 +1,16 @@
+@import '../../../styles/Variables.module.scss';
+
+.wrapper {
+    padding: 1.5rem 2rem 0 !important; // top (right & left) bottom
+    height: 100%;
+    overflow-y: auto;
+}
+
+.btnSave {    
+    color: $common-white !important;
+    background-color: $main-success !important;
+    // text-transform: none;
+    &:hover {
+        background-color: $dark-success !important;
+    }
+}

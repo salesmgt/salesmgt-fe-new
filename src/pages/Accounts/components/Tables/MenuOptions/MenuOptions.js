@@ -6,7 +6,7 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import { MdEdit, MdMoreVert } from 'react-icons/md'
+import { MdMoreVert, MdInfo } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { Link, useRouteMatch } from 'react-router-dom'
 import classes from './MenuOptions.module.scss'
@@ -44,11 +44,11 @@ function MenuOptions(props) {
                         state: { data: data },
                     }}
                 >
-                    <ListItemIcon className={classes.icon}>
-                        <MdEdit fontSize="large" />
+                    <ListItemIcon className={classes.itemIcon}>
+                        <MdInfo fontSize="large" />
                     </ListItemIcon>
-                    <ListItemText className={classes.text}>
-                        Edit info
+                    <ListItemText className={classes.itemText}>
+                        View details
                     </ListItemText>
                 </MenuItem>
             </Menu>

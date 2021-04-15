@@ -12,7 +12,7 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Notifications } from '../../../../components'
+import { Snackbars } from '../../../../components'
 import { Consts } from './AsgInfoConfig'
 import { useApp } from '../../../../hooks/AppContext'
 import { useAuth } from '../../../../hooks/AuthContext'
@@ -604,7 +604,7 @@ function AsgInfo(props) {
                 </form>
             )}
 
-            <Notifications notify={notify} setNotify={setNotify} />
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

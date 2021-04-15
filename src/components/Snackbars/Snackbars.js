@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function Notifications(props) {
+function Snackbars(props) {
     const { notify, setNotify } = props
 
     const classes = useStyles()
@@ -38,4 +38,4 @@ function Notifications(props) {
     )
 }
 
-export default React.memo(Notifications)
+export default React.memo(Snackbars)

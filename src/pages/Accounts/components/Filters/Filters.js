@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -10,12 +10,14 @@ import {
     InputLabel,
     MenuItem,
     FormControl,
+    Button,
 } from '@material-ui/core'
-import { MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useAccount } from '../../hooks/AccountContext'
 import Chips from './Chips/Chips'
+import CreateAccount from '../../dialogs/CreateAccount'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -43,6 +45,12 @@ const useStyles = makeStyles((theme) => ({
     },
     option: {
         fontSize: '0.875rem'
+    },
+    btn: {
+        padding: '0.5rem 1rem',
+        margin: '0 0.3rem',
+        borderRadius: '50px'
+        // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     }
 }));
 
@@ -75,12 +83,13 @@ const MuiAccordionSummary = withStyles({
         maxWidth: 120,
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
-        borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        borderRadius: '8px',
+        // borderBottom: '1px solid rgba(0, 0, 0, .125)',
+        boxShadow: '1px 1px 2px gray',
+        borderRadius: '50px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '8px',
+            borderRadius: '50px',
         },
     },
     content: {
@@ -93,7 +102,9 @@ const MuiAccordionSummary = withStyles({
 
 const MuiAccordionDetails = withStyles((theme) => ({
     root: {
-        margin: '0.2rem 0 0.7rem 0',
+        backgroundColor: 'rgb(255, 255, 255)',
+        margin: '0.5rem 0',
+        padding: '0.5rem 0 1rem 1.5rem',
         borderRadius: '8px',
     },
 }))(AccordionDetails);
@@ -107,6 +118,8 @@ function Filters() {
         roles,
         active, setActive, role, setRole
     } = useAccount()
+
+    const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handleIsActiveChange = (event) => {
@@ -188,6 +201,20 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields placeholder="Search..." onChange={handleSearch} />
+                    </Box>
+                    <Box className={classes.flexItem}>
+                        <Button
+                            className={classes.btn}
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => setOpenCreateDialog(true)}
+                        >
+                            <MdAdd fontSize="large" />&nbsp;Create
+                        </Button>
+                        <CreateAccount
+                            open={openCreateDialog}
+                            onClose={() => setOpenCreateDialog(false)}
+                        />
                     </Box>
                 </Box>
                 <MuiAccordionDetails>

@@ -31,7 +31,7 @@ import { useAuth } from '../../hooks/AuthContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
-import { Notifications } from '../../components'
+import { Snackbars } from '../../components'
 import classes from './Profiles.module.scss'
 
 const pwdSchema = yup.object().shape({
@@ -1039,7 +1039,7 @@ function Profiles() {
                     </Card>
                 </AnimationGroup>
             </div>
-            <Notifications notify={notify} setNotify={setNotify} />
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

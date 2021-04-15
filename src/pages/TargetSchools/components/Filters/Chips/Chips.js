@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     ul: {
         // width: '100%',
         maxWidth: 810,
-        overflowX: 'scroll',
+        overflowX: 'auto',
         // whiteSpace: 'nowrap',
         // height: '100%',
         display: 'flex',

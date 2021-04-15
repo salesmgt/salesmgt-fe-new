@@ -12,8 +12,9 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
     },
     ul: {
+        // maxWidth: 10 * 6 + 5,
         maxWidth: 810,
-        overflowX: 'scroll',
+        overflowX: 'auto',
         display: 'flex',
         justifyContent: 'flex-start',
         flexWrap: 'nowrap',
