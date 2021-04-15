@@ -247,7 +247,7 @@ function Profiles() {
                 () => {
                     storage
                         .ref('images/avatars/')
-                        .child(file.name)
+                        .child(`${user.username}-${file.name}`)
                         .getDownloadURL()
                         .then((url) => {
                             resolve(url)

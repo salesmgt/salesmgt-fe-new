@@ -10,6 +10,7 @@ export function useAuth() {
 function useAuthProvider() {
     const [user, setUser] = useState(Milks.getWithExpiry('notMe'))
 
+    console.log(user)
     // const [authToken, setAuthToken] = useState(null)
 
     return {
