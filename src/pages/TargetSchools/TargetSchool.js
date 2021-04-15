@@ -14,11 +14,19 @@ function TargetSchool() {
     if (!data) {
         return <NotFound />
     }
-
+    console.log(data)
     const schData = {
         schName: data?.schoolName,
+        addr: data?.address,
         dist: data?.district,
         year: data?.schoolYear,
+        level: data?.level,
+        scale: data?.schoolScale,
+        status: data?.schoolStatus,
+        type: data?.schoolType,
+        des: data?.schoolDescription,
+        note: data?.note,
+
         repName: data?.reprName,
         repGender: data?.reprGender,
         repPhone: data?.reprPhone,

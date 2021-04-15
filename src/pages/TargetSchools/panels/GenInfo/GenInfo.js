@@ -17,6 +17,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
 import { Notifications } from '../../../../components'
+// import { useAuth } from '../../../../hooks/AuthContext'
 import { Consts } from './GenInfoConfig'
 import classes from './GenInfo.module.scss'
 
@@ -85,6 +86,7 @@ function GenInfo(props) {
     })
 
     const { dists } = useApp()
+    // const { user } = useAuth()
 
     const { data } = props
 
@@ -127,6 +129,7 @@ function GenInfo(props) {
                     lg={12}
                     className={classes.content}
                 >
+                    {/* {user.roles[0] === 'SALESMAN' ? () : ()} */}
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                         <Grid container spacing={0}>
                             {/* First child - School Detail*/}

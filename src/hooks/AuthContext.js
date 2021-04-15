@@ -15,7 +15,8 @@ function useAuthProvider() {
     return {
         user,
         setUser,
-        // authToken, setAuthToken
+        // authToken,
+        // setAuthToken,
     }
 }
 

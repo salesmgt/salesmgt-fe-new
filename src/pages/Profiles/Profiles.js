@@ -44,7 +44,7 @@ const pwdSchema = yup.object().shape({
         )
         .matches(
             /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character'
+            'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
         ),
     confirmPassword: yup
         .string()
@@ -90,12 +90,6 @@ function Profiles() {
     const location = useLocation()
     const history = useHistory()
     const { id } = useParams()
-
-    // let { search } = useLocation()
-    // search = '?key=123&haaaaaaaa=aaaaaaaa'
-    // const values = queryString.parse(search)
-    // console.log('search', values.key)
-
 
     const [data, setData] = useState(null)
 
@@ -245,7 +239,7 @@ function Profiles() {
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
-                (snapshot) => { },
+                (snapshot) => {},
                 (error) => {
                     console.log(error)
                     reject('Upload Image to firebase failed: ' + error)
@@ -315,7 +309,7 @@ function Profiles() {
             })
 
         pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
-        alert(JSON.stringify(data))
+        // alert(JSON.stringify(data))
     }
 
     const onEmailSubmit = (data) => {
