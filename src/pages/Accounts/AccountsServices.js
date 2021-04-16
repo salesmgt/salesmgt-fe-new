@@ -20,14 +20,17 @@ export async function getAccounts(
             : url
     }
 
-    // const response = await Api.get(url)
-    // const data = await response.data
+    const response = await Api.get(url)
+    const data = await response.data
 
-    return await Api.get(url)
+    return data
 }
 
 export async function getAccount(username) {
-    return await Api.get(`/users/${username}`)
+    const response = await Api.get(`/users/${username}`)
+    const data = await response.data
+
+    return data
 }
 
 export async function updateAccount(username, account) {

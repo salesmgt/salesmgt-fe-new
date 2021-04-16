@@ -16,7 +16,7 @@ function Accounts() {
 
     function refreshAccount(page = 0, limit = 10, column = "username", direction = "asc", searchKey, listFilters) {
         AccountsServices.getAccounts(page, limit, column, direction, searchKey, listFilters).then((res) => {
-            setData(res.data)
+            setData(res)
         }).catch(error => {
             if (error.response) {
                 console.log(error)
