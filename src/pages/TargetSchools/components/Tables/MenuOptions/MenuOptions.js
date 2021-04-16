@@ -22,17 +22,19 @@ import {
     MdPersonAdd,
 } from 'react-icons/md'
 import PropTypes from 'prop-types'
-import { useAuth } from '../../../../../hooks/AuthContext'
+// import { useAuth } from '../../../../../hooks/AuthContext'
+import ConfirmRemove from '../../../dialogs/ConfirmRemove'
+import CannotRemove from '../../../dialogs/CannotRemove'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
     const [anchorEl, setAnchorEl] = useState(null)
-    const [openConfirmation, setOpenConfirmation] = useState(false);
+    const [open, setOpen] = useState(false);
 
     console.log('data từ MenuOptions: ', data)
 
-    const { user } = useAuth()
+    // const { user } = useAuth()
     const { url } = useRouteMatch()
 
     const handleOpen = (event) => {
@@ -45,17 +47,26 @@ function MenuOptions(props) {
 
     const handleOpenConfirmation = () => {
         setAnchorEl(null)
-        setOpenConfirmation(true)
+        setOpen(true)
     }
 
-    const handleRemove = () => {
-        setOpenConfirmation(false)
+    // const handleRemove = () => {
+    //     setOpen(false)
 
-        // Gọi API DELETE --> load lại trang
-    }
+    //     // Gọi API DELETE --> load lại trang
+    // }
 
     const renderRemoveDialog = () => {
-
+        if (data?.fullName) {
+            return (
+                <CannotRemove open={open} onClose={() => setOpen(false)} data={data} />
+            )
+        }
+        else {
+            return (
+                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} />
+            )
+        }
     }
 
     return (
@@ -109,32 +120,7 @@ function MenuOptions(props) {
                             Remove
                         </ListItemText>
                     </MenuItem>
-                    <Dialog
-                        open={openConfirmation}
-                        onClose={() => setOpenConfirmation(false)}
-                    >
-                        <DialogTitle>Confirm Remove</DialogTitle>
-                        <Divider />
-                        <DialogContent>
-                            <DialogContentText className={classes.dialogText}>
-                                <p>
-                                    Do you really want to remove
-                                    <strong><em> {data.educationalLevel} {data.schoolName} </em></strong>
-                                    from list of target schools in <strong>{data.schoolYear}</strong>?
-                                </p>
-                                <p>This process cannot be undone.</p>
-                            </DialogContentText>
-                        </DialogContent>
-                        <Divider />
-                        <DialogActions>
-                            <Button variant="contained" disableElevation onClick={() => setOpenConfirmation(false)}>
-                                Cancel
-                            </Button>
-                            <Button variant="contained" disableElevation className={classes.btnRemove} onClick={handleRemove} autoFocus>
-                                Remove
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                    {renderRemoveDialog()}
                 </>
             </Menu>
         </div>

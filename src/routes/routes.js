@@ -53,7 +53,12 @@ export const roleRoutes = {
         },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchool />,
+            // component: () => <TargetSchool />,
+            component: () => (
+                <TargetSchoolProvider>
+                    <TargetSchool />
+                </TargetSchoolProvider>
+            ),
         },
         {
             path: 'salesmen',
@@ -95,7 +100,12 @@ export const roleRoutes = {
         },
         {
             path: 'target-schools/:id',
-            component: () => <TargetSchool />,
+            // component: () => <TargetSchool />,
+            component: () => (
+                <TargetSchoolProvider>
+                    <TargetSchool />
+                </TargetSchoolProvider>
+            ),
         },
         {
             path: 'reports', component: () => (

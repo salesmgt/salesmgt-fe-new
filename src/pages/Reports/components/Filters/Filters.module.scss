@@ -1,6 +1,30 @@
 @import '../../../../styles/Variables.module.scss';
 
-// .wrapper {
-//     margin-bottom: 0.5rem;
-//     background-color: $common-white;
-// }
+.wrapper {
+    // margin-bottom: 0.5rem;
+    // background-color: $common-white;
+    .iconFilter {
+        font-size: 1.25rem;
+    }
+
+    // Ko nhận
+    // .option {
+    //     font-size: 0.875rem !important;
+    // }
+    // .lastOption {
+    //     @extend .option;
+    //     border-bottom: 0.5px solid #e0e0e0 !important;
+    // }
+
+    // .itemPIC {
+    //     padding: 0;
+    //     margin: 0;
+    // }
+    // .picName {
+    //     padding: 0;
+    //     font-size: 0.875rem !important;
+    // }    
+    // .itemTextPrimary {
+    //     font-size: 0.925rem;
+    // }
+}

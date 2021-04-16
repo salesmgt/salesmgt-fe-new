@@ -10,8 +10,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     maxHeight: '2.5rem',
     position: 'relative',
-    borderRadius: '50px',  //theme.shape.borderRadius
-    backgroundColor: '#ffffff',
+    borderRadius: '8px',  //theme.shape.borderRadius
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
     marginLeft: 0,
     height: '100%',
     width: '100%',

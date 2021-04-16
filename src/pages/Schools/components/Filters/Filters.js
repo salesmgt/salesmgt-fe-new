@@ -17,6 +17,7 @@ import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
+// import { useApp } from '../../../../hooks/AppContext'
 import Chips from './Chips/Chips'
 import styles from './Filters.module.scss'
 
@@ -49,10 +50,21 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '50px',
+        borderRadius: '8px'
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
-}))
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
+}));
 
 const MuiAccordion = withStyles({
     root: {
@@ -83,12 +95,13 @@ const MuiAccordionSummary = withStyles({
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        boxShadow: '1px 1px 2px gray',
-        borderRadius: '50px',
+        // boxShadow: '1px 1px 2px gray',
+        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '50px',
+            borderRadius: '8px',
         },
     },
     content: {
@@ -131,6 +144,8 @@ function Filters() {
         setSchoolScale,
         setSchoolStatus,
     } = useSchool()
+
+    // const { districts, schoolTypes, schoolLevels, schoolScales, schoolStatuses } = useApp()
 
     //================Handle useState() of filters================
     const handleDistrictChange = (event) => {
@@ -287,8 +302,8 @@ function Filters() {
                 >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList style={{ fontSize: 20 }} /> &nbsp;
-                            <Typography>Filters</Typography>
+                            <MdFilterList className={styles.iconFilter} /> &nbsp;
+                        <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -321,22 +336,26 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
-                                <Select
-                                    value={district}
-                                    onChange={handleDistrictChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value=""
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         All
                                     </MenuItem>
-                                    {districts.map((dist) => (
+                                    {districts?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
                                             className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
                                         >
                                             {dist}
                                         </MenuItem>
@@ -348,22 +367,26 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
-                                <Select
-                                    value={schoolStatus}
-                                    onChange={handleSchoolStatusChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value=""
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolStatuses.map((status) => (
+                                    {schoolStatuses?.map((status) => (
                                         <MenuItem
                                             key={status}
                                             value={status}
                                             className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
                                         >
                                             {status}
                                         </MenuItem>
@@ -375,22 +398,26 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Types</InputLabel>
-                                <Select
-                                    value={schoolType}
-                                    onChange={handleSchoolTypeChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={schoolType} onChange={handleSchoolTypeChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value=""
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolTypes.map((type) => (
+                                    {schoolTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
                                             className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
                                         >
                                             {type}
                                         </MenuItem>
@@ -402,22 +429,26 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Levels</InputLabel>
-                                <Select
-                                    value={schoolLevel}
-                                    onChange={handleSchoolLevelChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={schoolLevel} onChange={handleSchoolLevelChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value=""
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolLevels.map((level) => (
+                                    {schoolLevels?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
                                             className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
                                         >
                                             {level}
                                         </MenuItem>
@@ -429,22 +460,26 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Scales</InputLabel>
-                                <Select
-                                    value={schoolScale}
-                                    onChange={handleSchoolScaleChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={schoolScale} onChange={handleSchoolScaleChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value=""
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolScales.map((scale) => (
+                                    {schoolScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}
                                             className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
                                         >
                                             {scale}
                                         </MenuItem>

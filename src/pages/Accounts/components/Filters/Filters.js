@@ -48,12 +48,23 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '0.875rem',
     },
     btn: {
-        padding: '0.5rem 1rem',
+        padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '50px',
+        borderRadius: '8px'
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
-}))
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
+}));
 
 const MuiAccordion = withStyles({
     root: {
@@ -85,12 +96,13 @@ const MuiAccordionSummary = withStyles({
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        boxShadow: '1px 1px 2px gray',
-        borderRadius: '50px',
+        // boxShadow: '1px 1px 2px gray',
+        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '50px',
+            borderRadius: '8px',
         },
     },
     content: {
@@ -198,8 +210,8 @@ function Filters() {
                 >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList style={{ fontSize: 20 }} /> &nbsp;
-                            <Typography>Filters</Typography>
+                            <MdFilterList className={styles.iconFilter} /> &nbsp;
+                        <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -236,21 +248,24 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Is Active</InputLabel>
-                                <Select
-                                    value={active}
-                                    defaultValue={true}
-                                    onChange={handleIsActiveChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={active} defaultValue={true} onChange={handleIsActiveChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value={true}
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         True
                                     </MenuItem>
                                     <MenuItem
                                         value={false}
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         False
                                     </MenuItem>
@@ -261,14 +276,14 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Roles</InputLabel>
-                                <Select
-                                    value={role}
-                                    onChange={handleRoleChange}
-                                    MenuProps={MenuProps}
-                                >
+                                <Select value={role} onChange={handleRoleChange} MenuProps={MenuProps}>
                                     <MenuItem
                                         value=""
                                         className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
                                     >
                                         All
                                     </MenuItem>
@@ -277,6 +292,10 @@ function Filters() {
                                             key={role}
                                             value={role}
                                             className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
                                         >
                                             {role}
                                         </MenuItem>

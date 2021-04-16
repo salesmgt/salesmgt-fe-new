@@ -6,7 +6,7 @@
 // }
 
 .wrapper {
-    padding: 0.5rem 2rem 1.5rem !important; // top (right & left) bottom
+    padding: 0.5rem 2rem 1rem !important; // top (right & left) bottom
     height: 100%;
     overflow-y: auto;
 }
@@ -34,15 +34,19 @@
     }
     .tHeadCellName {
         @extend .tHeadCell;
-        width: 16rem;
+        width: 14rem;
     }
     .tHeadCellPic {
         @extend .tHeadCell;
-        width: 16rem;
+        width: 14rem;
     }
     .tHeadCellPurpose {
         @extend .tHeadCell;
-        width: 12.5rem;
+        width: 11.5rem;
+    }
+    .tHeadCellNote {
+        @extend .tHeadCell;
+        width: 11rem;
     }
 
     .tBody {
@@ -55,9 +59,11 @@
 
 .btnSave {    
     color: $common-white !important;
-    background-color: $main-success !important;
-    // text-transform: none;
+    background-color: $main-info !important;
     &:hover {
-        background-color: $dark-success !important;
+        background-color: $dark-info !important;
+    }
+    &:disabled {
+        background-color: $divider !important;
     }
 }

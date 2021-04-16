@@ -31,7 +31,7 @@ import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
-import AssignDialog from '../../dialogs/AssignDialog'
+import AssignMultiple from '../../dialogs/AssignMultiple'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -63,11 +63,47 @@ const useStyles = makeStyles((theme) => ({
     option: {
         fontSize: '0.875rem'
     },
+    lastOption: {
+        fontSize: '0.875rem',
+        borderBottom: '0.5px solid #e0e0e0'
+    },
     btn: {
-        padding: '0.5rem 1rem',
+        padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '50px'
+        borderRadius: '8px'
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
+    },
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
+    autoComplete: {
+        width: 250,
+        marginLeft: '0.5rem'
+    },
+    itemPIC: {
+        padding: 0,
+        margin: 0
+    },
+    itemTextPrimary: {
+        fontSize: '0.875rem',
+    },
+    padding: {
+        paddingTop: '0.3rem',
+        paddingLeft: '1.5rem'
+    },
+    paddingTop: {
+        paddingTop: '0.3rem'
+    },
+    paddingLeft: {
+        paddingLeft: '1.5rem'
     }
 }));
 
@@ -101,12 +137,13 @@ const MuiAccordionSummary = withStyles({
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        boxShadow: '1px 1px 2px gray',
-        borderRadius: '50px',
+        // boxShadow: '1px 1px 2px gray',
+        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '50px',
+            borderRadius: '8px',
         },
     },
     content: {
@@ -143,6 +180,9 @@ function Filters() {
         setSchoolYear, setDistrict, setSchoolType,
         setSchoolLevel, setSchoolScale, setPIC, setPurpose
     } = useTargetSchool()
+
+    // console.log('param filters: ', params);
+
     // const { listFilters } = params  //, searchKey, sorting, paging
 
     const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
@@ -154,49 +194,57 @@ function Filters() {
             id: 10,
             schoolName: 'THCS Hiệp Thành',
             district: 'Quận 4',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 12,
             schoolName: 'Tiểu học Xuân Thu',
             district: 'Quận Bình Tân',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 13,
             schoolName: 'THCS Võ Trường Toản',
             district: 'Quận 1',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 16,
             schoolName: 'THPT Nguyễn Thượng Hiền',
             district: 'Quận Phú Nhuận',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 20,
             schoolName: 'THPT Marie Cuire',
             district: 'Quận 10',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 21,
             schoolName: 'Tiểu học Đặng Trần Côn',
             district: 'Quận 12',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 30,
             schoolName: 'THPT Nguyễn Trãi',
             district: 'Quận 3',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
         {
             id: 34,
             schoolName: 'Tiểu học Nguyễn Văn Cừ',
             district: 'Quận 5',
-            purpose: ''
+            purpose: '',
+            note: ''
         },
     ]  // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
 
@@ -390,7 +438,7 @@ function Filters() {
                 <Box display="flex" flexWrap="nowrap" className={classes.flexBox}>
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList style={{ fontSize: 20 }} /> &nbsp;
+                            <MdFilterList className={styles.iconFilter} /> &nbsp;
                         <Typography>Filters</Typography>    {/* { renderCount }  */}
                         </MuiAccordionSummary>
                     </Box>
@@ -426,7 +474,7 @@ function Filters() {
                             <MdPersonAdd fontSize="large" /> &nbsp; Assign
                         </Button>
                         {/* Have checked target schools */}
-                        <AssignDialog
+                        <AssignMultiple
                             open={openAssignDialog}
                             onClose={() => setOpenAssignDialog(false)}
                             rows={selectedSchools}
@@ -489,53 +537,124 @@ function Filters() {
                                                 </>
                                             )
                                         }}
-                                    // inputProps={{ style: { fontSize: '0.875rem' }}}
                                     />
                                 }
                                 renderOption={(option) => {
                                     return (
-                                        <ListItem style={{ padding: 0 }}>
+                                        <ListItem className={classes.itemPIC}>
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
-                                            <ListItemText primary={option.fullName} primaryTypographyProps={{ style: { fontSize: '0.875rem' } }} />
+                                            <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
                                         </ListItem>
                                     );
                                 }}
-                                style={{ width: 250, marginLeft: '0.52rem' }}
+                                className={classes.autoComplete}
                                 onChange={(event, newPIC) => handlePICChange(event, newPIC)}
                             />
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={3} style={{ paddingTop: '0.3rem', paddingLeft: '1.5rem' }}>
+                        <Grid item xs={6} sm={4} md={4} lg={3} className={classes.padding}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Purposes</InputLabel>
                                 <Select
                                     value={purpose}
                                     onChange={handlePurposeChange}
-                                    // inputProps={{ style: { fontSize: '0.3rem'}}}
                                     MenuProps={MenuProps}
                                 >
-                                    <MenuItem value="" className={classes.option} style={{ borderBottom: '0.5px solid #e0e0e0' }}>All</MenuItem>
-                                    <ListSubheader className={classes.option}><em>Leads</em></ListSubheader>
-                                    <MenuItem value="Sales mới" className={classes.option}>Sales mới</MenuItem>
-                                    <MenuItem value="Theo dõi" className={classes.option} style={{ borderBottom: '0.5px solid #e0e0e0' }}>Theo dõi</MenuItem>
-                                    <ListSubheader className={classes.option}><em>Customers</em></ListSubheader>
-                                    <MenuItem value="Chăm sóc" className={classes.option}>Chăm sóc</MenuItem>
-                                    <MenuItem value="Tái ký hợp đồng" className={classes.option}>Tái ký hợp đồng</MenuItem>
-                                    <MenuItem value="Ký mới hợp đồng" className={classes.option} style={{ borderBottom: '0.5px solid #e0e0e0' }}>Ký mới hợp đồng</MenuItem>
-                                    <ListSubheader className={classes.option}><em>Ngưng hợp tác</em></ListSubheader>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.lastOption}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {/* <ListSubheader className={classes.option}><em>Leads</em></ListSubheader> */}
+                                    <MenuItem
+                                        value="Sales mới"
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        Sales mới
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="Theo dõi"
+                                        className={classes.lastOption}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        Theo dõi
+                                    </MenuItem>
+                                    {/* <ListSubheader className={classes.option}><em>Customers</em></ListSubheader> */}
+                                    <MenuItem
+                                        value="Chăm sóc"
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        Chăm sóc
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="Tái ký hợp đồng"
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        Tái ký hợp đồng
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="Ký mới hợp đồng"
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        Ký mới hợp đồng
+                                    </MenuItem>
+                                    {/* <ListSubheader className={classes.option}><em>Ngưng hợp tác</em></ListSubheader> */}
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={5} style={{ paddingTop: '0.3rem' }}>
+                        <Grid item xs={6} sm={4} md={4} lg={5} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
                                 <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {districts.map((dist) => (
-                                        <MenuItem key={dist} value={dist} className={classes.option}>{dist}</MenuItem>
+                                        <MenuItem
+                                            key={dist}
+                                            value={dist}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {dist}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -545,21 +664,59 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Years</InputLabel>
                                 <Select value={schoolYear} onChange={handleSchoolYearChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {schoolYears.map((year) => (
-                                        <MenuItem key={year} value={year} className={classes.option}>{year}</MenuItem>
+                                        <MenuItem
+                                            key={year}
+                                            value={year}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {year}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={3} lg={3} style={{ paddingLeft: '1.5rem' }}>
+                        <Grid item xs={6} sm={4} md={3} lg={3} className={classes.paddingLeft}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Types</InputLabel>
                                 <Select value={schoolType} onChange={handleSchoolTypeChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {schoolTypes.map((type) => (
-                                        <MenuItem key={type} value={type} className={classes.option}>{type}</MenuItem>
+                                        <MenuItem
+                                            key={type}
+                                            value={type}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {type}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -569,9 +726,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Levels</InputLabel>
                                 <Select value={schoolLevel} onChange={handleSchoolLevelChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {schoolLevels.map((level) => (
-                                        <MenuItem key={level} value={level} className={classes.option}>{level}</MenuItem>
+                                        <MenuItem
+                                            key={level}
+                                            value={level}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {level}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -581,9 +757,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Scales</InputLabel>
                                 <Select value={schoolScale} onChange={handleSchoolScaleChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {schoolScales.map((scale) => (
-                                        <MenuItem key={scale} value={scale} className={classes.option}>{scale}</MenuItem>
+                                        <MenuItem
+                                            key={scale}
+                                            value={scale}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {scale}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>

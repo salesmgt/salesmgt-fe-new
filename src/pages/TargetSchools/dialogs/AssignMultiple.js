@@ -26,7 +26,7 @@ import {
     FormControl,
     Select,
     MenuItem,
-    ListSubheader,
+    // ListSubheader,
     makeStyles,
     Paper,
 } from '@material-ui/core'
@@ -36,7 +36,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../hooks/TargetSchoolContext'
-import classes from './AssignDialog.module.scss'
+import classes from './AssignMultiple.module.scss'
 
 const clientSchema = yup.object().shape({
     // title: yup.string().trim().max(30).required(),
@@ -94,10 +94,42 @@ const useStyles = makeStyles((theme) => ({
         // margin: theme.spacing(1),
         minWidth: 160,
         // maxWidth: 180
-    }
+    },
+    option: {
+        fontSize: '0.875rem'
+    },
+    lastOption: {
+        fontSize: '0.875rem',
+        borderBottom: '0.5px solid #e0e0e0'
+    },
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
+    autoComplete: {
+        width: 250,
+        marginLeft: '0.5rem'
+    },
+    itemPIC: {
+        padding: 0,
+        margin: 0
+    },
+    itemTextPrimary: {
+        fontSize: '0.875rem',
+    },
+    itemTextSecondary: {
+        fontSize: '0.8rem',
+    },
 }));
 
-function AssignDialog(props) {
+function AssignMultiple(props) {
     const styles = useStyles();
     const { open, onClose, rows } = props
 
@@ -188,20 +220,19 @@ function AssignDialog(props) {
                                                 </>
                                             )
                                         }}
-                                    // inputProps={{ style: { fontSize: '0.875rem' }}}
                                     />
                                 }
                                 renderOption={(option) => {
                                     return (
-                                        <ListItem style={{ padding: 0 }}>
+                                        <ListItem className={classes.itemPIC}>
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
-                                            <ListItemText primary={option.fullName} primaryTypographyProps={{ style: { fontSize: '0.875rem' } }} />
+                                            <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
                                         </ListItem>
                                     );
                                 }}
-                                style={{ width: 250, marginLeft: '0.52rem' }}
+                                className={styles.autoComplete}
                                 onChange={(event, newPIC) => handlePICChange(event, newPIC)}
                             />
                         </Grid>
@@ -225,42 +256,35 @@ function AssignDialog(props) {
                                             <TableCell className={classes.tHeadCellName}>School Name</TableCell>
                                             <TableCell className={classes.tHeadCellPic}>PIC</TableCell>
                                             <TableCell className={classes.tHeadCellPurpose}>Purpose</TableCell>
+                                            <TableCell className={classes.tHeadCellNote}>Note</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody className={classes.tBody}>
                                         {rows.map((row, index) => (
                                             <TableRow key={row.id} className={classes.tBodyRow}>
-                                                <TableCell align="center" width="1rem">
+                                                <TableCell align="center">
                                                     {index + 1}
                                                 </TableCell>
                                                 <TableCell className={classes.tBodyCell}>
                                                     <ListItemText
                                                         primary={row.schoolName}
-                                                        primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                                                         secondary={row.district}
-                                                        secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
+                                                        classes={{
+                                                            primary: classes.itemTextPrimary,
+                                                            secondary: classes.itemTextSecondary
+                                                        }}
                                                     />
                                                 </TableCell>
                                                 <TableCell className={classes.tBodyCell}>
                                                     {PIC && (
-                                                        <ListItem
-                                                            style={{ padding: 0, margin: 0 }}
-                                                        >
-                                                            <ListItemAvatar>
-                                                                <Avatar src={PIC.avatar} />
-                                                            </ListItemAvatar>
+                                                        <ListItem className={classes.itemPIC}>
+                                                            <ListItemAvatar><Avatar src={PIC.avatar} /></ListItemAvatar>
                                                             <ListItemText
                                                                 primary={PIC.fullName}
-                                                                primaryTypographyProps={{
-                                                                    style: {
-                                                                        fontSize: '0.875rem',
-                                                                    },
-                                                                }}
                                                                 secondary={PIC.username}
-                                                                secondaryTypographyProps={{
-                                                                    style: {
-                                                                        fontSize: '0.8rem',
-                                                                    },
+                                                                classes={{
+                                                                    primary: classes.itemTextPrimary,
+                                                                    secondary: classes.itemTextSecondary
                                                                 }}
                                                             />
                                                         </ListItem>
@@ -272,8 +296,8 @@ function AssignDialog(props) {
                                                         <Select
                                                             // value={purpose.schoolIndex === index ? purpose.purpose : ''}
                                                             // value={purpose.schoolIndex === index && purpose.purpose}
-                                                            // value={purpose.purpose}
-                                                            value={purpose.value}
+                                                            value={row.purpose}
+                                                            // value={purpose.value}
                                                             onChange={(event, school) => handlePurposeChange(event, row)}
                                                             // onChange={handlePurposeChange}
                                                             // inputProps={{ style: { fontSize: '0.3rem'}}}
@@ -282,17 +306,74 @@ function AssignDialog(props) {
                                                         // inputRef={register}
                                                         // error={!!errors.purpose}
                                                         >
-                                                            <MenuItem value="" className={classes.option} style={{ borderBottom: '0.5px solid #e0e0e0' }}>None</MenuItem>
-                                                            <ListSubheader className={classes.option}><em>Leads</em></ListSubheader>
-                                                            <MenuItem value="Sales mới" className={classes.option}>Sales mới</MenuItem>
-                                                            <MenuItem value="Theo dõi" className={classes.option} style={{ borderBottom: '0.5px solid #e0e0e0' }}>Theo dõi</MenuItem>
-                                                            <ListSubheader className={classes.option}><em>Customers</em></ListSubheader>
-                                                            <MenuItem value="Chăm sóc" className={classes.option}>Chăm sóc</MenuItem>
-                                                            <MenuItem value="Tái ký hợp đồng" className={classes.option}>Tái ký hợp đồng</MenuItem>
-                                                            <MenuItem value="Ký mới hợp đồng" className={classes.option} style={{ borderBottom: '0.5px solid #e0e0e0' }}>Ký mới hợp đồng</MenuItem>
-                                                            <ListSubheader className={classes.option}><em>Ngưng hợp tác</em></ListSubheader>
+                                                            <MenuItem
+                                                                value=""
+                                                                className={styles.lastOption}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                None
+                                                            </MenuItem>
+                                                            {/* <ListSubheader className={styles.option}><em>Leads</em></ListSubheader> */}
+                                                            <MenuItem
+                                                                value="Sales mới"
+                                                                className={styles.option}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Sales mới
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value="Theo dõi"
+                                                                className={styles.lastOption}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Theo dõi
+                                                            </MenuItem>
+                                                            {/* <ListSubheader className={styles.option}><em>Customers</em></ListSubheader> */}
+                                                            <MenuItem
+                                                                value="Chăm sóc"
+                                                                className={styles.option}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Chăm sóc
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value="Tái ký hợp đồng"
+                                                                className={styles.option}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Tái ký hợp đồng
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value="Ký mới hợp đồng"
+                                                                className={styles.option}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Ký mới hợp đồng
+                                                            </MenuItem>
+                                                            {/* <ListSubheader className={styles.option}><em>Ngưng hợp tác</em></ListSubheader> */}
                                                         </Select>
                                                     </FormControl>
+                                                </TableCell>
+                                                <TableCell className={classes.tBodyCell} contentEditable>
+                                                    {row.note}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -318,57 +399,4 @@ function AssignDialog(props) {
     )
 }
 
-export default AssignDialog
-
-
-//     < TextField
-// label = "Title"
-// name = "title"
-// className = ""
-// variant = "outlined"
-// autoFocus
-// required
-// fullWidth
-// InputLabelProps = {{
-//     shrink: true,
-//                         }}
-// inputRef = { register }
-// error = {!!errors.title}
-// helperText = { errors?.title?.message }
-//     />
-//                     <FormControlLabel
-//                         className=""
-//                         label="All Day"
-//                         control={
-//                             <Switch
-//                                 // checked={form.allDay}
-//                                 id="allDay"
-//                                 name="allDay"
-//                             // onChange={handleChange}
-//                             />
-//                         }
-//                     />
-
-//                     <TextField
-//                         label="Remark"
-//                         name="remark"
-//                         className=""
-//                         variant="outlined"
-//                         fullWidth
-//                         inputRef={register}
-//                         error={!!errors.remark}
-//                         helperText={errors?.remark?.message}
-//                     />
-//                     <TextField
-//                         label="Description"
-//                         name="des"
-//                         className=""
-//                         variant="outlined"
-//                         type="text"
-//                         multiline
-//                         rows={5}
-//                         fullWidth
-//                         inputRef={register}
-//                     // error={!!errors.des}
-//                     // helperText={errors?.des?.message}
-//                     />
+export default AssignMultiple

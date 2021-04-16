@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, AsgInfo } from './panels'
 import { NotFound } from '../../components'
+import { useTargetSchool } from './hooks/TargetSchoolContext'
 
 function TargetSchool() {
     const [tabValue, setTabValue] = useState(0)
@@ -10,6 +11,9 @@ function TargetSchool() {
     const location = useLocation()
 
     const data = location.state?.data
+
+    const { params } = useTargetSchool()
+    console.log('Detail page: ', params);
 
     if (!data) {
         return <NotFound />

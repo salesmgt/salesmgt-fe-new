@@ -43,7 +43,18 @@ const useStyles = makeStyles((theme) => ({
     },
     option: {
         fontSize: '0.875rem'
-    }
+    },
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
 }));
 
 const MuiAccordion = withStyles({
@@ -177,7 +188,7 @@ function Filters() {
                 <Box display="flex" flexWrap="nowrap" className={classes.flexBox}>
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList style={{ fontSize: 20 }} /> &nbsp;
+                            <MdFilterList className={styles.iconFilter} /> &nbsp;
                         <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
@@ -198,8 +209,26 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Is Active</InputLabel>
                                 <Select value={active} onChange={handleIsActiveChange} MenuProps={MenuProps}>
-                                    <MenuItem value={true} className={classes.option}>True</MenuItem>
-                                    <MenuItem value={false} className={classes.option}>False</MenuItem>
+                                    <MenuItem
+                                        value={true}
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        True
+                                    </MenuItem>
+                                    <MenuItem
+                                        value={false}
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        False
+                                    </MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -208,9 +237,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Roles</InputLabel>
                                 <Select value={role} onChange={handleRoleChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {roles.map((role) => (
-                                        <MenuItem key={role} value={role} className={classes.option}>{role}</MenuItem>
+                                        <MenuItem
+                                            key={role}
+                                            value={role}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {role}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>

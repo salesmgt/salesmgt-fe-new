@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
     TableContainer,
     Table,
@@ -154,8 +154,15 @@ SortableTableHeaders.propTypes = {
     onRequestSort: PropTypes.func.isRequired,
 }
 
+const useStyles = makeStyles(() => ({
+    itemText: {
+        fontSize: '0.875rem',
+    }
+}));
+
 // Customize component Table
 function Tables(props) {
+    const styles = useStyles();
     const { columns, rows, totalRecord, totalPage } = props
 
     const {
@@ -261,9 +268,11 @@ function Tables(props) {
                                     <TableCell className={classes.tBodyCell}>
                                         <ListItemText
                                             primary={row.address}
-                                            primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                                             secondary={row.district}
-                                            secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                            classes={{
+                                                primary: styles.itemText,
+                                                secondary: styles.itemText
+                                            }}
                                         />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
@@ -283,9 +292,9 @@ function Tables(props) {
                                 </TableRow>
                             ))
                         ) : (
-                            <i style={{ color: 'gray', fontSize: '1.3em' }}>
-                                No records found.
-                            </i>
+                            <TableRow className={classes.tBodyRow}>
+                                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+                            </TableRow>
                         )}
                     </TableBody>
                 </Table>

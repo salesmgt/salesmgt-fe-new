@@ -31,11 +31,26 @@
     }
 
     .tBodyCell {
-      padding: 0.15rem 1rem
+      padding: 0.15rem 1rem;
+
+      .listItem {
+        padding: 0;
+        margin: 0;
+
+        .picName {
+          font-size: 0.875rem !important;
+        }
+        
+        .itemTextPrimary {
+          font-size: 0.875rem;
+        }
+      }
     }
 
-    .picName {
-      font-size: 0.875rem !important;
+    .noRecord {
+      color: gray !important;
+      font-style: italic;
+      font-size: 1.3em
     }
   }
 }
@@ -49,4 +64,19 @@
 
 .paging {
   flex-shrink: 0;
+}
+
+.chipSalesman {
+  background-color: $dark-warning !important;
+  color: $common-white !important;
+}
+
+.chipManager {
+  background-color: $main-success !important;
+  color: $common-white !important;
+}
+
+.chipSupervisor {
+  background-color: $dark-info !important;
+  color: $common-white !important;
 }

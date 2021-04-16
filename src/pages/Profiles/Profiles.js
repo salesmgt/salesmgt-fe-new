@@ -224,6 +224,7 @@ function Profiles() {
             })
         const finalFile = await resizeFile(file)
         const url = await uploadAvatarToFirebase(finalFile)
+        // console.log('url avatar = ', url)
         saveAvatarToDb(url)
         setNotify({
             isOpen: true,
@@ -239,17 +240,19 @@ function Profiles() {
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
-                (snapshot) => {},
+                (snapshot) => { },
                 (error) => {
                     console.log(error)
                     reject('Upload Image to firebase failed: ' + error)
                 },
                 () => {
+                    // console.log('file.name = ', file.name);
                     storage
                         .ref('images/avatars/')
                         .child(`${user.username}-${file.name}`)
                         .getDownloadURL()
                         .then((url) => {
+                            // console.log('getDownloadURL(): ', url);
                             resolve(url)
                         })
                 }
@@ -258,6 +261,7 @@ function Profiles() {
     }
 
     const saveAvatarToDb = (url) => {
+        // console.log('saveAvatarToDb -- url = ', url);
         ProfilesServices.updateGeneral(user.username, 'avatar', url)
             .then((data) => {
                 refreshPage()

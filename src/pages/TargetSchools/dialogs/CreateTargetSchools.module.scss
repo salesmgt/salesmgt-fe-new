@@ -8,9 +8,11 @@
 
 .btnSave {    
     color: $common-white !important;
-    background-color: $main-success !important;
-    // text-transform: none;
+    background-color: $main-info !important;
     &:hover {
-        background-color: $dark-success !important;
+        background-color: $dark-info !important;
+    }
+    &:disabled {
+        background-color: $divider !important;
     }
 }
