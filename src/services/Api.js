@@ -2,7 +2,6 @@ import axios from 'axios'
 import * as Cookies from '../utils/Cookies'
 
 const instance = axios.create({
-    // baseURL: 'http://192.168.1.8:8080',
     baseURL: 'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com',
     headers: {
         'Content-type': 'application/json',
@@ -33,8 +32,5 @@ instance.interceptors.request.use(
     { synchronous: true }
 )
 
-// instance.interceptors.response.use(res => {
-//     return res.data
-// })
 
 export default instance

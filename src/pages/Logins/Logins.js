@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
+import jwt from 'jwt-decode'
 import classes from './Logins.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -66,27 +67,24 @@ function Logins() {
         }
 
         LoginsServices.checkUser(username, password)
-            .then((res) => {
-                Cookies.setCookie('accessToken', res.token, 7)
-                // localStorage.setItem(
-                //     'notMe',
-                //     JSON.stringify(userObj(data.username, data.roles))
-                // )
+            .then((data) => {
+                Cookies.setCookie('accessToken', data.token, 7)
+                
                 Milks.setWithExpiry(
                     'notMe',
-                    userObj(res.username, res.roles),
+                    userObj(data.username, data.roles),
                     2
                 )
 
                 setUser(Milks.getWithExpiry('notMe'))
-                // user.roles[0] !== 'ADMIN'
-                //     ? history.push('/apps/dashboards')
-                //     : history.push('/apps/accounts')
             })
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    if (error.response.status === 500) {
+                    if (
+                        error.response.status === 403 ||
+                        error.response.status === 500
+                    ) {
                         serverSchema.forEach(({ name, type, message }) =>
                             setError(name, { type, message })
                         )

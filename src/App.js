@@ -6,6 +6,7 @@ import AuthProvider from './hooks/AuthContext'
 import AppProvider from './hooks/AppContext'
 import PublicRoute from './routes/PublicRoute'
 import PrivateRoute from './routes/PrivateRoute'
+
 function App() {
     return (
         <AuthProvider>
