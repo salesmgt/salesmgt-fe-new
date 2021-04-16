@@ -87,41 +87,41 @@ function DetailLayouts(props) {
                                         {header}
                                     </Typography>
                                 </Animation>
-                                {subHeader && (
-                                    <>
-                                        {isStatus ? (
-                                            <Animation
-                                                animation="transition.slideLeftIn"
-                                                delay={300}
-                                            >
-                                                <Chip
-                                                    label={
-                                                        subHeader
-                                                            ? 'Active'
-                                                            : 'Inactive'
-                                                    }
-                                                    className={
-                                                        subHeader
-                                                            ? classes.activeSub
-                                                            : classes.inactiveSub
-                                                    }
-                                                />
-                                            </Animation>
-                                        ) : (
-                                            <Animation
-                                                animation="transition.slideLeftIn"
-                                                delay={300}
-                                            >
-                                                <Typography
-                                                    variant="h6"
-                                                    className={classes.basicSub}
-                                                >
-                                                    {subHeader}
-                                                </Typography>
-                                            </Animation>
-                                        )}
-                                    </>
+                                {/* {subHeader && (
+                                    <> */}
+                                {isStatus ? (
+                                    <Animation
+                                        animation="transition.slideLeftIn"
+                                        delay={300}
+                                    >
+                                        <Chip
+                                            label={
+                                                subHeader
+                                                    ? 'Active'
+                                                    : 'Inactive'
+                                            }
+                                            className={
+                                                subHeader
+                                                    ? classes.activeSub
+                                                    : classes.inactiveSub
+                                            }
+                                        />
+                                    </Animation>
+                                ) : (
+                                    <Animation
+                                        animation="transition.slideLeftIn"
+                                        delay={300}
+                                    >
+                                        <Typography
+                                            variant="h6"
+                                            className={classes.basicSub}
+                                        >
+                                            {subHeader}
+                                        </Typography>
+                                    </Animation>
                                 )}
+                                {/* </>
+                                )} */}
                             </div>
                         </div>
                     </div>

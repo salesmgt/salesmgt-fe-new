@@ -6,7 +6,8 @@ import {
     AccordionDetails,
     Typography,
     Select,
-    Grid, Box,
+    Grid,
+    Box,
     InputLabel,
     MenuItem,
     FormControl,
@@ -21,15 +22,15 @@ import CreateAccount from '../../dialogs/CreateAccount'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
-const ITEM_HEIGHT = 38;
-const ITEM_PADDING_TOP = 5;
+const ITEM_HEIGHT = 38
+const ITEM_PADDING_TOP = 5
 const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-        }
-    }
-};
+        },
+    },
+}
 //==============================================================
 
 const useStyles = makeStyles((theme) => ({
@@ -41,18 +42,18 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
     },
     flexItem: {
-        padding: 0
+        padding: 0,
     },
     option: {
-        fontSize: '0.875rem'
+        fontSize: '0.875rem',
     },
     btn: {
         padding: '0.5rem 1rem',
         margin: '0 0.3rem',
-        borderRadius: '50px'
+        borderRadius: '50px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
-    }
-}));
+    },
+}))
 
 const MuiAccordion = withStyles({
     root: {
@@ -74,7 +75,7 @@ const MuiAccordion = withStyles({
         },
     },
     expanded: {},
-})(Accordion);
+})(Accordion)
 
 const MuiAccordionSummary = withStyles({
     root: {
@@ -98,7 +99,7 @@ const MuiAccordionSummary = withStyles({
         },
     },
     expanded: {},
-})(AccordionSummary);
+})(AccordionSummary)
 
 const MuiAccordionDetails = withStyles((theme) => ({
     root: {
@@ -107,70 +108,75 @@ const MuiAccordionDetails = withStyles((theme) => ({
         padding: '0.5rem 0 1rem 1.5rem',
         borderRadius: '8px',
     },
-}))(AccordionDetails);
+}))(AccordionDetails)
 
 function Filters() {
-    const classes = useStyles();
+    const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
     const {
-        params, dispatchParams,
+        params,
+        dispatchParams,
         roles,
-        active, setActive, role, setRole
+        active,
+        setActive,
+        role,
+        setRole,
     } = useAccount()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handleIsActiveChange = (event) => {
-        const selectedIsActive = event.target.value;
-        setActive(selectedIsActive);
+        const selectedIsActive = event.target.value
+        setActive(selectedIsActive)
 
         dispatchParams({
             type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: 'isActive', filterValue: selectedIsActive }
+            payload: { filterType: 'isActive', filterValue: selectedIsActive },
         })
-    };
+    }
 
     const handleRoleChange = (event) => {
-        const selectedRole = event.target.value;
-        setRole(selectedRole);
+        const selectedRole = event.target.value
+        setRole(selectedRole)
 
-        if (selectedRole) {   // !== ''
+        if (selectedRole) {
+            // !== ''
             dispatchParams({
                 type: ReducerActions.FILTER_ROLE,
-                payload: { filterType: 'role', filterValue: selectedRole }
+                payload: { filterType: 'role', filterValue: selectedRole },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_ROLE,
-                payload: { filterType: 'role', filterValue: '' }
+                payload: { filterType: 'role', filterValue: '' },
             })
         }
-    };
+    }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
     const handleChipsRemoved = (removedFilters) => {
-        removedFilters.forEach(removedFilter => {
+        removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 case 'active':
-                    setActive(true);
-                    break;
+                    setActive(true)
+                    break
                 case 'role':
-                    setRole("All");
-                    break;
+                    setRole('All')
+                    break
                 default:
-                    break;
+                    break
             }
-        });
-    };
+        })
+    }
 
     const generateChipsArray = (listFilters) => {
-        const listChips = [];
+        const listChips = []
         for (const chip in listFilters) {
-            listChips.push(listFilters[chip]);
+            listChips.push(listFilters[chip])
         }
-        return listChips;
+        return listChips
     }
     //===============================================================================
 
@@ -178,18 +184,22 @@ function Filters() {
     const handleSearch = (keyword) => {
         dispatchParams({
             type: ReducerActions.ENTER_SEARCH_KEYWORD,
-            payload: keyword
+            payload: keyword,
         })
     }
 
     return (
         <div className={styles.wrapper}>
             <MuiAccordion>
-                <Box display="flex" flexWrap="nowrap" className={classes.flexBox}>
+                <Box
+                    display="flex"
+                    flexWrap="nowrap"
+                    className={classes.flexBox}
+                >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
                             <MdFilterList style={{ fontSize: 20 }} /> &nbsp;
-                        <Typography>Filters</Typography>
+                            <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -200,7 +210,10 @@ function Filters() {
                         />
                     </Box>
                     <Box className={classes.flexItem}>
-                        <SearchFields placeholder="Search..." onChange={handleSearch} />
+                        <SearchFields
+                            placeholder="Search..."
+                            onChange={handleSearch}
+                        />
                     </Box>
                     <Box className={classes.flexItem}>
                         <Button
@@ -209,7 +222,8 @@ function Filters() {
                             color="secondary"
                             onClick={() => setOpenCreateDialog(true)}
                         >
-                            <MdAdd fontSize="large" />&nbsp;Create
+                            <MdAdd fontSize="large" />
+                            &nbsp;Create
                         </Button>
                         <CreateAccount
                             open={openCreateDialog}
@@ -222,9 +236,24 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Is Active</InputLabel>
-                                <Select value={active} defaultValue={true} onChange={handleIsActiveChange} MenuProps={MenuProps}>
-                                    <MenuItem value={true} className={classes.option}>True</MenuItem>
-                                    <MenuItem value={false} className={classes.option}>False</MenuItem>
+                                <Select
+                                    value={active}
+                                    defaultValue={true}
+                                    onChange={handleIsActiveChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem
+                                        value={true}
+                                        className={classes.option}
+                                    >
+                                        True
+                                    </MenuItem>
+                                    <MenuItem
+                                        value={false}
+                                        className={classes.option}
+                                    >
+                                        False
+                                    </MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -232,10 +261,25 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Roles</InputLabel>
-                                <Select value={role} onChange={handleRoleChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
+                                <Select
+                                    value={role}
+                                    onChange={handleRoleChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                    >
+                                        All
+                                    </MenuItem>
                                     {roles.map((role) => (
-                                        <MenuItem key={role} value={role} className={classes.option}>{role}</MenuItem>
+                                        <MenuItem
+                                            key={role}
+                                            value={role}
+                                            className={classes.option}
+                                        >
+                                            {role}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>

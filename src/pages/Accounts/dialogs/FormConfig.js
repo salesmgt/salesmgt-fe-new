@@ -1,6 +1,6 @@
 export const Consts = {
     headers: {
-        child1: 'Account Detail',
+        child1: 'Create Account',
     },
     operations: {
         cancel: 'Cancel',
@@ -9,6 +9,9 @@ export const Consts = {
     fields: {
         username: {
             title: 'Username',
+        },
+        fullName: {
+            title: 'Full Name',
         },
         gender: {
             title: 'Gender',
@@ -29,7 +32,7 @@ export const Consts = {
         status: {
             title: 'Account Active',
         },
-        auth: {
+        roles: {
             title: 'Roles',
         },
     },

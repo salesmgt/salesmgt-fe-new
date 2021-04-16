@@ -307,9 +307,7 @@ function Profiles() {
                     type: 'error',
                 })
             })
-
         pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
-        // alert(JSON.stringify(data))
     }
 
     const onEmailSubmit = (data) => {
@@ -336,7 +334,6 @@ function Profiles() {
                     type: 'error',
                 })
             })
-
         emailReset({ email: '' })
     }
 
@@ -364,7 +361,6 @@ function Profiles() {
                     type: 'error',
                 })
             })
-
         phoneReset({ phone: '' })
     }
 
@@ -397,7 +393,7 @@ function Profiles() {
 
     const handleLogout = () => {
         Cookies.setCookie('accessToken', '', 0)
-        localStorage.removeItem('notMe')
+        localStorage.clear()
         setUser()
     }
 
@@ -408,6 +404,8 @@ function Profiles() {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false)
     }
+
+    // return React.useMemo(() => {}, [user])
 
     return (
         <div className={classes.wrapper}>

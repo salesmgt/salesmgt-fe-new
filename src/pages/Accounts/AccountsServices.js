@@ -29,3 +29,17 @@ export async function getAccounts(
 export async function getAccount(username) {
     return await Api.get(`/users/${username}`)
 }
+
+export async function updateAccount(username, account) {
+    const response = await Api.put(`/users/${username}`, account)
+    const data = await response.data
+
+    return data
+}
+
+export async function createAccount(account) {
+    const response = await Api.post('/users', account)
+    const data = await response.data
+
+    return data
+}

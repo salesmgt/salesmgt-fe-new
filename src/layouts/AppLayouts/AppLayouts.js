@@ -38,15 +38,14 @@ import { useAuth } from '../../hooks/AuthContext'
 import { roleRoutes } from '../../routes/routes'
 import classes from './AppLayouts.module.scss'
 
-function AppLayouts() {
+function AppLayouts(props) {
     const { url } = useRouteMatch()
     const location = useLocation()
     const history = useHistory()
 
     const { user } = useAuth()
-    const { roles } = user
 
-    const menuItems = getMenuItems(roles[0])
+    const menuItems = getMenuItems(user.roles[0])
 
     const [open, setOpen] = useToggle(
         window.matchMedia('(max-width: 960px)').matches ? false : true
@@ -210,10 +209,12 @@ function AppLayouts() {
                             className={classes.majorImg}
                             alt="major-logos"
                             onClick={() => {
-                                if (roles[0] === 'ADMIN') { history.push(`${url}/accounts`) }
-                                else { history.push(`${url}/dashboards`) }
-                            }
-                            }
+                                if (user.roles[0] === 'ADMIN') {
+                                    history.push(`${url}/accounts`)
+                                } else {
+                                    history.push(`${url}/dashboards`)
+                                }
+                            }}
                         />
                     </div>
                     <List component="nav">
@@ -265,7 +266,7 @@ function AppLayouts() {
                 <div className={classes.appBarSpacer} />
                 <div className={classes.container}>
                     <Switch>
-                        {roleRoutes[roles[0]].map((route, index) => (
+                        {roleRoutes[user.roles[0]].map((route, index) => (
                             <Route
                                 exact
                                 path={`${url}/${route.path}`}

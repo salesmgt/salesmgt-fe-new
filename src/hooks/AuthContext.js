@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
-import * as Milks from '../utils/Milks'
+import * as Milk from '../utils/Milk'
 
 const AuthContext = createContext()
 
@@ -8,16 +8,20 @@ export function useAuth() {
 }
 
 function useAuthProvider() {
-    const [user, setUser] = useState(Milks.getWithExpiry('notMe'))
+    const [user, setUser] = useState(Milk.getWithExpiry('notMe'))
 
-    console.log(user)
-    // const [authToken, setAuthToken] = useState(null)
+    if (!user) {
+        localStorage.removeItem('dists')
+        localStorage.removeItem('schEduLvls')
+        localStorage.removeItem('schTypes')
+        localStorage.removeItem('schScales')
+        localStorage.removeItem('schStatus')
+        localStorage.removeItem('roles')
+    }
 
     return {
         user,
         setUser,
-        // authToken,
-        // setAuthToken,
     }
 }
 

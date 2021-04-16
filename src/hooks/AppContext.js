@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import * as FiltersServices from '../services/FiltersServices'
+import * as Milk from '../utils/Milk'
 
 const AppContext = createContext()
 
@@ -9,165 +9,137 @@ export function useApp() {
 }
 
 function useAppProvider() {
-    const history = useHistory()
+    const [dists, setDists] = useState(Milk.getMilk('dists'))
+    const [schEduLvls, setSchEduLvls] = useState(Milk.getMilk('eduLvls'))
+    const [schScales, setSchScales] = useState(Milk.getMilk('types'))
+    const [schTypes, setSchTypes] = useState(Milk.getMilk('scales'))
+    const [schStatus, setSchStatus] = useState(Milk.getMilk('status'))
+    const [roles, setRoles] = useState(Milk.getMilk('roles'))
 
-    const [dists, setDists] = useState(null)
-    const [schEduLvls, setSchEduLvls] = useState(null)
-    const [schScales, setSchScales] = useState(null)
-    const [schTypes, setSchTypes] = useState(null)
-    const [schStatus, setSchStatus] = useState(null)
-    // const [salesPurps, setSalesPurps] = useState(null)
-    const [roles, setRoles] = useState(null)
-    const [pics, setPics] = useState(null)
-
-    let isMounted = true
-    const refreshPage = () => {
-        FiltersServices.getDistricts()
-            .then((data) => {
-                if (isMounted) {
-                    setDists(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-
-        FiltersServices.getEducationalLevels()
-            .then((data) => {
-                if (isMounted) {
-                    setSchEduLvls(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-
-        FiltersServices.getSchoolScales()
-            .then((data) => {
-                if (isMounted) {
-                    setSchScales(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-
-        FiltersServices.getSchoolTypes()
-            .then((data) => {
-                if (isMounted) {
-                    setSchTypes(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-
-        FiltersServices.getSchoolStatuses()
-            .then((data) => {
-                if (isMounted) {
-                    setSchStatus(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-
-        // FiltersServices.getPurposes()
-        //     .then((data) => {
-        //         if (isMounted) {
-        //             setSalesPurps(data)
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         if (error.response) {
-        //             console.log(error)
-        //             history.push({
-        //                 pathname: '/errors',
-        //                 state: { error: error.response.status },
-        //             })
-        //         }
-        //     })
-
-        FiltersServices.getRoles()
-            .then((data) => {
-                if (isMounted) {
-                    setRoles(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-
-        FiltersServices.getPICs()
-            .then((data) => {
-                if (isMounted) {
-                    setPics(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // const [salesPurps] = useState(JSON.parse(localStorage.getItem('purps')))
+    // const [pics] = useState(null)
 
     useEffect(() => {
-        refreshPage()
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            isMounted = false
-        }
+        FiltersServices.getDistricts()
+            .then((data) => {
+                // localStorage.setItem('dists', JSON.stringify(data))
+                // setDists(JSON.parse(localStorage.getItem('dists')))
+                Milk.setMilk('dists', data)
+                setDists(Milk.getMilk('dists'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
     }, [])
+
+    useEffect(() => {
+        FiltersServices.getEducationalLevels()
+            .then((data) => {
+                // localStorage.setItem('eduLvls', JSON.stringify(data))
+                // setSchEduLvls(JSON.parse(localStorage.getItem('eduLvls')))
+                Milk.setMilk('eduLvls', data)
+                setSchEduLvls(Milk.getMilk('eduLvls'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
+
+    useEffect(() => {
+        FiltersServices.getSchoolTypes()
+            .then((data) => {
+                // localStorage.setItem('types', JSON.stringify(data))
+                // setSchTypes(JSON.parse(localStorage.getItem('types')))
+                Milk.setMilk('types', data)
+                setSchTypes(Milk.getMilk('types'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
+
+    useEffect(() => {
+        FiltersServices.getSchoolScales()
+            .then((data) => {
+                // localStorage.setItem('scales', JSON.stringify(data))
+                // setSchScales(JSON.parse(localStorage.getItem('scales')))
+                Milk.setMilk('scales', data)
+                setSchScales(Milk.getMilk('scales'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
+
+    useEffect(() => {
+        FiltersServices.getSchoolStatuses()
+            .then((data) => {
+                // localStorage.setItem('status', JSON.stringify(data))
+                // setSchStatus(JSON.parse(localStorage.getItem('status')))
+                Milk.setMilk('status', data)
+                setSchStatus(Milk.getMilk('status'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
+
+    useEffect(() => {
+        FiltersServices.getRoles()
+            .then((data) => {
+                // localStorage.setItem('roles', JSON.stringify(data))
+                // setRoles(localStorage.getItem('roles'))
+                Milk.setMilk('roles', data)
+                setRoles(Milk.getMilk('roles'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
+
+    // useEffect(() => {
+    //     FiltersServices.getPurposes()
+    //         .then((data) => {
+    //             localStorage.setItem('purps', JSON.stringify(data))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+    // }, [])
+
+    // FiltersServices.getPICs()
+    //     .then((data) => {
+    //         return data
+    //     })
+    //     .catch((error) => {
+    //         if (error.response) {
+    //             console.log(error)
+    //         }
+    //     })
 
     return {
         dists,
         schEduLvls,
-        schScales,
         schTypes,
+        schScales,
         schStatus,
-        // salesPurps
         roles,
-        pics,
+        // salesPurps,
+        // pics,
     }
 }
 

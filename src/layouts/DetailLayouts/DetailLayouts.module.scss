@@ -95,11 +95,12 @@
                         }
                         .activeSub {
                             color: $common-white;
-                            background-color: #4caf50;
+                            background-color: $heals;
                             width: fit-content;
                         }
                         .inactiveSub {
-                            background-color: $divider;
+                            color: $common-white;
+                            background-color: $disabled;
                             width: fit-content;
                         }
                     }

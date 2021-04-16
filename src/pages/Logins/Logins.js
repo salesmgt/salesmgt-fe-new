@@ -11,12 +11,11 @@ import { useHistory } from 'react-router-dom'
 import { Consts } from './LoginsConfig'
 import * as LoginsServices from './LoginsServices'
 import * as Cookies from '../../utils/Cookies'
-import * as Milks from '../../utils/Milks'
+import * as Milk from '../../utils/Milk'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
-import jwt from 'jwt-decode'
 import classes from './Logins.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -69,14 +68,12 @@ function Logins() {
         LoginsServices.checkUser(username, password)
             .then((data) => {
                 Cookies.setCookie('accessToken', data.token, 7)
-                
-                Milks.setWithExpiry(
+                Milk.setWithExpiry(
                     'notMe',
                     userObj(data.username, data.roles),
                     2
                 )
-
-                setUser(Milks.getWithExpiry('notMe'))
+                setUser(Milk.getWithExpiry('notMe'))
             })
             .catch((error) => {
                 if (error.response) {

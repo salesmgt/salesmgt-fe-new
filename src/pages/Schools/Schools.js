@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
-import { columns } from './SchoolsConfig';
-import { useSchool } from './hooks/SchoolContext';
+import { columns } from './SchoolsConfig'
+import { useSchool } from './hooks/SchoolContext'
 import * as SchoolsServices from './SchoolsServices'
 import classes from './Schools.module.scss'
 
@@ -14,18 +14,34 @@ function Schools() {
 
     const [data, setData] = useState({})
 
-    function refreshSchools(page = 0, limit = 10, column = "id", direction = "asc", searchKey, listFilters) {
-        SchoolsServices.getSchools(page, limit, column, direction, searchKey, listFilters).then((res) => {
-            setData(res.data)
-        }).catch(error => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+    function refreshSchools(
+        page = 0,
+        limit = 10,
+        column = 'id',
+        direction = 'asc',
+        searchKey,
+        listFilters
+    ) {
+        SchoolsServices.getSchools(
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters
+        )
+            .then((res) => {
+                setData(res.data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     useEffect(() => {
@@ -70,7 +86,8 @@ function Schools() {
                 <MdAdd fontSize="large" />&nbsp; Add School
             </Fab> */}
             <Filters className={classes.filter} />
-            <Tables className={classes.table}
+            <Tables
+                className={classes.table}
                 columns={columns}
                 rows={data.list}
                 totalRecord={data.totalElements}

@@ -16,9 +16,11 @@ function Account() {
 
     return (
         <DetailLayouts
-            linkBack='Accounts'
+            linkBack="Accounts"
             avatar={data.avatar}
             header={data.fullName}
+            subHeader={data.active}
+            isStatus={true}
             tabs={['General Info']}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}

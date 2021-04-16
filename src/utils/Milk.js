@@ -27,3 +27,20 @@ export function getWithExpiry(key) {
     }
     return item.value
 }
+
+export function setMilk(key, value) {
+    const item = {
+        value: value,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+}
+
+export function getMilk(key) {
+    const itemStr = localStorage.getItem(key)
+    if (!itemStr) {
+        return null
+    }
+    const item = JSON.parse(itemStr)
+
+    return item.value
+}
