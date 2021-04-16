@@ -38,7 +38,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../hooks/TargetSchoolContext'
-import classes from './CreateDialog.module.scss'
+import classes from './CreateTargetSchools.module.scss'
 
 const clientSchema = yup.object().shape({
     // title: yup.string().trim().max(30).required(),
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CreateDialog(props) {
+function CreateTargetSchools(props) {
     const styles = useStyles();
     const { open, onClose } = props
 
@@ -122,7 +122,7 @@ function CreateDialog(props) {
     )
 }
 
-export default CreateDialog
+export default CreateTargetSchools
 
 
 //     < TextField

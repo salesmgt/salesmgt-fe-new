@@ -11,11 +11,11 @@ export function useApp() {
 function useAppProvider() {
     const history = useHistory()
 
-    const [dists, setDists] = useState(null)
-    const [schEduLvls, setSchEduLvls] = useState(null)
-    const [schScales, setSchScales] = useState(null)
-    const [schTypes, setSchTypes] = useState(null)
-    const [schStatus, setSchStatus] = useState(null)
+    const [districts, setDists] = useState(null)
+    const [schoolLevels, setSchEduLvls] = useState(null)
+    const [schoolScales, setSchScales] = useState(null)
+    const [schoolTypes, setSchTypes] = useState(null)
+    const [schoolStatuses, setSchStatus] = useState(null)
     // const [salesPurps, setSalesPurps] = useState(null)
     const [roles, setRoles] = useState(null)
     const [pics, setPics] = useState(null)
@@ -160,11 +160,11 @@ function useAppProvider() {
     }, [])
 
     return {
-        dists,
-        schEduLvls,
-        schScales,
-        schTypes,
-        schStatus,
+        districts,  // dists,
+        schoolTypes,    // schTypes,
+        schoolLevels,   // schEduLvls,
+        schoolScales,   // schScales,
+        schoolStatuses, // schStatus,
         // salesPurps
         roles,
         pics,

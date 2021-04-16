@@ -12,25 +12,25 @@ export const columns = [
     { key: "", name: '', sortable: false }
 ]
 
-export const menuOptions = [
-    { icon: <MdInfo fontSize="large" />, text: 'View details' },
-    { icon: <MdDescription fontSize="large" />, text: 'View reports' },
-    { icon: <MdPersonAdd fontSize="large" />, text: 'Assign' },
-    { icon: <MdDelete fontSize="large" />, text: 'Remove this' },
-    // { icon: <MdAssignment fontSize="large" />, text: 'View contracts' },
-]
+// export const menuOptions = [
+//     { icon: <MdInfo fontSize="large" />, text: 'View details' },
+//     { icon: <MdDescription fontSize="large" />, text: 'View reports' },
+//     { icon: <MdPersonAdd fontSize="large" />, text: 'Assign' },
+//     { icon: <MdDelete fontSize="large" />, text: 'Remove this' },
+//     // { icon: <MdAssignment fontSize="large" />, text: 'View contracts' },
+// ]
 
-export function getMenuItems(role) {
-    const [details, reports, contracts, assign, remove] = menuOptions
+// export function getMenuItems(role) {
+//     const [details, reports, contracts, assign, remove] = menuOptions
 
-    switch (role) {
-        case 'SALES MANAGER':
-            return [details, reports, contracts, assign, remove]
-        case 'SALES SUPERVISOR':
-            return [details, reports, assign, remove]
-        case 'SALESMAN':
-            return [details, reports]
-        default:
-            throw new Error()
-    }
-}
+//     switch (role) {
+//         case 'SALES MANAGER':
+//             return [details, reports, contracts, assign, remove]
+//         case 'SALES SUPERVISOR':
+//             return [details, reports, assign, remove]
+//         case 'SALESMAN':
+//             return [details, reports]
+//         default:
+//             throw new Error()
+//     }
+// }

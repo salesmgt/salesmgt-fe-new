@@ -26,7 +26,7 @@ import DateFnsUtils from '@date-io/date-fns'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import classes from './CreateAccount.module.scss'
+import classes from './CreateSchool.module.scss'
 import { useApp } from '../../../hooks/AppContext'
 
 const clientSchema = yup.object().shape({
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
     menuItemSelected: {},
 }))
 
-function CreateAccount(props) {
+function CreateSchool(props) {
     const styles = useStyles();
     const { open, onClose } = props
 
@@ -290,7 +290,7 @@ function CreateAccount(props) {
     )
 }
 
-export default CreateAccount
+export default CreateSchool
 
                         // < FormControlLabel
                         //     className = ""

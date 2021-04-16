@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
     TableContainer,
     Table,
@@ -168,9 +168,25 @@ SortableTableHeaders.propTypes = {
     onRequestSort: PropTypes.func.isRequired,
 }
 
+const useStyles = makeStyles(() => ({
+    itemPIC: {
+        padding: 0,
+        margin: 0
+    },
+    itemTextLarge: {
+        fontSize: '1rem',
+    },
+    itemTextMedium: {
+        fontSize: '0.875rem',
+    },
+    itemTextSmall: {
+        fontSize: '0.8rem',
+    }
+}));
+
 // Customize component Table
 function Tables(props) {
-    // const classes = useStyles()
+    const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
     const { columns, rows, totalRecord, totalPage } = props // , onGetTargets
 
@@ -334,6 +350,14 @@ function Tables(props) {
 
     // const open = Boolean(anchorEl);
 
+    //=================================================================================
+    // const [anchorEl, setAnchorEl] = useState(null)
+    // const handleOpenMenuOptions = (event) => {
+    //     setAnchorEl(event.currentTarget)
+    // }
+
+    //=================================================================================
+
     return (
         <div className={classes.wrapper}>
             <TableContainer className={classes.container} component="div">
@@ -369,10 +393,14 @@ function Tables(props) {
                                     <TableCell className={classes.tBodyCell}>
                                         <ListItemText
                                             primary={row.schoolName}
-                                            primaryTypographyProps={{ style: { fontSize: '1rem' } }}
-                                            // primaryTypographyProps={classes.tCellPrimaryText}
                                             secondary={row.district}
-                                            secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                            classes={{
+                                                primary: styles.itemTextLarge,
+                                                secondary: styles.itemTextMedium
+                                            }}
+                                        // primaryTypographyProps={classes.tCellPrimaryText}
+                                        // primaryTypographyProps={{ style: { fontSize: '1rem' } }}
+                                        // secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                                         />
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>
@@ -417,9 +445,7 @@ function Tables(props) {
                   </Popover> */}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        <ListItem
-                                            style={{ padding: 0, margin: 0 }}
-                                        >
+                                        <ListItem className={classes.itemPIC}>
                                             <ListItemAvatar>
                                                 {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
                                                 <Avatar src={row.avatar} />
@@ -427,16 +453,10 @@ function Tables(props) {
                                             <ListItemText
                                                 className={classes.picName}
                                                 primary={row.fullName}
-                                                primaryTypographyProps={{
-                                                    style: {
-                                                        fontSize: '0.875rem',
-                                                    },
-                                                }}
                                                 secondary={row.username}
-                                                secondaryTypographyProps={{
-                                                    style: {
-                                                        fontSize: '0.8rem',
-                                                    },
+                                                classes={{
+                                                    primary: styles.itemTextMedium,
+                                                    secondary: styles.itemTextSmall
                                                 }}
                                             />
                                         </ListItem>
@@ -452,13 +472,17 @@ function Tables(props) {
                                         align="right"
                                     >
                                         <MenuOptions data={row} />
+                                        {/* <IconButton color="primary" onClick={handleOpenMenuOptions}>
+                                            <MdMoreVert />
+                                        </IconButton>
+                                        {anchorEl && <MenuOptions data={row} />} */}
                                     </TableCell>
                                 </TableRow>
                             ))
                         ) : (
-                            <i style={{ color: 'gray', fontSize: '1.3em' }}>
-                                No records found.
-                            </i>
+                            <TableRow className={classes.tBodyRow}>
+                                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+                            </TableRow>
                         )}
                     </TableBody>
                 </Table>

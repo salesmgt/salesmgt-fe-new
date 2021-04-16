@@ -16,6 +16,7 @@ import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
+// import { useApp } from '../../../../hooks/AppContext'
 import Chips from './Chips/Chips'
 import styles from './Filters.module.scss'
 
@@ -48,9 +49,20 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '50px'
+        borderRadius: '8px'
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
-    }
+    },
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
 }));
 
 const MuiAccordion = withStyles({
@@ -82,12 +94,13 @@ const MuiAccordionSummary = withStyles({
         backgroundColor: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        boxShadow: '1px 1px 2px gray',
-        borderRadius: '50px',
+        // boxShadow: '1px 1px 2px gray',
+        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
             minHeight: 35,
-            borderRadius: '50px',
+            borderRadius: '8px',
         },
     },
     content: {
@@ -108,6 +121,7 @@ const MuiAccordionDetails = withStyles((theme) => ({
 }))(AccordionDetails);
 
 function Filters() {
+    // console.log('aaaaaaaa');
     const classes = useStyles();
 
     //Use states which have been declared in the TargetSchoolContext
@@ -118,6 +132,8 @@ function Filters() {
         schoolStatus, setDistrict, setSchoolType,
         setSchoolLevel, setSchoolScale, setSchoolStatus
     } = useSchool()
+
+    // const { districts, schoolTypes, schoolLevels, schoolScales, schoolStatuses } = useApp()
 
     //================Handle useState() of filters================
     const handleDistrictChange = (event) => {
@@ -253,7 +269,7 @@ function Filters() {
                 <Box display="flex" flexWrap="nowrap" className={classes.flexBox}>
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList style={{ fontSize: 20 }} /> &nbsp;
+                            <MdFilterList className={styles.iconFilter} /> &nbsp;
                         <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
@@ -284,9 +300,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
                                 <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
-                                    {districts.map((dist) => (
-                                        <MenuItem key={dist} value={dist} className={classes.option}>{dist}</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {districts?.map((dist) => (
+                                        <MenuItem
+                                            key={dist}
+                                            value={dist}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {dist}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -296,9 +331,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
                                 <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
-                                    {schoolStatuses.map((status) => (
-                                        <MenuItem key={status} value={status} className={classes.option}>{status}</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {schoolStatuses?.map((status) => (
+                                        <MenuItem
+                                            key={status}
+                                            value={status}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {status}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -308,9 +362,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Types</InputLabel>
                                 <Select value={schoolType} onChange={handleSchoolTypeChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
-                                    {schoolTypes.map((type) => (
-                                        <MenuItem key={type} value={type} className={classes.option}>{type}</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {schoolTypes?.map((type) => (
+                                        <MenuItem
+                                            key={type}
+                                            value={type}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {type}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -320,9 +393,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Levels</InputLabel>
                                 <Select value={schoolLevel} onChange={handleSchoolLevelChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
-                                    {schoolLevels.map((level) => (
-                                        <MenuItem key={level} value={level} className={classes.option}>{level}</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {schoolLevels?.map((level) => (
+                                        <MenuItem
+                                            key={level}
+                                            value={level}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {level}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -332,9 +424,28 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Scales</InputLabel>
                                 <Select value={schoolScale} onChange={handleSchoolScaleChange} MenuProps={MenuProps}>
-                                    <MenuItem value="" className={classes.option}>All</MenuItem>
-                                    {schoolScales.map((scale) => (
-                                        <MenuItem key={scale} value={scale} className={classes.option}>{scale}</MenuItem>
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {schoolScales?.map((scale) => (
+                                        <MenuItem
+                                            key={scale}
+                                            value={scale}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {scale}
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>

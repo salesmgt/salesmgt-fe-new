@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
     TableContainer,
     Table,
@@ -156,8 +156,22 @@ SortableTableHeaders.propTypes = {
     onRequestSort: PropTypes.func.isRequired,
 }
 
+const useStyles = makeStyles(() => ({
+    itemPIC: {
+        padding: 0,
+        margin: 0
+    },
+    itemTextPrimary: {
+        fontSize: '0.925rem',
+    },
+    itemTextSecondary: {
+        fontSize: '0.8rem',
+    }
+}));
+
 // Customize component Table
 function Tables(props) {
+    const styles = useStyles();
     const { columns, rows, totalRecord, totalPage } = props
 
     const {
@@ -240,26 +254,18 @@ function Tables(props) {
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        <ListItem
-                                            style={{ padding: 0, margin: 0 }}
-                                        >
-                                            <ListItemAvatar>
-                                                <Avatar src={row.avatar} />
-                                            </ListItemAvatar>
+                                        <ListItem className={styles.itemPIC}>
+                                            <ListItemAvatar><Avatar src={row.avatar} /></ListItemAvatar>
                                             <ListItemText
                                                 className={classes.picName}
                                                 primary={row.fullName}
-                                                primaryTypographyProps={{
-                                                    style: {
-                                                        fontSize: '0.925rem',
-                                                    },
-                                                }}
                                                 secondary={row.username}
-                                                secondaryTypographyProps={{
-                                                    style: {
-                                                        fontSize: '0.8rem',
-                                                    },
+                                                classes={{
+                                                    primary: styles.itemTextPrimary,
+                                                    secondary: styles.itemTextSecondary
                                                 }}
+                                            // primaryTypographyProps={{ style: { fontSize: '0.925rem' } }}
+                                            // secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
                                             />
                                         </ListItem>
                                     </TableCell>
@@ -281,9 +287,9 @@ function Tables(props) {
                                 </TableRow>
                             ))
                         ) : (
-                            <i style={{ color: 'gray', fontSize: '1.3em' }}>
-                                No records found.
-                            </i>
+                            <TableRow className={classes.tBodyRow}>
+                                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+                            </TableRow>
                         )}
                     </TableBody>
                 </Table>

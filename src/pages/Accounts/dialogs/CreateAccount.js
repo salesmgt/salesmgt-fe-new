@@ -26,8 +26,8 @@ import DateFnsUtils from '@date-io/date-fns'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import classes from './CreateAccount.module.scss'
 import { useApp } from '../../../hooks/AppContext'
+import classes from './CreateAccount.module.scss'
 
 const clientSchema = yup.object().shape({
     username: yup.string().trim().min(8).max(30).required(),
@@ -88,10 +88,13 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: 'rgba(0, 0, 0, 0.12)',
         },
         '&$menuItemSelected:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+            backgroundColor: 'rgba(0, 0, 0, 0.04)',
         },
     },
     menuItemSelected: {},
+    formControl: {
+        backgroundColor: 'rgba(255, 206, 86, 0.6)',
+    }
 }))
 
 function CreateAccount(props) {
@@ -150,7 +153,7 @@ function CreateAccount(props) {
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={6}>
-                            <FormControl variant="outlined" fullWidth className={styles.formControl}>
+                            <FormControl variant="outlined" fullWidth className={styles.formControl} required>
                                 <InputLabel>Roles</InputLabel>
                                 <Controller name="role" control={control}
                                     render={({ value, onChange, }) => (
@@ -160,6 +163,7 @@ function CreateAccount(props) {
                                             onChange={onChange}
                                             MenuProps={MenuProps}
                                             disableUnderline
+                                            required
                                         >
                                             {roles.map(
                                                 (data) => (
@@ -224,6 +228,7 @@ function CreateAccount(props) {
                                 label="Address"
                                 name="address"
                                 className=""
+                                fullWidth
                                 variant="outlined"
                                 inputRef={register}
                             // error={!!errors.address}

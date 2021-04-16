@@ -171,11 +171,11 @@ function Tables(props) {
   const setRoleChipColor = (purpose) => {
     switch (purpose) {
       case 'SALESMAN':
-        return <Chip label={purpose} style={{ backgroundColor: '#f57c00', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipSalesman} />;
       case 'SALES MANAGER':
-        return <Chip label={purpose} style={{ backgroundColor: '#4caf50', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipManager} />;
       case 'SALES SUPERVISOR':
-        return <Chip label={purpose} style={{ backgroundColor: '#1976d2', color: 'white' }} />;
+        return <Chip label={purpose} className={classes.chipSupervisor} />;
       default:  // Admin
         // #5c21f3
         return <Chip label={purpose} />;
@@ -194,14 +194,14 @@ function Tables(props) {
                   <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
                   <TableCell className={classes.tBodyCell}>{row.username}</TableCell>
                   <TableCell className={classes.tBodyCell}>
-                    <ListItem style={{ padding: 0, margin: 0 }}>
+                    <ListItem className={classes.listItem}>
                       <ListItemAvatar>
                         <Avatar src={row.avatar} />
                       </ListItemAvatar>
                       <ListItemText
                         className={classes.picName}
                         primary={row.fullName}
-                        primaryTypographyProps={{ style: { fontSize: '0.925rem' } }}
+                        classes={{ primary: classes.itemTextPrimary }}
                       />
                     </ListItem>
                   </TableCell>
@@ -209,12 +209,14 @@ function Tables(props) {
                   <TableCell className={classes.tBodyCell}>{row.email}</TableCell>
                   <TableCell className={classes.tBodyCell}>{setRoleChipColor(row.roleName)}</TableCell>
                   <TableCell className={classes.tBodyCell} align="right">
-                    <MenuOptions data={row} />
+                    <MenuOptions data={row ? row : null} />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
-              <i style={{ color: 'gray', fontSize: '1.3em' }}>No records found.</i>
+              <TableRow className={classes.tBodyRow}>
+                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

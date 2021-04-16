@@ -6,19 +6,12 @@ import {
     DialogContent,
     DialogActions,
     IconButton,
-    FormControlLabel,
     DialogTitle,
     Divider,
     Grid,
     Typography,
     withStyles,
-    InputLabel,
-    FormControl,
-    Select,
-    MenuItem,
     makeStyles,
-    RadioGroup,
-    Radio,
     ListItem,
     ListItemText,
     TableContainer,
@@ -27,16 +20,16 @@ import {
     TableRow,
     TableCell,
     TableBody,
+    Chip,
+    Box,
 } from '@material-ui/core'
 import { MdAdd, MdClose } from 'react-icons/md'
-import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
-import DateFnsUtils from '@date-io/date-fns'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import classes from './CreateReport.module.scss'
-import { useApp } from '../../../hooks/AppContext'
 import { Autocomplete } from '@material-ui/lab'
+import * as moment from 'moment'
+import classes from './CreateReports.module.scss'
 
 const clientSchema = yup.object().shape({
     username: yup.string().trim().min(8).max(30).required(),
@@ -104,10 +97,27 @@ const useStyles = makeStyles((theme) => ({
     autoComplete: {
         margin: 0,
         padding: 0
+    },
+    item: {
+        padding: 0,
+        margin: 0
+    },
+    itemTextPrimary: {
+        fontSize: '0.875rem'
+    },
+    itemTextSecondary: {
+        fontSize: '0.8rem'
+    },
+    chipDate: {
+        padding: "0.25rem",
+        fontSize: '1.35rem',
+        color: '#fff',
+        backgroundColor: '#4caf50',
+        // borderRadius: "0.5rem"
     }
 }))
 
-function CreateReport(props) {
+function CreateReports(props) {
     const styles = useStyles();
     const { open, onClose } = props
 
@@ -200,6 +210,13 @@ function CreateReport(props) {
         else return '';
     }
 
+    const parseDateToString = () => {
+        const today = new Date();
+        return moment(today).format('dddd, DD-MM-YYYY');
+        // console.log('Today is: ', displayDate);
+    }
+    // parseDateToString()
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
@@ -210,27 +227,8 @@ function CreateReport(props) {
                 <DialogContent className={classes.wrapper}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={12} md={12} lg={5}>
-                            <Grid container spacing={1}>
-                                <Grid item xs={12} sm={12} md={12} lg={4}>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <Controller
-                                            name="dob"
-                                            control={control}
-                                            render={({ ref, ...rest }) => (
-                                                <DatePicker
-                                                    label="Date"
-                                                    format="dd/MM/yyyy"
-                                                    allowKeyboardControl
-                                                    readOnly
-                                                    // disableFuture
-                                                    // disablePast
-                                                    {...rest}
-                                                />
-                                            )}
-                                        />
-                                    </MuiPickersUtilsProvider>
-                                </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={8}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <Autocomplete
                                         autoComplete
                                         autoSelect
@@ -246,6 +244,7 @@ function CreateReport(props) {
                                                 label="Target School Name"
                                                 variant="outlined"
                                                 name="target"
+                                                required
                                                 inputRef={register}
                                                 error={!!errors.target}
                                                 helperText={errors?.target?.message}
@@ -254,17 +253,18 @@ function CreateReport(props) {
                                         }
                                         renderOption={(target) => {
                                             return (
-                                                <ListItem style={{ padding: 0 }}>
+                                                <ListItem className={styles.item}>
                                                     <ListItemText
                                                         primary={target.schoolName}
-                                                        primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                                                         secondary={target.district}
-                                                        secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                                        classes={{
+                                                            primary: styles.itemTextPrimary,
+                                                            secondary: styles.itemTextSecondary
+                                                        }}
                                                     />
                                                 </ListItem>
                                             );
                                         }}
-                                        // style={{ width: 250, marginLeft: '0.52rem' }}
                                         onChange={(event, newPIC) => setTarget(newPIC)}
                                     />
                                 </Grid>
@@ -335,9 +335,20 @@ function CreateReport(props) {
                         <Grid item xs={12} sm={12} md={12} lg={7}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <Button variant="contained" color="secondary">
-                                        <MdAdd fontSize="large" />
-                                    </Button>
+                                    <Box display="flex" flexDirection="row" flexWrap="nowrap">
+                                        <Box flexGrow={1}>
+                                            <Button variant="contained" color="secondary">
+                                                <MdAdd fontSize="large" />
+                                            </Button>
+                                        </Box>
+                                        <Box>
+                                            <Chip
+                                                label={parseDateToString()}
+                                                variant="default"
+                                                className={styles.chipDate}
+                                            />
+                                        </Box>
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <Typography variant='h6'>Preview:</Typography>
@@ -390,7 +401,7 @@ function CreateReport(props) {
     )
 }
 
-export default CreateReport
+export default CreateReports
 
                         // < FormControlLabel
                         //     className = ""

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   TableContainer,
   Table,
@@ -18,7 +18,7 @@ import {
   Avatar,
   Badge,
 } from '@material-ui/core';
-import { MdChat, MdEmail, MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
+import { MdChat, MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { useReport } from '../../hooks/ReportContext';
 import MenuOptions from './MenuOptions/MenuOptions';
@@ -120,8 +120,25 @@ SortableTableHeaders.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
 };
 
+const useStyles = makeStyles(() => ({
+  itemPIC: {
+    padding: 0,
+    margin: 0
+  },
+  itemTextLarge: {
+    fontSize: '0.95rem',
+  },
+  itemTextMedium: {
+    fontSize: '0.875rem',
+  },
+  itemTextSmall: {
+    fontSize: '0.8rem',
+  }
+}));
+
 // Customize component Table
 function Tables(props) {
+  const styles = useStyles();
   const { columns, rows, totalRecord, totalPage } = props;
 
   const {
@@ -201,32 +218,36 @@ function Tables(props) {
                 <TableRow key={row.id} className={classes.tBodyRow}>
                   {/* <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell> */}
                   <TableCell className={classes.tBodyCell}>
-                    {row.comment ? (
+                    {row.date} &nbsp;
+                    {row.comment &&
                       <Badge color="secondary" variant="dot">
-                        {row.date} &nbsp;
                         <MdChat />
                       </Badge>
-                    ) : row.date}
+                    }
                   </TableCell>
                   <TableCell className={classes.tBodyCell}>
                     <ListItemText
                       primary={`${row.educationalLevel} ${row.schoolName}`}
-                      primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                       secondary={row.district}
-                      secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
+                      classes={{
+                        primary: styles.itemTextLarge,
+                        secondary: styles.itemTextMedium
+                      }}
                     />
                   </TableCell>
                   <TableCell className={classes.tBodyCell}>
-                    <ListItem style={{ padding: 0, margin: 0 }}>
+                    <ListItem className={styles.itemPIC}>
                       <ListItemAvatar>
                         <Avatar src={row.avatar} />
                       </ListItemAvatar>
                       <ListItemText
                         className={classes.picName}
                         primary={row.fullName}
-                        primaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                         secondary={row.username}
-                        secondaryTypographyProps={{ style: { fontSize: '0.8rem' } }}
+                        classes={{
+                          primary: styles.itemTextMedium,
+                          secondary: styles.itemTextSmall
+                        }}
                       />
                     </ListItem>
                   </TableCell>
@@ -242,7 +263,9 @@ function Tables(props) {
                 </TableRow>
               ))
             ) : (
-              <i style={{ color: 'gray', fontSize: '1.3em' }}>No records found.</i>
+              <TableRow className={classes.tBodyRow}>
+                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
