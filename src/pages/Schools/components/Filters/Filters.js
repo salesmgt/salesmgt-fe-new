@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -18,6 +18,7 @@ import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
 // import { useApp } from '../../../../hooks/AppContext'
+import CreateSchool from '../../dialogs/CreateSchool'
 import Chips from './Chips/Chips'
 import styles from './Filters.module.scss'
 
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '8px'
+        borderRadius: '8px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
     root: {},
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItemSelected: {},
-}));
+}))
 
 const MuiAccordion = withStyles({
     root: {
@@ -96,7 +97,7 @@ const MuiAccordionSummary = withStyles({
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
         // boxShadow: '1px 1px 2px gray',
-        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        boxShadow: '0 4px 6px -6px #000', // 0px 1px 1px gray
         borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
@@ -145,6 +146,7 @@ function Filters() {
         setSchoolStatus,
     } = useSchool()
 
+    const [openCreateDialog, setOpenCreateDialog] = useState(false)
     // const { districts, schoolTypes, schoolLevels, schoolScales, schoolStatuses } = useApp()
 
     //================Handle useState() of filters================
@@ -302,8 +304,9 @@ function Filters() {
                 >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList className={styles.iconFilter} /> &nbsp;
-                        <Typography>Filters</Typography>
+                            <MdFilterList className={styles.iconFilter} />{' '}
+                            &nbsp;
+                            <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -324,11 +327,15 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={() => {}}
+                            onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
                             &nbsp;Create
                         </Button>
+                        <CreateSchool
+                            open={openCreateDialog}
+                            onClose={() => setOpenCreateDialog(false)}
+                        />
                     </Box>
                 </Box>
                 <MuiAccordionDetails>
@@ -336,7 +343,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
-                                <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={district}
+                                    onChange={handleDistrictChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -354,7 +365,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {dist}
@@ -367,7 +379,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
-                                <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolStatus}
+                                    onChange={handleSchoolStatusChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -385,7 +401,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {status}
@@ -398,7 +415,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Types</InputLabel>
-                                <Select value={schoolType} onChange={handleSchoolTypeChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolType}
+                                    onChange={handleSchoolTypeChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -416,7 +437,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {type}
@@ -429,7 +451,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Levels</InputLabel>
-                                <Select value={schoolLevel} onChange={handleSchoolLevelChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolLevel}
+                                    onChange={handleSchoolLevelChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -447,7 +473,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {level}
@@ -460,7 +487,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Scales</InputLabel>
-                                <Select value={schoolScale} onChange={handleSchoolScaleChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolScale}
+                                    onChange={handleSchoolScaleChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -478,7 +509,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {scale}

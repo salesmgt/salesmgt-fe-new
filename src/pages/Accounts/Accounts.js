@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
-import { columns } from './AccountsConfig';
-import { useAccount } from './hooks/AccountContext';
+import { columns } from './AccountsConfig'
+import { useAccount } from './hooks/AccountContext'
 import * as AccountsServices from './AccountsServices'
+import { Loading } from '../../components'
 import classes from './Accounts.module.scss'
 
 function Accounts() {
@@ -14,18 +15,34 @@ function Accounts() {
 
     const [data, setData] = useState({})
 
-    function refreshAccount(page = 0, limit = 10, column = "username", direction = "asc", searchKey, listFilters) {
-        AccountsServices.getAccounts(page, limit, column, direction, searchKey, listFilters).then((res) => {
-            setData(res.data)
-        }).catch(error => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+    const refreshAccount = (
+        page = 0,
+        limit = 10,
+        column = 'username',
+        direction = 'asc',
+        searchKey,
+        listFilters
+    ) => {
+        AccountsServices.getAccounts(
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters
+        )
+            .then((res) => {
+                setData(res.data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     useEffect(() => {
@@ -33,13 +50,14 @@ function Accounts() {
     }, [params])
 
     if (!data) {
-        return null;
+        return <Loading />
     }
 
     return (
         <div className={classes.panel}>
             <Filters className={classes.filter} />
-            <Tables columns={columns}
+            <Tables
+                columns={columns}
                 rows={data.list}
                 className={classes.table}
                 totalRecord={data.totalElements}

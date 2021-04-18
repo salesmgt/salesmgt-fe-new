@@ -92,7 +92,7 @@ function GenInfo(props) {
     const defaultValues = {
         username: data?.username,
         active: data?.active,
-        gender: String(data?.gender),
+        isMale: String(data?.isMale),
         dob: data?.birthDate,
         phone: data?.phone,
         email: data?.email,
@@ -113,7 +113,7 @@ function GenInfo(props) {
     }
 
     const onSubmit = (data) => {
-        const rs = { ...data, gender: data.gender === 'true' ? true : false }
+        const rs = { ...data, isMale: data.isMale === 'true' ? true : false }
         alert(JSON.stringify(rs))
         setNotify({
             isOpen: true,
@@ -221,10 +221,10 @@ function GenInfo(props) {
                                                 lg={12}
                                             >
                                                 <InputLabel>
-                                                    {fields.gender.title}
+                                                    {fields.isMale.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="gender"
+                                                    name="isMale"
                                                     control={control}
                                                     render={({
                                                         value,

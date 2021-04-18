@@ -13,7 +13,7 @@ export const Consts = {
         fullName: {
             title: 'Full Name',
         },
-        gender: {
+        isMale: {
             title: 'Gender',
         },
         birthDate: {
@@ -22,6 +22,7 @@ export const Consts = {
         },
         email: {
             title: 'Email',
+            helper: 'This email will be used to confirm account',
         },
         phone: {
             title: 'Phone Number',

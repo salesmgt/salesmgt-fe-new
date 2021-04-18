@@ -6,7 +6,6 @@ import {
     DialogContent,
     DialogActions,
     FormControlLabel,
-    Divider,
     Grid,
     InputLabel,
     FormControl,
@@ -23,9 +22,9 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Snackbars } from '../../../components'
-// import { useApp } from '../../../hooks/AppContext'
 import * as AccountsServices from '../AccountsServices'
 import { Consts } from '../dialogs/FormConfig'
+import { useApp } from '../../../hooks/AppContext'
 import classes from './CreateAccount.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -44,13 +43,13 @@ const clientSchema = yup.object().shape({
     phone: yup
         .string()
         .required('Phone is required')
-        .max(11, 'Phone must be at most 10 characters')
-        .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .max(10, 'Phone must be at most 10 digits')
+        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
 
     email: yup
         .string()
-        .email('Invalid email')
         .trim()
+        .email('Invalid email')
         .required('Email is required'),
     address: yup.string().trim(),
 })
@@ -98,13 +97,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function CreateAccountForm(props) {
+function CreateAccountForm() {
     const styles = useStyles()
-    const { onClose, roles } = props
+
+    const { roles } = useApp()
 
     const { operations, fields } = Consts
 
     const history = useHistory()
+
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
 
     const defaultValues = {
         username: '',
@@ -113,7 +119,7 @@ function CreateAccountForm(props) {
         phone: '',
         email: '',
         address: '',
-        gender: String(true),
+        isMale: String(true),
         birthDate: null,
     }
 
@@ -128,40 +134,23 @@ function CreateAccountForm(props) {
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
-    console.log(formState.dirtyFields)
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
 
     const onSubmit = (data) => {
-        const rs = {
+        const model = {
             ...data,
-            gender: data.gender === 'true' ? true : false,
+            isMale: data.isMale === 'true' ? true : false,
             birthDate: data.birthDate
                 ? moment(data.birthDate).format('YYYY-MM-DD')
                 : null,
         }
 
-        AccountsServices.createAccount(rs)
+        AccountsServices.createAccount(model)
             .then((data) => {
                 setNotify({
                     isOpen: true,
                     message: 'Created Successfully',
                     type: 'success',
                 })
-
-                // reset({
-                //     username: getValues('username'),
-                //     fullName: getValues('fullName'),
-                //     roleName: getValues('roleName'),
-                //     phone: getValues('phone'),
-                //     email: getValues('email'),
-                //     address: getValues('address'),
-                //     gender: getValues('gender'),
-                //     birthDate: getValues('birthDate'),
-                // })
                 reset({
                     username: '',
                     fullName: '',
@@ -169,7 +158,7 @@ function CreateAccountForm(props) {
                     phone: '',
                     email: '',
                     address: '',
-                    gender: String(true),
+                    isMale: String(true),
                     birthDate: null,
                 })
             })
@@ -190,15 +179,16 @@ function CreateAccountForm(props) {
                     })
                 }
             })
-        alert(JSON.stringify(rs))
+
+        alert(JSON.stringify(model))
     }
 
     return (
         <>
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent className={classes.wrapper}>
-                    <Grid container spacing={2} justify="center">
-                        <Grid item xs={12} sm={12} md={12} lg={10}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="username"
                                 control={control}
@@ -217,7 +207,7 @@ function CreateAccountForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="fullName"
                                 control={control}
@@ -235,7 +225,7 @@ function CreateAccountForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="phone"
                                 control={control}
@@ -253,7 +243,7 @@ function CreateAccountForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="email"
                                 control={control}
@@ -266,12 +256,15 @@ function CreateAccountForm(props) {
                                         value={value}
                                         onChange={onChange}
                                         error={!!errors.email}
-                                        helperText={errors?.email?.message}
+                                        helperText={
+                                            errors?.email?.message ||
+                                            fields.email.helper
+                                        }
                                     />
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="address"
                                 control={control}
@@ -288,10 +281,10 @@ function CreateAccountForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={5}>
-                            <InputLabel>{fields.gender.title}</InputLabel>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                            <InputLabel>{fields.isMale.title}</InputLabel>
                             <Controller
-                                name="gender"
+                                name="isMale"
                                 control={control}
                                 render={({ value, onChange }) => (
                                     <RadioGroup
@@ -313,7 +306,7 @@ function CreateAccountForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={5}>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <Controller
                                     name="birthDate"
@@ -330,18 +323,17 @@ function CreateAccountForm(props) {
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <FormControl
                                 className={styles.formControl}
                                 required
                             >
-                                <InputLabel>Roles</InputLabel>
+                                <InputLabel>{fields.roles.title}</InputLabel>
                                 <Controller
                                     name="roleName"
                                     control={control}
                                     render={({ value, onChange }) => (
                                         <Select
-                                            label={fields.roles.title}
                                             value={value}
                                             onChange={onChange}
                                             MenuProps={MenuProps}
@@ -368,7 +360,6 @@ function CreateAccountForm(props) {
                         </Grid>
                     </Grid>
                 </DialogContent>
-                <Divider />
                 <DialogActions className={classes.dialogAct}>
                     {/* <Button
                         variant="contained"
@@ -381,7 +372,7 @@ function CreateAccountForm(props) {
                                 phone: '',
                                 email: '',
                                 address: '',
-                                gender: String(true),
+                                isMale: String(true),
                                 birthDate: null,
                             })
                             onClose()

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
     Button,
     FormControlLabel,
@@ -14,14 +15,21 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Snackbars } from '../../../../components'
 import { Consts } from './RepInfoConfig'
+import * as SchoolsServices from '../../SchoolsServices'
 import classes from './RepInfo.module.scss'
 
 const clientSchema = yup.object().shape({
-    name: yup.string().trim().required('Name is required'),
-    phone: yup
+    reprName: yup
         .string()
-        .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
-    email: yup.string().email('Invalid email').trim(),
+        .trim()
+        .min(4, 'Name must be at least 4 characters')
+        .max(30, 'Name must be at most 30 characters')
+        .required('Name is required'),
+    reprPhone: yup
+        .string()
+        .max(10, 'Phone must be at most 10 digits')
+        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+    reprEmail: yup.string().trim().email('Invalid email'),
 })
 
 const serverSchema = [
@@ -30,15 +38,13 @@ const serverSchema = [
     //     name: 'name',
     //     message: null,
     // },
-    // {
-    //     type: 'server',
-    //     name: 'credential',
-    //     message: 'Invalid username or password',
-    // },
 ]
 
 function RepInfo(props) {
+    const { schData } = props
     const { headers, operations, fields } = Consts
+
+    const history = useHistory()
 
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -46,13 +52,12 @@ function RepInfo(props) {
         type: '',
     })
 
-    const { data } = props
-
     const defaultValues = {
-        name: data?.name,
-        gender: String(data?.gender),
-        phone: data?.phone,
-        email: data?.email,
+        id: schData?.id,
+        reprName: schData?.reprName,
+        reprIsMale: String(schData?.reprIsMale),
+        reprPhone: schData?.reprPhone,
+        reprEmail: schData?.reprEmail,
     }
 
     const { control, errors, handleSubmit, formState } = useForm({
@@ -61,13 +66,50 @@ function RepInfo(props) {
     })
 
     const onSubmit = (data) => {
-        const rs = { ...data, gender: data.gender === 'true' ? true : false }
-        alert(JSON.stringify(rs))
-        setNotify({
-            isOpen: true,
-            message: 'Updated Successfully',
-            type: 'success',
-        })
+        const model = {
+            ...data,
+            reprIsMale: data.isMale === 'true' ? true : false,
+
+            name: schData?.name,
+            address: schData?.address,
+            district: schData?.district,
+
+            educationalLevel: schData?.educationalLevel,
+            type: schData?.type,
+            scale: schData?.scale,
+            phone: schData?.phone,
+
+            description: schData?.description,
+            status: schData?.status,
+
+            active: schData?.active,
+        }
+
+        SchoolsServices.updateSchool(data.id, model)
+            .then((data) => {
+                // refreshPage()
+                setNotify({
+                    isOpen: true,
+                    message: 'Updated Successfully',
+                    type: 'success',
+                })
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+                setNotify({
+                    isOpen: true,
+                    message: 'Update Unsuccessful',
+                    type: 'error',
+                })
+            })
+
+        alert(JSON.stringify(model))
     }
 
     return (
@@ -116,7 +158,7 @@ function RepInfo(props) {
                                         xs={12}
                                         sm={12}
                                         md={7}
-                                        lg={7}
+                                        lg={5}
                                         className={classes.detailZone}
                                     >
                                         <Grid container spacing={3}>
@@ -129,7 +171,18 @@ function RepInfo(props) {
                                                 lg={12}
                                             >
                                                 <Controller
-                                                    name="name"
+                                                    name="id"
+                                                    control={control}
+                                                    render={({ value }) => (
+                                                        <input
+                                                            type="hidden"
+                                                            name="id"
+                                                            value={value}
+                                                        />
+                                                    )}
+                                                />
+                                                <Controller
+                                                    name="reprName"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -147,10 +200,10 @@ function RepInfo(props) {
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
-                                                                !!errors.name
+                                                                !!errors.reprName
                                                             }
                                                             helperText={
-                                                                errors?.name
+                                                                errors?.reprName
                                                                     ?.message
                                                             }
                                                         />
@@ -165,10 +218,10 @@ function RepInfo(props) {
                                                 lg={12}
                                             >
                                                 <InputLabel>
-                                                    {fields.gender.title}
+                                                    {fields.isMale.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="gender"
+                                                    name="reprIsMale"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -205,7 +258,7 @@ function RepInfo(props) {
                                                 lg={12}
                                             >
                                                 <Controller
-                                                    name="phone"
+                                                    name="reprPhone"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -217,15 +270,16 @@ function RepInfo(props) {
                                                                     .title
                                                             }
                                                             variant="outlined"
-                                                            required
+                                                            // required
                                                             fullWidth
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
-                                                                !!errors.phone
+                                                                !!errors.reprPhone
                                                             }
                                                             helperText={
-                                                                errors?.phone
+                                                                errors
+                                                                    ?.reprPhone
                                                                     ?.message
                                                             }
                                                         />
@@ -240,7 +294,7 @@ function RepInfo(props) {
                                                 lg={12}
                                             >
                                                 <Controller
-                                                    name="email"
+                                                    name="reprEmail"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -252,15 +306,16 @@ function RepInfo(props) {
                                                                     .title
                                                             }
                                                             variant="outlined"
-                                                            required
+                                                            // required
                                                             fullWidth
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
-                                                                !!errors.email
+                                                                !!errors.reprEmail
                                                             }
                                                             helperText={
-                                                                errors?.email
+                                                                errors
+                                                                    ?.reprEmail
                                                                     ?.message
                                                             }
                                                         />
@@ -277,7 +332,7 @@ function RepInfo(props) {
                                 xs={12}
                                 sm={12}
                                 md={10}
-                                lg={10}
+                                lg={8}
                                 className={classes.action}
                             >
                                 <Button

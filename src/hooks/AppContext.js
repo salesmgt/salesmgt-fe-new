@@ -22,8 +22,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getDistricts()
             .then((data) => {
-                // localStorage.setItem('dists', JSON.stringify(data))
-                // setDists(JSON.parse(localStorage.getItem('dists')))
                 Milk.setMilk('dists', data)
                 setDists(Milk.getMilk('dists'))
             })
@@ -37,8 +35,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getEducationalLevels()
             .then((data) => {
-                // localStorage.setItem('eduLvls', JSON.stringify(data))
-                // setSchEduLvls(JSON.parse(localStorage.getItem('eduLvls')))
                 Milk.setMilk('eduLvls', data)
                 setSchEduLvls(Milk.getMilk('eduLvls'))
             })
@@ -52,8 +48,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolTypes()
             .then((data) => {
-                // localStorage.setItem('types', JSON.stringify(data))
-                // setSchTypes(JSON.parse(localStorage.getItem('types')))
                 Milk.setMilk('types', data)
                 setSchTypes(Milk.getMilk('types'))
             })
@@ -67,8 +61,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolScales()
             .then((data) => {
-                // localStorage.setItem('scales', JSON.stringify(data))
-                // setSchScales(JSON.parse(localStorage.getItem('scales')))
                 Milk.setMilk('scales', data)
                 setSchScales(Milk.getMilk('scales'))
             })
@@ -82,8 +74,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolStatuses()
             .then((data) => {
-                // localStorage.setItem('status', JSON.stringify(data))
-                // setSchStatus(JSON.parse(localStorage.getItem('status')))
                 Milk.setMilk('status', data)
                 setSchStatus(Milk.getMilk('status'))
             })
@@ -97,8 +87,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getRoles()
             .then((data) => {
-                // localStorage.setItem('roles', JSON.stringify(data))
-                // setRoles(localStorage.getItem('roles'))
                 Milk.setMilk('roles', data)
                 setRoles(Milk.getMilk('roles'))
             })

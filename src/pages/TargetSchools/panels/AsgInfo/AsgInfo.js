@@ -110,7 +110,7 @@ function AsgInfo(props) {
     }
 
     const onSubmit = (data) => {
-        const rs = { ...data, gender: data.gender === 'true' ? true : false }
+        const rs = { ...data, isMale: data.isMale === 'true' ? true : false }
         alert(JSON.stringify(rs))
         setNotify({
             isOpen: true,

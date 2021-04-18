@@ -1,11 +1,11 @@
 export const Consts = {
     headers: {
-        child1: 'School Detail',
-        child2: 'Contact Detail',
+        child1: 'Create School',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
+        WithData: 'Withr Representative',
     },
     fields: {
         name: {
@@ -37,6 +37,18 @@ export const Consts = {
         },
         tel: {
             title: 'Tel',
+        },
+        repName: {
+            title: 'Full Name',
+        },
+        repGender: {
+            title: 'Gender',
+        },
+        repEmail: {
+            title: 'Email',
+        },
+        repPhone: {
+            title: 'Phone Number',
         },
     },
 }

@@ -3,14 +3,12 @@ import {
     Dialog,
     IconButton,
     DialogTitle,
-    Divider,
     Typography,
     withStyles,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { useApp } from '../../../hooks/AppContext'
-import CreateAccountForm from '../dialogs/CreateAccountForm'
-import { Consts } from '../dialogs/FormConfig'
+import { Consts } from './FormConfig'
+import CreateAccountForm from './CreateAccountForm'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -44,18 +42,15 @@ function CreateAccount(props) {
 
     const { headers } = Consts
 
-    const { roles } = useApp()
-    if (!roles) {
-        return null
-    }
-
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm">
+        <Dialog open={open} onClose={onClose} maxWidth="xs">
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.child1}
             </DialogTitleWithIconClose>
-            <Divider />
-            <CreateAccountForm onClose={onClose} roles={roles} />
+            <CreateAccountForm
+                onClose={onClose}
+                // roles={roles}
+            />
         </Dialog>
     )
 }

@@ -23,7 +23,7 @@ function MenuOptions(props) {
     const { data } = props
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [openConfirmation, setOpenConfirmation] = useState(false);
+    const [openConfirmation, setOpenConfirmation] = useState(false)
 
     const { user } = useAuth()
     const { url } = useRouteMatch()
@@ -52,10 +52,13 @@ function MenuOptions(props) {
             case 'ADMIN':
                 return (
                     <>
-                        <MenuItem onClick={handleCloseMenus} component={Link} to={{
-                            pathname: `${url}/${data.name}`,
-                            state: { data: data },
-                        }}
+                        <MenuItem
+                            onClick={handleCloseMenus}
+                            component={Link}
+                            to={{
+                                pathname: `${url}/${data.name}`,
+                                state: { data: data },
+                            }}
                         >
                             <ListItemIcon className={classes.itemIcon}>
                                 <MdInfo fontSize="large" />
@@ -80,20 +83,41 @@ function MenuOptions(props) {
                                 <DialogTitle>Confirm Remove</DialogTitle>
                                 <Divider />
                                 <DialogContent>
-                                    <DialogContentText className={classes.dialogText}>
+                                    <DialogContentText
+                                        className={classes.dialogText}
+                                    >
                                         <p>
                                             Do you really want to remove school
-                                            <strong><em> {data.educationalLevel} {data.name}</em></strong>?
+                                            <strong>
+                                                <em>
+                                                    {' '}
+                                                    {data.educationalLevel}{' '}
+                                                    {data.name}
+                                                </em>
+                                            </strong>
+                                            ?
                                         </p>
                                         <p>This process cannot be undone.</p>
                                     </DialogContentText>
                                 </DialogContent>
                                 <Divider />
                                 <DialogActions>
-                                    <Button variant="contained" disableElevation onClick={() => setOpenConfirmation(false)}>
+                                    <Button
+                                        variant="contained"
+                                        disableElevation
+                                        onClick={() =>
+                                            setOpenConfirmation(false)
+                                        }
+                                    >
                                         Cancel
                                     </Button>
-                                    <Button variant="contained" disableElevation className={classes.btnRemove} onClick={handleRemove} autoFocus>
+                                    <Button
+                                        variant="contained"
+                                        disableElevation
+                                        className={classes.btnRemove}
+                                        onClick={handleRemove}
+                                        autoFocus
+                                    >
                                         Remove
                                     </Button>
                                 </DialogActions>
@@ -103,7 +127,25 @@ function MenuOptions(props) {
                 )
 
             case 'SALES MANAGER':
-                // case 'SALES SUPERVISOR':
+                return (
+                    <MenuItem
+                        onClick={handleCloseMenus}
+                        component={Link}
+                        to={{
+                            pathname: `${url}/${data.name}`,
+                            state: { data: data },
+                        }}
+                    >
+                        <ListItemIcon className={classes.itemIcon}>
+                            <MdInfo fontSize="large" />
+                        </ListItemIcon>
+                        <ListItemText className={classes.itemText}>
+                            View details
+                        </ListItemText>
+                    </MenuItem>
+                )
+
+            case 'SALES SUPERVISOR':
                 return (
                     <MenuItem
                         onClick={handleCloseMenus}
@@ -123,7 +165,7 @@ function MenuOptions(props) {
                 )
 
             default:
-                break
+                throw new Error()
         }
     }
 

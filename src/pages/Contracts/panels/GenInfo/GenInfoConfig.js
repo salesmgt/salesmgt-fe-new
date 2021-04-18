@@ -10,8 +10,8 @@ export const Consts = {
         username: {
             title: 'Username',
         },
-        gender: {
-            title: 'Gender',
+        isMale: {
+            title: 'isMale',
         },
         dob: {
             title: 'Birthday',

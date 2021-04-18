@@ -3,9 +3,12 @@ import { useLocation } from 'react-router-dom'
 import { NotFound } from '../../components'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, RepInfo } from './panels'
+import { useAuth } from '../../hooks/AuthContext'
 
 function School() {
     const [tabValue, setTabValue] = useState(0)
+
+    const { user } = useAuth()
 
     const location = useLocation()
 
@@ -16,44 +19,103 @@ function School() {
     }
 
     const schData = {
+        id: data?.id,
         name: data?.name,
-        active: data?.active,
-        addr: data?.address,
-        tel: data?.phone,
-        email: data?.email,
-        dist: data?.district,
-        eduLvl: data?.educationalLevel,
-        scale: data?.scale,
-        status: data?.status,
-        type: data?.type,
-        des: data?.description,
-    }
+        address: data?.address,
+        district: data?.district,
 
-    const repData = {
-        name: data?.reprName,
-        gender: data?.reprGender,
-        phone: data?.reprPhone,
-        email: data?.reprEmail,
+        educationalLevel: data?.educationalLevel,
+        type: data?.type,
+        scale: data?.scale,
+        phone: data?.phone,
+
+        description: data?.description,
+        status: data?.status,
+
+        active: data?.active,
+
+        reprName: data?.reprName,
+        reprIsMale: data?.reprIsMale,
+        reprPhone: data?.reprPhone,
+        reprEmail: data?.reprEmail,
     }
 
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
 
-    return (
-        <DetailLayouts
-            linkBack="Schools"
-            header={data.name}
-            tabs={['General Info', 'Principal Info']}
-            tabValue={tabValue}
-            handleChangeTab={handleChangeTab}
-        >
-            {/* General Info */}
-            {tabValue === 0 && <GenInfo data={schData} />}
+    const getTabsByStatus = (status) => {
+        switch (status) {
+            case 'Chưa hợp tác':
+                return ['General Info', 'Principal Info']
+            case 'Đang hợp tác':
+                return ['General Info', 'Principal Info', 'Contracts Info']
+            case 'Ngưng hợp tác':
+                return ['General Info', 'Principal Info', 'Contracts Info']
+            default:
+                throw new Error()
+        }
+    }
 
-            {/* Principal Info */}
-            {tabValue === 1 && <RepInfo data={repData} />}
-        </DetailLayouts>
+    const currStatus = 'Ngưng hợp tác'
+
+    return (
+        <>
+            {user.roles[0] === 'ADMIN' && (
+                <DetailLayouts
+                    linkBack="Schools"
+                    header={data.name}
+                    subHeader={data.active}
+                    isStatus={true}
+                    tabs={['General Info', 'Principal Info']}
+                    tabValue={tabValue}
+                    handleChangeTab={handleChangeTab}
+                >
+                    {/* General Info */}
+                    {tabValue === 0 && <GenInfo schData={schData} />}
+
+                    {/* Principal Info */}
+                    {tabValue === 1 && <RepInfo schData={schData} />}
+                </DetailLayouts>
+            )}
+            {user.roles[0] === 'SALES MANAGER' && (
+                <DetailLayouts
+                    linkBack="Schools"
+                    header={data.name}
+                    subHeader={data.status}
+                    // isStatus={true}
+                    tabs={getTabsByStatus(currStatus)}
+                    tabValue={tabValue}
+                    handleChangeTab={handleChangeTab}
+                >
+                    {/* General Info */}
+                    {tabValue === 0 && <GenInfo schData={schData} />}
+
+                    {/* Principal Info */}
+                    {tabValue === 1 && <RepInfo schData={schData} />}
+
+                    {/* Contract Info */}
+                    {tabValue === 2 && <RepInfo schData={schData} />}
+                </DetailLayouts>
+            )}
+            {user.roles[0] === 'SALES SUPERVISOR' && (
+                <DetailLayouts
+                    linkBack="Schools"
+                    header={data.name}
+                    subHeader={data.status}
+                    // isStatus={true}
+                    tabs={['General Info', 'Principal Info']}
+                    tabValue={tabValue}
+                    handleChangeTab={handleChangeTab}
+                >
+                    {/* General Info */}
+                    {tabValue === 0 && <GenInfo schData={schData} />}
+
+                    {/* Principal Info */}
+                    {tabValue === 1 && <RepInfo schData={schData} />}
+                </DetailLayouts>
+            )}
+        </>
     )
 }
 

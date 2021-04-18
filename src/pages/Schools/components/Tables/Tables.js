@@ -157,12 +157,12 @@ SortableTableHeaders.propTypes = {
 const useStyles = makeStyles(() => ({
     itemText: {
         fontSize: '0.875rem',
-    }
-}));
+    },
+}))
 
 // Customize component Table
 function Tables(props) {
-    const styles = useStyles();
+    const styles = useStyles()
     const { columns, rows, totalRecord, totalPage } = props
 
     const {
@@ -256,7 +256,9 @@ function Tables(props) {
                                     >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
-                                    <TableCell className={classes.tCellSchoolName}>
+                                    <TableCell
+                                        className={classes.tCellSchoolName}
+                                    >
                                         {row.educationalLevel} {row.name}
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>
@@ -271,12 +273,12 @@ function Tables(props) {
                                             secondary={row.district}
                                             classes={{
                                                 primary: styles.itemText,
-                                                secondary: styles.itemText
+                                                secondary: styles.itemText,
                                             }}
                                         />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {row.reprGender
+                                        {row.reprisMale
                                             ? `Mr. ${row.reprName}`
                                             : `Ms. ${row.reprName}`}
                                     </TableCell>
@@ -293,7 +295,13 @@ function Tables(props) {
                             ))
                         ) : (
                             <TableRow className={classes.tBodyRow}>
-                                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+                                <TableCell
+                                    className={classes.noRecord}
+                                    component="td"
+                                    colspan="100%"
+                                >
+                                    No records found.
+                                </TableCell>
                             </TableRow>
                         )}
                     </TableBody>

@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import moment from 'moment'
 import { Grid, Typography } from '@material-ui/core'
 import { CardNow, CardRanks, CardJack, MixedCharts } from './components'
-import { Animation, AnimationGroup } from '../../components'
+import { Animation, AnimationGroup, Loading } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import * as DashboardsServices from './DashboardsServices'
 import { rankData, chartData as ChartData, cardData } from './DashboardsConfig'
@@ -59,7 +59,7 @@ function Dashboards() {
     }, [location.pathname])
 
     if (!userData) {
-        return null
+        return <Loading />
     }
 
     const { fullName, birthDate } = userData
