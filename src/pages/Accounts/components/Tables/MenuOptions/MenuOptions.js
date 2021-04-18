@@ -9,6 +9,7 @@ import {
 import { MdMoreVert, MdInfo } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { Link, useRouteMatch } from 'react-router-dom'
+import { useAccount } from '../../../hooks/AccountContext'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
@@ -16,6 +17,15 @@ function MenuOptions(props) {
     const { url } = useRouteMatch()
 
     const [anchorEl, setAnchorEl] = useState(null)
+
+    const { params } = useAccount()
+    const stateData = {
+        accountDTO: data,
+        params: params,
+        pathName: `${url}/${data.username}`
+    }
+
+    console.log('stateData: ', stateData);
 
     const handleOpen = (event) => {
         setAnchorEl(event.currentTarget)
@@ -41,7 +51,7 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: `${url}/${data.username}`,
-                        state: { data: data },
+                        state: { data: stateData },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>

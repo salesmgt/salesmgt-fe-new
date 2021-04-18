@@ -214,8 +214,8 @@ function CreateReports(props) {
     }
 
     const parseDateToString = () => {
-        const today = new Date()
-        return moment(today).format('dddd, DD-MM-YYYY')
+        const today = new Date();
+        return moment(today).format('dddd, DD/MM/YYYY');
         // console.log('Today is: ', displayDate);
     }
     // parseDateToString()

@@ -103,6 +103,9 @@ function GenInfo(props) {
 
     const { roles } = useApp()
 
+    const { data, refreshPage } = props
+
+    console.log("GenInfo data: ", data);
 
     const defaultValues = {
         username: data?.username,
@@ -127,22 +130,26 @@ function GenInfo(props) {
         return <NotFound />
     }
 
-    const onSubmit = (data) => {
-        const model = {
-            ...data,
-            isMale: data.isMale === 'true' ? true : false,
-            birthDate: data.birthDate
-                ? moment(data.birthDate).format('YYYY-MM-DD')
+    const onSubmit = (dto) => {
+        const rs = {
+            ...dto,
+            gender: dto.gender === 'true' ? true : false,
+            birthDate: dto.birthDate
+                ? moment(dto.birthDate).format('YYYY-MM-DD')
                 : null,
         }
-        AccountsServices.updateAccount(data.username, model)
+        console.log(dto.username)
+        console.log(rs)
+        AccountsServices.updateAccount(dto.username, rs)
             .then((data) => {
-                // refreshPage()
+                refreshPage(dto.username)
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+
+                console.log("Successfull data: ", data);
             })
             .catch((error) => {
                 if (error.response) {

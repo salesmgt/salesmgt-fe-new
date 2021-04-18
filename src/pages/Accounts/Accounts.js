@@ -15,34 +15,18 @@ function Accounts() {
 
     const [data, setData] = useState({})
 
-    const refreshAccount = (
-        page = 0,
-        limit = 10,
-        column = 'username',
-        direction = 'asc',
-        searchKey,
-        listFilters
-    ) => {
-        AccountsServices.getAccounts(
-            page,
-            limit,
-            column,
-            direction,
-            searchKey,
-            listFilters
-        )
-            .then((res) => {
-                setData(res.data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+    function refreshAccount(page = 0, limit = 10, column = "username", direction = "asc", searchKey, listFilters) {
+        AccountsServices.getAccounts(page, limit, column, direction, searchKey, listFilters).then((res) => {
+            setData(res)
+        }).catch(error => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
     }
 
     useEffect(() => {

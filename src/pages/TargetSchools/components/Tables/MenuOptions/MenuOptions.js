@@ -32,7 +32,7 @@ function MenuOptions(props) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [open, setOpen] = useState(false);
 
-    console.log('data từ MenuOptions: ', data)
+    // console.log('data từ MenuOptions: ', data)
 
     // const { user } = useAuth()
     const { url } = useRouteMatch()
