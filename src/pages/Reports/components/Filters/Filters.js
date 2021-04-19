@@ -21,13 +21,14 @@ import {
 } from '@material-ui/core'
 import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useReport } from '../../hooks/ReportContext'
 import Chips from './Chips/Chips'
 import { Autocomplete } from '@material-ui/lab'
 import DateRangePickers from './DateRangePickers/DateRangePickers'
 import moment from 'moment'
 import CreateReports from '../../dialogs/CreateReports'
+import { useApp } from '../../../../hooks/AppContext'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -151,11 +152,12 @@ function Filters() {
     //Use states which have been declared in the TargetSchoolContext
     const {
         params, dispatchParams,
-        PICs, districts, schoolYears, schoolStatuses,
+        PICs, // districts, schoolYears, schoolStatuses,    // Gọi từ AppContext
         PIC, district, schoolYear, purpose, schoolStatus,
         setPIC, setDistrict, setSchoolYear,
         setPurpose, setSchoolStatus, setDateRange
     } = useReport()
+    const { dists, schYears, schStatus, salesPurps } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
@@ -420,7 +422,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {districts.map((dist) => (
+                                    {dists.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -451,7 +453,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolYears.map((year) => (
+                                    {schYears.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -476,7 +478,7 @@ function Filters() {
                             </FormControl> */}
                         </Grid>
 
-                        <Grid item xs={6} sm={6} md={4} lg={3}>
+                        {/* <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
                                 <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
@@ -490,7 +492,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolStatuses.map((status) => (
+                                    {schStatus.map((status) => (
                                         <MenuItem
                                             key={status}
                                             value={status}
@@ -505,7 +507,7 @@ function Filters() {
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={6} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>

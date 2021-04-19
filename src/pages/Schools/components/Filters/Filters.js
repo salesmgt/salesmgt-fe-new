@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
 // import { useApp } from '../../../../hooks/AppContext'
 import Chips from './Chips/Chips'
@@ -324,7 +324,7 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={() => {}}
+                            onClick={() => { }}
                         >
                             <MdAdd fontSize="large" />
                             &nbsp;Create

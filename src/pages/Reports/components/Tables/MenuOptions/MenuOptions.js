@@ -37,7 +37,7 @@ function MenuOptions(props) {
         // comments.forEach(comment => {
         //     commentedBy.push(comment.fullName);
         // });
-        if (data?.comment) {
+        if (data?.contextComments) {
             return (
                 <CannotRemove open={open} onClose={() => setOpen(false)} data={data} />
             )

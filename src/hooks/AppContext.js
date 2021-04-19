@@ -10,10 +10,12 @@ export function useApp() {
 
 function useAppProvider() {
     const [dists, setDists] = useState(Milk.getMilk('dists'))
+    const [schYears, setSchYears] = useState(Milk.getMilk('schYears'))
     const [schEduLvls, setSchEduLvls] = useState(Milk.getMilk('eduLvls'))
-    const [schScales, setSchScales] = useState(Milk.getMilk('types'))
-    const [schTypes, setSchTypes] = useState(Milk.getMilk('scales'))
+    const [schScales, setSchScales] = useState(Milk.getMilk('scales'))
+    const [schTypes, setSchTypes] = useState(Milk.getMilk('types'))
     const [schStatus, setSchStatus] = useState(Milk.getMilk('status'))
+    const [salesPurps, setSalesPurps] = useState(Milk.getMilk('salesPurps'))
     const [roles, setRoles] = useState(Milk.getMilk('roles'))
 
     // const [salesPurps] = useState(JSON.parse(localStorage.getItem('purps')))
@@ -109,17 +111,31 @@ function useAppProvider() {
             })
     }, [])
 
-    // useEffect(() => {
-    //     FiltersServices.getPurposes()
-    //         .then((data) => {
-    //             localStorage.setItem('purps', JSON.stringify(data))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-    // }, [])
+    useEffect(() => {
+        FiltersServices.getPurposes()
+            .then((data) => {
+                // localStorage.setItem('salesPurps', JSON.stringify(data))
+                Milk.setMilk('salesPurps', data)
+                setSalesPurps(Milk.getMilk('salesPurps'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
+
+    useEffect(() => {
+        FiltersServices.getSchoolYears()
+            .then((data) => {
+                Milk.setMilk('schYears', data)
+                setSchYears(Milk.getMilk('schYears'))
+            }).catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
 
     // FiltersServices.getPICs()
     //     .then((data) => {
@@ -133,12 +149,13 @@ function useAppProvider() {
 
     return {
         dists,
+        schYears,
         schEduLvls,
         schTypes,
         schScales,
         schStatus,
+        salesPurps,
         roles,
-        // salesPurps,
         // pics,
     }
 }

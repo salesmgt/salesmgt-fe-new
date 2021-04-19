@@ -44,36 +44,36 @@ function useAccountProvider() {
     const [role, setRole] = useState('')
 
     // APIs
-    // const isActives = [true, false]
-    const [roles, setRoles] = useState([])
+    // const isActives = [true, false]  // bỏ, chỉ có 2 gtrị thì làm luôn FE
+    // const [roles, setRoles] = useState([])   // Bỏ, dùng cái bên LocalStorage
 
     // Search field (do not have)
 
     // Get filter's data
-    const getRolesFilter = () => {
-        FiltersServices.getRoles()
-            .then((data) => {
-                setRoles(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // const getRolesFilter = () => {
+    //     FiltersServices.getRoles()
+    //         .then((data) => {
+    //             setRoles(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
 
-    useEffect(() => {
-        getRolesFilter()
-    }, [])
+    // useEffect(() => {
+    //     getRolesFilter()
+    // }, [])
 
     return {
         params,
         dispatchParams,
-        roles, // isActives,
+        // roles, // isActives,
         page,
         setPage,
         limit,

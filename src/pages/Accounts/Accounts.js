@@ -7,6 +7,7 @@ import * as AccountsServices from './AccountsServices'
 import classes from './Accounts.module.scss'
 
 function Accounts() {
+    console.log("abc");
     const history = useHistory()
 
     const { params } = useAccount()
@@ -14,12 +15,15 @@ function Accounts() {
 
     const [data, setData] = useState({})
 
+    let isMounted = true
     function refreshAccount(page = 0, limit = 10, column = "username", direction = "asc", searchKey, listFilters) {
         AccountsServices.getAccounts(page, limit, column, direction, searchKey, listFilters).then((res) => {
-            setData(res)
+            if (isMounted) {
+                setData(res)
+            }
         }).catch(error => {
             if (error.response) {
-                console.log(error)
+                console.log('error', error)
                 history.push({
                     pathname: '/errors',
                     state: { error: error.response.status },
@@ -27,9 +31,14 @@ function Accounts() {
             }
         })
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         refreshAccount(page, limit, column, direction, searchKey, listFilters)
+        console.log('inside useEffect()');
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            isMounted = false
+        }
     }, [params])
 
     if (!data) {

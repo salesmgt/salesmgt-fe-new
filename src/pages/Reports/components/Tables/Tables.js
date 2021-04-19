@@ -22,8 +22,9 @@ import { MdChat, MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastP
 import PropTypes from 'prop-types';
 import { useReport } from '../../hooks/ReportContext';
 import MenuOptions from './MenuOptions/MenuOptions';
-import * as ReducerActions from '../../hooks/reducer-action-type';
+import * as ReducerActions from '../../../../hooks/reducer-action-type';
 import classes from './Tables.module.scss';
+import moment from 'moment';
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -33,7 +34,7 @@ function TablePaginationActions(props) {
 
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0); // firstPage has index = 0
-    console.log('first page: count = ', count);
+
   };
 
   const handleLastPageButtonClick = (event) => {
@@ -207,6 +208,10 @@ function Tables(props) {
     else return '';
   }
 
+  const parseDateToString = (date) => {
+    return moment(date).format('ddd, DD/MM/YYYY');
+  }
+
   return (
     <div className={classes.wrapper}>
       <TableContainer className={classes.container} component='div'>
@@ -214,12 +219,12 @@ function Tables(props) {
           <SortableTableHeaders columns={columns} direction={direction} column={column} onRequestSort={onSortBy} />
           <TableBody className={classes.tBody}>
             {rows?.length > 0 ? (
-              rows.map((row, index) => (
+              rows.map((row) => (
                 <TableRow key={row.id} className={classes.tBodyRow}>
                   {/* <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell> */}
                   <TableCell className={classes.tBodyCell}>
-                    {row.date} &nbsp;
-                    {row.comment &&
+                    {parseDateToString(row.date)} &nbsp;
+                    {row.contextComments &&
                       <Badge color="secondary" variant="dot">
                         <MdChat />
                       </Badge>
@@ -227,7 +232,7 @@ function Tables(props) {
                   </TableCell>
                   <TableCell className={classes.tBodyCell}>
                     <ListItemText
-                      primary={`${row.educationalLevel} ${row.schoolName}`}
+                      primary={`${row.level} ${row.schoolName}`}
                       secondary={row.district}
                       classes={{
                         primary: styles.itemTextLarge,

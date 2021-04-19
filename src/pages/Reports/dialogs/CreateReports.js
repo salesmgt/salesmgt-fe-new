@@ -28,7 +28,8 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Autocomplete } from '@material-ui/lab'
-import * as moment from 'moment'
+import { parseDateToString } from '../../../utils/ParseDateTime'
+import { Consts } from './FormConfig'
 import classes from './CreateReports.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -64,24 +65,6 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     );
 });
 
-const ITEM_HEIGHT = 120
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT,
-        },
-    },
-    anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
-    },
-    transformOrigin: {
-        vertical: 'top',
-        horizontal: 'center',
-    },
-    getContentAnchorEl: null,
-}
-
 const useStyles = makeStyles((theme) => ({
     root: {},
     menuItemRoot: {
@@ -94,32 +77,12 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItemSelected: {},
-    autoComplete: {
-        margin: 0,
-        padding: 0
-    },
-    item: {
-        padding: 0,
-        margin: 0
-    },
-    itemTextPrimary: {
-        fontSize: '0.875rem'
-    },
-    itemTextSecondary: {
-        fontSize: '0.8rem'
-    },
-    chipDate: {
-        padding: "0.25rem",
-        fontSize: '1.35rem',
-        color: '#fff',
-        backgroundColor: '#4caf50',
-        // borderRadius: "0.5rem"
-    }
 }))
 
 function CreateReports(props) {
-    const styles = useStyles();
+    // const styles = useStyles();
     const { open, onClose } = props
+    const { headers, operations, fields } = Consts
 
     const { control, register, handleSubmit, errors, formState } = useForm({  // getValues, , setError
         resolver: yupResolver(clientSchema),
@@ -210,17 +173,10 @@ function CreateReports(props) {
         else return '';
     }
 
-    const parseDateToString = () => {
-        const today = new Date();
-        return moment(today).format('dddd, DD/MM/YYYY');
-        // console.log('Today is: ', displayDate);
-    }
-    // parseDateToString()
-
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
-                Create Report
+                {headers.child1}
             </DialogTitleWithIconClose>
             <Divider />
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -248,18 +204,18 @@ function CreateReports(props) {
                                                 inputRef={register}
                                                 error={!!errors.target}
                                                 helperText={errors?.target?.message}
-                                                className={styles.autoComplete}
+                                                className={classes.autoComplete}
                                             />
                                         }
                                         renderOption={(target) => {
                                             return (
-                                                <ListItem className={styles.item}>
+                                                <ListItem className={classes.item}>
                                                     <ListItemText
                                                         primary={target.schoolName}
                                                         secondary={target.district}
                                                         classes={{
-                                                            primary: styles.itemTextPrimary,
-                                                            secondary: styles.itemTextSecondary
+                                                            primary: classes.itemTextPrimary,
+                                                            secondary: classes.itemTextSecondary
                                                         }}
                                                     />
                                                 </ListItem>
@@ -343,9 +299,9 @@ function CreateReports(props) {
                                         </Box>
                                         <Box>
                                             <Chip
-                                                label={parseDateToString()}
+                                                label={parseDateToString(new Date(), 'dddd, DD/MM/YYYY')}
                                                 variant="default"
-                                                className={styles.chipDate}
+                                                className={classes.chipDate}
                                             />
                                         </Box>
                                     </Box>
@@ -384,7 +340,7 @@ function CreateReports(props) {
                 <Divider />
                 <DialogActions className="">
                     <Button variant="contained" onClick={onClose}>
-                        Cancel
+                        {operations.cancel}
                     </Button>
                     <Button
                         className={classes.btnSave}
@@ -393,7 +349,7 @@ function CreateReports(props) {
                         disabled={!formState.isDirty}
                         onClick={handleSubmit(onSubmit)}
                     >
-                        Save
+                        {operations.save}
                     </Button>
                 </DialogActions>
             </form>
@@ -402,29 +358,3 @@ function CreateReports(props) {
 }
 
 export default CreateReports
-
-                        // < FormControlLabel
-                        //     className = ""
-                        //     label = "Gender"
-                        //     control = {
-                        //         < Switch
-                        //         // checked={form.allDay}
-                        //         id = "gender"
-                        //         name = "gender"
-                        //         // onChange={handleChange}
-                        //         />
-                        //     }
-                        // />
-                    //  <TextField
-                    //     label="Description"
-                    //     name="des"
-                    //     className=""
-                    //     variant="outlined"
-                    //     type="text"
-                    //     multiline
-                    //     rows={5}
-                    //     fullWidth
-                    //     inputRef={register}
-                    // // error={!!errors.des}
-                    // // helperText={errors?.des?.message}
-                    // />

@@ -25,7 +25,7 @@ import {
 import PropTypes from 'prop-types'
 import { useSalesman } from '../../hooks/SalesmanContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -36,7 +36,7 @@ function TablePaginationActions(props) {
 
     const handleFirstPageButtonClick = (event) => {
         onChangePage(event, 0) // firstPage has index = 0
-        console.log('first page: count = ', count)
+
     }
 
     const handleLastPageButtonClick = (event) => {

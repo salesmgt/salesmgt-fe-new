@@ -20,7 +20,7 @@ function useReportProvider() {
                 PIC: { filterType: 'PIC', filterValue: null },
                 district: { filterType: 'district', filterValue: '' },
                 schoolYear: { filterType: 'schoolYear', filterValue: '' },
-                status: { filterType: 'status', filterValue: '' },
+                // status: { filterType: 'status', filterValue: '' },   // Bỏ rồi cho đỡ ràng buộc lằng nhằng
                 purpose: { filterType: 'purpose', filterValue: '' },
                 // fromDate: { filterType: 'fromDate', filterValue: null },
                 // toDate: { filterType: 'toDate', filterValue: null },
@@ -28,7 +28,7 @@ function useReportProvider() {
             },
             searchKey: '',
             page: 0,
-            limit: 25,
+            limit: 10,
             column: 'id',
             direction: 'asc'
         }

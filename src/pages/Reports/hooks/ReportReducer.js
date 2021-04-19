@@ -1,9 +1,9 @@
-import * as Actions from './reducer-action-type'
+import * as Actions from '../../../hooks/reducer-action-type'
 
 export const ReportReducer = (params, action) => {
     const { type, payload } = action
     const { listFilters } = params
-    let newListFilters = {};
+    // let newListFilters = {};
 
     switch (type) {
         case Actions.FILTER_PIC:
@@ -12,8 +12,8 @@ export const ReportReducer = (params, action) => {
             return { ...params, page: 0, listFilters: { ...listFilters, district: payload } }
         case Actions.FILTER_SCHOOL_YEAR:
             return { ...params, page: 0, listFilters: { ...listFilters, schoolYear: payload } }
-        case Actions.FILTER_SCHOOL_STATUS:
-            return { ...params, page: 0, listFilters: { ...listFilters, status: payload } }
+        // case Actions.FILTER_SCHOOL_STATUS:
+        //     return { ...params, page: 0, listFilters: { ...listFilters, status: payload } }
         case Actions.FILTER_PURPOSE:
             return { ...params, page: 0, listFilters: { ...listFilters, purpose: payload } }
         case Actions.FILTER_DATE_RANGE:

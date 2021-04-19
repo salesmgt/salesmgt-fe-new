@@ -5,8 +5,6 @@ export async function getTargetSchools(
 ) {
     let url = `/targets?page=${page}&limit=${limit}&column=${column}&direction=${direction}`;
 
-    // Ko viết dạng truthy operator đc mà phải dùng 3 ngôi
-    // VD: url = searchKey && url.concat(`&key=${searchKey}`);
     url = searchKey ? url.concat(`&key=${searchKey}`) : url;
 
     // Tiền xử lý 7 filters

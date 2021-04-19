@@ -15,11 +15,12 @@ import {
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useAccount } from '../../hooks/AccountContext'
 import Chips from './Chips/Chips'
 import CreateAccount from '../../dialogs/CreateAccount'
 import styles from './Filters.module.scss'
+import { useApp } from '../../../../hooks/AppContext'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -126,15 +127,8 @@ function Filters() {
     const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
-    const {
-        params,
-        dispatchParams,
-        roles,
-        active,
-        setActive,
-        role,
-        setRole,
-    } = useAccount()
+    const { params, dispatchParams, active, setActive, role, setRole } = useAccount()
+    const { roles } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
