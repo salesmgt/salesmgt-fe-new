@@ -21,9 +21,9 @@ export async function getAccounts(
     }
 
     const response = await Api.get(url)
-    const data = await response.data
+    // const data = await response.data
 
-    return data
+    return response
 }
 
 export async function getAccount(username) {
@@ -35,14 +35,14 @@ export async function getAccount(username) {
 
 export async function createAccount(account) {
     const response = await Api.post('/users', account)
-    const data = await response.data
+    // const data = await response.data
 
-    return data
+    return response
 }
 
 export async function updateAccount(username, account) {
     const response = await Api.put(`/users/${username}`, account)
-    const data = await response.data
+    // const data = await response.data
 
-    return data
+    return response
 }

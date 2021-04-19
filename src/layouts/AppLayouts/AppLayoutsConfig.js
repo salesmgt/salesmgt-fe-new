@@ -10,6 +10,7 @@ import {
     MdAccountCircle,
     MdExitToApp,
 } from 'react-icons/md'
+import { roleNames } from '../../utils/Constants'
 
 const menuItems = [
     {
@@ -54,13 +55,13 @@ export function getMenuItems(role) {
         reports,
     ] = menuItems
     switch (role) {
-        case 'ADMIN':
+        case roleNames.admin:
             return [accounts, schools]
-        case 'SALES MANAGER':
+        case roleNames.manager:
+            return [dashboards, workPlans, targetSchools, reports, accounts]
+        case roleNames.supervisor:
             return [dashboards, workPlans, targetSchools, reports]
-        case 'SALES SUPERVISOR':
-            return [dashboards, workPlans, targetSchools, reports]
-        case 'SALESMAN':
+        case roleNames.salesman:
             return [dashboards, workPlans, targetSchools, reports]
         default:
             throw new Error()

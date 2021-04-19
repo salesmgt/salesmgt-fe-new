@@ -15,11 +15,21 @@ import {
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
+import Chips from './Chips/Chips'
+import CreateSchool from '../../dialogs/CreateSchool'
 import * as ReducerActions from '../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
-// import { useApp } from '../../../../hooks/AppContext'
-import CreateSchool from '../../dialogs/CreateSchool'
-import Chips from './Chips/Chips'
+import {
+    DISTRICT_FILTER,
+    TYPE_FILTER,
+    LEVEL_FILTER,
+    SCALE_FILTER,
+    STATUS_FILTER,
+    // ACTIVE_FILTER,
+} from './FilterConsts'
+
+import { useApp } from '../../../../hooks/AppContext'
+
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -125,154 +135,220 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters() {
     const classes = useStyles()
 
+    const { dists, schTypes, schEduLvls, schScales, schStatus } = useApp()
+
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
         dispatchParams,
-        districts,
-        schoolTypes,
-        schoolLevels,
-        schoolScales,
-        schoolStatuses,
+        // districts,
+        // schoolTypes,
+        // schoolLevels,
+        // schoolScales,
+        // schoolStatuses,
         district,
         schoolType,
         schoolLevel,
         schoolScale,
         schoolStatus,
-        setDistrict,
-        setSchoolType,
-        setSchoolLevel,
-        setSchoolScale,
-        setSchoolStatus,
+        // setDistrict,
+        // setSchoolType,
+        // setSchoolLevel,
+        // setSchoolScale,
+        // setSchoolStatus,
+        setFilter,
     } = useSchool()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
-    // const { districts, schoolTypes, schoolLevels, schoolScales, schoolStatuses } = useApp()
 
     //================Handle useState() of filters================
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-        setDistrict(selectedDistrict)
 
-        if (selectedDistrict) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: {
-                    filterType: 'district',
-                    filterValue: selectedDistrict,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: '' },
-            })
-        }
+        // setDistrict(selectedDistrict)
+        // if (selectedDistrict) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: {
+        //             filterType: 'district',
+        //             filterValue: selectedDistrict,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: { filterType: 'district', filterValue: '' },
+        //     })
+        // }
+        setFilter(DISTRICT_FILTER, selectedDistrict)
+        dispatchParams({
+            type: ReducerActions.FILTER_DISTRICT,
+            payload: {
+                filterType: DISTRICT_FILTER,
+                filterValue: selectedDistrict ? selectedDistrict : '',
+            },
+        })
     }
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-        setSchoolType(selectedSchoolType)
 
-        if (selectedSchoolType) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: {
-                    filterType: 'type',
-                    filterValue: selectedSchoolType,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: { filterType: 'type', filterValue: '' },
-            })
-        }
+        // setSchoolType(selectedSchoolType)
+        // if (selectedSchoolType) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //         payload: {
+        //             filterType: 'type',
+        //             filterValue: selectedSchoolType,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //         payload: { filterType: 'type', filterValue: '' },
+        //     })
+        // }
+        setFilter(TYPE_FILTER, selectedSchoolType)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_TYPE,
+            payload: {
+                filterType: TYPE_FILTER,
+                filterValue: selectedSchoolType ? selectedSchoolType : '',
+            },
+        })
     }
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-        setSchoolLevel(selectedSchoolLevel)
 
-        if (selectedSchoolLevel) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: {
-                    filterType: 'level',
-                    filterValue: selectedSchoolLevel,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: { filterType: 'level', filterValue: '' },
-            })
-        }
+        // setSchoolLevel(selectedSchoolLevel)
+        // if (selectedSchoolLevel) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //         payload: {
+        //             filterType: 'level',
+        //             filterValue: selectedSchoolLevel,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //         payload: { filterType: 'level', filterValue: '' },
+        //     })
+        // }
+        setFilter(LEVEL_FILTER, selectedSchoolLevel)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_LEVEL,
+            payload: {
+                filterType: LEVEL_FILTER,
+                filterValue: selectedSchoolLevel ? selectedSchoolLevel : '',
+            },
+        })
     }
 
     const handleSchoolScaleChange = (event) => {
         const selectedSchoolScale = event.target.value
-        setSchoolScale(selectedSchoolScale)
 
-        if (selectedSchoolScale) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: {
-                    filterType: 'scale',
-                    filterValue: selectedSchoolScale,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: { filterType: 'scale', filterValue: '' },
-            })
-        }
+        // setSchoolScale(selectedSchoolScale)
+        // if (selectedSchoolScale) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //         payload: {
+        //             filterType: 'scale',
+        //             filterValue: selectedSchoolScale,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //         payload: { filterType: 'scale', filterValue: '' },
+        //     })
+        // }
+        setFilter(SCALE_FILTER, selectedSchoolScale)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_SCALE,
+            payload: {
+                filterType: SCALE_FILTER,
+                filterValue: selectedSchoolScale ? selectedSchoolScale : '',
+            },
+        })
     }
 
     const handleSchoolStatusChange = (event) => {
         const selectedSchoolStatus = event.target.value
-        setSchoolStatus(selectedSchoolStatus)
 
-        if (selectedSchoolStatus) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_STATUS,
-                payload: {
-                    filterType: 'status',
-                    filterValue: selectedSchoolStatus,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_STATUS,
-                payload: { filterType: 'status', filterValue: '' },
-            })
-        }
+        // setSchoolStatus(selectedSchoolStatus)
+        // if (selectedSchoolStatus) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+        //         payload: {
+        //             filterType: 'status',
+        //             filterValue: selectedSchoolStatus,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+        //         payload: { filterType: 'status', filterValue: '' },
+        //     })
+        // }
+        setFilter(STATUS_FILTER, selectedSchoolStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
+            },
+        })
     }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
+    // const handleChipsRemoved = (removedFilters) => {
+    //     removedFilters.forEach((removedFilter) => {
+    //         switch (removedFilter) {
+    //             case 'district':
+    //                 setDistrict('All')
+    //                 break
+    //             case 'type':
+    //                 setSchoolType('All')
+    //                 break
+    //             case 'level':
+    //                 setSchoolLevel('All')
+    //                 break
+    //             case 'scale':
+    //                 setSchoolScale('All')
+    //                 break
+    //             case 'status':
+    //                 setSchoolStatus('All')
+    //                 break
+    //             default:
+    //                 break
+    //         }
+    //     })
+    // }
+
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                case 'district':
-                    setDistrict('All')
+                case DISTRICT_FILTER:
+                    setFilter(DISTRICT_FILTER, 'All')
                     break
-                case 'type':
-                    setSchoolType('All')
+                case TYPE_FILTER:
+                    setFilter(TYPE_FILTER, 'All')
                     break
-                case 'level':
-                    setSchoolLevel('All')
+                case LEVEL_FILTER:
+                    setFilter(LEVEL_FILTER, 'All')
                     break
-                case 'scale':
-                    setSchoolScale('All')
+                case SCALE_FILTER:
+                    setFilter(SCALE_FILTER, 'All')
                     break
-                case 'status':
-                    setSchoolStatus('All')
+                case STATUS_FILTER:
+                    setFilter(STATUS_FILTER, 'All')
                     break
                 default:
-                    break
+                    throw new Error()
             }
         })
     }
@@ -358,7 +434,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {districts?.map((dist) => (
+                                    {dists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -378,7 +454,7 @@ function Filters() {
 
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Statuses</InputLabel>
+                                <InputLabel>School Status</InputLabel>
                                 <Select
                                     value={schoolStatus}
                                     onChange={handleSchoolStatusChange}
@@ -394,7 +470,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolStatuses?.map((status) => (
+                                    {schStatus?.map((status) => (
                                         <MenuItem
                                             key={status}
                                             value={status}
@@ -430,7 +506,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolTypes?.map((type) => (
+                                    {schTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -466,7 +542,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolLevels?.map((level) => (
+                                    {schEduLvls?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
@@ -502,7 +578,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolScales?.map((scale) => (
+                                    {schScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}

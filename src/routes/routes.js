@@ -16,6 +16,13 @@ import ReportProvider from '../pages/Reports/hooks/ReportContext'
 import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
 import TargetSchoolProvider from '../pages/TargetSchools/hooks/TargetSchoolContext'
 
+export const defaultRoutes = {
+    ADMIN: { route: '/apps/accounts' },
+    'SALES MANAGER': { route: '/apps/dashboards' },
+    'SALES SUPERVISOR': { route: '/apps/dashboards' },
+    SALESMAN: { route: '/apps/dashboards' },
+}
+
 export const roleRoutes = {
     ADMIN: [
         {
@@ -38,6 +45,15 @@ export const roleRoutes = {
         { path: 'schools/:id', component: () => <School /> },
     ],
     'SALES MANAGER': [
+        {
+            path: 'accounts',
+            component: () => (
+                <AccountProvider>
+                    <Accounts />
+                </AccountProvider>
+            ),
+        },
+        { path: 'accounts/:id', component: () => <Account /> },
         { path: 'dashboards', component: () => <Dashboards /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
         // {

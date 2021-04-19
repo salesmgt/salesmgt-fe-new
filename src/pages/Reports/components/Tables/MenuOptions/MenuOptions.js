@@ -1,23 +1,40 @@
 import React, { useState } from 'react'
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import {
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+} from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
-import PropTypes from 'prop-types'
-import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove'
+import { useAuth } from '../../../../../hooks/AuthContext'
+import { useReport } from '../../../hooks/ReportContext'
+import { roleNames } from '../../../../../utils/Constants'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [open, setOpen] = useState(false);
 
     const { user } = useAuth()
     const { url } = useRouteMatch()
 
+    const { params } = useReport()
+
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useState(false)
+
+    const stateData = {
+        model: data,
+        params: params,
+        pathName: `${url}/${data.username}`,
+    }
+
     const handleOpen = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget)
     }
 
     const handleCloseMenus = () => {
@@ -39,13 +56,21 @@ function MenuOptions(props) {
         // });
         if (data?.comment) {
             return (
-                <CannotRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <CannotRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
             )
         }
         // else if (data.comments.length === 0) {
         else {
             return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <ConfirmRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
             )
         }
     }
@@ -53,13 +78,23 @@ function MenuOptions(props) {
     // console.log('user = ', user);
     const renderMenus = (role) => {
         switch (role) {
-            case 'SALES MANAGER':
-            case 'SALES SUPERVISOR':
+            case roleNames.manager:
                 return (
                     <>
-                        <MenuItem onClick={handleCloseMenus} component={Link} to={{ pathname: `${url}/${data.id}`, state: { data: data } }}>
-                            <ListItemIcon className={classes.itemIcon}><MdInfo fontSize="large" /></ListItemIcon>
-                            <ListItemText className={classes.itemText}>View details</ListItemText>
+                        <MenuItem
+                            onClick={handleCloseMenus}
+                            component={Link}
+                            to={{
+                                pathname: `${url}/${data.id}`,
+                                state: { data: stateData },
+                            }}
+                        >
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdInfo fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                View details
+                            </ListItemText>
                         </MenuItem>
                         {/**For Salesman:
                             - View details and update report inside that form.
@@ -67,14 +102,51 @@ function MenuOptions(props) {
                             - View details and give comment inside that form.
                         */}
                     </>
-                );
+                )
 
-            case 'SALESMAN':
+            case roleNames.supervisor:
                 return (
                     <>
-                        <MenuItem onClick={handleCloseMenus} component={Link} to={{ pathname: `${url}/${data.id}`, state: { data: data } }}>
-                            <ListItemIcon className={classes.itemIcon}><MdInfo fontSize="large" /></ListItemIcon>
-                            <ListItemText className={classes.itemText}>View details</ListItemText>
+                        <MenuItem
+                            onClick={handleCloseMenus}
+                            component={Link}
+                            to={{
+                                pathname: `${url}/${data.id}`,
+                                state: { data: stateData },
+                            }}
+                        >
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdInfo fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                View details
+                            </ListItemText>
+                        </MenuItem>
+                        {/**For Salesman:
+                            - View details and update report inside that form.
+                            For Manager & Supervisor:
+                            - View details and give comment inside that form.
+                        */}
+                    </>
+                )
+
+            case roleNames.salesman:
+                return (
+                    <>
+                        <MenuItem
+                            onClick={handleCloseMenus}
+                            component={Link}
+                            to={{
+                                pathname: `${url}/${data.id}`,
+                                state: { data: stateData },
+                            }}
+                        >
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdInfo fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                View details
+                            </ListItemText>
                         </MenuItem>
                         <>
                             <MenuItem onClick={handleOpenConfirmation}>
@@ -88,19 +160,24 @@ function MenuOptions(props) {
                             {renderRemoveDialog()}
                         </>
                     </>
-                );
+                )
 
             default:
-                break;
+                throw new Error()
         }
     }
 
     return (
         <div>
-            <IconButton color='primary' onClick={handleOpen}>
+            <IconButton color="primary" onClick={handleOpen}>
                 <MdMoreVert />
             </IconButton>
-            <Menu anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleCloseMenus}>
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={!!anchorEl}
+                onClose={handleCloseMenus}
+            >
                 {renderMenus(user.roles[0])}
             </Menu>
         </div>
@@ -110,5 +187,5 @@ function MenuOptions(props) {
 export default React.memo(MenuOptions)
 
 MenuOptions.propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
 }

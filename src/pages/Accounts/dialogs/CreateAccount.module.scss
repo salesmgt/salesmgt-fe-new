@@ -1,9 +1,10 @@
 @import '../../../styles/Variables.module.scss';
 
-.wrapper {
-    height: 100%;
+.dialogCont {
     padding: 1rem !important;
-    overflow-y: auto;
+    .wrapper {
+        overflow-y: auto;
+    }
 }
 
 .dialogAct {

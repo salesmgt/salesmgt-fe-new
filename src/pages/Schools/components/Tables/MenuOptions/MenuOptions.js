@@ -17,16 +17,26 @@ import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { useAuth } from '../../../../../hooks/AuthContext'
+import { useSchool } from '../../../hooks/SchoolContext'
+import { roleNames } from '../../../../../utils/Constants'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
 
+    const { user } = useAuth()
+    const { params } = useSchool()
+
+    const { url } = useRouteMatch()
+
     const [anchorEl, setAnchorEl] = useState(null)
     const [openConfirmation, setOpenConfirmation] = useState(false)
 
-    const { user } = useAuth()
-    const { url } = useRouteMatch()
+    const stateData = {
+        model: data,
+        params: params,
+        pathName: `${url}/${data.name}`,
+    }
 
     const handleOpen = (event) => {
         setAnchorEl(event.currentTarget)
@@ -49,15 +59,15 @@ function MenuOptions(props) {
 
     const renderMenus = (role) => {
         switch (role) {
-            case 'ADMIN':
+            case roleNames.admin:
                 return (
                     <>
                         <MenuItem
                             onClick={handleCloseMenus}
                             component={Link}
                             to={{
-                                pathname: `${url}/${data.name}`,
-                                state: { data: data },
+                                pathname: `${url}/${data.id}`,
+                                state: { data: stateData },
                             }}
                         >
                             <ListItemIcon className={classes.itemIcon}>
@@ -126,14 +136,14 @@ function MenuOptions(props) {
                     </>
                 )
 
-            case 'SALES MANAGER':
+            case roleNames.manager:
                 return (
                     <MenuItem
                         onClick={handleCloseMenus}
                         component={Link}
                         to={{
-                            pathname: `${url}/${data.name}`,
-                            state: { data: data },
+                            pathname: `${url}/${data.id}`,
+                            state: { data: stateData },
                         }}
                     >
                         <ListItemIcon className={classes.itemIcon}>
@@ -145,14 +155,14 @@ function MenuOptions(props) {
                     </MenuItem>
                 )
 
-            case 'SALES SUPERVISOR':
+            case roleNames.supervisor:
                 return (
                     <MenuItem
                         onClick={handleCloseMenus}
                         component={Link}
                         to={{
-                            pathname: `${url}/${data.name}`,
-                            state: { data: data },
+                            pathname: `${url}/${data.id}`,
+                            state: { data: stateData },
                         }}
                     >
                         <ListItemIcon className={classes.itemIcon}>

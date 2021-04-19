@@ -30,7 +30,7 @@ import useToggle from '../../hooks/useToggle'
 import { getMenuItems } from './AppLayoutsConfig'
 import { Profiles } from '../../pages'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleRoutes } from '../../routes/routes'
+import { defaultRoutes, roleRoutes } from '../../routes/routes'
 import * as UserServices from '../../services/UserServices'
 import { UserMenu } from './components'
 import classes from './AppLayouts.module.scss'
@@ -228,11 +228,7 @@ function AppLayouts() {
                             className={classes.majorImg}
                             alt="major-logos"
                             onClick={() => {
-                                if (user.roles[0] === 'ADMIN') {
-                                    history.push(`${url}/accounts`)
-                                } else {
-                                    history.push(`${url}/dashboards`)
-                                }
+                                history.push(defaultRoutes[user.roles[0]].route)
                             }}
                         />
                     </div>

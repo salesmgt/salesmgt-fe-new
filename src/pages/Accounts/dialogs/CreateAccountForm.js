@@ -145,7 +145,7 @@ function CreateAccountForm() {
         }
 
         AccountsServices.createAccount(model)
-            .then((data) => {
+            .then((res) => {
                 setNotify({
                     isOpen: true,
                     message: 'Created Successfully',
@@ -186,8 +186,8 @@ function CreateAccountForm() {
     return (
         <>
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                <DialogContent className={classes.wrapper}>
-                    <Grid container spacing={2}>
+                <DialogContent className={classes.dialogCont}>
+                    <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="username"

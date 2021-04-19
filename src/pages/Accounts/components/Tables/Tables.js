@@ -27,6 +27,7 @@ import PropTypes from 'prop-types'
 import { useAccount } from '../../hooks/AccountContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../hooks/reducer-action-type'
+import { roleNames } from '../../../../utils/Constants'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -214,11 +215,11 @@ function Tables(props) {
 
     const setRoleChipColor = (purpose) => {
         switch (purpose) {
-            case 'SALESMAN':
+            case roleNames.salesman:
                 return <Chip label={purpose} className={classes.chipSalesman} />
-            case 'SALES MANAGER':
+            case roleNames.manager:
                 return <Chip label={purpose} className={classes.chipManager} />
-            case 'SALES SUPERVISOR':
+            case roleNames.supervisor:
                 return (
                     <Chip label={purpose} className={classes.chipSupervisor} />
                 )

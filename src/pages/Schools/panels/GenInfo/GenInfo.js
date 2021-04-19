@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     makeStyles,
@@ -33,14 +33,6 @@ const clientSchema = yup.object().shape({
         .matches(/(02)+([0-9]{9})\b/g, 'Incorrect entry'),
 })
 
-const serverSchema = [
-    // {
-    //     type: 'server',
-    //     name: 'name',
-    //     message: null,
-    // },
-]
-
 const ITEM_HEIGHT = 120
 const MenuProps = {
     PaperProps: {
@@ -74,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function GenInfo(props) {
-    const { schData } = props
+    const { school, refreshPage } = props
     const { headers, operations, fields } = Consts
     const styles = useStyles()
 
@@ -88,25 +80,40 @@ function GenInfo(props) {
 
     const { dists, schEduLvls, schTypes, schScales } = useApp()
 
-
     const defaultValues = {
-        id: schData?.id,
-        name: schData?.name,
-        address: schData?.address,
-        district: schData?.district,
+        id: school?.id,
+        name: school?.name,
+        address: school?.address,
+        district: school?.district,
 
-        educationalLevel: schData?.educationalLevel,
-        scale: schData?.scale,
-        type: schData?.type,
-        phone: schData?.phone,
+        educationalLevel: school?.educationalLevel,
+        scale: school?.scale,
+        type: school?.type,
+        phone: school?.phone,
 
-        active: schData?.active,
+        active: school?.active,
     }
 
-    const { control, errors, handleSubmit, formState } = useForm({
+    const { control, errors, handleSubmit, formState, reset } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
+
+    useEffect(() => {
+        reset({
+            id: school?.id,
+            name: school?.name,
+            address: school?.address,
+            district: school?.district,
+
+            educationalLevel: school?.educationalLevel,
+            scale: school?.scale,
+            type: school?.type,
+            phone: school?.phone,
+
+            active: school?.active,
+        })
+    }, [school])
 
     if (!dists) {
         return <Loading />
@@ -124,20 +131,25 @@ function GenInfo(props) {
         return <Loading />
     }
 
+    if (!school) {
+        return <Loading />
+    }
+
     const onSubmit = (data) => {
         const model = {
             ...data,
-            description: schData?.description,
-            status: schData?.status,
-            reprName: schData?.reprName,
-            reprIsMale: schData?.reprIsMale,
-            reprPhone: schData?.reprPhone,
-            reprEmail: schData?.reprEmail,
+            description: school?.description,
+            status: school?.status,
+            reprName: school?.reprName,
+            reprIsMale: school?.reprIsMale,
+            reprPhone: school?.reprPhone,
+            reprEmail: school?.reprEmail,
         }
 
         SchoolsServices.updateSchool(data.id, model)
-            .then((data) => {
-                // refreshPage()
+            .then((res) => {
+                refreshPage(data.id)
+
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',

@@ -9,12 +9,24 @@ export function useApp() {
 }
 
 function useAppProvider() {
-    const [dists, setDists] = useState(Milk.getMilk('dists'))
-    const [schEduLvls, setSchEduLvls] = useState(Milk.getMilk('eduLvls'))
-    const [schScales, setSchScales] = useState(Milk.getMilk('types'))
-    const [schTypes, setSchTypes] = useState(Milk.getMilk('scales'))
-    const [schStatus, setSchStatus] = useState(Milk.getMilk('status'))
-    const [roles, setRoles] = useState(Milk.getMilk('roles'))
+    const [dists, setDists] = useState(
+        Milk.getMilk('dists') ? Milk.getMilk('dists') : null
+    )
+    const [schEduLvls, setSchEduLvls] = useState(
+        Milk.getMilk('eduLvls') ? Milk.getMilk('eduLvls') : null
+    )
+    const [schScales, setSchScales] = useState(
+        Milk.getMilk('types') ? Milk.getMilk('types') : null
+    )
+    const [schTypes, setSchTypes] = useState(
+        Milk.getMilk('scales') ? Milk.getMilk('scales') : null
+    )
+    const [schStatus, setSchStatus] = useState(
+        Milk.getMilk('status') ? Milk.getMilk('status') : null
+    )
+    const [roles, setRoles] = useState(
+        Milk.getMilk('roles') ? Milk.getMilk('roles') : null
+    )
 
     // const [salesPurps] = useState(JSON.parse(localStorage.getItem('purps')))
     // const [pics] = useState(null)

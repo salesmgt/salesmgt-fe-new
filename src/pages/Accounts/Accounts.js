@@ -13,24 +13,48 @@ function Accounts() {
     const { params } = useAccount()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
-    const [data, setData] = useState({})
+    const [data, setData] = useState(null)
 
-    function refreshAccount(page = 0, limit = 10, column = "username", direction = "asc", searchKey, listFilters) {
-        AccountsServices.getAccounts(page, limit, column, direction, searchKey, listFilters).then((res) => {
-            setData(res)
-        }).catch(error => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+    let isMounted = true
+    const refreshPage = (
+        page = 0,
+        limit = 10,
+        column = 'username',
+        direction = 'asc',
+        searchKey,
+        listFilters
+    ) => {
+        AccountsServices.getAccounts(
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters
+        )
+            .then((res) => {
+                if (isMounted) {
+                    setData(res.data)
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        refreshAccount(page, limit, column, direction, searchKey, listFilters)
+        refreshPage(page, limit, column, direction, searchKey, listFilters)
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            isMounted = false
+        }
     }, [params])
 
     if (!data) {

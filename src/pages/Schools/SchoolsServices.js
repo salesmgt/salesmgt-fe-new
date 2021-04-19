@@ -33,7 +33,9 @@ export async function getSchools(
     // const response = await Api.get(url)
     // const data = await response.data
     // console.log('url = ', url);
-    return await Api.get(url)
+    const response = await Api.get(url)
+
+    return response
 }
 
 // export async function getSchoolsByKeys(...keys) {
@@ -43,18 +45,25 @@ export async function getSchools(
 //     return data
 // }
 
-export async function createSchool(school) {
-    const response = await Api.post('/schools', school)
+export async function getSchool(schoolId) {
+    const response = await Api.get(`/schools/${schoolId}`)
     const data = await response.data
 
     return data
 }
 
+export async function createSchool(school) {
+    const response = await Api.post('/schools', school)
+    // const data = await response.data
+
+    return response
+}
+
 export async function updateSchool(id, school) {
     const response = await Api.put(`/schools/${id}`, school)
-    const data = await response.data
+    // const data = await response.data
 
-    return data
+    return response
 }
 
 // export async function addSchoolsByFile(newSchools) {

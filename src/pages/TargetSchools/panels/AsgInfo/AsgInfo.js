@@ -16,6 +16,7 @@ import { Snackbars } from '../../../../components'
 import { Consts } from './AsgInfoConfig'
 import { useApp } from '../../../../hooks/AppContext'
 import { useAuth } from '../../../../hooks/AuthContext'
+import { roleNames } from '../../../../utils/Constants'
 import classes from './AsgInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -121,7 +122,7 @@ function AsgInfo(props) {
 
     return (
         <div className={classes.panel}>
-            {user.roles[0] === 'SALESMAN' ? (
+            {user.roles[0] === roleNames.salesman ? (
                 <Grid container spacing={0} className={classes.body}>
                     {/* Content Sector */}
                     <Grid

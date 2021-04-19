@@ -25,7 +25,7 @@ export const data = {
             district: 'Quận 1',
             address: '12 Trần Quang Khải, P7',
             reprName: 'Hồ Quang Tuấn',
-            reprisMale: true,
+            reprIsMale: true,
             status: 'Chưa hợp tác',
             purpose: 'Sales mới',
             result: 'OK',
@@ -33,7 +33,7 @@ export const data = {
             positivity: 'Thầy rất thiện chí',
             difficulty: '',
             futurePlan: 'Giới thiệu thêm chương trình Toán Khoa cho Thầy',
-            comments: [],
+            comment: [],
             schoolYear: '2020-2021',
         },
         {
@@ -48,7 +48,7 @@ export const data = {
             district: 'Quận 7',
             address: '12 Trần Xuân Soạn, P12',
             reprName: 'Nguyễn Trung Hậu',
-            reprisMale: true,
+            reprIsMale: true,
             status: 'Đang hợp tác',
             purpose: 'Chăm sóc',
             result: 'Không gặp được HT',
@@ -82,7 +82,7 @@ export const data = {
             district: 'Quận 12',
             address: '90 Nguyễn Văn Trỗi, P7',
             reprName: 'Trịnh Thị Thanh Thư',
-            reprisMale: false,
+            reprIsMale: false,
             status: 'Đang hợp tác',
             purpose: 'Tái ký hợp đồng',
             result: 'Đã gặp HT',
@@ -114,3 +114,30 @@ export const data = {
     totalPage: 1,
     totalElements: 3,
 }
+
+// {
+//   "schoolName": "string",
+//   "address": "string",
+//   "district": "string",
+//   "level": "string",
+//   "reprName": "string",
+//   "reprIsMale": true,
+
+//   "id": 0,
+//   "date": "2021-04-19T09:46:49.916Z",
+//   "result": "string",
+//   "description": "string",
+//   "positivity": "string",
+//   "difficulty": "string",
+//   "futurePlan": "string",
+//   "commentedPerson": "string",
+//   "contextComments": "string",
+
+//   "targetId": 0,
+//   "schoolYear": "string",
+//   "purpose": "string",
+
+//   "avatar": "string",
+//   "username": "string"
+//   "fullName": "string",
+// }
