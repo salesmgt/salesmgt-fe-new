@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Avatar, Button, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
-import * as ReducerActions from '../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../../hooks/reducer-action-type'
 // import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -209,7 +209,7 @@ function Chips(props) {
 
     return (
         <>
-            {(handleShowClearAllButton() !== 6) &&
+            {(handleShowClearAllButton() !== 5) &&
                 <div className={classes.root}>
                     <Button size='small' className={classes.btnClear} onClick={handleClearAllChips}>
                         Clear all

@@ -1,34 +1,29 @@
 import React from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
-    TableContainer,
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    TableCell,
-    TablePagination,
-    IconButton,
-    Chip,
-    TableSortLabel,
-    withStyles,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    Avatar,
-} from '@material-ui/core'
-import {
-    MdFirstPage,
-    MdKeyboardArrowLeft,
-    MdKeyboardArrowRight,
-    MdLastPage,
-} from 'react-icons/md'
-import PropTypes from 'prop-types'
-import { useContract } from '../../hooks/ContractContext'
-import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TablePagination,
+  IconButton,
+  Chip,
+  TableSortLabel,
+  withStyles,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+} from '@material-ui/core';
+import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
+import PropTypes from 'prop-types';
+import { useContract } from '../../hooks/ContractContext';
+import MenuOptions from './MenuOptions/MenuOptions';
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { roleNames } from '../../../../utils/Constants'
-import classes from './Tables.module.scss'
+import classes from './Tables.module.scss';
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -36,10 +31,10 @@ function TablePaginationActions(props) {
 
     const { count, page, rowsPerPage, totalPage, onChangePage } = props
 
-    const handleFirstPageButtonClick = (event) => {
-        onChangePage(event, 0) // firstPage has index = 0
-        console.log('first page: count = ', count)
-    }
+  const handleFirstPageButtonClick = (event) => {
+    onChangePage(event, 0); // firstPage has index = 0
+
+  };
 
     const handleLastPageButtonClick = (event) => {
         onChangePage(event, Math.ceil(count / rowsPerPage) - 1)

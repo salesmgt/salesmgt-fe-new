@@ -27,7 +27,7 @@ import {
     MdFilterList,
 } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useReport } from '../../hooks/ReportContext'
 import Chips from './Chips/Chips'
 import { Autocomplete } from '@material-ui/lab'
@@ -163,7 +163,7 @@ const MuiAccordionDetails = withStyles(() => ({
 function Filters() {
     const classes = useStyles()
 
-    const { dists, schStatus } = useApp()
+    const { dists, schYears, schStatus, salesPurps } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -610,7 +610,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolYears.map((year) => (
+                                    {schYears.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -636,7 +636,7 @@ function Filters() {
                             </FormControl> */}
                         </Grid>
 
-                        <Grid item xs={6} sm={6} md={4} lg={3}>
+                        {/* <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
                                 <Select
@@ -670,7 +670,7 @@ function Filters() {
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={6} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>

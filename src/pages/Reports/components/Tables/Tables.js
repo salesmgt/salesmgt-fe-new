@@ -28,8 +28,9 @@ import {
 import PropTypes from 'prop-types'
 import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import classes from './Tables.module.scss'
+import moment from 'moment'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -39,7 +40,6 @@ function TablePaginationActions(props) {
 
     const handleFirstPageButtonClick = (event) => {
         onChangePage(event, 0) // firstPage has index = 0
-        console.log('first page: count = ', count)
     }
 
     const handleLastPageButtonClick = (event) => {

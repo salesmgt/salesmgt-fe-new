@@ -56,8 +56,8 @@ function useAccountProvider() {
     )
 
     // APIs
-    // const isActives = [true, false]
-    // const [roles, setRoles] = useState([])
+    // const isActives = [true, false]  // bỏ, chỉ có 2 gtrị thì làm luôn FE
+    // const [roles, setRoles] = useState([])   // Bỏ, dùng cái bên LocalStorage
 
     // Search field (do not have)
 

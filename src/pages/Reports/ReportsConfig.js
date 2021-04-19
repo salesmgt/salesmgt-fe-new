@@ -21,7 +21,7 @@ export const data = {
             avatar:
                 'https://galileoenrichment.com/wp-content/uploads/2020/03/man.png',
             schoolName: 'Trần Quang Khải',
-            educationalLevel: 'THPT',
+            level: 'THPT',
             district: 'Quận 1',
             address: '12 Trần Quang Khải, P7',
             reprName: 'Hồ Quang Tuấn',
@@ -44,7 +44,7 @@ export const data = {
             avatar:
                 'https://www.richmondhillpestcontrol.ca/wp-content/uploads/2019/10/7-512.png',
             schoolName: 'Trần Xuân Soạn',
-            educationalLevel: 'THCS',
+            level: 'THCS',
             district: 'Quận 7',
             address: '12 Trần Xuân Soạn, P12',
             reprName: 'Nguyễn Trung Hậu',
@@ -78,7 +78,7 @@ export const data = {
             avatar:
                 'https://cdn1.iconfinder.com/data/icons/avatar-97/32/avatar-02-512.png',
             schoolName: 'Nguyễn Văn Trỗi',
-            educationalLevel: 'TH',
+            level: 'TH',
             district: 'Quận 12',
             address: '90 Nguyễn Văn Trỗi, P7',
             reprName: 'Trịnh Thị Thanh Thư',

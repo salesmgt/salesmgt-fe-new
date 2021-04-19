@@ -43,11 +43,11 @@ export async function getPICs() {
     return data.list
 }
 
-// export async function getPurposes() {
-//     const response = await Api.get('/purposes')
-//     const data = await response.data
-//     return data
-// }
+export async function getPurposes() {
+    const response = await Api.get('/purposes')
+    const data = await response.data
+    return data
+}
 
 export async function getRoles() {
     const response = await Api.get('/roles')

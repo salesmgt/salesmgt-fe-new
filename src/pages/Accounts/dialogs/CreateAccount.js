@@ -39,6 +39,7 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 
 function CreateAccount(props) {
     const { open, onClose } = props
+    // const { onClose, roles } = props
 
     const { headers } = Consts
 
@@ -47,10 +48,7 @@ function CreateAccount(props) {
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.child1}
             </DialogTitleWithIconClose>
-            <CreateAccountForm
-                onClose={onClose}
-                // roles={roles}
-            />
+            <CreateAccountForm onClose={onClose} />
         </Dialog>
     )
 }

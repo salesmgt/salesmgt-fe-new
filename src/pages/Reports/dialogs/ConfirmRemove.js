@@ -8,14 +8,23 @@ import {
     DialogActions,
     Divider,
 } from '@material-ui/core'
+import { removeReport, getReports } from '../ReportsServices'
+import { parseDateToString } from '../../../utils/ParseDateTime'
 import classes from './ConfirmRemove.module.scss'
+import { useReport } from '../hooks/ReportContext'
 
 function ConfirmRemove(props) {
     const { open, onClose, data } = props
+    const { params } = useReport()
+    const { listFilters, page, limit, column, direction, searchKey } = params
+
+    console.log("Confirm Remove - params: ", params);
 
     const handleRemove = () => {
-        // Gọi API xóa
-        console.log('Remove nha');
+        removeReport(data.id).then((data) => {
+            console.log('Remove roi nha', data);
+            getReports(page, limit, column, direction, searchKey, listFilters)
+        })
 
         onClose();
     }
@@ -29,7 +38,7 @@ function ConfirmRemove(props) {
                     <p>
                         Do you really want to remove report of school
                         <strong><em> {data.educationalLevel} {data.schoolName} </em></strong>
-                        on <strong>{data.date}</strong>?
+                        on <strong>{parseDateToString(data.date, 'DD/MM/YYYY')}</strong>?
                     </p>
                     <p>This process cannot be undone.</p>
                 </DialogContentText>

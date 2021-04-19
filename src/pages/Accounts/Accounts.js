@@ -8,6 +8,7 @@ import { Loading } from '../../components'
 import classes from './Accounts.module.scss'
 
 function Accounts() {
+    console.log("abc");
     const history = useHistory()
 
     const { params } = useAccount()

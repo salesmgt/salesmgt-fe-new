@@ -28,7 +28,7 @@ import {
 import { Autocomplete } from '@material-ui/lab'
 import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
 import AssignMultiple from '../../dialogs/AssignMultiple'
@@ -180,8 +180,6 @@ function Filters() {
         setSchoolYear, setDistrict, setSchoolType,
         setSchoolLevel, setSchoolScale, setPIC, setPurpose
     } = useTargetSchool()
-
-    // console.log('param filters: ', params);
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
@@ -337,7 +335,7 @@ function Filters() {
 
     const handlePICChange = (event, newPIC) => {
         setPIC(newPIC);
-
+        console.log('handle change, new PIC', newPIC);
         if (newPIC) {   //  !== null
             dispatchParams({
                 type: ReducerActions.FILTER_PIC,
@@ -518,34 +516,37 @@ function Filters() {
                                 autoHighlight
                                 clearOnEscape
                                 options={PICs}
-                                getOptionLabel={(pic) => pic.fullName}
+                                getOptionLabel={(pic) => pic.fullName ? pic.fullName : ""}
                                 value={PIC}
-                                renderInput={(params) =>
-                                    <TextField
-                                        {...params}
-                                        label="PICs"
-                                        margin="normal"
-                                        placeholder="PIC's name"
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            startAdornment: (
-                                                <>
-                                                    <InputAdornment position="start">
-                                                        <MdAccountCircle />
-                                                    </InputAdornment>
-                                                    {params.InputProps.startAdornment}
-                                                </>
-                                            )
-                                        }}
-                                    />
-                                }
+                                renderInput={(params) => {
+                                    return (
+                                        <TextField
+                                            {...params}
+                                            label="PICs"
+                                            margin="normal"
+                                            placeholder="PIC's name"
+                                        // ref={params.InputProps.ref}
+                                        // InputProps={{
+                                        //     ...params.InputProps,
+                                        //     startAdornment: (
+                                        //         <>
+                                        //             <InputAdornment position="start">
+                                        //                 <MdAccountCircle />
+                                        //             </InputAdornment>
+                                        //             {params.InputProps.startAdornment}
+                                        //         </>
+                                        //     )
+                                        // }}
+                                        />
+                                    )
+                                }}
                                 renderOption={(option) => {
                                     return (
                                         <ListItem className={classes.itemPIC}>
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
-                                            <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
+                                            <ListItemText primary={option.fullName ? option.fullName : ""} classes={{ primary: classes.itemTextPrimary }} />
                                         </ListItem>
                                     );
                                 }}

@@ -28,7 +28,7 @@ import {
 import PropTypes from 'prop-types'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 // import { Pagination } from '@material-ui/lab';
 import classes from './Tables.module.scss'
 
@@ -42,7 +42,7 @@ function TablePaginationActions(props) {
 
     const handleFirstPageButtonClick = (event) => {
         onChangePage(event, 0) // firstPage has index = 0
-        console.log('first page: count = ', count)
+
     }
 
     const handleLastPageButtonClick = (event) => {

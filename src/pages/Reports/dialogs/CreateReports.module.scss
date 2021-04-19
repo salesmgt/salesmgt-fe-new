@@ -54,3 +54,28 @@
         background-color: $divider !important;
     }
 }
+
+
+.autoComplete {
+    margin: 0;
+    padding: 0
+}
+
+.item {
+    padding: 0;
+    margin: 0
+}
+.itemTextPrimary {
+    font-size: '0.875rem'
+}
+.itemTextSecondary {
+    font-size: '0.8rem'
+}
+
+.chipDate {
+    padding: "0.25rem";
+    font-size: '1.35rem';
+    color: '#fff';
+    background-color: '#4caf50';
+    // border-radius: "0.5rem"
+}

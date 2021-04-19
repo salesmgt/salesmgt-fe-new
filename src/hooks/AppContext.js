@@ -28,8 +28,12 @@ function useAppProvider() {
         Milk.getMilk('roles') ? Milk.getMilk('roles') : null
     )
 
-    // const [salesPurps] = useState(JSON.parse(localStorage.getItem('purps')))
-    // const [pics] = useState(null)
+    const [schYears, setSchYears] = useState(
+        Milk.getMilk('schYears') ? Milk.getMilk('schYears') : null
+    )
+    const [salesPurps, setSalesPurps] = useState(
+        Milk.getMilk('salesPurps') ? Milk.getMilk('salesPurps') : null
+    )
 
     useEffect(() => {
         FiltersServices.getDistricts()
@@ -109,37 +113,42 @@ function useAppProvider() {
             })
     }, [])
 
-    // useEffect(() => {
-    //     FiltersServices.getPurposes()
-    //         .then((data) => {
-    //             localStorage.setItem('purps', JSON.stringify(data))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-    // }, [])
+    useEffect(() => {
+        FiltersServices.getPurposes()
+            .then((data) => {
+                // localStorage.setItem('salesPurps', JSON.stringify(data))
+                Milk.setMilk('salesPurps', data)
+                setSalesPurps(Milk.getMilk('salesPurps'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
 
-    // FiltersServices.getPICs()
-    //     .then((data) => {
-    //         return data
-    //     })
-    //     .catch((error) => {
-    //         if (error.response) {
-    //             console.log(error)
-    //         }
-    //     })
+    useEffect(() => {
+        FiltersServices.getSchoolYears()
+            .then((data) => {
+                Milk.setMilk('schYears', data)
+                setSchYears(Milk.getMilk('schYears'))
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+    }, [])
 
     return {
         dists,
+        schYears,
         schEduLvls,
         schTypes,
         schScales,
         schStatus,
+        salesPurps,
         roles,
-        // salesPurps,
-        // pics,
     }
 }
 

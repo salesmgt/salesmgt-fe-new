@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core'
 import { MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useSalesman } from '../../hooks/SalesmanContext'
 import Chips from './Chips/Chips'
 import styles from './Filters.module.scss'

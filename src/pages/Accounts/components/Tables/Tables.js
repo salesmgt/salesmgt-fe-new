@@ -26,7 +26,7 @@ import {
 import PropTypes from 'prop-types'
 import { useAccount } from '../../hooks/AccountContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { roleNames } from '../../../../utils/Constants'
 import classes from './Tables.module.scss'
 
@@ -38,7 +38,6 @@ function TablePaginationActions(props) {
 
     const handleFirstPageButtonClick = (event) => {
         onChangePage(event, 0) // firstPage has index = 0
-        console.log('first page: count = ', count)
     }
 
     const handleLastPageButtonClick = (event) => {
