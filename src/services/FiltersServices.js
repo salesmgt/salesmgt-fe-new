@@ -1,4 +1,5 @@
 import Api from './Api'
+import queryString from 'query-string'
 
 //===========Schools & Target Schools===========
 export async function getSchoolYears() {
@@ -37,8 +38,9 @@ export async function getSchoolStatuses() {
     return data
 }
 
-export async function getPICs() {
-    const response = await Api.get('/users?active=true')
+export async function getPICs(convert) {
+    const paramString = queryString.stringify(convert);
+    const response = await Api.get(`/users?${paramString}`)
     const data = await response.data
     return data.list
 }
