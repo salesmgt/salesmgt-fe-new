@@ -6,7 +6,8 @@ import {
     AccordionDetails,
     Typography,
     Select,
-    Grid, Box,
+    Grid,
+    Box,
     InputLabel,
     MenuItem,
     FormControl,
@@ -19,7 +20,12 @@ import {
     // ListSubheader,
     Button,
 } from '@material-ui/core'
-import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
+import {
+    MdAccountCircle,
+    MdAdd,
+    MdExpandMore,
+    MdFilterList,
+} from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useReport } from '../../hooks/ReportContext'
@@ -28,19 +34,27 @@ import { Autocomplete } from '@material-ui/lab'
 import DateRangePickers from './DateRangePickers/DateRangePickers'
 import moment from 'moment'
 import CreateReports from '../../dialogs/CreateReports'
+import {
+    PIC_FILTER,
+    DISTRICT_FILTER,
+    SCHOOL_YEAR_FILTER,
+    PURPOSE_FILTER,
+    STATUS_FILTER,
+    DATE_RANGE_FILTER,
+} from './FilterConsts'
 import { useApp } from '../../../../hooks/AppContext'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
-const ITEM_HEIGHT = 38;
-const ITEM_PADDING_TOP = 5;
+const ITEM_HEIGHT = 38
+const ITEM_PADDING_TOP = 5
 const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-        }
-    }
-};
+        },
+    },
+}
 //==============================================================
 
 const useStyles = makeStyles((theme) => ({
@@ -52,28 +66,28 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
     },
     flexItem: {
-        padding: 0
+        padding: 0,
     },
     option: {
-        fontSize: '0.875rem'
+        fontSize: '0.875rem',
     },
     lastOption: {
         fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0'
+        borderBottom: '0.5px solid #e0e0e0',
     },
     autoComplete: {
         width: 260,
-        marginLeft: '0.5rem'
+        marginLeft: '0.5rem',
     },
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '8px'
+        borderRadius: '8px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
     itemPIC: {
         padding: 0,
-        margin: 0
+        margin: 0,
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
@@ -89,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItemSelected: {},
-}));
+}))
 
 const MuiAccordion = withStyles({
     root: {
@@ -110,7 +124,7 @@ const MuiAccordion = withStyles({
         },
     },
     expanded: {},
-})(Accordion);
+})(Accordion)
 
 const MuiAccordionSummary = withStyles({
     root: {
@@ -121,7 +135,7 @@ const MuiAccordionSummary = withStyles({
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
         // boxShadow: '1px 1px 2px gray',
-        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        boxShadow: '0 4px 6px -6px #000', // 0px 1px 1px gray
         borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
@@ -135,7 +149,7 @@ const MuiAccordionSummary = withStyles({
         },
     },
     expanded: {},
-})(AccordionSummary);
+})(AccordionSummary)
 
 const MuiAccordionDetails = withStyles(() => ({
     root: {
@@ -144,176 +158,293 @@ const MuiAccordionDetails = withStyles(() => ({
         padding: '0.3rem 0 0.3rem 1.5rem',
         borderRadius: '8px',
     },
-}))(AccordionDetails);
+}))(AccordionDetails)
 
 function Filters() {
-    const classes = useStyles();
+    const classes = useStyles()
+
+    const { dists, schYears } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
     const {
-        params, dispatchParams,
-        PICs, // districts, schoolYears, schoolStatuses,    // Gọi từ AppContext
-        PIC, district, schoolYear, purpose, schoolStatus,
-        setPIC, setDistrict, setSchoolYear,
-        setPurpose, setSchoolStatus, setDateRange
+        params,
+        dispatchParams,
+        PICs,
+        // districts,
+        // schoolYears,
+        // schoolStatuses,
+        PIC,
+        district,
+        schoolYear,
+        purpose,
+        // schoolStatus,
+        // setPIC,
+        // setDistrict,
+        // setSchoolYear,
+        // setPurpose,
+        // setSchoolStatus,
+        // setDateRange,
+        setFilter,
     } = useReport()
-    const { dists, schYears, schStatus, salesPurps } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handlePICChange = (event, newPIC) => {
-        setPIC(newPIC);
-
-        if (newPIC) {   //  !== null
-            dispatchParams({
-                type: ReducerActions.FILTER_PIC,
-                payload: { filterType: 'PIC', filterValue: newPIC }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_PIC,
-                payload: { filterType: 'PIC', filterValue: null }
-            })
-        }
-    };
+        // setPIC(newPIC)
+        // if (newPIC) {
+        //     //  !== null
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PIC,
+        //         payload: { filterType: 'PIC', filterValue: newPIC },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PIC,
+        //         payload: { filterType: 'PIC', filterValue: null },
+        //     })
+        // }
+        setFilter(PIC_FILTER, newPIC)
+        dispatchParams({
+            type: ReducerActions.FILTER_PIC,
+            payload: {
+                filterType: PIC_FILTER,
+                filterValue: newPIC ? newPIC : null,
+            },
+        })
+    }
 
     const handleDistrictChange = (event) => {
-        const selectedDistrict = event.target.value;
-        setDistrict(selectedDistrict);
+        const selectedDistrict = event.target.value
 
-        if (selectedDistrict) { // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: selectedDistrict }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: '' }
-            })
-        }
-    };
+        // setDistrict(selectedDistrict)
+        // if (selectedDistrict) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: {
+        //             filterType: 'district',
+        //             filterValue: selectedDistrict,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: { filterType: 'district', filterValue: '' },
+        //     })
+        // }
+        setFilter(DISTRICT_FILTER, selectedDistrict)
+        dispatchParams({
+            type: ReducerActions.FILTER_DISTRICT,
+            payload: {
+                filterType: DISTRICT_FILTER,
+                filterValue: selectedDistrict ? selectedDistrict : '',
+            },
+        })
+    }
 
     const handleSchoolYearChange = (event) => {
-        const selectedSchoolYear = event.target.value;
-        setSchoolYear(selectedSchoolYear);
+        const selectedSchoolYear = event.target.value
 
-        if (selectedSchoolYear) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_YEAR,
-                payload: { filterType: 'schoolYear', filterValue: selectedSchoolYear }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_YEAR,
-                payload: { filterType: 'schoolYear', filterValue: '' }
-            })
-        }
-    };
+        // setSchoolYear(selectedSchoolYear)
+        // if (selectedSchoolYear) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
+        //         payload: {
+        //             filterType: 'schoolYear',
+        //             filterValue: selectedSchoolYear,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
+        //         payload: { filterType: 'schoolYear', filterValue: '' },
+        //     })
+        // }
+        setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_YEAR,
+            payload: {
+                filterType: SCHOOL_YEAR_FILTER,
+                filterValue: selectedSchoolYear ? selectedSchoolYear : '',
+            },
+        })
+    }
 
-    const handleSchoolStatusChange = (event) => {
-        const selectedSchoolStatus = event.target.value;
-        setSchoolStatus(selectedSchoolStatus);
+    // const handleSchoolStatusChange = (event) => {
+    //     const selectedSchoolStatus = event.target.value
 
-        if (selectedSchoolStatus) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_STATUS,
-                payload: { filterType: 'status', filterValue: selectedSchoolStatus }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_STATUS,
-                payload: { filterType: 'status', filterValue: '' }
-            })
-        }
-    };
+    //     // setSchoolStatus(selectedSchoolStatus)
+    //     // if (selectedSchoolStatus) {
+    //     //     dispatchParams({
+    //     //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+    //     //         payload: {
+    //     //             filterType: 'status',
+    //     //             filterValue: selectedSchoolStatus,
+    //     //         },
+    //     //     })
+    //     // } else {
+    //     //     dispatchParams({
+    //     //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+    //     //         payload: { filterType: 'status', filterValue: '' },
+    //     //     })
+    //     // }
+    //     setFilter(STATUS_FILTER, selectedSchoolStatus)
+    //     dispatchParams({
+    //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+    //         payload: {
+    //             filterType: STATUS_FILTER,
+    //             filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
+    //         },
+    //     })
+    // }
 
     const handlePurposeChange = (event) => {
-        const selectedPurpose = event.target.value;
-        setPurpose(selectedPurpose);
+        const selectedPurpose = event.target.value
 
-        if (selectedPurpose) {  // !== '' && selectedPurpose !== undefined
-            dispatchParams({
-                type: ReducerActions.FILTER_PURPOSE,
-                payload: { filterType: 'purpose', filterValue: selectedPurpose }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_PURPOSE,
-                payload: { filterType: 'purpose', filterValue: '' }
-            })
-        }
-    };
+        // setPurpose(selectedPurpose)
+        // if (selectedPurpose) {
+        //     // !== '' && selectedPurpose !== undefined
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PURPOSE,
+        //         payload: {
+        //             filterType: 'purpose',
+        //             filterValue: selectedPurpose,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PURPOSE,
+        //         payload: { filterType: 'purpose', filterValue: '' },
+        //     })
+        // }
+        setFilter(PURPOSE_FILTER, selectedPurpose)
+        dispatchParams({
+            type: ReducerActions.FILTER_PURPOSE,
+            payload: {
+                filterType: PURPOSE_FILTER,
+                filterValue: selectedPurpose ? selectedPurpose : '',
+            },
+        })
+    }
 
     const handleDateRangeChange = (selectedDate) => {
         // Tiền xử lý format của date trước khi lưu vào context
-        if (selectedDate) {  // !== '' && selectedDate !== undefined
-            const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD');
-            const toDate = moment(selectedDate[1]).format('YYYY-MM-DD');
-
-            dispatchParams({
-                type: ReducerActions.FILTER_DATE_RANGE,
-                payload: { filterType: 'dateRange', filterValue: [fromDate, toDate] }
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_DATE_RANGE,
-                payload: { filterType: 'dateRange', filterValue: [null, null] }
-            })
-        }
-    };
+        // if (selectedDate) {
+        //     // !== '' && selectedDate !== undefined
+        //     const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
+        //     const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DATE_RANGE,
+        //         payload: {
+        //             filterType: 'dateRange',
+        //             filterValue: [fromDate, toDate],
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DATE_RANGE,
+        //         payload: { filterType: 'dateRange', filterValue: [null, null] },
+        //     })
+        // }
+        const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
+        const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
+        setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
+        dispatchParams({
+            type: ReducerActions.FILTER_PURPOSE,
+            payload: {
+                filterType: PURPOSE_FILTER,
+                filterValue: [fromDate, toDate]
+                    ? [fromDate, toDate]
+                    : [null, null],
+            },
+        })
+    }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
+    // const handleChipsRemoved = (removedFilters) => {
+    //     removedFilters.forEach((removedFilter) => {
+    //         switch (removedFilter) {
+    //             case 'PIC':
+    //                 setPIC(null)
+    //                 break
+    //             case 'district':
+    //                 setDistrict('All')
+    //                 break
+    //             case 'schoolYear':
+    //                 setSchoolYear('All')
+    //                 break
+    //             case 'status':
+    //                 setSchoolStatus('All')
+    //                 break
+    //             case 'purpose':
+    //                 setPurpose('All')
+    //                 break
+    //             case 'dateRange':
+    //                 setDateRange([null, null])
+    //                 break
+    //             default:
+    //                 break
+    //         }
+    //     })
+    // }
+
     const handleChipsRemoved = (removedFilters) => {
-        removedFilters.forEach(removedFilter => {
+        removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                case 'PIC':
-                    setPIC(null);
-                    break;
-                case 'district':
-                    setDistrict("All");
-                    break;
-                case 'schoolYear':
-                    setSchoolYear("All");
-                    break;
-                case 'status':
-                    setSchoolStatus("All");
-                    break;
-                case 'purpose':
-                    setPurpose("All");
-                    break;
-                case 'dateRange':
-                    setDateRange([null, null]);
-                    break;
+                case PIC_FILTER:
+                    setFilter(PIC_FILTER, null)
+                    break
+                // case PIC_FILTER:
+                //     setPIC(null)
+                //     break
+                case DISTRICT_FILTER:
+                    setFilter(DISTRICT_FILTER, 'All')
+                    break
+                case SCHOOL_YEAR_FILTER:
+                    setFilter(SCHOOL_YEAR_FILTER, 'All')
+                    break
+                case STATUS_FILTER:
+                    setFilter(STATUS_FILTER, 'All')
+                    break
+                case PURPOSE_FILTER:
+                    setFilter(PURPOSE_FILTER, 'All')
+                    break
+                case DATE_RANGE_FILTER:
+                    setFilter(DATE_RANGE_FILTER, [null, null])
+                    break
                 default:
-                    break;
+                    break
             }
-        });
-    };
+        })
+    }
 
     const generateChipsArray = (listFilters) => {
-        const listChips = [];
+        const listChips = []
         let newListFilters = { ...listFilters }
 
         for (const chip in newListFilters) {
-            if (chip === 'dateRange') {
-                const fromDate = moment(newListFilters[chip].filterValue[0]).format('MMM D, YYYY')
-                const toDate = moment(newListFilters[chip].filterValue[1]).format('MMM D, YYYY')
+            if (chip === DATE_RANGE_FILTER) {
+                const fromDate = moment(
+                    newListFilters[chip].filterValue[0]
+                ).format('MMM D, YYYY')
+                const toDate = moment(
+                    newListFilters[chip].filterValue[1]
+                ).format('MMM D, YYYY')
 
                 if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
                     newListFilters = {
                         ...newListFilters,
                         dateRange: {
-                            filterType: 'dateRange',
-                            filterValue: `${fromDate} ➜ ${toDate}`
-                        }
+                            filterType: DATE_RANGE_FILTER,
+                            filterValue: `${fromDate} ➜ ${toDate}`,
+                        },
                     }
                 }
             }
-            listChips.push(newListFilters[chip]);
+            listChips.push(newListFilters[chip])
         }
-        return listChips;
+        return listChips
     }
     //===============================================================================
 
@@ -321,18 +452,23 @@ function Filters() {
     const handleSearch = (keyword) => {
         dispatchParams({
             type: ReducerActions.ENTER_SEARCH_KEYWORD,
-            payload: keyword
+            payload: keyword,
         })
     }
 
     return (
         <div className={styles.wrapper}>
             <MuiAccordion>
-                <Box display="flex" flexWrap="nowrap" className={classes.flexBox}>
+                <Box
+                    display="flex"
+                    flexWrap="nowrap"
+                    className={classes.flexBox}
+                >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList className={styles.iconFilter} /> &nbsp;
-                        <Typography>Filters</Typography>
+                            <MdFilterList className={styles.iconFilter} />{' '}
+                            &nbsp;
+                            <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -343,7 +479,10 @@ function Filters() {
                         />
                     </Box>
                     <Box className={classes.flexItem}>
-                        <SearchFields placeholder="Search..." onChange={handleSearch} />
+                        <SearchFields
+                            placeholder="Search..."
+                            onChange={handleSearch}
+                        />
                     </Box>
                     <Box className={classes.flexItem}>
                         <Button
@@ -352,7 +491,8 @@ function Filters() {
                             color="secondary"
                             onClick={() => setOpenCreateDialog(true)}
                         >
-                            <MdAdd fontSize="large" />&nbsp;Create
+                            <MdAdd fontSize="large" />
+                            &nbsp;Create
                         </Button>
                         <CreateReports
                             open={openCreateDialog}
@@ -369,9 +509,10 @@ function Filters() {
                                 autoHighlight
                                 clearOnEscape
                                 options={PICs}
-                                getOptionLabel={(pic) => pic.fullName}
+                                // getOptionLabel={(pic) => pic.fullName}
+                                getOptionLabel={(PIC) => PIC.fullName}
                                 value={PIC}
-                                renderInput={(params) =>
+                                renderInput={(params) => (
                                     <TextField
                                         {...params}
                                         label="PICs"
@@ -384,12 +525,15 @@ function Filters() {
                                                     <InputAdornment position="start">
                                                         <MdAccountCircle />
                                                     </InputAdornment>
-                                                    {params.InputProps.startAdornment}
+                                                    {
+                                                        params.InputProps
+                                                            .startAdornment
+                                                    }
                                                 </>
-                                            )
+                                            ),
                                         }}
                                     />
-                                }
+                                )}
                                 renderOption={(option) => {
                                     return (
                                         <ListItem className={classes.itemPIC}>
@@ -398,20 +542,29 @@ function Filters() {
                                             </ListItemAvatar>
                                             <ListItemText
                                                 primary={option.fullName}
-                                                classes={{ primary: classes.itemTextPrimary }}
+                                                classes={{
+                                                    primary:
+                                                        classes.itemTextPrimary,
+                                                }}
                                             />
                                         </ListItem>
-                                    );
+                                    )
                                 }}
                                 className={classes.autoComplete}
-                                onChange={(event, newPIC) => handlePICChange(event, newPIC)}
+                                onChange={(event, newPIC) =>
+                                    handlePICChange(event, newPIC)
+                                }
                             />
                         </Grid>
 
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
-                                <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={district}
+                                    onChange={handleDistrictChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -429,7 +582,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {dist}
@@ -442,7 +596,11 @@ function Filters() {
                         <Grid item xs={6} sm={6} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Years</InputLabel>
-                                <Select value={schoolYear} onChange={handleSchoolYearChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolYear}
+                                    onChange={handleSchoolYearChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -460,7 +618,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {year}
@@ -481,7 +640,11 @@ function Filters() {
                         {/* <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
-                                <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolStatus}
+                                    onChange={handleSchoolStatusChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -499,7 +662,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {status}

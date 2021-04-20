@@ -1,39 +1,54 @@
 export const Consts = {
     headers: {
-        child1: 'Create Account',
+        child1: 'Create School',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
+        WithData: 'Withr Representative',
     },
     fields: {
-        username: {
-            title: 'Username',
-        },
-        fullName: {
-            title: 'Full Name',
-        },
-        gender: {
-            title: 'Gender',
-        },
-        birthDate: {
-            title: 'Birthday',
-            format: 'dd/MM/yyyy',
-        },
-        email: {
-            title: 'Email',
-        },
-        phone: {
-            title: 'Phone Number',
+        name: {
+            title: 'School Name',
         },
         addr: {
             title: 'Address',
         },
-        status: {
-            title: 'Account Active',
+        dist: {
+            title: 'District',
         },
-        roles: {
-            title: 'Roles',
+        status: {
+            title: 'School Active',
+        },
+        eduLvl: {
+            title: 'Educational Level',
+        },
+        scale: {
+            title: 'School Scale',
+        },
+        type: {
+            title: 'School Type',
+        },
+        salesStatus: {
+            title: 'School Status',
+        },
+        des: {
+            title: 'Description',
+        },
+        tel: {
+            title: 'Tel',
+        },
+        repName: {
+            title: 'Full Name',
+        },
+        repGender: {
+            title: 'Gender',
+        },
+        repEmail: {
+            title: 'Email',
+        },
+        repPhone: {
+            title: 'Phone Number',
         },
     },
 }

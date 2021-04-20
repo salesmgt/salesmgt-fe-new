@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     Button,
+    FormControl,
     FormControlLabel,
     Grid,
     InputLabel,
@@ -14,38 +15,26 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core'
-import { MuiPickersUtilsProvider, DatePicker } from 'mui-pickers-v3' // '@material-ui/pickers'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from 'mui-pickers-v3' // '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
+import moment from 'moment'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
-import { NotFound, Snackbars } from '../../../../components'
+import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import * as AccountsServices from '../../AccountsServices'
 import classes from './GenInfo.module.scss'
-import moment from 'moment'
 
 const clientSchema = yup.object().shape({
     phone: yup
         .string()
-        .max(11, 'Phone must be at most 10 characters')
-        .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
-    // email: yup.string().email('Invalid email').trim(),
+        .required('Phone is required')
+        .max(10, 'Phone must be at most 10 digits')
+        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+    address: yup.string().trim(),
 })
-
-// const serverSchema = [
-//     {
-//         type: 'server',
-//         name: 'name',
-//         message: null,
-//     },
-//     {
-//         type: 'server',
-//         name: 'credential',
-//         message: 'Invalid username or password',
-//     },
-// ]
 
 const ITEM_HEIGHT = 120
 const MenuProps = {
@@ -87,8 +76,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function GenInfo(props) {
-    const styles = useStyles()
+    const { account, refreshPage } = props
     const { headers, operations, fields } = Consts
+    const styles = useStyles()
 
     const history = useHistory()
 
@@ -100,53 +90,59 @@ function GenInfo(props) {
 
     const { roles } = useApp()
 
-    const { data, refreshPage } = props
-
-    console.log("GenInfo data: ", data);
-
     const defaultValues = {
-        username: data?.username,
-        phone: data?.phone,
-        email: data?.email,
-        gender: String(data?.gender),
-        birthDate: data?.birthDate,
-        roleName: data?.roleName,
-        active: data?.active,
+        username: account?.username,
+        phone: account?.phone,
+        email: account?.email,
+        isMale: String(account?.isMale),
+        birthDate: account?.birthDate,
+        roleName: account?.roleName,
+        active: account?.active,
     }
 
-    const { control, errors, handleSubmit, formState } = useForm({
+    const { control, errors, handleSubmit, formState, reset } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
 
+    useEffect(() => {
+        reset({
+            username: account?.username,
+            phone: account?.phone,
+            email: account?.email,
+            isMale: String(account?.isMale),
+            birthDate: account?.birthDate,
+            roleName: account?.roleName,
+            active: account?.active,
+        })
+    }, [account])
+
     if (!roles) {
-        return null
+        return <Loading />
     }
 
-    if (!data) {
-        return <NotFound />
+    if (!account) {
+        return <Loading />
     }
 
-    const onSubmit = (dto) => {
-        const rs = {
-            ...dto,
-            gender: dto.gender === 'true' ? true : false,
-            birthDate: dto.birthDate
-                ? moment(dto.birthDate).format('YYYY-MM-DD')
+    const onSubmit = (data) => {
+        const model = {
+            ...data,
+            fullName: account?.fullName,
+            gender: data?.gender === 'true' ? true : false,
+            birthDate: data?.birthDate
+                ? moment(data?.birthDate).format('YYYY-MM-DD')
                 : null,
         }
-        console.log(dto.username)
-        console.log(rs)
-        AccountsServices.updateAccount(dto.username, rs)
-            .then((data) => {
-                refreshPage(dto.username)
+
+        AccountsServices.updateAccount(data?.username, model)
+            .then((res) => {
+                refreshPage(data.username)
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',
                     type: 'success',
                 })
-
-                console.log("Successfull data: ", data);
             })
             .catch((error) => {
                 if (error.response) {
@@ -162,12 +158,8 @@ function GenInfo(props) {
                     type: 'error',
                 })
             })
-        alert(JSON.stringify(rs))
-        // setNotify({
-        //     isOpen: true,
-        //     message: 'Updated Successfully',
-        //     type: 'success',
-        // })
+
+        alert(JSON.stringify(model))
     }
 
     return (
@@ -322,7 +314,7 @@ function GenInfo(props) {
                                                             variant="outlined"
                                                             required
                                                             fullWidth
-                                                            autoFocus
+                                                            // autoFocus
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
@@ -345,10 +337,10 @@ function GenInfo(props) {
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    {fields.gender.title}
+                                                    {fields.isMale.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="gender"
+                                                    name="isMale"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -394,7 +386,7 @@ function GenInfo(props) {
                                                             ref,
                                                             ...rest
                                                         }) => (
-                                                            <DatePicker
+                                                            <KeyboardDatePicker
                                                                 label={
                                                                     fields
                                                                         .birthDate
@@ -421,52 +413,53 @@ function GenInfo(props) {
                                                 lg={12}
                                                 className={classes.roleZone}
                                             >
-                                                <InputLabel>
-                                                    {fields.auth.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="roleName"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            // label={
-                                                            //     fields.auth
-                                                            //         .title
-                                                            // }
-                                                            // variant="outlined"
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
-                                                        >
-                                                            {roles.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
-                                                />
+                                                <FormControl required>
+                                                    <InputLabel>
+                                                        {fields.roles.title}
+                                                    </InputLabel>
+                                                    <Controller
+                                                        name="roleName"
+                                                        control={control}
+                                                        render={({
+                                                            value,
+                                                            onChange,
+                                                        }) => (
+                                                            <Select
+                                                                value={value}
+                                                                onChange={
+                                                                    onChange
+                                                                }
+                                                                MenuProps={
+                                                                    MenuProps
+                                                                }
+                                                                disableUnderline
+                                                            >
+                                                                {roles.map(
+                                                                    (data) => (
+                                                                        <MenuItem
+                                                                            key={
+                                                                                data
+                                                                            }
+                                                                            value={
+                                                                                data
+                                                                            }
+                                                                            classes={{
+                                                                                root:
+                                                                                    styles.menuItemRoot,
+                                                                                selected:
+                                                                                    styles.menuItemSelected,
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                data
+                                                                            }
+                                                                        </MenuItem>
+                                                                    )
+                                                                )}
+                                                            </Select>
+                                                        )}
+                                                    />
+                                                </FormControl>
                                             </Grid>
                                             <Grid
                                                 item
@@ -529,4 +522,4 @@ function GenInfo(props) {
     )
 }
 
-export default GenInfo
+export default React.memo(GenInfo)

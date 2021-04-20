@@ -10,12 +10,7 @@ import {
     useHistory,
 } from 'react-router-dom'
 import { IconContext } from 'react-icons'
-import {
-    MdMenu,
-    MdNotifications,
-    MdAccountCircle,
-    MdChevronLeft,
-} from 'react-icons/md'
+import { MdMenu, MdNotifications, MdChevronLeft } from 'react-icons/md'
 import {
     AppBar,
     Toolbar,
@@ -35,17 +30,20 @@ import useToggle from '../../hooks/useToggle'
 import { getMenuItems } from './AppLayoutsConfig'
 import { Profiles } from '../../pages'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleRoutes } from '../../routes/routes'
+import { defaultRoutes, roleRoutes } from '../../routes/routes'
+import * as UserServices from '../../services/UserServices'
+import { UserMenu } from './components'
 import classes from './AppLayouts.module.scss'
 
-function AppLayouts(props) {
+function AppLayouts() {
     const { url } = useRouteMatch()
     const location = useLocation()
     const history = useHistory()
 
     const { user } = useAuth()
-
     const menuItems = getMenuItems(user.roles[0])
+
+    const [userInfo, setUserInfo] = useState(null)
 
     const [open, setOpen] = useToggle(
         window.matchMedia('(max-width: 960px)').matches ? false : true
@@ -87,7 +85,7 @@ function AppLayouts(props) {
 
     //---------------------------------------Notifications---------------------------------------
 
-    const notifData = 'notif-'.repeat(20).split('-')
+    const notifData = 'notif-'.repeat(4).split('-')
 
     const ITEM_HEIGHT = 48
     const [notifAnchorEl, setNotifAnchorEl] = useState(null)
@@ -133,6 +131,26 @@ function AppLayouts(props) {
         </Menu>
     )
 
+    useEffect(() => {
+        UserServices.getProfile(user.username)
+            .then((data) => {
+                setUserInfo(data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+    }, [])
+
+    if (!userInfo) {
+        return null
+    }
+
     // React.useEffect(() => {
     //     console.log('has changed')
     // }, [notifAnchorEl])
@@ -142,7 +160,7 @@ function AppLayouts(props) {
     return (
         <div className={classes.root}>
             {/* AppBar area */}
-            <IconContext.Provider value={{ color: '#fff' }}>
+            <IconContext.Provider value={{ color: 'rgba(0, 0, 0, 0.54)' }}>
                 <AppBar
                     className={clsx(
                         classes.appBar,
@@ -170,17 +188,18 @@ function AppLayouts(props) {
 
                         {/* Remember to set badge content */}
                         <IconButton onClick={handleNotifMenuOpen}>
-                            <StyledBadge badgeContent={17}>
+                            <StyledBadge badgeContent={4}>
                                 <MdNotifications />
                             </StyledBadge>
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                             edge="end"
                             component={Link}
                             to={`${url}/profiles/${user.username}`}
                         >
                             <MdAccountCircle />
-                        </IconButton>
+                        </IconButton> */}
+                        <UserMenu userInfo={userInfo} />
                     </Toolbar>
                 </AppBar>
                 {renderNotifMenu}
@@ -209,11 +228,7 @@ function AppLayouts(props) {
                             className={classes.majorImg}
                             alt="major-logos"
                             onClick={() => {
-                                if (user.roles[0] === 'ADMIN') {
-                                    history.push(`${url}/accounts`)
-                                } else {
-                                    history.push(`${url}/dashboards`)
-                                }
+                                history.push(defaultRoutes[user.roles[0]].route)
                             }}
                         />
                     </div>

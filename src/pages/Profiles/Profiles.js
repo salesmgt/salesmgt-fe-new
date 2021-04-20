@@ -18,7 +18,7 @@ import {
     Icon,
 } from '@material-ui/core'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
-import { MdEdit, MdExitToApp, MdPhotoCamera } from 'react-icons/md'
+import { MdEdit, MdPhotoCamera } from 'react-icons/md'
 import { Animation, AnimationGroup, NotFound } from '../../components'
 import * as ProfilesServices from './ProfilesServices'
 import { Consts } from './ProfilesConfig'
@@ -31,7 +31,7 @@ import { useAuth } from '../../hooks/AuthContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
-import { Snackbars } from '../../components'
+import { Snackbars, Loading } from '../../components'
 import classes from './Profiles.module.scss'
 
 const pwdSchema = yup.object().shape({
@@ -55,8 +55,8 @@ const pwdSchema = yup.object().shape({
 const emailSchema = yup.object().shape({
     email: yup
         .string()
-        .email('Invalid email')
         .trim()
+        .email('Invalid email')
         .required('Email is required'),
 })
 
@@ -64,7 +64,8 @@ const phoneSchema = yup.object().shape({
     phone: yup
         .string()
         .required('Phone is required')
-        .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .max(10, 'Phone must be at most 10 digits')
+        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
 })
 
 const addrSchema = yup.object().shape({
@@ -172,7 +173,7 @@ function Profiles() {
         if (id !== user.username) {
             return <NotFound title="User not found!" />
         }
-        return null
+        return <Loading />
     }
 
     const {
@@ -181,7 +182,7 @@ function Profiles() {
         email,
         phone,
         avatar,
-        gender,
+        isMale,
         address,
         birthDate,
     } = data
@@ -240,7 +241,7 @@ function Profiles() {
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
-                (snapshot) => { },
+                (snapshot) => {},
                 (error) => {
                     console.log(error)
                     reject('Upload Image to firebase failed: ' + error)
@@ -261,7 +262,6 @@ function Profiles() {
     }
 
     const saveAvatarToDb = (url) => {
-        // console.log('saveAvatarToDb -- url = ', url);
         ProfilesServices.updateGeneral(user.username, 'avatar', url)
             .then((data) => {
                 refreshPage()
@@ -409,12 +409,10 @@ function Profiles() {
         setExpanded(isExpanded ? panel : false)
     }
 
-    // return React.useMemo(() => {}, [user])
-
     return (
         <div className={classes.wrapper}>
             <div className={classes.infoContent}>
-                <div className={classes.logout}>
+                {/* <div className={classes.logout}>
                     <Button
                         startIcon={<MdExitToApp />}
                         className={classes.logoutBtn}
@@ -422,15 +420,15 @@ function Profiles() {
                     >
                         {operations.logout}
                     </Button>
-                </div>
+                </div> */}
                 <div className={classes.infoAvatar}>
                     <Animation animation="transition.expandIn" delay={300}>
                         <Avatar className={classes.avatar} src={avatar} />
                     </Animation>
                     <input
+                        id="icon-button-file"
                         className={classes.inputAvatar}
                         accept="image/*"
-                        id="icon-button-file"
                         type="file"
                         onChange={(event) => handleUploadAvatar(event)}
                     />
@@ -708,12 +706,12 @@ function Profiles() {
                                 </Grid>
                             </div>
 
-                            {/* Gender section */}
+                            {/* isMale section */}
                             <div className={classes.cardText}>
                                 <Grid container spacing={2}>
                                     <Grid item sm={3} md={3} lg={3}>
                                         <Typography className={classes.titles}>
-                                            {fields.gender.title}
+                                            {fields.isMale.title}
                                         </Typography>
                                     </Grid>
                                     <Grid item sm={6} md={6} lg={6}>
@@ -721,10 +719,10 @@ function Profiles() {
                                             <Typography
                                                 className={classes.details}
                                             >
-                                                {gender ? 'Male' : 'Female'}
+                                                {isMale ? 'Male' : 'Female'}
                                             </Typography>
                                             <Icon>
-                                                {gender ? (
+                                                {isMale ? (
                                                     <AiOutlineMan color="#005BB5" />
                                                 ) : (
                                                     <AiOutlineWoman color="#E26A89" />
@@ -997,7 +995,6 @@ function Profiles() {
                                                     }
                                                     fullWidth
                                                     autoFocus
-                                                    required
                                                     name="address"
                                                     label={fields.address.label}
                                                     variant="outlined"

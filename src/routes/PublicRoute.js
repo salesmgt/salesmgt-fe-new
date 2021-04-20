@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { useAuth } from '../hooks/AuthContext'
+import { roleNames } from '../utils/Constants'
 
 function PublicRoute(props) {
     const { component: Component, restricted, ...rest } = props
@@ -18,7 +19,7 @@ function PublicRoute(props) {
                     // <Redirect to="/apps/accounts" />
                     <Redirect
                         to={
-                            user.roles[0] !== 'ADMIN'
+                            user.roles[0] !== roleNames.admin
                                 ? '/apps/dashboards'
                                 : '/apps/accounts'
                         }

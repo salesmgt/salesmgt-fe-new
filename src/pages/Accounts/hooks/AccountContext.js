@@ -1,13 +1,6 @@
-import React, {
-    useState,
-    useContext,
-    createContext,
-    useReducer,
-    useEffect,
-} from 'react'
-import { useHistory } from 'react-router'
-import * as FiltersServices from '../../../services/FiltersServices'
+import React, { useState, useContext, createContext, useReducer } from 'react'
 import { AccountReducer } from './AccountReducer'
+import { ACTIVE_FILTER, ROLE_FILTER } from '../components/Filters/FilterConsts'
 
 const AccountContext = createContext()
 
@@ -15,15 +8,19 @@ export function useAccount() {
     return useContext(AccountContext)
 }
 
-function useAccountProvider() {
-    const history = useHistory()
+let defaultFilters = {
+    isActive: { filterType: ACTIVE_FILTER, filterValue: true },
+    role: { filterType: ROLE_FILTER, filterValue: '' },
+}
 
+function useAccountProvider() {
     // Reducer
     const [params, dispatchParams] = useReducer(AccountReducer, {
-        listFilters: {
-            isActive: { filterType: 'isActive', filterValue: true },
-            role: { filterType: 'role', filterValue: '' },
-        },
+        // listFilters: {
+        //     isActive: { filterType: 'isActive', filterValue: true },
+        //     role: { filterType: 'role', filterValue: '' },
+        // },
+        listFilters: defaultFilters,
         searchKey: '',
         page: 0,
         limit: 10,
@@ -40,8 +37,18 @@ function useAccountProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    const [active, setActive] = useState(true)
-    const [role, setRole] = useState('')
+    // const [active, setActive] = useState(true)
+    // const [role, setRole] = useState('')
+
+    const [active, setActive] = useState(
+        defaultFilters.isActive.filterValue
+            ? defaultFilters.isActive.filterValue
+            : true
+    )
+
+    const [role, setRole] = useState(
+        defaultFilters.role.filterValue ? defaultFilters.role.filterValue : ''
+    )
 
     // APIs
     // const isActives = [true, false]  // bỏ, chỉ có 2 gtrị thì làm luôn FE
@@ -70,6 +77,28 @@ function useAccountProvider() {
     //     getRolesFilter()
     // }, [])
 
+    // fix major BUG
+    const setFilter = (key, value) => {
+        switch (key) {
+            case ACTIVE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    isActive: { filterType: ACTIVE_FILTER, filterValue: value },
+                }
+                setActive(value)
+                break
+            case ROLE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    role: { filterType: ROLE_FILTER, filterValue: value },
+                }
+                setRole(value)
+                break
+            default:
+                break
+        }
+    }
+
     return {
         params,
         dispatchParams,
@@ -83,9 +112,10 @@ function useAccountProvider() {
         column,
         setColumn,
         active,
-        setActive,
+        // setActive,
         role,
-        setRole,
+        // setRole,
+        setFilter,
     }
 }
 

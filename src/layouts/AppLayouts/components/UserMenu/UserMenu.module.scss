@@ -1,0 +1,40 @@
+@import '../../../../styles/Variables.module.scss';
+
+.user {
+    min-height: 2rem;
+    min-width: 2rem;
+    // padding: 0rem;
+    // @media (min-width: $md) {
+    //     padding: 0.6rem 1.6rem;
+    // }
+    // @media (hover: none) {
+    //     background-color: transparent;
+    // }
+    .info {
+        display: none;
+        @media (min-width: $md) {
+            display: flex;
+        }
+        margin: 0rem 0.4rem;
+        flex-direction: column;
+        align-items: flex-end;
+        .name {
+            font-weight: 500;
+            display: flex;
+        }
+        .role {
+            // text-transform: capitalize;
+            font-size: 0.875rem;
+            color: $secondary-text;
+        }
+    }
+    .avatar {
+        @media (min-width: $md) {
+            margin: 0rem 0.4rem;
+        }
+    }
+}
+
+.menuIcon {
+    min-width: 4rem !important;
+}

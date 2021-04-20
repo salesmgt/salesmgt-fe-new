@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
     makeStyles,
     Button,
@@ -14,31 +15,23 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
-import { useAuth } from '../../../../hooks/AuthContext'
-import { Snackbars } from '../../../../components'
+import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './GenInfoConfig'
+import * as SchoolsServices from '../../SchoolsServices'
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({
-    name: yup.string().trim().required('Name is required'),
-    addr: yup.string().required('Address is required'),
-    email: yup.string().email('Invalid email').trim(),
-    tel: yup.string().matches(/(84|02)+([0-9]{9})\b/g, 'Incorrect entry'),
-    des: yup.string(),
+    name: yup
+        .string()
+        .trim()
+        .min(3, 'Name must be at least 3 characters')
+        .required('Name is required'),
+    address: yup.string().trim().required('Address is required'),
+    phone: yup
+        .string()
+        .max(11, 'Tel must be at most 11 digits')
+        .matches(/(02)+([0-9]{9})\b/g, 'Incorrect entry'),
 })
-
-const serverSchema = [
-    // {
-    //     type: 'server',
-    //     name: 'name',
-    //     message: null,
-    // },
-    // {
-    //     type: 'server',
-    //     name: 'credential',
-    //     message: 'Invalid username or password',
-    // },
-]
 
 const ITEM_HEIGHT = 120
 const MenuProps = {
@@ -73,8 +66,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function GenInfo(props) {
+    const { school, refreshPage } = props
     const { headers, operations, fields } = Consts
     const styles = useStyles()
+
+    const history = useHistory()
 
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -82,53 +78,100 @@ function GenInfo(props) {
         type: '',
     })
 
-    const { user } = useAuth()
-    const { dists, schEduLvls, schScales, schTypes, schStatus } = useApp()
-
-    const { data } = props
+    const { dists, schEduLvls, schTypes, schScales } = useApp()
 
     const defaultValues = {
-        name: data?.name,
-        active: data?.active,
-        addr: data?.addr,
-        tel: data?.tel,
-        email: data?.email,
-        dist: data?.dist,
-        eduLvl: data?.eduLvl,
-        scale: data?.scale,
-        type: data?.type,
-        status: data?.status,
-        des: data?.des,
+        id: school?.id,
+        name: school?.name,
+        address: school?.address,
+        district: school?.district,
+
+        educationalLevel: school?.educationalLevel,
+        scale: school?.scale,
+        type: school?.type,
+        phone: school?.phone,
+
+        active: school?.active,
     }
 
-    const { control, errors, handleSubmit, formState } = useForm({
+    const { control, errors, handleSubmit, formState, reset } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
 
+    useEffect(() => {
+        reset({
+            id: school?.id,
+            name: school?.name,
+            address: school?.address,
+            district: school?.district,
+
+            educationalLevel: school?.educationalLevel,
+            scale: school?.scale,
+            type: school?.type,
+            phone: school?.phone,
+
+            active: school?.active,
+        })
+    }, [school])
+
     if (!dists) {
-        return null
+        return <Loading />
     }
+
     if (!schEduLvls) {
-        return null
+        return <Loading />
     }
-    if (!schScales) {
-        return null
-    }
+
     if (!schTypes) {
-        return null
+        return <Loading />
     }
-    if (!schStatus) {
-        return null
+
+    if (!schScales) {
+        return <Loading />
+    }
+
+    if (!school) {
+        return <Loading />
     }
 
     const onSubmit = (data) => {
-        alert(JSON.stringify(data))
-        setNotify({
-            isOpen: true,
-            message: 'Updated Successfully',
-            type: 'success',
-        })
+        const model = {
+            ...data,
+            description: school?.description,
+            status: school?.status,
+            reprName: school?.reprName,
+            reprIsMale: school?.reprIsMale,
+            reprPhone: school?.reprPhone,
+            reprEmail: school?.reprEmail,
+        }
+
+        SchoolsServices.updateSchool(data.id, model)
+            .then((res) => {
+                refreshPage(data.id)
+
+                setNotify({
+                    isOpen: true,
+                    message: 'Updated Successfully',
+                    type: 'success',
+                })
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+                setNotify({
+                    isOpen: true,
+                    message: 'Update Unsuccessful',
+                    type: 'error',
+                })
+            })
+
+        alert(JSON.stringify(model))
     }
 
     return (
@@ -177,7 +220,7 @@ function GenInfo(props) {
                                         xs={12}
                                         sm={12}
                                         md={7}
-                                        lg={7}
+                                        lg={5}
                                         className={classes.detailZone}
                                     >
                                         <Grid container spacing={3}>
@@ -190,6 +233,17 @@ function GenInfo(props) {
                                                 lg={12}
                                             >
                                                 <Controller
+                                                    name="id"
+                                                    control={control}
+                                                    render={({ value }) => (
+                                                        <input
+                                                            type="hidden"
+                                                            name="id"
+                                                            value={value}
+                                                        />
+                                                    )}
+                                                />
+                                                <Controller
                                                     name="name"
                                                     control={control}
                                                     render={({
@@ -198,8 +252,8 @@ function GenInfo(props) {
                                                     }) => (
                                                         <TextField
                                                             label={
-                                                                fields.school
-                                                                    .name.title
+                                                                fields.name
+                                                                    .title
                                                             }
                                                             variant="outlined"
                                                             required
@@ -218,7 +272,6 @@ function GenInfo(props) {
                                                     )}
                                                 />
                                             </Grid>
-
                                             <Grid
                                                 item
                                                 xs={12}
@@ -227,7 +280,7 @@ function GenInfo(props) {
                                                 lg={9}
                                             >
                                                 <Controller
-                                                    name="addr"
+                                                    name="address"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -235,8 +288,8 @@ function GenInfo(props) {
                                                     }) => (
                                                         <TextField
                                                             label={
-                                                                fields.school
-                                                                    .addr.title
+                                                                fields.addr
+                                                                    .title
                                                             }
                                                             variant="outlined"
                                                             required
@@ -244,10 +297,10 @@ function GenInfo(props) {
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
-                                                                !!errors.addr
+                                                                !!errors.address
                                                             }
                                                             helperText={
-                                                                errors?.addr
+                                                                errors?.address
                                                                     ?.message
                                                             }
                                                         />
@@ -256,16 +309,16 @@ function GenInfo(props) {
                                             </Grid>
                                             <Grid
                                                 item
-                                                xs={9}
+                                                xs={12}
                                                 sm={3}
                                                 md={3}
                                                 lg={3}
                                             >
                                                 <InputLabel>
-                                                    {fields.school.dist.title}
+                                                    {fields.dist.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="dist"
+                                                    name="district"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -303,19 +356,18 @@ function GenInfo(props) {
                                                     )}
                                                 />
                                             </Grid>
-
                                             <Grid
                                                 item
-                                                xs={9}
+                                                xs={12}
                                                 sm={6}
                                                 md={6}
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    {fields.school.eduLvl.title}
+                                                    {fields.eduLvl.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="eduLvl"
+                                                    name="educationalLevel"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -355,62 +407,13 @@ function GenInfo(props) {
                                             </Grid>
                                             <Grid
                                                 item
-                                                xs={9}
+                                                xs={12}
                                                 sm={6}
                                                 md={6}
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    {fields.school.scale.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="scale"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
-                                                        >
-                                                            {schScales.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={9}
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                            >
-                                                <InputLabel>
-                                                    {fields.school.type.title}
+                                                    {fields.type.title}
                                                 </InputLabel>
                                                 <Controller
                                                     name="type"
@@ -453,19 +456,16 @@ function GenInfo(props) {
                                             </Grid>
                                             <Grid
                                                 item
-                                                xs={6}
+                                                xs={12}
                                                 sm={6}
                                                 md={6}
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    {
-                                                        fields.school
-                                                            .salesStatus.title
-                                                    }
+                                                    {fields.scale.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="status"
+                                                    name="scale"
                                                     control={control}
                                                     render={({
                                                         value,
@@ -479,7 +479,7 @@ function GenInfo(props) {
                                                             }
                                                             disableUnderline
                                                         >
-                                                            {schStatus.map(
+                                                            {schScales.map(
                                                                 (data) => (
                                                                     <MenuItem
                                                                         key={
@@ -503,196 +503,81 @@ function GenInfo(props) {
                                                     )}
                                                 />
                                             </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={12}
+                                                md={12}
+                                                lg={12}
+                                            >
+                                                <Controller
+                                                    name="phone"
+                                                    control={control}
+                                                    render={({
+                                                        value,
+                                                        onChange,
+                                                    }) => (
+                                                        <TextField
+                                                            label={
+                                                                fields.tel.title
+                                                            }
+                                                            variant="outlined"
+                                                            fullWidth
+                                                            value={value}
+                                                            onChange={onChange}
+                                                            error={
+                                                                !!errors.phone
+                                                            }
+                                                            helperText={
+                                                                errors?.phone
+                                                                    ?.message
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={12}
+                                                md={12}
+                                                lg={12}
+                                            >
+                                                <InputLabel>
+                                                    {fields.status.title}
+                                                </InputLabel>
+                                                <Controller
+                                                    name="active"
+                                                    control={control}
+                                                    render={({
+                                                        value,
+                                                        onChange,
+                                                    }) => (
+                                                        <Switch
+                                                            checked={value}
+                                                            onChange={(e) =>
+                                                                onChange(
+                                                                    e.target
+                                                                        .checked
+                                                                )
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            {/* Second child - Contact detail*/}
 
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="des"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.school
-                                                                    .des.title
-                                                            }
-                                                            variant="outlined"
-                                                            fullWidth
-                                                            multiline
-                                                            rows={5}
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.name
-                                                            }
-                                                            helperText={
-                                                                errors?.name
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                            {user.roles[0] === 'ADMIN' && (
-                                                <Grid
-                                                    item
-                                                    xs={12}
-                                                    sm={12}
-                                                    md={12}
-                                                    lg={12}
-                                                >
-                                                    <InputLabel>
-                                                        {
-                                                            fields.school.status
-                                                                .title
-                                                        }
-                                                    </InputLabel>
-                                                    <Controller
-                                                        name="active"
-                                                        control={control}
-                                                        render={({
-                                                            value,
-                                                            onChange,
-                                                        }) => (
-                                                            <Switch
-                                                                checked={value}
-                                                                onChange={(e) =>
-                                                                    onChange(
-                                                                        e.target
-                                                                            .checked
-                                                                    )
-                                                                }
-                                                            />
-                                                        )}
-                                                    />
-                                                </Grid>
-                                            )}
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            {/* Second child - Contact detail*/}
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={12}
-                                lg={12}
-                                className={classes.child}
-                            >
-                                <Grid container spacing={0}>
-                                    {/* Child title */}
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={3}
-                                        lg={3}
-                                        className={classes.titleZone}
-                                    >
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.title}
-                                        >
-                                            {headers.child2}
-                                        </Typography>
-                                    </Grid>
-                                    {/* Child detail */}
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={7}
-                                        className={classes.detailZone}
-                                    >
-                                        <Grid container spacing={3}>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="tel"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.contact
-                                                                    .tel.title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={!!errors.tel}
-                                                            helperText={
-                                                                errors?.tel
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="email"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.contact
-                                                                    .email.title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.email
-                                                            }
-                                                            helperText={
-                                                                errors?.email
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
                             {/* Action */}
                             <Grid
                                 item
                                 xs={12}
                                 sm={12}
                                 md={10}
-                                lg={10}
+                                lg={8}
                                 className={classes.action}
                             >
                                 <Button

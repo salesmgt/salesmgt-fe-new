@@ -10,7 +10,7 @@ export const Consts = {
         username: {
             title: 'Username',
         },
-        gender: {
+        isMale: {
             title: 'Gender',
         },
         birthDate: {
@@ -29,7 +29,7 @@ export const Consts = {
         status: {
             title: 'Account Active',
         },
-        auth: {
+        roles: {
             title: 'Roles',
         },
     },

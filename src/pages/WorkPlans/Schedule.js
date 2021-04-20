@@ -415,7 +415,7 @@ const Schedule = (props) => {
                             allowDragAndDrop
                             fields={{ dataSource: props?.tree, id: 'id', text: 'schoolName' }}
                             nodeDragStop={onTreeDragStop}
-                          // nodeTemplate={treeTemplate}
+                            // nodeTemplate={treeTemplate}
                             nodeDragging={onItemDrag}
                         />
                         <div>

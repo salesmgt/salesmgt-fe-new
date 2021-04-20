@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -15,10 +15,21 @@ import {
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
+import Chips from './Chips/Chips'
+import CreateSchool from '../../dialogs/CreateSchool'
 import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useSchool } from '../../hooks/SchoolContext'
-// import { useApp } from '../../../../hooks/AppContext'
-import Chips from './Chips/Chips'
+import {
+    DISTRICT_FILTER,
+    TYPE_FILTER,
+    LEVEL_FILTER,
+    SCALE_FILTER,
+    STATUS_FILTER,
+    // ACTIVE_FILTER,
+} from './FilterConsts'
+
+import { useApp } from '../../../../hooks/AppContext'
+
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -50,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '8px'
+        borderRadius: '8px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
     root: {},
@@ -64,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItemSelected: {},
-}));
+}))
 
 const MuiAccordion = withStyles({
     root: {
@@ -96,7 +107,7 @@ const MuiAccordionSummary = withStyles({
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
         // boxShadow: '1px 1px 2px gray',
-        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        boxShadow: '0 4px 6px -6px #000', // 0px 1px 1px gray
         borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
@@ -124,150 +135,217 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters() {
     const classes = useStyles()
 
+    const { dists, schTypes, schEduLvls, schScales, schStatus } = useApp()
+
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
         dispatchParams,
-        districts,
-        schoolTypes,
-        schoolLevels,
-        schoolScales,
-        schoolStatuses,
+        // districts,
+        // schoolTypes,
+        // schoolLevels,
+        // schoolScales,
+        // schoolStatuses,
         district,
         schoolType,
         schoolLevel,
         schoolScale,
         schoolStatus,
-        setDistrict,
-        setSchoolType,
-        setSchoolLevel,
-        setSchoolScale,
-        setSchoolStatus,
+        // setDistrict,
+        // setSchoolType,
+        // setSchoolLevel,
+        // setSchoolScale,
+        // setSchoolStatus,
+        setFilter,
     } = useSchool()
 
-    // const { districts, schoolTypes, schoolLevels, schoolScales, schoolStatuses } = useApp()
+    const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-        setDistrict(selectedDistrict)
 
-        if (selectedDistrict) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: {
-                    filterType: 'district',
-                    filterValue: selectedDistrict,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: '' },
-            })
-        }
+        // setDistrict(selectedDistrict)
+        // if (selectedDistrict) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: {
+        //             filterType: 'district',
+        //             filterValue: selectedDistrict,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: { filterType: 'district', filterValue: '' },
+        //     })
+        // }
+        setFilter(DISTRICT_FILTER, selectedDistrict)
+        dispatchParams({
+            type: ReducerActions.FILTER_DISTRICT,
+            payload: {
+                filterType: DISTRICT_FILTER,
+                filterValue: selectedDistrict ? selectedDistrict : '',
+            },
+        })
     }
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-        setSchoolType(selectedSchoolType)
 
-        if (selectedSchoolType) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: {
-                    filterType: 'type',
-                    filterValue: selectedSchoolType,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: { filterType: 'type', filterValue: '' },
-            })
-        }
+        // setSchoolType(selectedSchoolType)
+        // if (selectedSchoolType) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //         payload: {
+        //             filterType: 'type',
+        //             filterValue: selectedSchoolType,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //         payload: { filterType: 'type', filterValue: '' },
+        //     })
+        // }
+        setFilter(TYPE_FILTER, selectedSchoolType)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_TYPE,
+            payload: {
+                filterType: TYPE_FILTER,
+                filterValue: selectedSchoolType ? selectedSchoolType : '',
+            },
+        })
     }
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-        setSchoolLevel(selectedSchoolLevel)
 
-        if (selectedSchoolLevel) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: {
-                    filterType: 'level',
-                    filterValue: selectedSchoolLevel,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: { filterType: 'level', filterValue: '' },
-            })
-        }
+        // setSchoolLevel(selectedSchoolLevel)
+        // if (selectedSchoolLevel) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //         payload: {
+        //             filterType: 'level',
+        //             filterValue: selectedSchoolLevel,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //         payload: { filterType: 'level', filterValue: '' },
+        //     })
+        // }
+        setFilter(LEVEL_FILTER, selectedSchoolLevel)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_LEVEL,
+            payload: {
+                filterType: LEVEL_FILTER,
+                filterValue: selectedSchoolLevel ? selectedSchoolLevel : '',
+            },
+        })
     }
 
     const handleSchoolScaleChange = (event) => {
         const selectedSchoolScale = event.target.value
-        setSchoolScale(selectedSchoolScale)
 
-        if (selectedSchoolScale) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: {
-                    filterType: 'scale',
-                    filterValue: selectedSchoolScale,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: { filterType: 'scale', filterValue: '' },
-            })
-        }
+        // setSchoolScale(selectedSchoolScale)
+        // if (selectedSchoolScale) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //         payload: {
+        //             filterType: 'scale',
+        //             filterValue: selectedSchoolScale,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //         payload: { filterType: 'scale', filterValue: '' },
+        //     })
+        // }
+        setFilter(SCALE_FILTER, selectedSchoolScale)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_SCALE,
+            payload: {
+                filterType: SCALE_FILTER,
+                filterValue: selectedSchoolScale ? selectedSchoolScale : '',
+            },
+        })
     }
 
     const handleSchoolStatusChange = (event) => {
         const selectedSchoolStatus = event.target.value
-        setSchoolStatus(selectedSchoolStatus)
 
-        if (selectedSchoolStatus) {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_STATUS,
-                payload: {
-                    filterType: 'status',
-                    filterValue: selectedSchoolStatus,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_STATUS,
-                payload: { filterType: 'status', filterValue: '' },
-            })
-        }
+        // setSchoolStatus(selectedSchoolStatus)
+        // if (selectedSchoolStatus) {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+        //         payload: {
+        //             filterType: 'status',
+        //             filterValue: selectedSchoolStatus,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+        //         payload: { filterType: 'status', filterValue: '' },
+        //     })
+        // }
+        setFilter(STATUS_FILTER, selectedSchoolStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
+            },
+        })
     }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
+    // const handleChipsRemoved = (removedFilters) => {
+    //     removedFilters.forEach((removedFilter) => {
+    //         switch (removedFilter) {
+    //             case 'district':
+    //                 setDistrict('All')
+    //                 break
+    //             case 'type':
+    //                 setSchoolType('All')
+    //                 break
+    //             case 'level':
+    //                 setSchoolLevel('All')
+    //                 break
+    //             case 'scale':
+    //                 setSchoolScale('All')
+    //                 break
+    //             case 'status':
+    //                 setSchoolStatus('All')
+    //                 break
+    //             default:
+    //                 break
+    //         }
+    //     })
+    // }
+
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                case 'district':
-                    setDistrict('All')
+                case DISTRICT_FILTER:
+                    setFilter(DISTRICT_FILTER, 'All')
                     break
-                case 'type':
-                    setSchoolType('All')
+                case TYPE_FILTER:
+                    setFilter(TYPE_FILTER, 'All')
                     break
-                case 'level':
-                    setSchoolLevel('All')
+                case LEVEL_FILTER:
+                    setFilter(LEVEL_FILTER, 'All')
                     break
-                case 'scale':
-                    setSchoolScale('All')
+                case SCALE_FILTER:
+                    setFilter(SCALE_FILTER, 'All')
                     break
-                case 'status':
-                    setSchoolStatus('All')
+                case STATUS_FILTER:
+                    setFilter(STATUS_FILTER, 'All')
                     break
                 default:
                     break
@@ -302,8 +380,9 @@ function Filters() {
                 >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList className={styles.iconFilter} /> &nbsp;
-                        <Typography>Filters</Typography>
+                            <MdFilterList className={styles.iconFilter} />{' '}
+                            &nbsp;
+                            <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -324,11 +403,15 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={() => { }}
+                            onClick={() => {}}
                         >
                             <MdAdd fontSize="large" />
                             &nbsp;Create
                         </Button>
+                        <CreateSchool
+                            open={openCreateDialog}
+                            onClose={() => setOpenCreateDialog(false)}
+                        />
                     </Box>
                 </Box>
                 <MuiAccordionDetails>
@@ -336,7 +419,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
-                                <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={district}
+                                    onChange={handleDistrictChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -347,14 +434,15 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {districts?.map((dist) => (
+                                    {dists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {dist}
@@ -366,8 +454,12 @@ function Filters() {
 
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Statuses</InputLabel>
-                                <Select value={schoolStatus} onChange={handleSchoolStatusChange} MenuProps={MenuProps}>
+                                <InputLabel>School Status</InputLabel>
+                                <Select
+                                    value={schoolStatus}
+                                    onChange={handleSchoolStatusChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -378,14 +470,15 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolStatuses?.map((status) => (
+                                    {schStatus?.map((status) => (
                                         <MenuItem
                                             key={status}
                                             value={status}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {status}
@@ -398,7 +491,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Types</InputLabel>
-                                <Select value={schoolType} onChange={handleSchoolTypeChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolType}
+                                    onChange={handleSchoolTypeChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -409,14 +506,15 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolTypes?.map((type) => (
+                                    {schTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {type}
@@ -429,7 +527,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Levels</InputLabel>
-                                <Select value={schoolLevel} onChange={handleSchoolLevelChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolLevel}
+                                    onChange={handleSchoolLevelChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -440,14 +542,15 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolLevels?.map((level) => (
+                                    {schEduLvls?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {level}
@@ -460,7 +563,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Scales</InputLabel>
-                                <Select value={schoolScale} onChange={handleSchoolScaleChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolScale}
+                                    onChange={handleSchoolScaleChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -471,14 +578,15 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolScales?.map((scale) => (
+                                    {schScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {scale}

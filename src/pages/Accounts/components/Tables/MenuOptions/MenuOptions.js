@@ -14,18 +14,18 @@ import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
+
     const { url } = useRouteMatch()
+
+    const { params } = useAccount()
 
     const [anchorEl, setAnchorEl] = useState(null)
 
-    const { params } = useAccount()
     const stateData = {
-        accountDTO: data,
+        model: data,
         params: params,
-        pathName: `${url}/${data.username}`
+        pathName: `${url}/${data.username}`,
     }
-
-    console.log('stateData: ', stateData);
 
     const handleOpen = (event) => {
         setAnchorEl(event.currentTarget)

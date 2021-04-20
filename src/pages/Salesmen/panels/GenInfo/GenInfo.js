@@ -105,7 +105,7 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.title}
                                             >
-                                                {fields.gender.title}
+                                                {fields.isMale.title}
                                             </Typography>
                                         </Grid>
                                         <Grid
@@ -120,12 +120,12 @@ function GenInfo(props) {
                                                 color="inherit"
                                                 className={classes.detail}
                                             >
-                                                {data.gender
+                                                {data.isMale
                                                     ? 'Male'
                                                     : 'Female'}
                                             </Typography>
                                             <Icon className={classes.icon}>
-                                                {data?.gender ? (
+                                                {data?.isMale ? (
                                                     <AiOutlineMan color="#005BB5" />
                                                 ) : (
                                                     <AiOutlineWoman color="#E26A89" />
