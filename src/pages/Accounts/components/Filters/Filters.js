@@ -212,7 +212,7 @@ function Filters() {
                     setFilter(ROLE_FILTER, 'All')
                     break
                 default:
-                    throw new Error()
+                    break
             }
         })
     }

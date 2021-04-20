@@ -175,7 +175,7 @@ function MenuOptions(props) {
                 )
 
             default:
-                throw new Error()
+                break
         }
     }
 

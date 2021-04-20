@@ -348,7 +348,7 @@ function Filters() {
                     setFilter(STATUS_FILTER, 'All')
                     break
                 default:
-                    throw new Error()
+                    break
             }
         })
     }

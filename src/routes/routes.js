@@ -45,15 +45,6 @@ export const roleRoutes = {
         { path: 'schools/:id', component: () => <School /> },
     ],
     'SALES MANAGER': [
-        {
-            path: 'accounts',
-            component: () => (
-                <AccountProvider>
-                    <Accounts />
-                </AccountProvider>
-            ),
-        },
-        { path: 'accounts/:id', component: () => <Account /> },
         { path: 'dashboards', component: () => <Dashboards /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
         // {

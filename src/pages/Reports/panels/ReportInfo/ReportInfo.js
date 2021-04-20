@@ -48,9 +48,7 @@ function RepInfo(props) {
         positivity: report?.positivity,
         difficulty: report?.difficulty,
         futurePlan: report?.futurePlan,
-
-        // commentedPerson: report.comment.fullName,
-        contextComments: report.comment.content,
+        contextComments: report.contextComments,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -66,9 +64,7 @@ function RepInfo(props) {
             positivity: report?.positivity,
             difficulty: report?.difficulty,
             futurePlan: report?.futurePlan,
-
-            // commentedPerson: report.comment.fullName,
-            contextComments: report.comment.content,
+            contextComments: report.contextComments,
         })
     }, [report])
 
@@ -80,7 +76,7 @@ function RepInfo(props) {
         const model = {
             ...data,
 
-            date: report.date,
+            date: report?.date,
 
             schoolName: report?.name,
             address: report?.address,
@@ -402,7 +398,7 @@ function RepInfo(props) {
                             <Grid
                                 container
                                 spacing={0}
-                                className={classes.titleZone}
+                                className={classes.rowZone}
                             >
                                 <Grid item xs={3} sm={3} md={3} lg={3}>
                                     <Typography
@@ -423,11 +419,12 @@ function RepInfo(props) {
                                             render={({ value, onChange }) => (
                                                 <TextField
                                                     label={
-                                                        report.comment.fullName
+                                                        report.commentedPerson
                                                     }
                                                     variant="outlined"
-                                                    // required
                                                     fullWidth
+                                                    multiline
+                                                    rows={5}
                                                     value={value}
                                                     onChange={onChange}
                                                     error={
@@ -440,30 +437,6 @@ function RepInfo(props) {
                                                 />
                                             )}
                                         />
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.titleZone}
-                            >
-                                <Grid item xs={3} sm={3} md={3} lg={3}>
-                                    <Typography
-                                        color="inherit"
-                                        // className={classes.detail}
-                                    >
-                                        Title 2
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={9} sm={9} md={7} lg={6}>
-                                    <Typography
-                                        color="inherit"
-                                        // className={classes.detail}
-                                    >
-                                        Child 2
                                     </Typography>
                                 </Grid>
                             </Grid>

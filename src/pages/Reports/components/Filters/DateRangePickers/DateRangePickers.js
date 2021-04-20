@@ -1,28 +1,34 @@
-import React from "react";
-import { FormControl, Grid, makeStyles, TextField } from "@material-ui/core";
-import { DateRangePicker, LocalizationProvider } from "mui-pickers-v4"; //DateRangeDelimiter
+import React from 'react'
+import { FormControl, Grid, makeStyles, TextField } from '@material-ui/core'
+import { DateRangePicker, LocalizationProvider } from 'mui-pickers-v4' //DateRangeDelimiter
 // import DateFnsUtils from "mui-pickers-v4/adapter/date-fns";
-import DateFnsAdapter from "mui-pickers-v4/adapter/date-fns";
-import { useReport } from "../../../hooks/ReportContext";
+import DateFnsAdapter from 'mui-pickers-v4/adapter/date-fns'
+import { useReport } from '../../../hooks/ReportContext'
+import { DATE_RANGE_FILTER } from '../FilterConsts'
 // import classes from "./DateRangePickers.module.scss";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
         width: 125,
         margin: theme.spacing(1),
-        paddingRight: '0.5rem'
+        paddingRight: '0.5rem',
     },
-}));
+}))
 
 function DateRangePickers(props) {
-    const classes = useStyles();
+    const classes = useStyles()
 
     const { handleDateRangeChange } = props
 
-    const { dateRange, setDateRange } = useReport()
+    const {
+        dateRange,
+        // setDateRange
+        setFilter,
+    } = useReport()
 
     const handleChangeDate = (newDate) => {
-        setDateRange(newDate)
+        // setDateRange(newDate)
+        setFilter(DATE_RANGE_FILTER, newDate)
         handleDateRangeChange(newDate)
         // console.log('newDate: ', newDate);
     }
@@ -48,18 +54,18 @@ function DateRangePickers(props) {
                                 <TextField
                                     {...startProps}
                                     variant="standard"
-                                // onBlur={handleFromDateChange}
-                                // onChange={handleFromDateChange}
-                                // onSubmit={handleFromDateChange}
-                                // onBeforeInput={handleFromDateChange}
-                                // onInput={handleFromDateChange}
-                                // onAbort={handleFromDateChange}
-                                // onClick={handleFromDateChange}
-                                // onLoad={handleFromDateChange}
-                                // onReset={handleFromDateChange}
-                                // onFocus={handleFromDateChange}
-                                // onSuspend={handleFromDateChange}
-                                // onSelect={handleFromDateChange}
+                                    // onBlur={handleFromDateChange}
+                                    // onChange={handleFromDateChange}
+                                    // onSubmit={handleFromDateChange}
+                                    // onBeforeInput={handleFromDateChange}
+                                    // onInput={handleFromDateChange}
+                                    // onAbort={handleFromDateChange}
+                                    // onClick={handleFromDateChange}
+                                    // onLoad={handleFromDateChange}
+                                    // onReset={handleFromDateChange}
+                                    // onFocus={handleFromDateChange}
+                                    // onSuspend={handleFromDateChange}
+                                    // onSelect={handleFromDateChange}
                                 />
                             </FormControl>
                         </Grid>
@@ -69,18 +75,18 @@ function DateRangePickers(props) {
                                 <TextField
                                     {...endProps}
                                     variant="standard"
-                                // onBlur={handleToDateChange}
-                                // onChange={handleToDateChange}
-                                // onSubmit={handleToDateChange}
-                                // onBeforeInput={handleToDateChange}
-                                // onInput={handleToDateChange}
-                                // onAbort={handleToDateChange}
-                                // onClick={handleToDateChange}
-                                // onLoad={handleToDateChange}
-                                // onReset={handleToDateChange}
-                                // onFocus={handleToDateChange}
-                                // onSuspend={handleToDateChange}
-                                // onSelect={handleToDateChange}
+                                    // onBlur={handleToDateChange}
+                                    // onChange={handleToDateChange}
+                                    // onSubmit={handleToDateChange}
+                                    // onBeforeInput={handleToDateChange}
+                                    // onInput={handleToDateChange}
+                                    // onAbort={handleToDateChange}
+                                    // onClick={handleToDateChange}
+                                    // onLoad={handleToDateChange}
+                                    // onReset={handleToDateChange}
+                                    // onFocus={handleToDateChange}
+                                    // onSuspend={handleToDateChange}
+                                    // onSelect={handleToDateChange}
                                 />
                             </FormControl>
                         </Grid>
@@ -88,7 +94,7 @@ function DateRangePickers(props) {
                 )}
             />
         </LocalizationProvider>
-    );
+    )
 }
 
 export default DateRangePickers

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
-import { SchoolInfo, ReportInfo, AsgInfo } from './panels'
+import { AssignInfo, ReportInfo } from './panels'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleNames, statusNames } from '../../utils/Constants'
+import moment from 'moment'
+// import { roleNames, statusNames } from '../../utils/Constants'
 import * as ReportsServices from './ReportsServices'
 
 function Report() {
@@ -17,8 +18,6 @@ function Report() {
 
     const stateData = location.state?.data
     const [report, setReport] = useState(stateData?.model)
-
-    console.log('data', report)
 
     //   let isMounted = true
     //   const refreshPage = (reportId) => {
@@ -57,9 +56,10 @@ function Report() {
             linkBack="Reports"
             // avatar={report?.avatar}
             header={report?.schoolName}
-            subHeader={report?.date}
+            // subHeader={report?.date}
+            subHeader={moment(report?.date).format('DD/MM/YYYY')}
             // isStatus={true}
-            tabs={['Report Info', 'School Info', 'Assign Info']}
+            tabs={['Report Info', 'Assign Info']}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >
@@ -71,19 +71,7 @@ function Report() {
                 />
             )}
             {/* School Info */}
-            {tabValue === 1 && (
-                <SchoolInfo
-                    report={report}
-                    // refreshPage={refreshPage}
-                />
-            )}
-            {/* Assign Info */}
-            {tabValue === 2 && (
-                <AsgInfo
-                    report={report}
-                    // refreshPage={refreshPage}
-                />
-            )}
+            {tabValue === 1 && <AssignInfo report={report} />}
         </DetailLayouts>
     )
 }

@@ -45,7 +45,7 @@ function MenuOptions(props) {
     //                 </MenuItem >
     //             )
     //         default:
-    //             throw new Error()
+    //             break
     //     }
     // }
 

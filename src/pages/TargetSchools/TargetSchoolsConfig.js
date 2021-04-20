@@ -2,14 +2,14 @@
 
 export const columns = [
     // { key: "checkbox", name: '', sortable: false },
-    { key: "no", name: 'No', sortable: false },
-    { key: "schoolName", name: 'School Name', sortable: true },
+    { key: 'no', name: 'No', sortable: false },
+    { key: 'schoolName', name: 'School Name', sortable: true },
     // { key: "school.district.name", name: 'District', sortable: true },
-    { key: "school.reprName", name: 'Principal', sortable: true },
-    { key: "user.fullName", name: 'PIC', sortable: true },
-    { key: "schoolYear", name: 'School Year', sortable: true },
-    { key: "targetPurposeName", name: 'Purpose', sortable: true },
-    { key: "", name: '', sortable: false }
+    { key: 'school.reprName', name: 'Principal', sortable: true },
+    { key: 'user.fullName', name: 'PIC', sortable: true },
+    { key: 'schoolYear', name: 'School Year', sortable: true },
+    { key: 'targetPurposeName', name: 'Purpose', sortable: true },
+    { key: '', name: '', sortable: false },
 ]
 
 // export const menuOptions = [
@@ -31,6 +31,6 @@ export const columns = [
 //         case 'SALESMAN':
 //             return [details, reports]
 //         default:
-//             throw new Error()
+//             break
 //     }
 // }

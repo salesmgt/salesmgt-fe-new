@@ -1,9 +1,4 @@
-import React, {
-    useState,
-    useContext,
-    createContext,
-    useReducer,
-} from 'react'
+import React, { useState, useContext, createContext, useReducer } from 'react'
 import { AccountReducer } from './AccountReducer'
 import { ACTIVE_FILTER, ROLE_FILTER } from '../components/Filters/FilterConsts'
 
@@ -100,7 +95,7 @@ function useAccountProvider() {
                 setRole(value)
                 break
             default:
-                throw new Error()
+                break
         }
     }
 

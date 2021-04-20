@@ -15,7 +15,6 @@ function School() {
     const location = useLocation()
     const history = useHistory()
 
-
     const stateData = location.state?.data
     const [school, setSchool] = useState(stateData?.model)
 
@@ -60,7 +59,7 @@ function School() {
             case statusNames.pending:
                 return ['General Info', 'Principal Info', 'Contracts Info']
             default:
-                throw new Error()
+                break
         }
     }
 

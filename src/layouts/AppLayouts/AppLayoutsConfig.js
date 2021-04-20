@@ -58,13 +58,13 @@ export function getMenuItems(role) {
         case roleNames.admin:
             return [accounts, schools]
         case roleNames.manager:
-            return [dashboards, workPlans, targetSchools, reports, accounts]
+            return [dashboards, workPlans, targetSchools, reports]
         case roleNames.supervisor:
             return [dashboards, workPlans, targetSchools, reports]
         case roleNames.salesman:
             return [dashboards, workPlans, targetSchools, reports]
         default:
-            throw new Error()
+            break
     }
 }
 

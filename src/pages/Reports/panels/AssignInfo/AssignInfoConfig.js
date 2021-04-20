@@ -1,7 +1,7 @@
 export const Consts = {
     headers: {
-        child1: 'School Detail',
-        child2: 'Contact Detail',
+        child1: 'ASSIGN DETAIL',
+        child2: 'SCHOOL DETAIL',
     },
     operations: {
         cancel: 'Cancel',
@@ -17,9 +17,6 @@ export const Consts = {
         dist: {
             title: 'District',
         },
-        status: {
-            title: 'School Active',
-        },
         eduLvl: {
             title: 'Educational Level',
         },
@@ -32,11 +29,23 @@ export const Consts = {
         salesStatus: {
             title: 'School Status',
         },
-        des: {
-            title: 'Description',
-        },
         tel: {
             title: 'Tel',
+        },
+        reprName: {
+            title: 'Principal Name',
+        },
+        reprIsMale: {
+            title: 'Principal Gender',
+        },
+        pic: {
+            title: 'PIC',
+        },
+        purpose: {
+            title: 'Sales Purpose',
+        },
+        schlYear: {
+            title: 'Shool Year',
         },
     },
 }

@@ -69,7 +69,7 @@ function useReportProvider() {
     // const [schoolYear, setSchoolYear] = useState('')
     // const [purpose, setPurpose] = useState('')
     // const [schoolStatus, setSchoolStatus] = useState('')
-    const [dateRange, setDateRange] = useState([null, null])
+    // const [dateRange, setDateRange] = useState([null, null])
     // const [fromDate, setFromDate] = useState((new Date()).getDate() - 7);
     // const [toDate, setToDate] = useState((new Date()).getDate());
 
@@ -96,11 +96,11 @@ function useReportProvider() {
             ? defaultFilters.status.filterValue
             : ''
     )
-    // const [dateRange, setDateRange] = useState(
-    //     defaultFilters.dateRange.filterValue
-    //         ? defaultFilters.dateRange.filterValue
-    //         : [null, null]
-    // )
+    const [dateRange, setDateRange] = useState(
+        defaultFilters.dateRange.filterValue
+            ? defaultFilters.dateRange.filterValue
+            : [null, null]
+    )
 
     // fix major BUG
     const setFilter = (key, value) => {
@@ -149,25 +149,25 @@ function useReportProvider() {
                 }
                 setSchoolStatus(value)
                 break
-            // case DATE_RANGE_FILTER:
-            //     defaultFilters = {
-            //         ...defaultFilters,
-            //         status: {
-            //             filterType: DATE_RANGE_FILTER,
-            //             filterValue: value,
-            //         },
-            //     }
-            //     setDateRange(value)
-            //     break
+            case DATE_RANGE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    status: {
+                        filterType: DATE_RANGE_FILTER,
+                        filterValue: value,
+                    },
+                }
+                setDateRange(value)
+                break
             default:
-                throw new Error()
+                break
         }
     }
 
     // APIs
     const [PICs, setPICs] = useState([])
     // const [districts, setDistricts] = useState([])
-    const [schoolYears, setSchoolYears] = useState([])
+    // const [schoolYears, setSchoolYears] = useState([])
     // const [schoolStatuses, setSchoolStatuses] = useState([])
 
     // Search field (do not have)
@@ -205,21 +205,21 @@ function useReportProvider() {
     //         })
     // }
 
-    const getSchoolYearsFilter = () => {
-        FiltersServices.getSchoolYears()
-            .then((data) => {
-                setSchoolYears(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // const getSchoolYearsFilter = () => {
+    //     FiltersServices.getSchoolYears()
+    //         .then((data) => {
+    //             setSchoolYears(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
 
     // const getSchoolStatusesFilter = () => {
     //     FiltersServices.getSchoolStatuses()
@@ -240,7 +240,7 @@ function useReportProvider() {
     useEffect(() => {
         getPICsFilter()
         // getDistrictsFilter()
-        getSchoolYearsFilter()
+        // getSchoolYearsFilter()
         // getSchoolStatusesFilter()
     }, [])
 
@@ -249,7 +249,7 @@ function useReportProvider() {
         dispatchParams,
         PICs,
         // districts,
-        schoolYears,
+        // schoolYears,
         // schoolStatuses,
         page,
         setPage,
@@ -270,7 +270,7 @@ function useReportProvider() {
         schoolStatus,
         // setSchoolStatus,
         dateRange,
-        setDateRange,
+        // setDateRange,
         setFilter,
         // fromDate, setFromDate, toDate, setToDate
     }

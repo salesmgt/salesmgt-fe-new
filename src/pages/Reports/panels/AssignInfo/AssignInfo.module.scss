@@ -33,11 +33,47 @@
                 color: $secondary-text;
             }
         }
+        .header {
+            font-size: 1.2rem;
+        }
         .detailZone {
             padding: 0.75rem;
         }
         .rowZone {
             padding: 0.75rem;
+        }
+        .rowZoneX {
+            padding: 0rem 0.75rem;
+        }
+        .genderZone {
+            display: flex;
+            flex-direction: row;
+            .gender {
+                margin-right: 0.5rem;
+            }
+        }
+
+        .user {
+            display: flex;
+            flex-direction: row;
+            .info {
+                display: flex;
+                margin: 0rem 0.4rem;
+                flex-direction: column;
+                .fullName {
+                    font-weight: 500;
+                    display: flex;
+                }
+                .username {
+                    font-size: 0.875rem;
+                    color: $secondary-text;
+                }
+            }
+            .avatar {
+                @media (min-width: $md) {
+                    margin: 0rem 0.4rem;
+                }
+            }
         }
     }
 }

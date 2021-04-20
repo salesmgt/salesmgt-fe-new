@@ -163,7 +163,7 @@ const MuiAccordionDetails = withStyles(() => ({
 function Filters() {
     const classes = useStyles()
 
-    const { dists, schYears, schStatus, salesPurps } = useApp()
+    const { dists, schYears } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -171,19 +171,19 @@ function Filters() {
         dispatchParams,
         PICs,
         // districts,
-        schoolYears,
+        // schoolYears,
         // schoolStatuses,
         PIC,
         district,
         schoolYear,
         purpose,
-        schoolStatus,
+        // schoolStatus,
         // setPIC,
         // setDistrict,
         // setSchoolYear,
         // setPurpose,
         // setSchoolStatus,
-        setDateRange,
+        // setDateRange,
         setFilter,
     } = useReport()
 
@@ -271,33 +271,33 @@ function Filters() {
         })
     }
 
-    const handleSchoolStatusChange = (event) => {
-        const selectedSchoolStatus = event.target.value
+    // const handleSchoolStatusChange = (event) => {
+    //     const selectedSchoolStatus = event.target.value
 
-        // setSchoolStatus(selectedSchoolStatus)
-        // if (selectedSchoolStatus) {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
-        //         payload: {
-        //             filterType: 'status',
-        //             filterValue: selectedSchoolStatus,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
-        //         payload: { filterType: 'status', filterValue: '' },
-        //     })
-        // }
-        setFilter(STATUS_FILTER, selectedSchoolStatus)
-        dispatchParams({
-            type: ReducerActions.FILTER_SCHOOL_STATUS,
-            payload: {
-                filterType: STATUS_FILTER,
-                filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
-            },
-        })
-    }
+    //     // setSchoolStatus(selectedSchoolStatus)
+    //     // if (selectedSchoolStatus) {
+    //     //     dispatchParams({
+    //     //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+    //     //         payload: {
+    //     //             filterType: 'status',
+    //     //             filterValue: selectedSchoolStatus,
+    //     //         },
+    //     //     })
+    //     // } else {
+    //     //     dispatchParams({
+    //     //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+    //     //         payload: { filterType: 'status', filterValue: '' },
+    //     //     })
+    //     // }
+    //     setFilter(STATUS_FILTER, selectedSchoolStatus)
+    //     dispatchParams({
+    //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+    //         payload: {
+    //             filterType: STATUS_FILTER,
+    //             filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
+    //         },
+    //     })
+    // }
 
     const handlePurposeChange = (event) => {
         const selectedPurpose = event.target.value
@@ -330,35 +330,35 @@ function Filters() {
 
     const handleDateRangeChange = (selectedDate) => {
         // Tiền xử lý format của date trước khi lưu vào context
-        if (selectedDate) {
-            // !== '' && selectedDate !== undefined
-            const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
-            const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
-            dispatchParams({
-                type: ReducerActions.FILTER_DATE_RANGE,
-                payload: {
-                    filterType: 'dateRange',
-                    filterValue: [fromDate, toDate],
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_DATE_RANGE,
-                payload: { filterType: 'dateRange', filterValue: [null, null] },
-            })
-        }
-        // const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
-        // const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
-        // setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
-        // dispatchParams({
-        //     type: ReducerActions.FILTER_PURPOSE,
-        //     payload: {
-        //         filterType: PURPOSE_FILTER,
-        //         filterValue: [fromDate, toDate]
-        //             ? [fromDate, toDate]
-        //             : [null, null],
-        //     },
-        // })
+        // if (selectedDate) {
+        //     // !== '' && selectedDate !== undefined
+        //     const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
+        //     const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DATE_RANGE,
+        //         payload: {
+        //             filterType: 'dateRange',
+        //             filterValue: [fromDate, toDate],
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DATE_RANGE,
+        //         payload: { filterType: 'dateRange', filterValue: [null, null] },
+        //     })
+        // }
+        const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
+        const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
+        setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
+        dispatchParams({
+            type: ReducerActions.FILTER_PURPOSE,
+            payload: {
+                filterType: PURPOSE_FILTER,
+                filterValue: [fromDate, toDate]
+                    ? [fromDate, toDate]
+                    : [null, null],
+            },
+        })
     }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
@@ -395,6 +395,9 @@ function Filters() {
                 case PIC_FILTER:
                     setFilter(PIC_FILTER, null)
                     break
+                // case PIC_FILTER:
+                //     setPIC(null)
+                //     break
                 case DISTRICT_FILTER:
                     setFilter(DISTRICT_FILTER, 'All')
                     break
@@ -407,14 +410,11 @@ function Filters() {
                 case PURPOSE_FILTER:
                     setFilter(PURPOSE_FILTER, 'All')
                     break
-                // case DATE_RANGE_FILTER:
-                //     setFilter(DATE_RANGE_FILTER, [null, null])
-                //     break
                 case DATE_RANGE_FILTER:
-                    setDateRange([null, null])
+                    setFilter(DATE_RANGE_FILTER, [null, null])
                     break
                 default:
-                    throw new Error()
+                    break
             }
         })
     }
@@ -424,7 +424,7 @@ function Filters() {
         let newListFilters = { ...listFilters }
 
         for (const chip in newListFilters) {
-            if (chip === 'dateRange') {
+            if (chip === DATE_RANGE_FILTER) {
                 const fromDate = moment(
                     newListFilters[chip].filterValue[0]
                 ).format('MMM D, YYYY')
@@ -509,7 +509,8 @@ function Filters() {
                                 autoHighlight
                                 clearOnEscape
                                 options={PICs}
-                                getOptionLabel={(pic) => pic.fullName}
+                                // getOptionLabel={(pic) => pic.fullName}
+                                getOptionLabel={(PIC) => PIC.fullName}
                                 value={PIC}
                                 renderInput={(params) => (
                                     <TextField

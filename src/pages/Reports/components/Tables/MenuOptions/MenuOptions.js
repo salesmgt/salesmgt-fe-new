@@ -159,11 +159,16 @@ function MenuOptions(props) {
                             </MenuItem>
                             {renderRemoveDialog()}
                         </>
+                        {/**For Salesman:
+                            - View details and update report inside that form.
+                            For Manager & Supervisor:
+                            - View details and give comment inside that form.
+                        */}
                     </>
                 )
 
             default:
-                throw new Error()
+                break
         }
     }
 

@@ -127,7 +127,7 @@ function useSchoolProvider() {
                 setSchoolStatus(value)
                 break
             default:
-                throw new Error()
+                break
         }
     }
 
