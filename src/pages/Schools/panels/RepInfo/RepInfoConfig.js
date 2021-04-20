@@ -10,7 +10,7 @@ export const Consts = {
         fullName: {
             title: 'Username',
         },
-        gender: {
+        isMale: {
             title: 'Gender',
         },
 

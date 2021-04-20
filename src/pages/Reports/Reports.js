@@ -18,7 +18,7 @@ function Reports() {
     ) {
         ReportsServices.getReports(page, limit, column, direction, searchKey, listFilters)
             .then((res) => {
-                console.log("list reports: ", res);
+                // console.log("list reports: ", res);
                 setData(res)
             }).catch((error) => {
                 if (error.response) {
@@ -46,6 +46,7 @@ function Reports() {
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
+                refreshAPI={getAllReports}
             />
         </div>
     )

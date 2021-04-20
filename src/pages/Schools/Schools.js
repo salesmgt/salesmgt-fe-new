@@ -31,7 +31,7 @@ function Schools() {
             listFilters
         )
             .then((res) => {
-                setData(res.data)
+                setData(res)
             })
             .catch((error) => {
                 if (error.response) {

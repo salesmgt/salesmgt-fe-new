@@ -127,7 +127,7 @@ function Filters() {
     const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
-    const { params, dispatchParams, active, setActive, role, setRole } = useAccount()
+    const { params, dispatchParams, isActive, setIsActive, role, setRole, workingStatuses } = useAccount()
     const { roles } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
@@ -135,12 +135,20 @@ function Filters() {
     //================Handle useState() of filters================
     const handleIsActiveChange = (event) => {
         const selectedIsActive = event.target.value
-        setActive(selectedIsActive)
 
-        dispatchParams({
-            type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: 'isActive', filterValue: selectedIsActive },
-        })
+        if (selectedIsActive) {
+            setIsActive({ isActive: true, status: "Active" });
+            dispatchParams({
+                type: ReducerActions.FILTER_ACTIVE,
+                payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } },
+            })
+        } else {
+            setIsActive({ isActive: false, status: "Inactive" });
+            dispatchParams({
+                type: ReducerActions.FILTER_ACTIVE,
+                payload: { filterType: 'isActive', filterValue: { isActive: false, status: "Inactive" } },
+            })
+        }
     }
 
     const handleRoleChange = (event) => {
@@ -165,8 +173,8 @@ function Filters() {
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                case 'active':
-                    setActive(true)
+                case 'isActive':
+                    setIsActive({ isActive: true, status: 'Active' })
                     break
                 case 'role':
                     setRole('All')
@@ -241,28 +249,20 @@ function Filters() {
                     <Grid container>
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Is Active</InputLabel>
-                                <Select value={active} defaultValue={true} onChange={handleIsActiveChange} MenuProps={MenuProps}>
-                                    <MenuItem
-                                        value={true}
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        True
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={false}
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        False
-                                    </MenuItem>
+                                <InputLabel>Working Status</InputLabel>
+                                <Select value={isActive.isActive} defaultValue={{ isActive: true, status: 'Active' }} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                    {workingStatuses.map((workingStatus) => (
+                                        <MenuItem
+                                            value={workingStatus.isActive}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {workingStatus.status}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -281,7 +281,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {roles.map((role) => (
+                                    {roles?.map((role) => (
                                         <MenuItem
                                             key={role}
                                             value={role}

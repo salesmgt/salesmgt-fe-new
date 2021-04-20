@@ -140,7 +140,7 @@ const useStyles = makeStyles(() => ({
 // Customize component Table
 function Tables(props) {
   const styles = useStyles();
-  const { columns, rows, totalRecord, totalPage } = props;
+  const { columns, rows, totalRecord, totalPage, refreshAPI } = props;
 
   const {
     params, dispatchParams,
@@ -263,7 +263,7 @@ function Tables(props) {
                   <TableCell className={classes.tBodyCell}>{truncateString(row.description)}</TableCell>
                   {/* <TableCell className={classes.tBodyCell}>{truncateString(row.comment?.content)}</TableCell> */}
                   <TableCell className={classes.tBodyCell} align="right">
-                    <MenuOptions data={row} />
+                    <MenuOptions data={row} refreshAPI={refreshAPI} />
                   </TableCell>
                 </TableRow>
               ))
@@ -310,4 +310,5 @@ Tables.propTypes = {
   columns: PropTypes.array.isRequired,
   totalRecord: PropTypes.number.isRequired,
   totalPage: PropTypes.number.isRequired,
+  refreshAPI: PropTypes.func
 };

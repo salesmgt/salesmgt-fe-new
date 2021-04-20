@@ -150,7 +150,7 @@ function useTargetSchoolProvider() {
             })
     }
 
-    const getPICsFilter = () => {
+    const getPICsFilter2 = () => {
         FiltersServices.getPICs()
             .then((data) => {
                 setPICs(data)
@@ -173,7 +173,7 @@ function useTargetSchoolProvider() {
         getSchoolTypesFilter()
         getSchoolLevelsFilter()
         getSchoolScalesFilter()
-        getPICsFilter()
+        getPICsFilter2()
     }, [])
 
     //================Parse object "params" --> query-string================

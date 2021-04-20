@@ -14,6 +14,7 @@ function School() {
     if (!data) {
         return <NotFound />
     }
+    console.log("data School: ", data);
 
     const schData = {
         name: data?.name,
@@ -31,7 +32,7 @@ function School() {
 
     const repData = {
         name: data?.reprName,
-        gender: data?.reprGender,
+        isMale: data?.reprIsMale,
         phone: data?.reprPhone,
         email: data?.reprEmail,
     }

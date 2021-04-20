@@ -45,7 +45,7 @@ export async function updateReport(report) {
 }
 
 export async function removeReport(reportId) {
-    const response = await Api.delete('/reports', { reportId })
+    const response = await Api.delete(`/reports/${reportId}`, { reportId })
     const data = await response.data
 
     return data

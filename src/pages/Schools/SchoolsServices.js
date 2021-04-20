@@ -15,10 +15,10 @@ export async function getSchools(
         url = filters['status'].filterValue ? url.concat(`&status=${filters['status'].filterValue}`) : url;
     }
 
-    // const response = await Api.get(url)
-    // const data = await response.data
     // console.log('url = ', url);
-    return await Api.get(url)
+    const response = await Api.get(url)
+    const data = await response.data
+    return data
 }
 
 // export async function getSchoolsByKeys(...keys) {

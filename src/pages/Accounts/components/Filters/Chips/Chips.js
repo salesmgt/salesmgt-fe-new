@@ -41,7 +41,7 @@ function Chips(props) {
             case 'active':
                 dispatch({
                     type: ReducerActions.FILTER_ACTIVE,
-                    payload: { filterType: 'isActive', filterValue: true }
+                    payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } }
                 })
                 break;
 
@@ -72,14 +72,14 @@ function Chips(props) {
 
         dispatch({
             type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: 'isActive', filterValue: true }
+            payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } }
         })
         dispatch({
             type: ReducerActions.FILTER_ROLE,
             payload: { filterType: 'role', filterValue: '' }
         })
 
-        const removedFilters = ['active', 'role']
+        const removedFilters = ['isActive', 'role']
 
         handleChipsRemoved(removedFilters);
     }
@@ -114,7 +114,7 @@ function Chips(props) {
                                     }
                                     {(chip.filterType === 'isActive') &&
                                         <Chip
-                                            label={chip.filterValue.toString()}
+                                            label={chip.filterValue.status}
                                             onDelete={handleChipDelete(chip)}
                                             className={classes.chip}
                                             color="secondary"

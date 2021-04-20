@@ -108,7 +108,7 @@ function GenInfo(props) {
         username: data?.username,
         phone: data?.phone,
         email: data?.email,
-        gender: String(data?.gender),
+        isMale: String(data?.isMale),
         birthDate: data?.birthDate,
         roleName: data?.roleName,
         active: data?.active,
@@ -130,7 +130,7 @@ function GenInfo(props) {
     const onSubmit = (dto) => {
         const rs = {
             ...dto,
-            gender: dto.gender === 'true' ? true : false,
+            isMale: dto.isMale === 'true' ? true : false,
             birthDate: dto.birthDate
                 ? moment(dto.birthDate).format('YYYY-MM-DD')
                 : null,
@@ -345,10 +345,10 @@ function GenInfo(props) {
                                                 lg={6}
                                             >
                                                 <InputLabel>
-                                                    {fields.gender.title}
+                                                    {fields.isMale.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="gender"
+                                                    name="isMale"
                                                     control={control}
                                                     render={({
                                                         value,

@@ -34,7 +34,6 @@ function Accounts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         refreshAccount(page, limit, column, direction, searchKey, listFilters)
-        console.log('inside useEffect()');
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             isMounted = false

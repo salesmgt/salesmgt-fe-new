@@ -392,7 +392,7 @@ function Tables(props) {
                                     </TableCell> */}
                                     <TableCell className={classes.tBodyCell}>
                                         <ListItemText
-                                            primary={row.schoolName}
+                                            primary={`${row.level} ${row.schoolName}`}
                                             secondary={row.district}
                                             classes={{
                                                 primary: styles.itemTextLarge,

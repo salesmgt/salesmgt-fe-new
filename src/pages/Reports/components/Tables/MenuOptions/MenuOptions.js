@@ -9,7 +9,7 @@ import CannotRemove from '../../../dialogs/CannotRemove'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data } = props
+    const { data, refreshAPI } = props
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
 
@@ -45,7 +45,7 @@ function MenuOptions(props) {
         // else if (data.comments.length === 0) {
         else {
             return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
             )
         }
     }

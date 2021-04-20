@@ -3,7 +3,7 @@ export const columns = [
     // { key: "no", name: 'No', sortable: false },
     { key: "date", name: 'Date', sortable: true },
     { key: "schoolName", name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
-    { key: "user.fullName", name: 'PIC', sortable: true },
+    { key: "fullName", name: 'PIC', sortable: true },
     { key: "targetPurposeName", name: 'Purpose', sortable: true },  // Purpose - primary
     { key: "result", name: 'Result', sortable: false },
     { key: "description", name: 'Description', sortable: false }, // truncate 30 kí tự thôi

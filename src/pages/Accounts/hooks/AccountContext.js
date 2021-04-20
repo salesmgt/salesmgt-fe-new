@@ -3,10 +3,10 @@ import React, {
     useContext,
     createContext,
     useReducer,
-    useEffect,
+    // useEffect,
 } from 'react'
-import { useHistory } from 'react-router'
-import * as FiltersServices from '../../../services/FiltersServices'
+// import { useHistory } from 'react-router'
+// import * as FiltersServices from '../../../services/FiltersServices'
 import { AccountReducer } from './AccountReducer'
 
 const AccountContext = createContext()
@@ -16,12 +16,10 @@ export function useAccount() {
 }
 
 function useAccountProvider() {
-    const history = useHistory()
-
     // Reducer
     const [params, dispatchParams] = useReducer(AccountReducer, {
         listFilters: {
-            isActive: { filterType: 'isActive', filterValue: true },
+            isActive: { filterType: 'isActive', filterValue: { isActive: true, status: 'Active' } },
             role: { filterType: 'role', filterValue: '' },
         },
         searchKey: '',
@@ -40,11 +38,15 @@ function useAccountProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    const [active, setActive] = useState(true)
+    const [isActive, setIsActive] = useState({ isActive: true, status: 'Active' })
     const [role, setRole] = useState('')
 
     // APIs
     // const isActives = [true, false]  // bỏ, chỉ có 2 gtrị thì làm luôn FE
+    const workingStatuses = [
+        { isActive: true, status: 'Active' },
+        { isActive: false, status: 'Inactive' }
+    ]
     // const [roles, setRoles] = useState([])   // Bỏ, dùng cái bên LocalStorage
 
     // Search field (do not have)
@@ -73,7 +75,6 @@ function useAccountProvider() {
     return {
         params,
         dispatchParams,
-        // roles, // isActives,
         page,
         setPage,
         limit,
@@ -82,10 +83,11 @@ function useAccountProvider() {
         setDirection,
         column,
         setColumn,
-        active,
-        setActive,
+        isActive,
+        setIsActive,
         role,
         setRole,
+        workingStatuses
     }
 }
 
