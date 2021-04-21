@@ -35,7 +35,6 @@ import classes from './CreateReports.module.scss'
 const clientSchema = yup.object().shape({
     username: yup.string().trim().min(8).max(30).required(),
     fullName: yup.string().trim().max(50).required(),
-
 })
 
 const stylesTitle = (theme) => ({
@@ -49,21 +48,25 @@ const stylesTitle = (theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
-});
+})
 
 const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const { children, classes, onClose, ...other } = props
     return (
         <DialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <IconButton
+                    aria-label="close"
+                    className={classes.closeButton}
+                    onClick={onClose}
+                >
                     <MdClose />
                 </IconButton>
             ) : null}
         </DialogTitle>
-    );
-});
+    )
+})
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -84,7 +87,8 @@ function CreateReports(props) {
     const { open, onClose } = props
     const { headers, operations, fields } = Consts
 
-    const { control, register, handleSubmit, errors, formState } = useForm({  // getValues, , setError
+    const { control, register, handleSubmit, errors, formState } = useForm({
+        // getValues, , setError
         resolver: yupResolver(clientSchema),
     })
     // const [open, setOpen] = useToggle()
@@ -138,7 +142,7 @@ function CreateReports(props) {
             schoolName: 'Tiểu học Nguyễn Văn Cừ',
             district: 'Quận 5',
         },
-    ]  // Giờ để tạm ở đây để test trước chứ đúng ra là gọi API đổ vào
+    ] // Giờ để tạm ở đây để test trước chứ đúng ra là gọi API đổ vào
 
     // const handleTargetChange = (event, newTarget) => {
     //     setTarget(newTarget)
@@ -163,18 +167,24 @@ function CreateReports(props) {
             des: 'Thầy đi công tác. Đã gửi quà cho Thầy Hiệu phó.',
             positivity: 'Thầy rất thiện chí',
             difficulty: '',
-            plan: ''
+            plan: '',
         },
     ]
 
     const truncateString = (str) => {
-        if (str)
-            return str.length > 30 ? str.substring(0, 27) + "..." : str;
-        else return '';
+        if (str) return str.length > 30 ? str.substring(0, 27) + '...' : str
+        else return ''
     }
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth component="form" className={classes.dialog}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="lg"
+            fullWidth
+            component="form"
+            className={classes.dialog}
+        >
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.child1}
             </DialogTitleWithIconClose>
@@ -192,9 +202,11 @@ function CreateReports(props) {
                                         clearOnEscape
                                         // multiple
                                         options={targets}
-                                        getOptionLabel={(target) => target.schoolName}
+                                        getOptionLabel={(target) =>
+                                            target.schoolName
+                                        }
                                         value={target}
-                                        renderInput={(params) =>
+                                        renderInput={(params) => (
                                             <TextField
                                                 {...params}
                                                 label="Target School Name"
@@ -206,22 +218,28 @@ function CreateReports(props) {
                                                 helperText={errors?.target?.message}
                                                 className={classes.autoComplete}
                                             />
-                                        }
+                                        )}
                                         renderOption={(target) => {
                                             return (
                                                 <ListItem className={classes.item}>
                                                     <ListItemText
-                                                        primary={target.schoolName}
-                                                        secondary={target.district}
+                                                        primary={
+                                                            target.schoolName
+                                                        }
+                                                        secondary={
+                                                            target.district
+                                                        }
                                                         classes={{
                                                             primary: classes.itemTextPrimary,
                                                             secondary: classes.itemTextSecondary
                                                         }}
                                                     />
                                                 </ListItem>
-                                            );
+                                            )
                                         }}
-                                        onChange={(event, newPIC) => setTarget(newPIC)}
+                                        onChange={(event, newPIC) =>
+                                            setTarget(newPIC)
+                                        }
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -259,9 +277,9 @@ function CreateReports(props) {
                                         name="positivity"
                                         variant="outlined"
                                         fullWidth
-                                    // inputRef={register}
-                                    // error={!!errors.positivity}
-                                    // helperText={errors?.positivity?.message}
+                                        // inputRef={register}
+                                        // error={!!errors.positivity}
+                                        // helperText={errors?.positivity?.message}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -270,9 +288,9 @@ function CreateReports(props) {
                                         name="difficulty"
                                         variant="outlined"
                                         fullWidth
-                                    // inputRef={register}
-                                    // error={!!errors.difficulty}
-                                    // helperText={errors?.difficulty?.message}
+                                        // inputRef={register}
+                                        // error={!!errors.difficulty}
+                                        // helperText={errors?.difficulty?.message}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -281,9 +299,9 @@ function CreateReports(props) {
                                         name="plan"
                                         variant="outlined"
                                         fullWidth
-                                    // inputRef={register}
-                                    // error={!!errors.plan}
-                                    // helperText={errors?.plan?.message}
+                                        // inputRef={register}
+                                        // error={!!errors.plan}
+                                        // helperText={errors?.plan?.message}
                                     />
                                 </Grid>
                             </Grid>
@@ -291,9 +309,16 @@ function CreateReports(props) {
                         <Grid item xs={12} sm={12} md={12} lg={7}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <Box display="flex" flexDirection="row" flexWrap="nowrap">
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        flexWrap="nowrap"
+                                    >
                                         <Box flexGrow={1}>
-                                            <Button variant="contained" color="secondary">
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                            >
                                                 <MdAdd fontSize="large" />
                                             </Button>
                                         </Box>
@@ -307,26 +332,92 @@ function CreateReports(props) {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <Typography variant='h6'>Preview:</Typography>
-                                    <TableContainer className={classes.container} component='div'>
-                                        <Table className={classes.table} stickyHeader size="small">
+                                    <Typography variant="h6">
+                                        Preview:
+                                    </Typography>
+                                    <TableContainer
+                                        className={classes.container}
+                                        component="div"
+                                    >
+                                        <Table
+                                            className={classes.table}
+                                            stickyHeader
+                                            size="small"
+                                        >
                                             <TableHead>
-                                                <TableRow className={classes.tHead}>
-                                                    <TableCell align="left" className={classes.tHeadCell}>#</TableCell>
-                                                    <TableCell className={classes.tHeadCell}>School Name</TableCell>
-                                                    <TableCell className={classes.tHeadCell}>Result</TableCell>
-                                                    <TableCell className={classes.tHeadCell}>Description</TableCell>
+                                                <TableRow
+                                                    className={classes.tHead}
+                                                >
+                                                    <TableCell
+                                                        align="left"
+                                                        className={
+                                                            classes.tHeadCell
+                                                        }
+                                                    >
+                                                        #
+                                                    </TableCell>
+                                                    <TableCell
+                                                        className={
+                                                            classes.tHeadCell
+                                                        }
+                                                    >
+                                                        School Name
+                                                    </TableCell>
+                                                    <TableCell
+                                                        className={
+                                                            classes.tHeadCell
+                                                        }
+                                                    >
+                                                        Result
+                                                    </TableCell>
+                                                    <TableCell
+                                                        className={
+                                                            classes.tHeadCell
+                                                        }
+                                                    >
+                                                        Description
+                                                    </TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {rows.map((row, index) => (
-                                                    <TableRow key={row.id} className={classes.tBodyRow}>
-                                                        <TableCell align="left" className={classes.tBodyCell}>
+                                                    <TableRow
+                                                        key={row.id}
+                                                        className={
+                                                            classes.tBodyRow
+                                                        }
+                                                    >
+                                                        <TableCell
+                                                            align="left"
+                                                            className={
+                                                                classes.tBodyCell
+                                                            }
+                                                        >
                                                             {index}
                                                         </TableCell>
-                                                        <TableCell className={classes.tBodyCell}>{row.schoolName}</TableCell>
-                                                        <TableCell className={classes.tBodyCell}>{row.result}</TableCell>
-                                                        <TableCell className={classes.tBodyCell}>{truncateString(row.des)}</TableCell>
+                                                        <TableCell
+                                                            className={
+                                                                classes.tBodyCell
+                                                            }
+                                                        >
+                                                            {row.schoolName}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            className={
+                                                                classes.tBodyCell
+                                                            }
+                                                        >
+                                                            {row.result}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            className={
+                                                                classes.tBodyCell
+                                                            }
+                                                        >
+                                                            {truncateString(
+                                                                row.des
+                                                            )}
+                                                        </TableCell>
                                                     </TableRow>
                                                 ))}
                                             </TableBody>

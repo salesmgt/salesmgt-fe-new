@@ -10,7 +10,10 @@ import Schedule from './Schedule'
 function WorkPlans() {
     // const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXB0bm4iLCJpYXQiOjE2MTgzMjE3NzQsImV4cCI6MTYxODkyNjU3NH0.A4oEvU_bHdKQc2FfxqLWOAsvi-GSrloYfQrm0wHeyU3NElY5DuIM-ERYkAyVyaezFWiawjD2iop8GHdkze3kzA'
     const [data, setData] = React.useState([])
-    const [tree, setTree] = React.useState([])
+    const [tree, setTree] = React.useState([{
+        id: 1,
+        schoolName: "Hiếu Thành"
+    }])
 
     const { user } = useAuth()
     const history = useHistory()
@@ -24,10 +27,14 @@ function WorkPlans() {
 
     // Get list PICs for autocomplete search
     const [listPICs, setListPICs] = useState([])
-    const getListPICs = () => {
-        getPICs().then((data) => {
+    const getListPICs = (e) => {
+        getPICs({
+            active: true,
+            fullName: e
+        }).then((data) => {
             console.log('data: ', data)
             setListPICs(data)
+            
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -252,7 +259,7 @@ function WorkPlans() {
         });
     }
     React.useEffect(() => //call api for tree
-        callAPITree("")
+        callAPITree(null)
         , [])
 
     // Change view by "Today" / "Day" / "Week" / "Month"
@@ -293,8 +300,15 @@ function WorkPlans() {
     const onSubmit = e => {
         callAPITree(e)
     }
-
-
+    const onChange = e => {
+        if(e){
+        setFilter({...filter,username: e})
+        callAPI({...filter,username: e})
+        }
+    }
+    const onInputChange = e => {
+        getListPICs(e)
+    }
     return (
         <Schedule
             onSubmit={onSubmit}
@@ -304,6 +318,9 @@ function WorkPlans() {
             handleRequestType={handleRequestType}
             handleChangeView={handleChangeView}
             listPICs={listPICs}
+            handleOnSearchFieldChange={onChange}
+            isEdit={user.username === filter.username ? false :true}
+            handleInputChange={onInputChange}
         />
     )
 }

@@ -22,20 +22,20 @@
         background-size: cover;
         background-color: $light-primary;
         border-radius: $default-radius !important;
-        .logout {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-            .logoutBtn {
-                color: $common-white;
-                justify-self: center;
-                &:hover {
-                    background-color: $main-info;
-                }
-            }
-        }
+        // .logout {
+        //     width: 100%;
+        //     display: flex;
+        //     flex-direction: row;
+        //     justify-content: flex-end;
+        //     align-items: center;
+        //     .logoutBtn {
+        //         color: $common-white;
+        //         justify-self: center;
+        //         &:hover {
+        //             background-color: $main-info;
+        //         }
+        //     }
+        // }
         .infoAvatar {
             display: flex;
             flex-direction: row;

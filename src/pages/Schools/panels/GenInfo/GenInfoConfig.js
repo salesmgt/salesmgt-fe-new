@@ -8,42 +8,35 @@ export const Consts = {
         save: 'Save',
     },
     fields: {
-        school: {
-            name: {
-                title: 'Name',
-            },
-            addr: {
-                title: 'Address',
-            },
-            dist: {
-                title: 'District',
-            },
-            status: {
-                title: 'School Active',
-            },
-            eduLvl: {
-                title: 'Educational Level',
-            },
-            scale: {
-                title: 'School Scale',
-            },
-            type: {
-                title: 'School Type',
-            },
-            salesStatus: {
-                title: 'School Status',
-            },
-            des: {
-                title: 'Description',
-            },
+        name: {
+            title: 'School Name',
         },
-        contact: {
-            email: {
-                title: 'Email',
-            },
-            tel: {
-                title: 'Tel',
-            },
+        addr: {
+            title: 'Address',
+        },
+        dist: {
+            title: 'District',
+        },
+        status: {
+            title: 'School Active',
+        },
+        eduLvl: {
+            title: 'Educational Level',
+        },
+        scale: {
+            title: 'School Scale',
+        },
+        type: {
+            title: 'School Type',
+        },
+        salesStatus: {
+            title: 'School Status',
+        },
+        des: {
+            title: 'Description',
+        },
+        tel: {
+            title: 'Tel',
         },
     },
 }

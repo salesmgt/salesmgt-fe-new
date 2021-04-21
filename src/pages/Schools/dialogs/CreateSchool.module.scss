@@ -1,18 +1,22 @@
 @import '../../../styles/Variables.module.scss';
 
-.wrapper {
-    padding: 1.5rem 2rem 0 !important; // top (right & left) bottom
-    height: 100%;
-    overflow-y: auto;
+.dialogCont {
+    padding: 1rem !important;
+    .wrapper {
+        overflow-y: auto;
+    }
 }
 
-.btnSave {    
-    color: $common-white !important;
-    background-color: $main-info !important;
-    &:hover {
-        background-color: $dark-info !important;
-    }
-    &:disabled {
-        background-color: $divider !important;
+.dialogAct {
+    padding: 1rem !important;
+    .btnSave {
+        color: $common-white !important;
+        background-color: $main-info !important;
+        &:hover {
+            background-color: $dark-info !important;
+        }
+        &:disabled {
+            background-color: $divider !important;
+        }
     }
 }

@@ -11,7 +11,9 @@ $banner: url(../../assets/images/major/banner-major-edu.png);
 }
 /* App bar */
 .appBar {
-    background-color: $navy-a700 !important;
+    // background-color: $navy-a700 !important;
+    background-color: $common-white !important;
+
     width: calc(100% - #{$drawer-width-close}) !important;
     z-index: 1201 !important;
     transition-property: width, margin !important;
@@ -39,7 +41,8 @@ $banner: url(../../assets/images/major/banner-major-edu.png);
     }
     .title {
         font-weight: 500;
-        color: $common-white;
+        // color: $common-white;
+        color: $common-black;
         flex-grow: 1;
         align-self: center;
     }

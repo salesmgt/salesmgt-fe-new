@@ -171,7 +171,7 @@ SortableTableHeaders.propTypes = {
 const useStyles = makeStyles(() => ({
     itemPIC: {
         padding: 0,
-        margin: 0
+        margin: 0,
     },
     itemTextLarge: {
         fontSize: '1rem',
@@ -181,8 +181,8 @@ const useStyles = makeStyles(() => ({
     },
     itemTextSmall: {
         fontSize: '0.8rem',
-    }
-}));
+    },
+}))
 
 // Customize component Table
 function Tables(props) {
@@ -324,13 +324,13 @@ function Tables(props) {
     const setPurposeChipColor = (purpose) => {
         switch (purpose) {
             case 'Sales mới':
-                return <Chip label={purpose} className={classes.chipSalesMoi} />;
+                return <Chip label={purpose} className={classes.chipSalesMoi} />
             case 'Chăm sóc':
-                return <Chip label={purpose} className={classes.chipChamSoc} />;
+                return <Chip label={purpose} className={classes.chipChamSoc} />
             case 'Tái ký hợp đồng':
-                return <Chip label={purpose} className={classes.chipTaiKy} />;
+                return <Chip label={purpose} className={classes.chipTaiKy} />
             case 'Ký mới hợp đồng':
-                return <Chip label={purpose} className={classes.chipKyMoi} />;
+                return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 return <Chip label={purpose} /> // #5c21f3
         }
@@ -396,11 +396,12 @@ function Tables(props) {
                                             secondary={row.district}
                                             classes={{
                                                 primary: styles.itemTextLarge,
-                                                secondary: styles.itemTextMedium
+                                                secondary:
+                                                    styles.itemTextMedium,
                                             }}
-                                        // primaryTypographyProps={classes.tCellPrimaryText}
-                                        // primaryTypographyProps={{ style: { fontSize: '1rem' } }}
-                                        // secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
+                                            // primaryTypographyProps={classes.tCellPrimaryText}
+                                            // primaryTypographyProps={{ style: { fontSize: '1rem' } }}
+                                            // secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                                         />
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>
@@ -408,8 +409,8 @@ function Tables(props) {
                                     </TableCell> */}
                                     <TableCell
                                         className={classes.tBodyCell}
-                                    // onMouseEnter={handlePopoverOpen}
-                                    // onMouseLeave={handlePopoverClose}
+                                        // onMouseEnter={handlePopoverOpen}
+                                        // onMouseLeave={handlePopoverClose}
                                     >
                                         {/* <Typography
                     aria-owns={!!anchorEl ? 'mouse-over-popover' : undefined}
@@ -417,7 +418,7 @@ function Tables(props) {
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                   > */}
-                                        {row.reprGender
+                                        {row.reprisMale
                                             ? `Mr. ${row.reprName}`
                                             : `Ms. ${row.reprName}`}
                                         {/* </Typography> */}
@@ -455,8 +456,10 @@ function Tables(props) {
                                                 primary={row.fullName}
                                                 secondary={row.username}
                                                 classes={{
-                                                    primary: styles.itemTextMedium,
-                                                    secondary: styles.itemTextSmall
+                                                    primary:
+                                                        styles.itemTextMedium,
+                                                    secondary:
+                                                        styles.itemTextSmall,
                                                 }}
                                             />
                                         </ListItem>
@@ -481,7 +484,13 @@ function Tables(props) {
                             ))
                         ) : (
                             <TableRow className={classes.tBodyRow}>
-                                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+                                <TableCell
+                                    className={classes.noRecord}
+                                    component="td"
+                                    colspan="100%"
+                                >
+                                    No records found.
+                                </TableCell>
                             </TableRow>
                         )}
                     </TableBody>

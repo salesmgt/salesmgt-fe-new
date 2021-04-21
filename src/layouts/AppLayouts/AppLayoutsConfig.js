@@ -5,89 +5,43 @@ import {
     MdAssignment,
     MdDateRange,
     MdSchool,
-    MdGroup,
+    // MdGroup,
     MdDescription,
+    MdAccountCircle,
+    MdExitToApp,
 } from 'react-icons/md'
-// import {
-//     Dashboards,
-//     Accounts,
-//     TargetSchools,
-//     WorkPlans,
-//     Schools,
-//     Salesmen,
-//     Reports,
-//     Profiles,
-// } from '../pages'
-// import AccountProvider from '../pages/Accounts/hooks/AccountContext'
-// import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
-// import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
-// import TargetSchoolProvider from '../pages/TargetSchools/hooks/TargetSchoolContext'
+import { roleNames } from '../../utils/Constants'
 
-const menuData = [
+const menuItems = [
     {
         title: 'Dashboards',
         path: 'dashboards',
         icon: <MdDashboard />,
-        // component: () => <Dashboards />,
-        // component: <Dashboards />,
     },
     {
         title: 'Accounts',
         path: 'accounts',
         icon: <MdPerson />,
-        // component: () => (
-        //     <AccountProvider>
-        //         <Accounts />
-        //     </AccountProvider>
-        // ),
-        // component: <Accounts />,
     },
     {
         title: 'Target Schools',
         path: 'target-schools',
         icon: <MdAssignment />,
-        // component: () => (
-        //     <TargetSchoolProvider>
-        //         <TargetSchools />
-        //     </TargetSchoolProvider>
-        // ),
-        // component: <TargetSchools />,
     },
     {
         title: 'Work Plans',
         path: 'work-plans',
         icon: <MdDateRange />,
-        // component: () => <WorkPlans />,
-        // component: <WorkPlans />,
     },
     {
         title: 'Schools',
         path: 'schools',
         icon: <MdSchool />,
-        // component: () => (
-        //     <SchoolProvider>
-        //         <Schools />
-        //     </SchoolProvider>
-        // ),
-        // component: <Schools />,
-    },
-    {
-        title: 'Salesmen',
-        path: 'salesmen',
-        icon: <MdGroup />,
-        // component: () => (
-        //     <SalesmanProvider>
-        //         <Salesmen />
-        //     </SalesmanProvider>
-        // ),
-        // component: <Salesmen />,
     },
     {
         title: 'Reports',
         path: 'reports',
         icon: <MdDescription />,
-        // component: () => <Reports />,
-        // component: <Reports />,
     },
 ]
 
@@ -98,24 +52,23 @@ export function getMenuItems(role) {
         targetSchools,
         workPlans,
         schools,
-        salesmen,
         reports,
-    ] = menuData
+    ] = menuItems
     switch (role) {
-        case 'ADMIN':
+        case roleNames.admin:
             return [accounts, schools]
-        case 'SALES MANAGER':
-            return [
-                dashboards,
-                workPlans,
-                schools,
-                targetSchools,
-                salesmen,
-                reports,
-            ]
-        case 'SALESMAN':
+        case roleNames.manager:
+            return [dashboards, workPlans, targetSchools, reports]
+        case roleNames.supervisor:
+            return [dashboards, workPlans, targetSchools, reports]
+        case roleNames.salesman:
             return [dashboards, workPlans, targetSchools, reports]
         default:
-            throw new Error()
+            break
     }
+}
+
+export const userMenuItems = {
+    0: [{ title: 'My Profile', icon: <MdExitToApp /> }],
+    1: [{ title: 'Log Out', icon: <MdAccountCircle /> }],
 }

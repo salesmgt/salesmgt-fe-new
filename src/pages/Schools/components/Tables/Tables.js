@@ -248,7 +248,9 @@ function Tables(props) {
                                     >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
-                                    <TableCell className={classes.tCellSchoolName}>
+                                    <TableCell
+                                        className={classes.tCellSchoolName}
+                                    >
                                         {row.educationalLevel} {row.name}
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>
@@ -285,7 +287,13 @@ function Tables(props) {
                             ))
                         ) : (
                             <TableRow className={classes.tBodyRow}>
-                                <TableCell className={classes.noRecord} component="td" colspan="100%">No records found.</TableCell>
+                                <TableCell
+                                    className={classes.noRecord}
+                                    component="td"
+                                    colspan="100%"
+                                >
+                                    No records found.
+                                </TableCell>
                             </TableRow>
                         )}
                     </TableBody>

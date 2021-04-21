@@ -8,12 +8,11 @@ export const Consts = {
     },
     fields: {
         fullName: {
-            title: 'Username',
+            title: 'Full Name',
         },
         isMale: {
             title: 'Gender',
         },
-
         email: {
             title: 'Email',
         },

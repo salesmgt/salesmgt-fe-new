@@ -12,6 +12,8 @@ import {
 } from '@material-ui/core'
 import { MdArrowBack } from 'react-icons/md'
 import { Animation } from '../../components'
+import { useAuth } from '../../hooks/AuthContext'
+import { defaultRoutes } from '../../routes/routes'
 import classes from './DetailLayouts.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +39,8 @@ function DetailLayouts(props) {
         children,
     } = props
 
+    const { user } = useAuth()
+
     const styles = useStyles()
 
     const history = useHistory()
@@ -54,7 +58,15 @@ function DetailLayouts(props) {
                             <Typography
                                 className={classes.nav}
                                 component={Button}
-                                onClick={() => history.goBack()}
+                                onClick={() => {
+                                    if (history.location.state) {
+                                        history.goBack()
+                                    } else {
+                                        history.push(
+                                            defaultRoutes[user.roles[0]].route
+                                        )
+                                    }
+                                }}
                             >
                                 <Icon className={classes.icon}>
                                     <MdArrowBack />

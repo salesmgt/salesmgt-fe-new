@@ -6,7 +6,8 @@ import {
     AccordionDetails,
     Typography,
     Select,
-    Grid, Box,
+    Grid,
+    Box,
     InputLabel,
     ListSubheader,
     MenuItem,
@@ -23,10 +24,16 @@ import {
     Divider,
     DialogContent,
     DialogContentText,
-    DialogActions
+    DialogActions,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
+import {
+    MdAccountCircle,
+    MdAdd,
+    MdExpandMore,
+    MdFilterList,
+    MdPersonAdd,
+} from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../../../hooks/reducer-action-type'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
@@ -35,15 +42,15 @@ import AssignMultiple from '../../dialogs/AssignMultiple'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
-const ITEM_HEIGHT = 38;
-const ITEM_PADDING_TOP = 5;
+const ITEM_HEIGHT = 38
+const ITEM_PADDING_TOP = 5
 const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-        }
-    }
-};
+        },
+    },
+}
 //==============================================================
 
 const useStyles = makeStyles((theme) => ({
@@ -58,19 +65,19 @@ const useStyles = makeStyles((theme) => ({
         // borderRadius: '8px'
     },
     flexItem: {
-        padding: 0  //'0 0.2rem'
+        padding: 0, //'0 0.2rem'
     },
     option: {
-        fontSize: '0.875rem'
+        fontSize: '0.875rem',
     },
     lastOption: {
         fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0'
+        borderBottom: '0.5px solid #e0e0e0',
     },
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '8px'
+        borderRadius: '8px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
     root: {},
@@ -86,26 +93,26 @@ const useStyles = makeStyles((theme) => ({
     menuItemSelected: {},
     autoComplete: {
         width: 250,
-        marginLeft: '0.5rem'
+        marginLeft: '0.5rem',
     },
     itemPIC: {
         padding: 0,
-        margin: 0
+        margin: 0,
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
     },
     padding: {
         paddingTop: '0.3rem',
-        paddingLeft: '1.5rem'
+        paddingLeft: '1.5rem',
     },
     paddingTop: {
-        paddingTop: '0.3rem'
+        paddingTop: '0.3rem',
     },
     paddingLeft: {
-        paddingLeft: '1.5rem'
-    }
-}));
+        paddingLeft: '1.5rem',
+    },
+}))
 
 const MuiAccordion = withStyles({
     root: {
@@ -127,7 +134,7 @@ const MuiAccordion = withStyles({
         },
     },
     expanded: {},
-})(Accordion);
+})(Accordion)
 
 const MuiAccordionSummary = withStyles({
     root: {
@@ -138,7 +145,7 @@ const MuiAccordionSummary = withStyles({
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
         // boxShadow: '1px 1px 2px gray',
-        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        boxShadow: '0 4px 6px -6px #000', // 0px 1px 1px gray
         borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
@@ -152,33 +159,48 @@ const MuiAccordionSummary = withStyles({
         },
     },
     expanded: {},
-})(AccordionSummary);
+})(AccordionSummary)
 
 const MuiAccordionDetails = withStyles((theme) => ({
     root: {
         // backgroundColor: 'rgb(238, 238, 238)',
         // backgroundColor: 'rgb(255, 255, 255)',
         margin: '0.5rem 0',
-        padding: '0.3rem 0 1rem 1.5rem',  // top (right-left) bottom
+        padding: '0.3rem 0 1rem 1.5rem', // top (right-left) bottom
         borderRadius: '8px',
     },
-}))(AccordionDetails);
+}))(AccordionDetails)
 
 function Filters() {
     //   const style = useStyles();
-    const classes = useStyles();
+    const classes = useStyles()
     // const { onGetTargets } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
     //Use states which have been declared in the TargetSchoolContext
     const {
-        params, dispatchParams,
-        PICs, districts, schoolYears,
-        schoolTypes, schoolLevels, schoolScales,
-        schoolYear, district, schoolType, schoolLevel,
-        schoolScale, PIC, purpose,
-        setSchoolYear, setDistrict, setSchoolType,
-        setSchoolLevel, setSchoolScale, setPIC, setPurpose
+        params,
+        dispatchParams,
+        PICs,
+        districts,
+        schoolYears,
+        schoolTypes,
+        schoolLevels,
+        schoolScales,
+        schoolYear,
+        district,
+        schoolType,
+        schoolLevel,
+        schoolScale,
+        PIC,
+        purpose,
+        setSchoolYear,
+        setDistrict,
+        setSchoolType,
+        setSchoolLevel,
+        setSchoolScale,
+        setPIC,
+        setPurpose,
     } = useTargetSchool()
 
     // const { listFilters } = params  //, searchKey, sorting, paging
@@ -193,217 +215,242 @@ function Filters() {
             schoolName: 'THCS Hiệp Thành',
             district: 'Quận 4',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 12,
             schoolName: 'Tiểu học Xuân Thu',
             district: 'Quận Bình Tân',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 13,
             schoolName: 'THCS Võ Trường Toản',
             district: 'Quận 1',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 16,
             schoolName: 'THPT Nguyễn Thượng Hiền',
             district: 'Quận Phú Nhuận',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 20,
             schoolName: 'THPT Marie Cuire',
             district: 'Quận 10',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 21,
             schoolName: 'Tiểu học Đặng Trần Côn',
             district: 'Quận 12',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 30,
             schoolName: 'THPT Nguyễn Trãi',
             district: 'Quận 3',
             purpose: '',
-            note: ''
+            note: '',
         },
         {
             id: 34,
             schoolName: 'Tiểu học Nguyễn Văn Cừ',
             district: 'Quận 5',
             purpose: '',
-            note: ''
+            note: '',
         },
-    ]  // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
+    ] // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
 
     //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
-        const selectedSchoolYear = event.target.value;
-        setSchoolYear(selectedSchoolYear);
+        const selectedSchoolYear = event.target.value
+        setSchoolYear(selectedSchoolYear)
 
-        if (selectedSchoolYear) {   // !== ''
+        if (selectedSchoolYear) {
+            // !== ''
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_YEAR,
-                payload: { filterType: 'schoolYear', filterValue: selectedSchoolYear }
+                payload: {
+                    filterType: 'schoolYear',
+                    filterValue: selectedSchoolYear,
+                },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_YEAR,
-                payload: { filterType: 'schoolYear', filterValue: '' }
+                payload: { filterType: 'schoolYear', filterValue: '' },
             })
         }
-    };
+    }
 
     const handleDistrictChange = (event) => {
-        const selectedDistrict = event.target.value;
-        console.log('selectedDistrict: ', selectedDistrict);
-        setDistrict(selectedDistrict);
+        const selectedDistrict = event.target.value
+        console.log('selectedDistrict: ', selectedDistrict)
+        setDistrict(selectedDistrict)
 
-        if (selectedDistrict) { // !== ''
+        if (selectedDistrict) {
+            // !== ''
             dispatchParams({
                 type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: selectedDistrict }
+                payload: {
+                    filterType: 'district',
+                    filterValue: selectedDistrict,
+                },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: '' }
+                payload: { filterType: 'district', filterValue: '' },
             })
         }
-    };
+    }
 
     const handleSchoolTypeChange = (event) => {
-        const selectedSchoolType = event.target.value;
-        setSchoolType(selectedSchoolType);
+        const selectedSchoolType = event.target.value
+        setSchoolType(selectedSchoolType)
 
-        if (selectedSchoolType) {   // !== ''
+        if (selectedSchoolType) {
+            // !== ''
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: { filterType: 'type', filterValue: selectedSchoolType }
+                payload: {
+                    filterType: 'type',
+                    filterValue: selectedSchoolType,
+                },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: { filterType: 'type', filterValue: '' }
+                payload: { filterType: 'type', filterValue: '' },
             })
         }
-    };
+    }
 
     const handleSchoolLevelChange = (event) => {
-        const selectedSchoolLevel = event.target.value;
-        setSchoolLevel(selectedSchoolLevel);
+        const selectedSchoolLevel = event.target.value
+        setSchoolLevel(selectedSchoolLevel)
 
-        if (selectedSchoolLevel) {  // !== ''
+        if (selectedSchoolLevel) {
+            // !== ''
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: { filterType: 'level', filterValue: selectedSchoolLevel }
+                payload: {
+                    filterType: 'level',
+                    filterValue: selectedSchoolLevel,
+                },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: { filterType: 'level', filterValue: '' }
+                payload: { filterType: 'level', filterValue: '' },
             })
         }
-    };
+    }
 
     const handleSchoolScaleChange = (event) => {
-        const selectedSchoolScale = event.target.value;
-        setSchoolScale(selectedSchoolScale);
+        const selectedSchoolScale = event.target.value
+        setSchoolScale(selectedSchoolScale)
 
-        if (selectedSchoolScale) {  // !== ''
+        if (selectedSchoolScale) {
+            // !== ''
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: { filterType: 'scale', filterValue: selectedSchoolScale }
+                payload: {
+                    filterType: 'scale',
+                    filterValue: selectedSchoolScale,
+                },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: { filterType: 'scale', filterValue: '' }
+                payload: { filterType: 'scale', filterValue: '' },
             })
         }
-    };
+    }
 
     const handlePICChange = (event, newPIC) => {
-        setPIC(newPIC);
-        console.log('handle change, new PIC', newPIC);
-        if (newPIC) {   //  !== null
+        setPIC(newPIC)
+        console.log('handle change, new PIC', newPIC)
+        if (newPIC) {
+            //  !== null
             dispatchParams({
                 type: ReducerActions.FILTER_PIC,
-                payload: { filterType: 'PIC', filterValue: newPIC }
+                payload: { filterType: 'PIC', filterValue: newPIC },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_PIC,
-                payload: { filterType: 'PIC', filterValue: null }
+                payload: { filterType: 'PIC', filterValue: null },
             })
         }
-    };
+    }
 
     const handlePurposeChange = (event) => {
-        const selectedPurpose = event.target.value;
-        setPurpose(selectedPurpose);
+        const selectedPurpose = event.target.value
+        setPurpose(selectedPurpose)
 
-        if (selectedPurpose) {  // !== '' && selectedPurpose !== undefined
+        if (selectedPurpose) {
+            // !== '' && selectedPurpose !== undefined
             dispatchParams({
                 type: ReducerActions.FILTER_PURPOSE,
-                payload: { filterType: 'purpose', filterValue: selectedPurpose }
+                payload: {
+                    filterType: 'purpose',
+                    filterValue: selectedPurpose,
+                },
             })
         } else {
             dispatchParams({
                 type: ReducerActions.FILTER_PURPOSE,
-                payload: { filterType: 'purpose', filterValue: '' }
+                payload: { filterType: 'purpose', filterValue: '' },
             })
         }
-    };
+    }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
     const handleChipsRemoved = (removedFilters) => {
-        removedFilters.forEach(removedFilter => {
+        removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 case 'schoolYear':
-                    setSchoolYear("All");
-                    break;
+                    setSchoolYear('All')
+                    break
                 case 'district':
-                    setDistrict("All");
-                    break;
+                    setDistrict('All')
+                    break
                 case 'type':
-                    setSchoolType("All");
-                    break;
+                    setSchoolType('All')
+                    break
                 case 'level':
-                    setSchoolLevel("All");
-                    break;
+                    setSchoolLevel('All')
+                    break
                 case 'scale':
-                    setSchoolScale("All");
-                    break;
+                    setSchoolScale('All')
+                    break
                 case 'PIC':
-                    setPIC(null);
-                    break;
+                    setPIC(null)
+                    break
                 case 'purpose':
-                    setPurpose("All");
-                    break;
+                    setPurpose('All')
+                    break
                 default:
-                    // throw new Error();
-                    break;
+                    // break;
+                    break
             }
-        });
-    };
+        })
+    }
 
     const generateChipsArray = (listFilters) => {
-        const listChips = [];
+        const listChips = []
         for (const chip in listFilters) {
-            listChips.push(listFilters[chip]);
+            listChips.push(listFilters[chip])
         }
-        return listChips;
+        return listChips
     }
     //===============================================================================
 
@@ -411,33 +458,38 @@ function Filters() {
     const handleSearch = (keyword) => {
         dispatchParams({
             type: ReducerActions.ENTER_SEARCH_KEYWORD,
-            payload: keyword
+            payload: keyword,
         })
     }
 
     const handleOpenCreateDialog = () => {
-        console.log('create dialog');
-
+        console.log('create dialog')
     }
 
     const handleOpenAssignDialog = () => {
         if (selectedSchools.length > 0) {
-            console.log('assign dialog');
-            setOpenAssignDialog(true);
+            console.log('assign dialog')
+            setOpenAssignDialog(true)
         } else {
-            console.log('noti dialog: ');
-            setOpenNotifyDialog(true);
+            console.log('noti dialog: ')
+            setOpenNotifyDialog(true)
         }
     }
 
     return (
         <div className={styles.wrapper}>
             <MuiAccordion>
-                <Box display="flex" flexWrap="nowrap" className={classes.flexBox}>
+                <Box
+                    display="flex"
+                    flexWrap="nowrap"
+                    className={classes.flexBox}
+                >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList className={styles.iconFilter} /> &nbsp;
-                        <Typography>Filters</Typography>    {/* { renderCount }  */}
+                            <MdFilterList className={styles.iconFilter} />{' '}
+                            &nbsp;
+                            <Typography>Filters</Typography>{' '}
+                            {/* { renderCount }  */}
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -449,17 +501,20 @@ function Filters() {
                         />
                     </Box>
                     <Box className={classes.flexItem}>
-                        <SearchFields placeholder="Search..." onChange={handleSearch} />
+                        <SearchFields
+                            placeholder="Search..."
+                            onChange={handleSearch}
+                        />
                     </Box>
                     <Box className={classes.flexItem}>
                         <Button
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-
                             onClick={handleOpenCreateDialog}
                         >
-                            <MdAdd fontSize="large" />&nbsp;Create
+                            <MdAdd fontSize="large" />
+                            &nbsp;Create
                         </Button>
                     </Box>
                     <Box className={classes.flexItem}>
@@ -485,11 +540,20 @@ function Filters() {
                             <DialogTitle>Notify</DialogTitle>
                             <Divider />
                             <DialogContent>
-                                <DialogContentText className={classes.dialogText}>
+                                <DialogContentText
+                                    className={classes.dialogText}
+                                >
                                     <p>
-                                        In the Target School table, please choose target schools you want to assign.
+                                        In the Target School table, please
+                                        choose target schools you want to
+                                        assign.
                                     </p>
-                                    <p><i><b>Tips:</b> Filters and search box may help you find schools faster.</i></p>
+                                    <p>
+                                        <i>
+                                            <b>Tips:</b> Filters and search box
+                                            may help you find schools faster.
+                                        </i>
+                                    </p>
                                 </DialogContentText>
                             </DialogContent>
                             <Divider />
@@ -516,7 +580,9 @@ function Filters() {
                                 autoHighlight
                                 clearOnEscape
                                 options={PICs}
-                                getOptionLabel={(pic) => pic.fullName ? pic.fullName : ""}
+                                getOptionLabel={(pic) =>
+                                    pic.fullName ? pic.fullName : ''
+                                }
                                 value={PIC}
                                 renderInput={(params) => {
                                     return (
@@ -525,18 +591,18 @@ function Filters() {
                                             label="PICs"
                                             margin="normal"
                                             placeholder="PIC's name"
-                                        // ref={params.InputProps.ref}
-                                        // InputProps={{
-                                        //     ...params.InputProps,
-                                        //     startAdornment: (
-                                        //         <>
-                                        //             <InputAdornment position="start">
-                                        //                 <MdAccountCircle />
-                                        //             </InputAdornment>
-                                        //             {params.InputProps.startAdornment}
-                                        //         </>
-                                        //     )
-                                        // }}
+                                            // ref={params.InputProps.ref}
+                                            // InputProps={{
+                                            //     ...params.InputProps,
+                                            //     startAdornment: (
+                                            //         <>
+                                            //             <InputAdornment position="start">
+                                            //                 <MdAccountCircle />
+                                            //             </InputAdornment>
+                                            //             {params.InputProps.startAdornment}
+                                            //         </>
+                                            //     )
+                                            // }}
                                         />
                                     )
                                 }}
@@ -546,16 +612,35 @@ function Filters() {
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
-                                            <ListItemText primary={option.fullName ? option.fullName : ""} classes={{ primary: classes.itemTextPrimary }} />
+                                            <ListItemText
+                                                primary={
+                                                    option.fullName
+                                                        ? option.fullName
+                                                        : ''
+                                                }
+                                                classes={{
+                                                    primary:
+                                                        classes.itemTextPrimary,
+                                                }}
+                                            />
                                         </ListItem>
-                                    );
+                                    )
                                 }}
                                 className={classes.autoComplete}
-                                onChange={(event, newPIC) => handlePICChange(event, newPIC)}
+                                onChange={(event, newPIC) =>
+                                    handlePICChange(event, newPIC)
+                                }
                             />
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={3} className={classes.padding}>
+                        <Grid
+                            item
+                            xs={6}
+                            sm={4}
+                            md={4}
+                            lg={3}
+                            className={classes.padding}
+                        >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Purposes</InputLabel>
                                 <Select
@@ -630,10 +715,21 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={5} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={6}
+                            sm={4}
+                            md={4}
+                            lg={5}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Districts</InputLabel>
-                                <Select value={district} onChange={handleDistrictChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={district}
+                                    onChange={handleDistrictChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -651,7 +747,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {dist}
@@ -664,7 +761,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Years</InputLabel>
-                                <Select value={schoolYear} onChange={handleSchoolYearChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolYear}
+                                    onChange={handleSchoolYearChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -682,7 +783,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {year}
@@ -692,10 +794,21 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={3} lg={3} className={classes.paddingLeft}>
+                        <Grid
+                            item
+                            xs={6}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingLeft}
+                        >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Types</InputLabel>
-                                <Select value={schoolType} onChange={handleSchoolTypeChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolType}
+                                    onChange={handleSchoolTypeChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -713,7 +826,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {type}
@@ -726,7 +840,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Levels</InputLabel>
-                                <Select value={schoolLevel} onChange={handleSchoolLevelChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolLevel}
+                                    onChange={handleSchoolLevelChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -744,7 +862,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {level}
@@ -757,7 +876,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Scales</InputLabel>
-                                <Select value={schoolScale} onChange={handleSchoolScaleChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={schoolScale}
+                                    onChange={handleSchoolScaleChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -775,7 +898,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {scale}

@@ -1,13 +1,6 @@
-import React, {
-    useState,
-    useContext,
-    createContext,
-    useReducer,
-    // useEffect,
-} from 'react'
-// import { useHistory } from 'react-router'
-// import * as FiltersServices from '../../../services/FiltersServices'
+import React, { useState, useContext, createContext, useReducer } from 'react'
 import { AccountReducer } from './AccountReducer'
+import { ACTIVE_FILTER, ROLE_FILTER } from '../components/Filters/FilterConsts'
 
 const AccountContext = createContext()
 
@@ -15,13 +8,15 @@ export function useAccount() {
     return useContext(AccountContext)
 }
 
+let defaultFilters = {
+    isActive: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: 'Active' } },
+    role: { filterType: ROLE_FILTER, filterValue: '' },
+}
+
 function useAccountProvider() {
     // Reducer
     const [params, dispatchParams] = useReducer(AccountReducer, {
-        listFilters: {
-            isActive: { filterType: 'isActive', filterValue: { isActive: true, status: 'Active' } },
-            role: { filterType: 'role', filterValue: '' },
-        },
+        listFilters: defaultFilters,
         searchKey: '',
         page: 0,
         limit: 10,
@@ -38,39 +33,60 @@ function useAccountProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    const [isActive, setIsActive] = useState({ isActive: true, status: 'Active' })
-    const [role, setRole] = useState('')
-
-    // APIs
-    // const isActives = [true, false]  // bỏ, chỉ có 2 gtrị thì làm luôn FE
     const workingStatuses = [
         { isActive: true, status: 'Active' },
         { isActive: false, status: 'Inactive' }
     ]
+    // Ha's
+    // const [isActive, setIsActive] = useState({ isActive: true, status: 'Active' })  // const [active, setActive] = useState(true)
+    // const [role, setRole] = useState('')
+
+    // Nguyen's ?????????????????????????????????????
+    const [selectedIsActive, setSelectedIsActive] = useState(
+        // defaultFilters.isActive.filterValue
+        //     ? defaultFilters.isActive.filterValue
+        //     : { isActive: true, status: 'Active' }
+
+        defaultFilters.isActive.filterValue.status
+            ? defaultFilters.isActive.filterValue.status
+            : { isActive: false, status: 'Inactive' }.status
+        //     // : 'Active'
+    )
+
+    const [role, setRole] = useState(
+        defaultFilters.role.filterValue ? defaultFilters.role.filterValue : ''
+    )
+
+    // APIs
+    // const isActives = [true, false]  // bỏ, chỉ có 2 gtrị thì làm luôn FE
     // const [roles, setRoles] = useState([])   // Bỏ, dùng cái bên LocalStorage
 
     // Search field (do not have)
 
-    // Get filter's data
-    // const getRolesFilter = () => {
-    //     FiltersServices.getRoles()
-    //         .then((data) => {
-    //             setRoles(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
+    // Move API get filter's data to AppContext
 
-    // useEffect(() => {
-    //     getRolesFilter()
-    // }, [])
+    // Fix major BUG
+    const setFilter = (key, value) => {
+        switch (key) {
+            case ACTIVE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    isActive: { filterType: ACTIVE_FILTER, filterValue: value },
+                }
+                console.log('value.status = ', value.status);
+                setSelectedIsActive(value.status)
+                break
+            case ROLE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    role: { filterType: ROLE_FILTER, filterValue: value },
+                }
+                setRole(value)
+                break
+            default:
+                break
+        }
+    }
 
     return {
         params,
@@ -83,11 +99,12 @@ function useAccountProvider() {
         setDirection,
         column,
         setColumn,
-        isActive,
-        setIsActive,
+        selectedIsActive, //isActive,
+        // setIsActive,
         role,
-        setRole,
-        workingStatuses
+        // setRole,
+        workingStatuses,
+        setFilter
     }
 }
 

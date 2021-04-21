@@ -19,9 +19,12 @@
         }
     }
     .content {
+        margin-bottom: 1rem;
         padding: 0.75rem;
+        border: 1px solid $divider;
+        border-radius: $default-radius;
         .child {
-            padding: 0.75rem;
+            // padding: 0.75rem;
         }
         .titleZone {
             padding: 0.75rem;

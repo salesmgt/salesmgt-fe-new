@@ -9,23 +9,35 @@ export function useApp() {
 }
 
 function useAppProvider() {
-    const [dists, setDists] = useState(Milk.getMilk('dists'))
-    const [schYears, setSchYears] = useState(Milk.getMilk('schYears'))
-    const [schEduLvls, setSchEduLvls] = useState(Milk.getMilk('eduLvls'))
-    const [schScales, setSchScales] = useState(Milk.getMilk('scales'))
-    const [schTypes, setSchTypes] = useState(Milk.getMilk('types'))
-    const [schStatus, setSchStatus] = useState(Milk.getMilk('status'))
-    const [salesPurps, setSalesPurps] = useState(Milk.getMilk('salesPurps'))
-    const [roles, setRoles] = useState(Milk.getMilk('roles'))
+    const [dists, setDists] = useState(
+        Milk.getMilk('dists') ? Milk.getMilk('dists') : null
+    )
+    const [schEduLvls, setSchEduLvls] = useState(
+        Milk.getMilk('eduLvls') ? Milk.getMilk('eduLvls') : null
+    )
+    const [schScales, setSchScales] = useState(
+        Milk.getMilk('types') ? Milk.getMilk('types') : null
+    )
+    const [schTypes, setSchTypes] = useState(
+        Milk.getMilk('scales') ? Milk.getMilk('scales') : null
+    )
+    const [schStatus, setSchStatus] = useState(
+        Milk.getMilk('status') ? Milk.getMilk('status') : null
+    )
+    const [roles, setRoles] = useState(
+        Milk.getMilk('roles') ? Milk.getMilk('roles') : null
+    )
 
-    // const [salesPurps] = useState(JSON.parse(localStorage.getItem('purps')))
-    // const [pics] = useState(null)
+    const [schYears, setSchYears] = useState(
+        Milk.getMilk('schYears') ? Milk.getMilk('schYears') : null
+    )
+    const [salesPurps, setSalesPurps] = useState(
+        Milk.getMilk('salesPurps') ? Milk.getMilk('salesPurps') : null
+    )
 
     useEffect(() => {
         FiltersServices.getDistricts()
             .then((data) => {
-                // localStorage.setItem('dists', JSON.stringify(data))
-                // setDists(JSON.parse(localStorage.getItem('dists')))
                 Milk.setMilk('dists', data)
                 setDists(Milk.getMilk('dists'))
             })
@@ -39,8 +51,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getEducationalLevels()
             .then((data) => {
-                // localStorage.setItem('eduLvls', JSON.stringify(data))
-                // setSchEduLvls(JSON.parse(localStorage.getItem('eduLvls')))
                 Milk.setMilk('eduLvls', data)
                 setSchEduLvls(Milk.getMilk('eduLvls'))
             })
@@ -54,8 +64,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolTypes()
             .then((data) => {
-                // localStorage.setItem('types', JSON.stringify(data))
-                // setSchTypes(JSON.parse(localStorage.getItem('types')))
                 Milk.setMilk('types', data)
                 setSchTypes(Milk.getMilk('types'))
             })
@@ -69,8 +77,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolScales()
             .then((data) => {
-                // localStorage.setItem('scales', JSON.stringify(data))
-                // setSchScales(JSON.parse(localStorage.getItem('scales')))
                 Milk.setMilk('scales', data)
                 setSchScales(Milk.getMilk('scales'))
             })
@@ -84,8 +90,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolStatuses()
             .then((data) => {
-                // localStorage.setItem('status', JSON.stringify(data))
-                // setSchStatus(JSON.parse(localStorage.getItem('status')))
                 Milk.setMilk('status', data)
                 setSchStatus(Milk.getMilk('status'))
             })
@@ -99,8 +103,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getRoles()
             .then((data) => {
-                // localStorage.setItem('roles', JSON.stringify(data))
-                // setRoles(localStorage.getItem('roles'))
                 Milk.setMilk('roles', data)
                 setRoles(Milk.getMilk('roles'))
             })
@@ -130,22 +132,13 @@ function useAppProvider() {
             .then((data) => {
                 Milk.setMilk('schYears', data)
                 setSchYears(Milk.getMilk('schYears'))
-            }).catch((error) => {
+            })
+            .catch((error) => {
                 if (error.response) {
                     console.log(error)
                 }
             })
     }, [])
-
-    // FiltersServices.getPICs()
-    //     .then((data) => {
-    //         return data
-    //     })
-    //     .catch((error) => {
-    //         if (error.response) {
-    //             console.log(error)
-    //         }
-    //     })
 
     return {
         dists,
@@ -156,7 +149,6 @@ function useAppProvider() {
         schStatus,
         salesPurps,
         roles,
-        // pics,
     }
 }
 

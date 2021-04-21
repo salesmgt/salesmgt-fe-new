@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Chip } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Chip } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import * as ReducerActions from '../../../../../hooks/reducer-action-type'
+import { ACTIVE_FILTER, ROLE_FILTER } from '../FilterConsts'
 // import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -22,118 +23,121 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '0.5rem',
     },
     btnClear: {
-        fontSize: '0.75rem'
+        fontSize: '0.75rem',
     },
     chip: {
         margin: theme.spacing(0.5),
     },
-}));
+}))
 
 function Chips(props) {
-    const classes = useStyles();
-    const { chips, dispatch, handleChipsRemoved } = props;
+    const classes = useStyles()
+    const { chips, dispatch, handleChipsRemoved } = props
 
     //================Generate chips according to filters================
-    const [btnClearAll, setBtnClearAll] = useState(false);
+    const [btnClearAll, setBtnClearAll] = useState(false)
 
     const handleChipDelete = (chipToDelete) => () => {
         switch (chipToDelete.filterType) {
-            case 'active':
+            case ACTIVE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_ACTIVE,
-                    payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } }
+                    payload: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: "Active" } },
                 })
                 break;
 
-            case 'role':
+            case ROLE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_ROLE,
-                    payload: { filterType: 'role', filterValue: '' }
+                    payload: { filterType: ROLE_FILTER, filterValue: '' },
                 })
                 break;
 
             default:
-                // throw new Error();
                 break;
         }
 
-        if (!handleChipsRemoved)
-            return;
+        if (!handleChipsRemoved) return
         // Reset corresponding filters' value to "All" / null
         const removedFilters = [chipToDelete.filterType]
-        handleChipsRemoved(removedFilters);
+        handleChipsRemoved(removedFilters)
     }
 
     const handleClearAllChips = () => {
-        setBtnClearAll(false);
+        setBtnClearAll(false)
 
-        if (!handleChipsRemoved)
-            return;
+        if (!handleChipsRemoved) return
 
         dispatch({
             type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } }
+            payload: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: "Active" } }
         })
         dispatch({
             type: ReducerActions.FILTER_ROLE,
-            payload: { filterType: 'role', filterValue: '' }
+            payload: { filterType: ROLE_FILTER, filterValue: '' },
         })
 
-        const removedFilters = ['isActive', 'role']
+        // const removedFilters = ['active', 'role']
+        const removedFilters = [ACTIVE_FILTER, ROLE_FILTER]
 
-        handleChipsRemoved(removedFilters);
+        handleChipsRemoved(removedFilters)
     }
 
     const handleShowClearAllButton = () => {
-        let count = 0;
-        chips.forEach(chip => {
+        let count = 0
+        chips.forEach((chip) => {
             if (chip.filterValue === '' || chip.filterValue === null)
                 count++;
-        });
-        return count;
+        })
+        return count
     }
 
     return (
         <>
-            {(handleShowClearAllButton() !== 2) &&
+            {handleShowClearAllButton() !== 2 && (
                 <div className={classes.root}>
-                    <Button size='small' className={classes.btnClear} onClick={handleClearAllChips}>
+                    <Button
+                        size="small"
+                        className={classes.btnClear}
+                        onClick={handleClearAllChips}
+                    >
                         Clear all
                     </Button>
                     <ul className={classes.ul}>
                         {chips.map((chip) => {
                             return (
                                 <li key={chip.filterType}>
-                                    {(chip.filterType !== 'isActive' && chip.filterValue) &&
-                                        <Chip
-                                            label={chip.filterValue}
-                                            onDelete={handleChipDelete(chip)}
-                                            className={classes.chip}
-                                            color="secondary"
-                                        />
-                                    }
-                                    {(chip.filterType === 'isActive') &&
+                                    {chip.filterType !== ACTIVE_FILTER &&
+                                        chip.filterValue && (
+                                            <Chip
+                                                label={chip.filterValue}
+                                                onDelete={handleChipDelete(chip)}
+                                                className={classes.chip}
+                                                color="secondary"
+                                            />
+                                        )}
+                                    {chip.filterType === ACTIVE_FILTER && (
                                         <Chip
                                             label={chip.filterValue.status}
                                             onDelete={handleChipDelete(chip)}
                                             className={classes.chip}
                                             color="secondary"
                                         />
-                                    }
+                                    )}
                                 </li>
-                            );
+                            )
                         })}
                     </ul>
                 </div>
-            }
+            )}
         </>
     )
 }
 
-export default React.memo(Chips);
+export default React.memo(Chips)
 
 Chips.propTypes = {
     chips: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
-    handleChipsRemoved: PropTypes.func
+    handleChipsRemoved: PropTypes.func,
 }

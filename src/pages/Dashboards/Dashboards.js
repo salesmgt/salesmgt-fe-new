@@ -3,10 +3,11 @@ import { useHistory, useLocation } from 'react-router-dom'
 import moment from 'moment'
 import { Grid, Typography } from '@material-ui/core'
 import { CardNow, CardRanks, CardJack, MixedCharts } from './components'
-import { Animation, AnimationGroup } from '../../components'
+import { Animation, AnimationGroup, Loading } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import * as DashboardsServices from './DashboardsServices'
 import { rankData, chartData as ChartData, cardData } from './DashboardsConfig'
+import { roleNames } from '../../utils/Constants'
 import classes from './Dashboards.module.scss'
 
 function Dashboards() {
@@ -59,7 +60,7 @@ function Dashboards() {
     }, [location.pathname])
 
     if (!userData) {
-        return null
+        return <Loading />
     }
 
     const { fullName, birthDate } = userData
@@ -102,7 +103,7 @@ function Dashboards() {
 
     const renderLeftBody = (role) => {
         switch (role) {
-            case 'SALES MANAGER':
+            case roleNames.manager:
                 return (
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -147,7 +148,7 @@ function Dashboards() {
                         </Grid>
                     </Grid>
                 )
-            case 'SALES SUPERVISOR':
+            case roleNames.supervisor:
                 return (
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -192,7 +193,7 @@ function Dashboards() {
                         </Grid>
                     </Grid>
                 )
-            case 'SALESMAN':
+            case roleNames.salesman:
                 return (
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -238,7 +239,7 @@ function Dashboards() {
                     </Grid>
                 )
             default:
-                throw new Error()
+                break
         }
     }
 

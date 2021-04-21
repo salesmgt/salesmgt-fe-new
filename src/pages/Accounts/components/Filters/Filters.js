@@ -15,12 +15,13 @@ import {
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
-import { useAccount } from '../../hooks/AccountContext'
 import Chips from './Chips/Chips'
 import CreateAccount from '../../dialogs/CreateAccount'
-import styles from './Filters.module.scss'
+import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import { useAccount } from '../../hooks/AccountContext'
+import { ACTIVE_FILTER, ROLE_FILTER } from './FilterConsts'
 import { useApp } from '../../../../hooks/AppContext'
+import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         padding: '0.5rem',
         margin: '0 0.3rem',
-        borderRadius: '8px'
+        borderRadius: '8px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
     root: {},
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItemSelected: {},
-}));
+}))
 
 const MuiAccordion = withStyles({
     root: {
@@ -98,7 +99,7 @@ const MuiAccordionSummary = withStyles({
         fontWeight: 'bold',
         // borderBottom: '1px solid rgba(0, 0, 0, .125)',
         // boxShadow: '1px 1px 2px gray',
-        boxShadow: '0 4px 6px -6px #000',  // 0px 1px 1px gray
+        boxShadow: '0 4px 6px -6px #000', // 0px 1px 1px gray
         borderRadius: '8px',
         paddingButtom: 0,
         '&$expanded': {
@@ -127,7 +128,7 @@ function Filters() {
     const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
-    const { params, dispatchParams, isActive, setIsActive, role, setRole, workingStatuses } = useAccount()
+    const { params, dispatchParams, selectedIsActive, role, workingStatuses, setFilter } = useAccount()     // isActive,
     const { roles } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
@@ -136,48 +137,86 @@ function Filters() {
     const handleIsActiveChange = (event) => {
         const selectedIsActive = event.target.value
 
-        if (selectedIsActive) {
-            setIsActive({ isActive: true, status: "Active" });
-            dispatchParams({
-                type: ReducerActions.FILTER_ACTIVE,
-                payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } },
-            })
-        } else {
-            setIsActive({ isActive: false, status: "Inactive" });
-            dispatchParams({
-                type: ReducerActions.FILTER_ACTIVE,
-                payload: { filterType: 'isActive', filterValue: { isActive: false, status: "Inactive" } },
-            })
-        }
+        console.log('handleIsActiveChange - selectedIsActive: ', selectedIsActive);
+
+        // if (selectedIsActive) {
+        //     setIsActive({ isActive: true, status: "Active" });
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_ACTIVE,
+        //         payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } },
+        //     })
+        // } else {
+        //     setIsActive({ isActive: false, status: "Inactive" });
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_ACTIVE,
+        //         payload: { filterType: 'isActive', filterValue: { isActive: false, status: "Inactive" } },
+        //     })
+        // }
+
+        // ?????????????????????????????????????????
+        setFilter(ACTIVE_FILTER, selectedIsActive.isActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" })
+        dispatchParams({
+            type: ReducerActions.FILTER_ACTIVE,
+            payload: {
+                filterType: ACTIVE_FILTER,
+                filterValue: selectedIsActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" },
+            },
+        })
     }
 
     const handleRoleChange = (event) => {
         const selectedRole = event.target.value
-        setRole(selectedRole)
-
-        if (selectedRole) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_ROLE,
-                payload: { filterType: 'role', filterValue: selectedRole },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_ROLE,
-                payload: { filterType: 'role', filterValue: '' },
-            })
-        }
+        // setRole(selectedRole)
+        // if (selectedRole) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_ROLE,
+        //         payload: { filterType: 'role', filterValue: selectedRole },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_ROLE,
+        //         payload: { filterType: 'role', filterValue: '' },
+        //     })
+        // }
+        setFilter(ROLE_FILTER, selectedRole)
+        dispatchParams({
+            type: ReducerActions.FILTER_ROLE,
+            payload: {
+                filterType: ROLE_FILTER,
+                filterValue: selectedRole ? selectedRole : '',
+            },
+        })
     }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
+    // const handleChipsRemoved = (removedFilters) => {
+    //     removedFilters.forEach((removedFilter) => {
+    //         switch (removedFilter) {
+    //             case 'active':
+    //                 setActive(true)
+    //                 break
+    //             case 'role':
+    //                 setRole('All')
+    //                 break
+    //             default:
+    //                 break
+    //         }
+    //     })
+    // }
+
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                case 'isActive':
-                    setIsActive({ isActive: true, status: 'Active' })
+                // case 'isActive':
+                //     setIsActive({ isActive: true, status: 'Active' })
+
+                //??????????????????????????????????
+                case ACTIVE_FILTER:
+                    setFilter(ACTIVE_FILTER, { isActive: true, status: "Active" })
                     break
-                case 'role':
-                    setRole('All')
+                case ROLE_FILTER:
+                    setFilter(ROLE_FILTER, '')
                     break
                 default:
                     break
@@ -202,6 +241,8 @@ function Filters() {
         })
     }
 
+    console.log('selectedIsActive: ', selectedIsActive);
+
     return (
         <div className={styles.wrapper}>
             <MuiAccordion>
@@ -212,8 +253,9 @@ function Filters() {
                 >
                     <Box className={classes.flexItem}>
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList className={styles.iconFilter} /> &nbsp;
-                        <Typography>Filters</Typography>
+                            <MdFilterList className={styles.iconFilter} />{' '}
+                            &nbsp;
+                            <Typography>Filters</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -250,7 +292,7 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Working Status</InputLabel>
-                                <Select value={isActive.isActive} defaultValue={{ isActive: true, status: 'Active' }} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                <Select value={selectedIsActive.status} onChange={handleIsActiveChange} MenuProps={MenuProps}>
                                     {workingStatuses.map((workingStatus) => (
                                         <MenuItem
                                             value={workingStatus.isActive}
@@ -270,7 +312,11 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Roles</InputLabel>
-                                <Select value={role} onChange={handleRoleChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={role}
+                                    onChange={handleRoleChange}
+                                    MenuProps={MenuProps}
+                                >
                                     <MenuItem
                                         value=""
                                         className={classes.option}
@@ -288,7 +334,8 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {role}

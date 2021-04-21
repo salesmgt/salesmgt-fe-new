@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo } from './panels'
 import * as AccountsServices from './AccountsServices'
@@ -7,30 +7,40 @@ import * as AccountsServices from './AccountsServices'
 function Account() {
     const [tabValue, setTabValue] = useState(0)
 
+    const { id } = useParams()
     const location = useLocation()
     const history = useHistory()
 
-    const data = location.state?.data
-    const [accountDTO, setAccountDTO] = useState(data?.accountDTO)
+    const stateData = location.state?.data
+    const [account, setAccount] = useState(stateData?.model)
 
-    console.log('Data từ bảng: ', data);
-
+    let isMounted = true
     const refreshPage = (username) => {
-        // console.log('username nè = ', username)
-        AccountsServices.getAccount(username).then((res) => {
-            setAccountDTO(res)
-
-            console.log('Get one: ', res);
-        }).catch(error => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+        AccountsServices.getAccount(username)
+            .then((data) => {
+                if (isMounted) {
+                    setAccount(data)
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        refreshPage(id)
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            isMounted = false
+        }
+    }, [])
 
     const handleChangeTab = (event, value) => {
         setTabValue(value)
@@ -39,16 +49,18 @@ function Account() {
     return (
         <DetailLayouts
             linkBack="Accounts"
-            avatar={accountDTO?.avatar}
-            header={accountDTO?.fullName}
-            subHeader={accountDTO?.active}
+            avatar={account?.avatar}
+            header={account?.fullName}
+            subHeader={account?.active}
             isStatus={true}
             tabs={['General Info']}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >
             {/* General Info */}
-            {tabValue === 0 && <GenInfo data={accountDTO} refreshPage={refreshPage} />}
+            {tabValue === 0 && (
+                <GenInfo account={account} refreshPage={refreshPage} />
+            )}
         </DetailLayouts>
     )
 }

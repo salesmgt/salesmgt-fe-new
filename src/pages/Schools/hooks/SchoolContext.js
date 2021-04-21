@@ -2,12 +2,19 @@ import React, {
     useState,
     useContext,
     createContext,
-    useEffect,
+    // useEffect,
     useReducer,
 } from 'react'
-import * as FiltersServices from '../../../services/FiltersServices'
-import { useHistory } from 'react-router-dom'
 import { SchoolReducer } from './SchoolReducer'
+import {
+    DISTRICT_FILTER,
+    TYPE_FILTER,
+    LEVEL_FILTER,
+    SCALE_FILTER,
+    STATUS_FILTER,
+} from '../components/Filters/FilterConsts'
+// import * as FiltersServices from '../../../services/FiltersServices'
+// import { useHistory } from 'react-router-dom'
 
 const SchoolContext = createContext()
 
@@ -15,18 +22,27 @@ export function useSchool() {
     return useContext(SchoolContext)
 }
 
+let defaultFilters = {
+    district: { filterType: DISTRICT_FILTER, filterValue: '' },
+    type: { filterType: TYPE_FILTER, filterValue: '' },
+    level: { filterType: LEVEL_FILTER, filterValue: '' },
+    scale: { filterType: SCALE_FILTER, filterValue: '' },
+    status: { filterType: STATUS_FILTER, filterValue: '' },
+}
+
 function useSchoolProvider() {
-    const history = useHistory()
+    // const history = useHistory()
 
     // Reducer
     const [params, dispatchParams] = useReducer(SchoolReducer, {
-        listFilters: {
-            district: { filterType: 'district', filterValue: '' },
-            type: { filterType: 'type', filterValue: '' },
-            level: { filterType: 'level', filterValue: '' },
-            scale: { filterType: 'scale', filterValue: '' },
-            status: { filterType: 'status', filterValue: '' },
-        },
+        // listFilters: {
+        //     district: { filterType: 'district', filterValue: '' },
+        //     type: { filterType: 'type', filterValue: '' },
+        //     level: { filterType: 'level', filterValue: '' },
+        //     scale: { filterType: 'scale', filterValue: '' },
+        //     status: { filterType: 'status', filterValue: '' },
+        // },
+        listFilters: defaultFilters,
         searchKey: '',
         page: 0,
         limit: 10,
@@ -43,118 +59,184 @@ function useSchoolProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    const [district, setDistrict] = useState('')
-    const [schoolType, setSchoolType] = useState('')
-    const [schoolLevel, setSchoolLevel] = useState('')
-    const [schoolScale, setSchoolScale] = useState('')
-    const [schoolStatus, setSchoolStatus] = useState('')
+    // const [district, setDistrict] = useState('')
+    // const [schoolType, setSchoolType] = useState('')
+    // const [schoolLevel, setSchoolLevel] = useState('')
+    // const [schoolScale, setSchoolScale] = useState('')
+    // const [schoolStatus, setSchoolStatus] = useState('')
 
-    // APIs
-    const [districts, setDistricts] = useState([])
-    const [schoolTypes, setSchoolTypes] = useState([])
-    const [schoolLevels, setSchoolLevels] = useState([])
-    const [schoolScales, setSchoolScales] = useState([])
-    const [schoolStatuses, setSchoolStatuses] = useState([])
+    const [district, setDistrict] = useState(
+        defaultFilters.district.filterValue
+            ? defaultFilters.district.filterValue
+            : ''
+    )
+    const [schoolType, setSchoolType] = useState(
+        defaultFilters.type.filterValue ? defaultFilters.type.filterValue : ''
+    )
+    const [schoolLevel, setSchoolLevel] = useState(
+        defaultFilters.level.filterValue ? defaultFilters.level.filterValue : ''
+    )
+    const [schoolScale, setSchoolScale] = useState(
+        defaultFilters.scale.filterValue ? defaultFilters.scale.filterValue : ''
+    )
+    const [schoolStatus, setSchoolStatus] = useState(
+        defaultFilters.status.filterValue
+            ? defaultFilters.status.filterValue
+            : ''
+    )
 
-    // Search field (do not have)
-
-    // Get filters' data
-    const getDistrictsFilter = () => {
-        FiltersServices.getDistricts()
-            .then((data) => {
-                setDistricts(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+    // fix major BUG
+    const setFilter = (key, value) => {
+        switch (key) {
+            case DISTRICT_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    district: {
+                        filterType: DISTRICT_FILTER,
+                        filterValue: value,
+                    },
                 }
-            })
+                setDistrict(value)
+                break
+            case TYPE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    type: { filterType: TYPE_FILTER, filterValue: value },
+                }
+                setSchoolType(value)
+                break
+            case LEVEL_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    level: { filterType: LEVEL_FILTER, filterValue: value },
+                }
+                setSchoolLevel(value)
+                break
+            case SCALE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    scale: { filterType: SCALE_FILTER, filterValue: value },
+                }
+                setSchoolScale(value)
+                break
+            case STATUS_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    status: { filterType: STATUS_FILTER, filterValue: value },
+                }
+                setSchoolStatus(value)
+                break
+            default:
+                break
+        }
     }
 
-    const getSchoolTypesFilter = () => {
-        FiltersServices.getSchoolTypes()
-            .then((data) => {
-                setSchoolTypes(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // // APIs
+    // const [districts, setDistricts] = useState([])
+    // const [schoolTypes, setSchoolTypes] = useState([])
+    // const [schoolLevels, setSchoolLevels] = useState([])
+    // const [schoolScales, setSchoolScales] = useState([])
+    // const [schoolStatuses, setSchoolStatuses] = useState([])
 
-    const getSchoolLevelsFilter = () => {
-        FiltersServices.getEducationalLevels()
-            .then((data) => {
-                setSchoolLevels(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // // Search field (do not have)
 
-    const getSchoolScalesFilter = () => {
-        FiltersServices.getSchoolScales()
-            .then((data) => {
-                setSchoolScales(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // // Get filters' data
+    // const getDistrictsFilter = () => {
+    //     FiltersServices.getDistricts()
+    //         .then((data) => {
+    //             setDistricts(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
 
-    const getSchoolStatusesFilter = () => {
-        FiltersServices.getSchoolStatuses()
-            .then((data) => {
-                setSchoolStatuses(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
+    // const getSchoolTypesFilter = () => {
+    //     FiltersServices.getSchoolTypes()
+    //         .then((data) => {
+    //             setSchoolTypes(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
 
-    useEffect(() => {
-        getDistrictsFilter()
-        getSchoolTypesFilter()
-        getSchoolLevelsFilter()
-        getSchoolScalesFilter()
-        getSchoolStatusesFilter()
-    }, [])
+    // const getSchoolLevelsFilter = () => {
+    //     FiltersServices.getEducationalLevels()
+    //         .then((data) => {
+    //             setSchoolLevels(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
+
+    // const getSchoolScalesFilter = () => {
+    //     FiltersServices.getSchoolScales()
+    //         .then((data) => {
+    //             setSchoolScales(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
+
+    // const getSchoolStatusesFilter = () => {
+    //     FiltersServices.getSchoolStatuses()
+    //         .then((data) => {
+    //             setSchoolStatuses(data)
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
+
+    // useEffect(() => {
+    //     getDistrictsFilter()
+    //     getSchoolTypesFilter()
+    //     getSchoolLevelsFilter()
+    //     getSchoolScalesFilter()
+    //     getSchoolStatusesFilter()
+    // }, [])
 
     return {
         params,
         dispatchParams,
-        districts,
-        schoolTypes,
-        schoolLevels,
-        schoolScales,
-        schoolStatuses,
+        // districts,
+        // schoolTypes,
+        // schoolLevels,
+        // schoolScales,
+        // schoolStatuses,
         page,
         setPage,
         limit,
@@ -164,15 +246,16 @@ function useSchoolProvider() {
         column,
         setColumn,
         district,
-        setDistrict,
+        // setDistrict,
         schoolType,
-        setSchoolType,
+        // setSchoolType,
         schoolLevel,
-        setSchoolLevel,
+        // setSchoolLevel,
         schoolScale,
-        setSchoolScale,
+        // setSchoolScale,
         schoolStatus,
-        setSchoolStatus,
+        // setSchoolStatus,
+        setFilter,
     }
 }
 

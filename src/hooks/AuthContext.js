@@ -8,14 +8,16 @@ export function useAuth() {
 }
 
 function useAuthProvider() {
-    const [user, setUser] = useState(Milk.getWithExpiry('notMe'))
+    const [user, setUser] = useState(
+        Milk.getWithExpiry('notMe') ? Milk.getWithExpiry('notMe') : null
+    )
 
     if (!user) {
         localStorage.removeItem('dists')
-        localStorage.removeItem('schEduLvls')
-        localStorage.removeItem('schTypes')
-        localStorage.removeItem('schScales')
-        localStorage.removeItem('schStatus')
+        localStorage.removeItem('eduLvls')
+        localStorage.removeItem('types')
+        localStorage.removeItem('scales')
+        localStorage.removeItem('status')
         localStorage.removeItem('roles')
     }
 

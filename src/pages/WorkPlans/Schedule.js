@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Box, InputAdornment, InputBase, ListItem, ListItemAvatar, ListItemText, TextField } from '@material-ui/core';
+import { Avatar, Box, Grid, InputAdornment, InputBase, ListItem, ListItemAvatar, ListItemText, TextField } from '@material-ui/core';
 import {
     Inject, ScheduleComponent, ViewsDirective, ViewDirective
     , Day, Week, Month, DragAndDrop, Resize
@@ -78,15 +78,13 @@ L10n.load({
 
 
 const Schedule = (props) => {
-
+    const [username,setUsername] = React.useState('')
     const classes = useStyles();
     const [key, setKey] = React.useState('')
     const [startTime, setStartTime] = React.useState(null)
     let schedule = React.useRef(null)
     let tree = React.useRef(null)
     let typingTimeoutRef = React.useRef(null)
-
-    const { listPICs } = props  // , handleSearchNameChange
 
     const localDate = {
         dataSource: props.data,
@@ -235,8 +233,8 @@ const Schedule = (props) => {
         return (
             <div id="waiting">
                 <div id="waitdetails">
-                    <div id="waitlist">{prop.schoolName}</div>
-                    <div id="waitcategory"> {prop.district}
+                    <div id="waitlist">aaa</div>
+                    <div id="waitcategory"> aa
                     </div>
                 </div>
             </div>
@@ -303,10 +301,18 @@ const Schedule = (props) => {
     const [PIC, setPIC] = React.useState(null)
     // Search other's workplan
     const handleSearchNameChange = (e, newPIC) => {
-        console.log('event PIC: ', newPIC);
+        if(newPIC){
         setPIC(newPIC);
+        props.handleOnSearchFieldChange(newPIC.username)
+        }
     }
-
+    const onChange = e =>{
+        if(e.target.value){
+            setUsername(e.target.value)
+       props.handleInputChange(e.target.value)
+           
+        }
+    }
     return (
         <div className="schedule-control-section">
             <div className="col-lg-12 control-section">
@@ -319,12 +325,14 @@ const Schedule = (props) => {
                                 autoSelect
                                 autoHighlight
                                 clearOnEscape
-                                options={listPICs}
+                                options={props.listPICs ? props.listPICs : [] }
                                 getOptionLabel={(pic) => pic.fullName ? pic.fullName : ""}
                                 value={PIC}
                                 renderInput={(params) =>
                                     <TextField
+                                    value = {username}
                                         {...params}
+                                        onChange={onChange}
                                         label="Person"
                                         margin="normal"
                                         placeholder="Search workplan of...?"
@@ -335,7 +343,7 @@ const Schedule = (props) => {
                                                     <InputAdornment position="start">
                                                         <MdAccountCircle />
                                                     </InputAdornment>
-                                                    {params.InputProps.startAdornment}
+                                                    {params?.InputProps.startAdornment}
                                                 </>
                                             )
                                         }}
@@ -356,6 +364,7 @@ const Schedule = (props) => {
                             />
                         </div>
                         <ScheduleComponent currentView='Week'
+                        readonly={props.isEdit}
                             popupClose={onPopupClose}
                             height="550px"
                             resizeStart={onResize}
@@ -367,7 +376,7 @@ const Schedule = (props) => {
                             timezone="Asia/Saigon"
                             drag={onDrag}
                             eventRendered={onEventRender}
-                            allowDragAndDrop
+                            
                             navigating={switchDate}
                             popupOpen={onPopupOpen}
                             selectedDate={props.filter.currentDate} eventSettings={localDate} showWeekNumber
@@ -400,14 +409,29 @@ const Schedule = (props) => {
                             </div>
                         </div>
                         <TreeViewComponent
+                        allowDragAndDrop={props.isEdit}
                             ref={e => tree = e}
                             cssClass="treeview-external-drag"
                             allowDragAndDrop
-                            fields={{ dataSource: props.tree, id: 'id', text: 'schoolName' }}
+                            fields={{ dataSource: props?.tree, id: 'id', text: 'schoolName' }}
                             nodeDragStop={onTreeDragStop}
-                            nodeTemplate={treeTemplate}
+                            // nodeTemplate={treeTemplate}
                             nodeDragging={onItemDrag}
                         />
+                        <div>
+                            {/* <Grid container>
+                                <Grid item xs={12} sm={4} md={3} lg={3} className="note-box">
+                                    <div id="note-completed" ></div>
+                                    <div id="note-failed"></div>
+                                    <div id="note-pending"></div>
+                                </Grid>
+                                <Grid item xs={12} sm={8} md={9} lg={9} className="note-box">
+                                    <span className="note-completed">Completed</span>
+                                    <div className="note-failed">Failed</div>
+                                    <div className="note-pending">Pending</div>
+                                </Grid>
+                            </Grid> */}
+                        </div>
                     </div>
                 </div>
             </div>

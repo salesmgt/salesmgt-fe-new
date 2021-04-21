@@ -29,8 +29,8 @@ export const Consts = {
         status: {
             title: 'Account Active',
         },
-        auth: {
-            title: 'isMale',
+        roles: {
+            title: 'Roles',
         },
     },
 }
