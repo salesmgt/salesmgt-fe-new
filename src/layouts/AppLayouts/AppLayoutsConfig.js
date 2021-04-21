@@ -69,6 +69,6 @@ export function getMenuItems(role) {
 }
 
 export const userMenuItems = {
-    0: [{ title: 'My Profile', icon: <MdExitToApp /> }],
-    1: [{ title: 'Log Out', icon: <MdAccountCircle /> }],
+    0: [{ title: 'My Profile', icon: <MdAccountCircle /> }],
+    1: [{ title: 'Log Out', icon: <MdExitToApp /> }],
 }

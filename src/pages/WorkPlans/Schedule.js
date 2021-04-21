@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Box, Grid, InputAdornment, InputBase, ListItem, ListItemAvatar, ListItemText, TextField } from '@material-ui/core';
+import { Avatar, InputAdornment, InputBase, ListItem, ListItemAvatar, ListItemText, TextField } from '@material-ui/core';
 import {
     Inject, ScheduleComponent, ViewsDirective, ViewDirective
     , Day, Week, Month, DragAndDrop, Resize
@@ -78,13 +78,13 @@ L10n.load({
 
 
 const Schedule = (props) => {
-    const [username,setUsername] = React.useState('')
+    const [username, setUsername] = React.useState('')
     const classes = useStyles();
     const [key, setKey] = React.useState('')
     const [startTime, setStartTime] = React.useState(null)
     let schedule = React.useRef(null)
     let tree = React.useRef(null)
-    let typingTimeoutRef = React.useRef(null)
+    const typingTimeoutRef = React.useRef(null)
 
     const localDate = {
         dataSource: props.data,
@@ -141,7 +141,7 @@ const Schedule = (props) => {
             const string = 'Do you want to cancel the changes made to specific instances of this series and match it to the whole series again?'
             if (args.element.querySelector('.e-dlg-content').textContent === string &&
                 args.element.querySelector('.e-quick-dialog-alert-btn').textContent === 'Yes') {
-                let yesButton = args.element.querySelector('.e-quick-dialog-alert-btn')
+                const yesButton = args.element.querySelector('.e-quick-dialog-alert-btn')
                 yesButton.style.display = "none"
                 const noButton = args.element.querySelector('.e-quick-alertcancel')
                 noButton.innerHTML = "Save";
@@ -152,7 +152,7 @@ const Schedule = (props) => {
         }
         if (args.type === 'Editor') {
             if (args.element.querySelector('.e-time-zone-container')) {
-                let timezone = args.element.querySelector('.e-time-zone-container')
+                const timezone = args.element.querySelector('.e-time-zone-container')
                 timezone.style.display = "none"
             }
             if (!args.element.querySelector('.custom-field-row')) {
@@ -229,25 +229,25 @@ const Schedule = (props) => {
     }
 
     //====================Location tree====================
-    const treeTemplate = (prop) => {
-        return (
-            <div id="waiting">
-                <div id="waitdetails">
-                    <div id="waitlist">aaa</div>
-                    <div id="waitcategory"> aa
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    // const treeTemplate = (prop) => {
+    //     return (
+    //         <div id="waiting">
+    //             <div id="waitdetails">
+    //                 <div id="waitlist">aaa</div>
+    //                 <div id="waitcategory"> aa
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
     const onTreeDragStop = (e) => {
-        let treeElement = closest(e.target, ".e-treeview");
+        const treeElement = closest(e.target, ".e-treeview");
         if (!treeElement) {
             e.cancel = true;
-            let scheduleElement = closest(e.target, ".e-content-wrap");
+            const scheduleElement = closest(e.target, ".e-content-wrap");
             if (scheduleElement) {
-                let treeviewData = tree.fields.dataSource;
+                const treeviewData = tree.fields.dataSource;
                 if (e.target.classList.contains("e-work-cells")) {
                     const filteredData = treeviewData.filter(
                         item => item.id === parseInt(e.draggedNodeData.id, 10)
@@ -279,15 +279,15 @@ const Schedule = (props) => {
 
     const onPopupClose = e => {
         if (e.element.querySelector('.e-quick-dialog-alert-btn')) {
-            let yesButton = e.element.querySelector('.e-quick-dialog-alert-btn')
+            const yesButton = e.element.querySelector('.e-quick-dialog-alert-btn')
             yesButton.style.display = "inline"
-            let noButton = e.element.querySelector('.e-quick-alertcancel')
+            const noButton = e.element.querySelector('.e-quick-alertcancel')
             noButton.style.color = "rgba(0,0,0,0.87)"
         }
     }
 
     const onEventRender = (e) => {
-        let data = e.data
+        const data = e.data
         e.element.style.backgroundColor = "RGB(54,162, 235)"
         if ((data.startTime).getTime() < new Date().getTime() && (data.endTime).getTime() < new Date().getTime() && !data.isCompleted) {
             e.element.style.backgroundColor = "rgb(255,99,132)"
@@ -301,16 +301,16 @@ const Schedule = (props) => {
     const [PIC, setPIC] = React.useState(null)
     // Search other's workplan
     const handleSearchNameChange = (e, newPIC) => {
-        if(newPIC){
-        setPIC(newPIC);
-        props.handleOnSearchFieldChange(newPIC.username)
+        if (newPIC) {
+            setPIC(newPIC);
+            props.handleOnSearchFieldChange(newPIC.username)
         }
     }
-    const onChange = e =>{
-        if(e.target.value){
+    const onChange = e => {
+        if (e.target.value) {
             setUsername(e.target.value)
-       props.handleInputChange(e.target.value)
-           
+            props.handleInputChange(e.target.value)
+
         }
     }
     return (
@@ -325,12 +325,12 @@ const Schedule = (props) => {
                                 autoSelect
                                 autoHighlight
                                 clearOnEscape
-                                options={props.listPICs ? props.listPICs : [] }
+                                options={props.listPICs ? props.listPICs : []}
                                 getOptionLabel={(pic) => pic.fullName ? pic.fullName : ""}
                                 value={PIC}
                                 renderInput={(params) =>
                                     <TextField
-                                    value = {username}
+                                        value={username}
                                         {...params}
                                         onChange={onChange}
                                         label="Person"
@@ -364,7 +364,7 @@ const Schedule = (props) => {
                             />
                         </div>
                         <ScheduleComponent currentView='Week'
-                        readonly={props.isEdit}
+                            readonly={props.isEdit}
                             popupClose={onPopupClose}
                             height="550px"
                             resizeStart={onResize}
@@ -376,7 +376,7 @@ const Schedule = (props) => {
                             timezone="Asia/Saigon"
                             drag={onDrag}
                             eventRendered={onEventRender}
-                            
+
                             navigating={switchDate}
                             popupOpen={onPopupOpen}
                             selectedDate={props.filter.currentDate} eventSettings={localDate} showWeekNumber
@@ -409,7 +409,7 @@ const Schedule = (props) => {
                             </div>
                         </div>
                         <TreeViewComponent
-                        allowDragAndDrop={props.isEdit}
+                            allowDragAndDrop={props.isEdit}
                             ref={e => tree = e}
                             cssClass="treeview-external-drag"
                             allowDragAndDrop

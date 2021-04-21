@@ -333,19 +333,19 @@ function Filters() {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 case DISTRICT_FILTER:
-                    setFilter(DISTRICT_FILTER, 'All')
+                    setFilter(DISTRICT_FILTER, '')
                     break
                 case TYPE_FILTER:
-                    setFilter(TYPE_FILTER, 'All')
+                    setFilter(TYPE_FILTER, '')
                     break
                 case LEVEL_FILTER:
-                    setFilter(LEVEL_FILTER, 'All')
+                    setFilter(LEVEL_FILTER, '')
                     break
                 case SCALE_FILTER:
-                    setFilter(SCALE_FILTER, 'All')
+                    setFilter(SCALE_FILTER, '')
                     break
                 case STATUS_FILTER:
-                    setFilter(STATUS_FILTER, 'All')
+                    setFilter(STATUS_FILTER, '')
                     break
                 default:
                     break
@@ -403,7 +403,7 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={() => {}}
+                            onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
                             &nbsp;Create

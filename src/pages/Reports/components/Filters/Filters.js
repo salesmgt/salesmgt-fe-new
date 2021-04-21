@@ -39,7 +39,7 @@ import {
     DISTRICT_FILTER,
     SCHOOL_YEAR_FILTER,
     PURPOSE_FILTER,
-    STATUS_FILTER,
+    // STATUS_FILTER,
     DATE_RANGE_FILTER,
 } from './FilterConsts'
 import { useApp } from '../../../../hooks/AppContext'
@@ -329,26 +329,12 @@ function Filters() {
     }
 
     const handleDateRangeChange = (selectedDate) => {
-        // Tiền xử lý format của date trước khi lưu vào context
-        // if (selectedDate) {
-        //     // !== '' && selectedDate !== undefined
-        //     const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
-        //     const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DATE_RANGE,
-        //         payload: {
-        //             filterType: 'dateRange',
-        //             filterValue: [fromDate, toDate],
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DATE_RANGE,
-        //         payload: { filterType: 'dateRange', filterValue: [null, null] },
-        //     })
-        // }
         const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
         const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
+
+        console.log('handleDateRangeChange - fromDate: ', fromDate);
+        console.log('handleDateRangeChange - toDate: ', toDate);
+
         setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
         dispatchParams({
             type: ReducerActions.FILTER_PURPOSE,
@@ -399,16 +385,16 @@ function Filters() {
                 //     setPIC(null)
                 //     break
                 case DISTRICT_FILTER:
-                    setFilter(DISTRICT_FILTER, 'All')
+                    setFilter(DISTRICT_FILTER, '')
                     break
                 case SCHOOL_YEAR_FILTER:
-                    setFilter(SCHOOL_YEAR_FILTER, 'All')
+                    setFilter(SCHOOL_YEAR_FILTER, '')
                     break
-                case STATUS_FILTER:
-                    setFilter(STATUS_FILTER, 'All')
-                    break
+                // case STATUS_FILTER:
+                //     setFilter(STATUS_FILTER, '')
+                //     break
                 case PURPOSE_FILTER:
-                    setFilter(PURPOSE_FILTER, 'All')
+                    setFilter(PURPOSE_FILTER, '')
                     break
                 case DATE_RANGE_FILTER:
                     setFilter(DATE_RANGE_FILTER, [null, null])
@@ -423,6 +409,8 @@ function Filters() {
         const listChips = []
         let newListFilters = { ...listFilters }
 
+        console.log('newListFilters: ', newListFilters);
+
         for (const chip in newListFilters) {
             if (chip === DATE_RANGE_FILTER) {
                 const fromDate = moment(
@@ -431,6 +419,9 @@ function Filters() {
                 const toDate = moment(
                     newListFilters[chip].filterValue[1]
                 ).format('MMM D, YYYY')
+
+                console.log('generateChipsArray - fromDate: ', newListFilters[chip].filterValue[0]);
+                console.log('generateChipsArray - toDate: ', newListFilters[chip].filterValue[1]);
 
                 if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
                     newListFilters = {
@@ -444,6 +435,7 @@ function Filters() {
             }
             listChips.push(newListFilters[chip])
         }
+        console.log('listChips: ', listChips);
         return listChips
     }
     //===============================================================================

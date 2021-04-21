@@ -157,7 +157,7 @@ function Filters() {
                     setActive(true);
                     break;
                 case 'role':
-                    setRole("All");
+                    setRole('');
                     break;
                 default:
                     break;

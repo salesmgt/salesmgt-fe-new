@@ -87,8 +87,8 @@ function CreateReports(props) {
     const { open, onClose } = props
     const { headers, operations, fields } = Consts
 
-    const { control, register, handleSubmit, errors, formState } = useForm({
-        // getValues, , setError
+    const { register, handleSubmit, errors, formState } = useForm({
+        // getValues, , setError, control
         resolver: yupResolver(clientSchema),
     })
     // const [open, setOpen] = useToggle()
@@ -277,9 +277,9 @@ function CreateReports(props) {
                                         name="positivity"
                                         variant="outlined"
                                         fullWidth
-                                        // inputRef={register}
-                                        // error={!!errors.positivity}
-                                        // helperText={errors?.positivity?.message}
+                                    // inputRef={register}
+                                    // error={!!errors.positivity}
+                                    // helperText={errors?.positivity?.message}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -288,9 +288,9 @@ function CreateReports(props) {
                                         name="difficulty"
                                         variant="outlined"
                                         fullWidth
-                                        // inputRef={register}
-                                        // error={!!errors.difficulty}
-                                        // helperText={errors?.difficulty?.message}
+                                    // inputRef={register}
+                                    // error={!!errors.difficulty}
+                                    // helperText={errors?.difficulty?.message}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -299,9 +299,9 @@ function CreateReports(props) {
                                         name="plan"
                                         variant="outlined"
                                         fullWidth
-                                        // inputRef={register}
-                                        // error={!!errors.plan}
-                                        // helperText={errors?.plan?.message}
+                                    // inputRef={register}
+                                    // error={!!errors.plan}
+                                    // helperText={errors?.plan?.message}
                                     />
                                 </Grid>
                             </Grid>
