@@ -16,7 +16,7 @@ import { Snackbars } from '../../../../components'
 import { Consts } from './AsgInfoConfig'
 import { useApp } from '../../../../hooks/AppContext'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { roleNames } from '../../../../utils/Constants'
+import { roleNames } from '../../../../constants/Generals'
 import classes from './AsgInfo.module.scss'
 
 const clientSchema = yup.object().shape({

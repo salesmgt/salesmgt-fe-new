@@ -1,4 +1,4 @@
-import * as Actions from '../../../hooks/reducer-action-type'
+import * as Actions from '../../../constants/ActionTypes'
 
 export const AccountReducer = (params, action) => {
     const { type, payload } = action

@@ -28,7 +28,7 @@ import {
 import PropTypes from 'prop-types'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 // import { Pagination } from '@material-ui/lab';
 import classes from './Tables.module.scss'
 

@@ -10,7 +10,7 @@ import {
     MdAccountCircle,
     MdExitToApp,
 } from 'react-icons/md'
-import { roleNames } from '../../utils/Constants'
+import { roleNames } from '../../constants/Generals'
 
 const menuItems = [
     {

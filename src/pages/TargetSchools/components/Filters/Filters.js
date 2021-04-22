@@ -9,11 +9,9 @@ import {
     Grid,
     Box,
     InputLabel,
-    ListSubheader,
     MenuItem,
     FormControl,
     TextField,
-    InputAdornment,
     Avatar,
     ListItem,
     ListItemAvatar,
@@ -27,15 +25,9 @@ import {
     DialogActions,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import {
-    MdAccountCircle,
-    MdAdd,
-    MdExpandMore,
-    MdFilterList,
-    MdPersonAdd,
-} from 'react-icons/md'
+import { MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
 import AssignMultiple from '../../dialogs/AssignMultiple'

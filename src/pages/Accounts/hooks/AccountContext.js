@@ -1,6 +1,6 @@
 import React, { useState, useContext, createContext, useReducer } from 'react'
 import { AccountReducer } from './AccountReducer'
-import { ACTIVE_FILTER, ROLE_FILTER } from '../components/Filters/FilterConsts'
+import { ACTIVE_FILTER, ROLE_FILTER } from '../../../constants/Filters'
 
 const AccountContext = createContext()
 
