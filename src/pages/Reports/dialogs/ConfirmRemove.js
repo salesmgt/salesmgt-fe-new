@@ -8,8 +8,8 @@ import {
     DialogActions,
     Divider,
 } from '@material-ui/core'
-import { removeReport, getReports } from '../ReportsServices'
-import { parseDateToString } from '../../../utils/ParseDateTime'
+import { removeReport } from '../ReportsServices'
+import { parseDateToString } from '../../../utils/DateTimes'
 import classes from './ConfirmRemove.module.scss'
 import { useReport } from '../hooks/ReportContext'
 

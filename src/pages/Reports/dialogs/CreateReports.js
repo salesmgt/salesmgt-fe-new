@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     Button,
     TextField,
@@ -11,7 +11,6 @@ import {
     Grid,
     Typography,
     withStyles,
-    makeStyles,
     ListItem,
     ListItemText,
     TableContainer,
@@ -23,13 +22,18 @@ import {
     Chip,
     Box,
 } from '@material-ui/core'
-import { MdAdd, MdClose } from 'react-icons/md'
+import { MdAdd, MdClose, MdDelete } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Autocomplete } from '@material-ui/lab'
-import { parseDateToString } from '../../../utils/ParseDateTime'
+import { parseDateToString } from '../../../utils/DateTimes'
 import { Consts } from './FormConfig'
+import * as ReportsServices from '../ReportsServices'
+import { useHistory } from 'react-router'
+import * as ArrayUtils from '../../../utils/Arrays'
+import { } from '../../../utils/DateTimes'
+import { useAuth } from '../../../hooks/AuthContext'
 import classes from './CreateReports.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -68,27 +72,18 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     )
 })
 
-const useStyles = makeStyles((theme) => ({
-    root: {},
-    menuItemRoot: {
-        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
-        '&$menuItemSelected:focus': {
-            backgroundColor: 'rgba(0, 0, 0, 0.12)',
-        },
-        '&$menuItemSelected:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.04);',
-        },
-    },
-    menuItemSelected: {},
-}))
-
 function CreateReports(props) {
     // const styles = useStyles();
     const { open, onClose } = props
-    const { headers, operations, fields } = Consts
+    const { headers, operations } = Consts
 
-    const { register, handleSubmit, errors, formState } = useForm({
-        // getValues, , setError, control
+    const { user } = useAuth()
+    const history = useHistory()
+
+    const typingTimeoutRef = useRef(null);
+
+    const { register, errors } = useForm({
+        // getValues, , setError, control, handleSubmit, formState
         resolver: yupResolver(clientSchema),
     })
     // const [open, setOpen] = useToggle()
@@ -96,101 +91,187 @@ function CreateReports(props) {
     // const defaultValue = {
     // }
 
-    const onSubmit = (data) => {
-        console.log(data)
-    }
-
-    const [target, setTarget] = useState({})
-    const targets = [
-        {
-            id: 10,
-            schoolName: 'THCS Hiệp Thành',
-            district: 'Quận 4',
-        },
-        {
-            id: 12,
-            schoolName: 'Tiểu học Xuân Thu',
-            district: 'Quận Bình Tân',
-        },
-        {
-            id: 13,
-            schoolName: 'THCS Võ Trường Toản',
-            district: 'Quận 1',
-        },
-        {
-            id: 16,
-            schoolName: 'THPT Nguyễn Thượng Hiền',
-            district: 'Quận Phú Nhuận',
-        },
-        {
-            id: 20,
-            schoolName: 'THPT Marie Cuire',
-            district: 'Quận 10',
-        },
-        {
-            id: 21,
-            schoolName: 'Tiểu học Đặng Trần Côn',
-            district: 'Quận 12',
-        },
-        {
-            id: 30,
-            schoolName: 'THPT Nguyễn Trãi',
-            district: 'Quận 3',
-        },
-        {
-            id: 34,
-            schoolName: 'Tiểu học Nguyễn Văn Cừ',
-            district: 'Quận 5',
-        },
-    ] // Giờ để tạm ở đây để test trước chứ đúng ra là gọi API đổ vào
-
-    // const handleTargetChange = (event, newTarget) => {
-    //     setTarget(newTarget)
+    // const onSubmit = (data) => {
+    //     console.log(data)
     // }
 
-    const rows = [
-        {
-            id: 10,
-            schoolName: 'THCS Hiệp Thành',
-            district: 'Quận 4',
-            result: 'OK',
-            des: 'Đã giới thiệu về Major Education',
-            positivity: 'Thầy rất thiện chí',
-            difficulty: '',
-            plan: 'Giới thiệu thêm chương trình Toán Khoa cho Thầy',
-        },
-        {
-            id: 12,
-            schoolName: 'Tiểu học Xuân Thu',
-            district: 'Quận Bình Tân',
-            result: 'Không gặp được HT',
-            des: 'Thầy đi công tác. Đã gửi quà cho Thầy Hiệu phó.',
-            positivity: 'Thầy rất thiện chí',
-            difficulty: '',
-            plan: '',
-        },
-    ]
+    const [target, setTarget] = useState({})
+    const [targets, setTargets] = useState([])
+
+    const getListTargets = (searchKey) => {
+        ReportsServices.getTargetSchools({ username: user.username, schoolYear: calculateSchoolYear(), key: searchKey }).then(data => {
+            setTargets(data);
+            console.log('list targets = ', data);
+            // Tại sao có 1 số searchKey (VD: tohu) bị văng lỗi "TypeError: Cannot read property 'filter' of null"???
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    // useEffect(() => {
+    //     getListTargets()
+    //     return () => {
+    //         cleanup
+    //     }
+    // }, [input])
+    useEffect(getListTargets, []);
+
+    const onSearchTargetChange = (event) => {
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchKey = event.target.value;
+            console.log('searchKey = ', searchKey);
+            if (searchKey) {
+                // setTarget(searchKey);
+                getListTargets(searchKey);
+            }
+        }, 300);
+    }
+
+    // console.log('target nè: ', target)
+
+    const handleTargetChange = (newTarget) => {
+        setTarget(newTarget)
+        console.log('newTarget: ', newTarget);
+    }
+
+    const [listReports, setListReports] = useState([])
+    const addReports = (event) => {
+        event.preventDefault();
+        const e = event.target;
+        // console.log('event.target: ', event.target);
+
+        const report = {
+            username: user.username,
+            date: parseDateToString(new Date(), 'YYYY-MM-DD'),
+            schoolYear: calculateSchoolYear(),
+            targetId: parseInt(e.targetId.value),
+            schoolName: e.targetName.value,
+            level: e.level.value,
+            result: e.result.value,
+            description: e.des.value,
+            positivity: e.pos.value,
+            difficulty: e.dif.value,
+            futurePlan: e.plan.value, //=================
+            // address: '',
+            // avatar: '',
+            // commentedPerson: null,
+            // contextComments: null,
+            // district: '',
+            // fullName: '',
+            // purpose: 'Sales mới',
+            // reprIsMale: true,
+            // reprName: ''
+        }
+
+        // if (!ArrayUtils.checkDuplicate(listReports, report.targetId)) {
+        // setListReports([...listReports, report])
+        // }
+        // let countDuplicate = 0;
+        listReports.forEach(re => {
+            console.log('re.targetId = ', re.targetId);
+            console.log('this ID = ', report.targetId);
+            if (re.targetId === report.targetId) {
+                // Remove target cũ, ghi đè bằng target đó bản chỉnh sửa
+                console.log('Remove duplicate target ', re.targetId);
+                setListReports([...ArrayUtils.removeItem(listReports, 'targetId', re.targetId)]);
+                // setListReports([...listReports, report])
+            }
+            // countDuplicate++;
+        });
+        setListReports([...listReports, report])    // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list 
+        // if (countDuplicate === 0) {
+        //     setListReports([...listReports, report])
+        // }
+
+        console.log('==============Report value==============');
+        console.log('Target School name: ', report.schoolName);
+        console.log('Target ID: ', report.targetId);
+        console.log('Result: ', report.result);
+        console.log('Des: ', report.description);
+        console.log('Pos: ', report.positivity);
+        console.log('Dif: ', report.difficulty);
+        console.log('Future plan: ', report.futurePlan);
+
+        // Ko hiểu rõ lắm tại sao kiểu index này bị lệch gtrị, cái lấy đc cái ko
+        // console.log('Target ID: ', event.target[0].value);
+        // // console.log('Target ID: ', event.target[0].value.id);
+        // console.log('Result: ', event.target[1].value);
+        // console.log('Des: ', event.target[2].value);
+        // console.log('Pos: ', event.target[3].value);
+        // console.log('Dif: ', event.target[4].value);
+        // console.log('Future: ', event.target[5].value);
+        // console.log('event: ', event);
+        // console.log('targetSchool: ', event.target.targetSchool.value);
+    }
+
+    const removeReport = (event, targetId) => {
+        setListReports([...ArrayUtils.removeItem(listReports, 'targetId', targetId)]);
+        console.log('Remove target ', targetId);
+    }
+
+    console.log('-----------------------------------------------------');
+    console.log('listReports: ', listReports);
+
+    // Click on a row in the preview table --> data is displayed in form
+    // const handleShowClickedRow = () => {
+    // }
+
+    const handleCreateReport = () => {
+        ReportsServices.addReport(listReports).then(data => {
+            console.log('Add thành công rồi này!!!', data);
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+
+    const calculateSchoolYear = () => {
+        const thisYear = new Date().getFullYear();
+        const thisMonth = new Date().getMonth();
+        console.log(`${thisMonth}/${thisYear}`);
+        console.log(`This school year: ${thisYear - 1}-${thisYear}`);
+
+        if (thisMonth < 7)
+            return `${thisYear - 1}-${thisYear}`;
+        else return `${thisYear}-${thisYear + 1}`
+    }
 
     const truncateString = (str) => {
         if (str) return str.length > 30 ? str.substring(0, 27) + '...' : str
         else return ''
     }
 
+    const handleCloseDialog = () => {
+        setListReports([]);
+        onClose();
+    }
+
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleCloseDialog}
             maxWidth="lg"
             fullWidth
             component="form"
             className={classes.dialog}
         >
-            <DialogTitleWithIconClose onClose={onClose}>
+            <DialogTitleWithIconClose onClose={handleCloseDialog}>
                 {headers.child1}
             </DialogTitleWithIconClose>
             <Divider />
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                <DialogContent className={classes.wrapper}>
+            {/* <form noValidate onSubmit={handleSubmit(onSubmit)}> */}
+            <DialogContent className={classes.wrapper}>
+                <form onSubmit={addReports}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={12} md={12} lg={5}>
                             <Grid container spacing={2}>
@@ -200,34 +281,39 @@ function CreateReports(props) {
                                         autoSelect
                                         autoHighlight
                                         clearOnEscape
-                                        // multiple
-                                        options={targets}
-                                        getOptionLabel={(target) =>
-                                            target.schoolName
-                                        }
+                                        options={targets ? targets : []}
+                                        // getOptionLabel={(target) => target.schoolName}
+                                        getOptionLabel={(target) => target?.schoolName ? `${target?.level} ${target?.schoolName}` : null}
                                         value={target}
                                         renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Target School Name"
-                                                variant="outlined"
-                                                name="target"
-                                                required
-                                                inputRef={register}
-                                                error={!!errors.target}
-                                                helperText={errors?.target?.message}
-                                                className={classes.autoComplete}
-                                            />
+                                            <>
+                                                <TextField
+                                                    {...params}
+                                                    label="Target School Name"
+                                                    variant="outlined"
+                                                    name="targetName"
+                                                    value={target}
+                                                    required
+                                                    inputRef={register}
+                                                    error={!!errors.target}
+                                                    helperText={errors?.target?.message}
+                                                    className={classes.autoComplete}
+                                                    onChange={onSearchTargetChange}
+                                                />
+                                                <input type="hidden" name="level" value={target?.level} />
+                                            </>
                                         )}
                                         renderOption={(target) => {
                                             return (
                                                 <ListItem className={classes.item}>
                                                     <ListItemText
                                                         primary={
-                                                            target.schoolName
+                                                            target?.schoolName
+                                                                ? `${target?.level} ${target?.schoolName}`
+                                                                : null
                                                         }
                                                         secondary={
-                                                            target.district
+                                                            target?.district ? target?.district : null
                                                         }
                                                         classes={{
                                                             primary: classes.itemTextPrimary,
@@ -237,10 +323,9 @@ function CreateReports(props) {
                                                 </ListItem>
                                             )
                                         }}
-                                        onChange={(event, newPIC) =>
-                                            setTarget(newPIC)
-                                        }
+                                        onChange={(event, newTarget) => handleTargetChange(newTarget)}
                                     />
+                                    <input type="hidden" name="targetId" value={target?.id} />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <TextField
@@ -274,7 +359,7 @@ function CreateReports(props) {
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <TextField
                                         label="Positivity"
-                                        name="positivity"
+                                        name="pos"
                                         variant="outlined"
                                         fullWidth
                                     // inputRef={register}
@@ -285,7 +370,7 @@ function CreateReports(props) {
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <TextField
                                         label="Difficulty"
-                                        name="difficulty"
+                                        name="dif"
                                         variant="outlined"
                                         fullWidth
                                     // inputRef={register}
@@ -318,6 +403,8 @@ function CreateReports(props) {
                                             <Button
                                                 variant="contained"
                                                 color="secondary"
+                                                type="submit"
+                                            // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />
                                             </Button>
@@ -377,12 +464,13 @@ function CreateReports(props) {
                                                     >
                                                         Description
                                                     </TableCell>
+                                                    <TableCell className={classes.tHeadCell}></TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {rows.map((row, index) => (
+                                                {listReports.map((row, index) => (
                                                     <TableRow
-                                                        key={row.id}
+                                                        key={row.targetId}
                                                         className={
                                                             classes.tBodyRow
                                                         }
@@ -393,14 +481,14 @@ function CreateReports(props) {
                                                                 classes.tBodyCell
                                                             }
                                                         >
-                                                            {index}
+                                                            {index + 1}
                                                         </TableCell>
                                                         <TableCell
                                                             className={
                                                                 classes.tBodyCell
                                                             }
                                                         >
-                                                            {row.schoolName}
+                                                            {`${row.level} ${row.schoolName}`}
                                                         </TableCell>
                                                         <TableCell
                                                             className={
@@ -415,8 +503,13 @@ function CreateReports(props) {
                                                             }
                                                         >
                                                             {truncateString(
-                                                                row.des
+                                                                row.description
                                                             )}
+                                                        </TableCell>
+                                                        <TableCell className={classes.tBodyCell} align="right">
+                                                            <IconButton size="small" onClick={(event, id) => removeReport(event, row.targetId)}>
+                                                                <MdDelete />
+                                                            </IconButton>
                                                         </TableCell>
                                                     </TableRow>
                                                 ))}
@@ -427,23 +520,25 @@ function CreateReports(props) {
                             </Grid>
                         </Grid>
                     </Grid>
-                </DialogContent>
-                <Divider />
-                <DialogActions className="">
-                    <Button variant="contained" onClick={onClose}>
-                        {operations.cancel}
-                    </Button>
-                    <Button
-                        className={classes.btnSave}
-                        variant="contained"
-                        type="submit"
-                        disabled={!formState.isDirty}
-                        onClick={handleSubmit(onSubmit)}
-                    >
-                        {operations.save}
-                    </Button>
-                </DialogActions>
-            </form>
+                </form>
+            </DialogContent>
+            <Divider />
+            <DialogActions className="">
+                <Button variant="contained" onClick={handleCloseDialog}>
+                    {operations.cancel}
+                </Button>
+                <Button
+                    className={classes.btnSave}
+                    variant="contained"
+                    // type="submit"
+                    // disabled={!formState.isDirty}
+                    // onClick={handleSubmit(onSubmit)}
+                    onClick={handleCreateReport}
+                >
+                    {operations.save}
+                </Button>
+            </DialogActions>
+            {/* </form> */}
         </Dialog>
     )
 }

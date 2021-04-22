@@ -37,21 +37,14 @@ function useAccountProvider() {
         { isActive: true, status: 'Active' },
         { isActive: false, status: 'Inactive' }
     ]
-    // Ha's
-    // const [isActive, setIsActive] = useState({ isActive: true, status: 'Active' })  // const [active, setActive] = useState(true)
-    // const [role, setRole] = useState('')
 
-    // Nguyen's ?????????????????????????????????????
-    const [selectedIsActive, setSelectedIsActive] = useState(
-        // defaultFilters.isActive.filterValue
-        //     ? defaultFilters.isActive.filterValue
-        //     : { isActive: true, status: 'Active' }
-
-        defaultFilters.isActive.filterValue.status
-            ? defaultFilters.isActive.filterValue.status
-            : { isActive: false, status: 'Inactive' }.status
-        //     // : 'Active'
+    const [isActive, setIsActive] = useState(
+        defaultFilters.isActive.filterValue
+            ? defaultFilters.isActive.filterValue
+            : { isActive: true, status: 'Active' }
     )
+
+    console.log('default isActive = ', isActive);
 
     const [role, setRole] = useState(
         defaultFilters.role.filterValue ? defaultFilters.role.filterValue : ''
@@ -67,14 +60,16 @@ function useAccountProvider() {
 
     // Fix major BUG
     const setFilter = (key, value) => {
+        console.log('setFilter - value = ', value);
+
         switch (key) {
             case ACTIVE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
                     isActive: { filterType: ACTIVE_FILTER, filterValue: value },
                 }
-                console.log('value.status = ', value.status);
-                setSelectedIsActive(value.status)
+                console.log('setFilter - value.status = ', value.status);
+                setIsActive(value)
                 break
             case ROLE_FILTER:
                 defaultFilters = {
@@ -99,7 +94,7 @@ function useAccountProvider() {
         setDirection,
         column,
         setColumn,
-        selectedIsActive, //isActive,
+        isActive,
         // setIsActive,
         role,
         // setRole,

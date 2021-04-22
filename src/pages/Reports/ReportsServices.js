@@ -1,4 +1,5 @@
 import Api from '../../services/Api'
+import queryString from 'query-string'
 
 export async function getReports(
     page = 0,
@@ -47,6 +48,13 @@ export async function updateReport(reportId, report) {
     return response
 }
 
+export async function getTargetSchools(params) {
+    const paramString = queryString.stringify(params);
+    const response = await Api.get(`/targets?${paramString}`)
+    const data = await response.data
+    return data.list
+}
+
 // export async function getReports() {
 //     const response = await Api.get('/reports')
 //     const data = await response.data
@@ -61,12 +69,12 @@ export async function updateReport(reportId, report) {
 //     return data
 // }
 
-// export async function addReport(newReport) {
-//     const response = await Api.post('/reports', { newReport })
-//     const data = await response.data
+export async function addReport(newReports) {
+    const response = await Api.post('/reports', newReports)
+    const data = await response.data
 
-//     return data
-// }
+    return data
+}
 
 export async function removeReport(reportId) {
     const response = await Api.delete(`/reports/${reportId}`, { reportId })

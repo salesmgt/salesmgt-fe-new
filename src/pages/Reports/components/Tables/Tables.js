@@ -29,7 +29,7 @@ import PropTypes from 'prop-types'
 import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../hooks/reducer-action-type'
-import { parseDateToString } from '../../../../utils/ParseDateTime'
+import { parseDateToString } from '../../../../utils/DateTimes'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination

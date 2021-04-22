@@ -128,7 +128,7 @@ function Filters() {
     const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
-    const { params, dispatchParams, selectedIsActive, role, workingStatuses, setFilter } = useAccount()     // isActive,
+    const { params, dispatchParams, isActive, role, workingStatuses, setFilter } = useAccount()     // isActive,
     const { roles } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
@@ -154,12 +154,12 @@ function Filters() {
         // }
 
         // ?????????????????????????????????????????
-        setFilter(ACTIVE_FILTER, selectedIsActive.isActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" })
+        setFilter(ACTIVE_FILTER, selectedIsActive ? selectedIsActive : { isActive: true, status: "Active" })
         dispatchParams({
             type: ReducerActions.FILTER_ACTIVE,
             payload: {
                 filterType: ACTIVE_FILTER,
-                filterValue: selectedIsActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" },
+                filterValue: selectedIsActive.isActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" },
             },
         })
     }
@@ -209,11 +209,9 @@ function Filters() {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 // case 'isActive':
-                //     setIsActive({ isActive: true, status: 'Active' })
-
-                //??????????????????????????????????
                 case ACTIVE_FILTER:
                     setFilter(ACTIVE_FILTER, { isActive: true, status: "Active" })
+                    // setIsActive({ isActive: true, status: "Active" })
                     break
                 case ROLE_FILTER:
                     setFilter(ROLE_FILTER, '')
@@ -241,7 +239,7 @@ function Filters() {
         })
     }
 
-    console.log('selectedIsActive: ', selectedIsActive);
+    console.log('isActive: ', isActive);
 
     return (
         <div className={styles.wrapper}>
@@ -292,10 +290,10 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Working Status</InputLabel>
-                                <Select value={selectedIsActive.status} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                <Select value={isActive.status} onChange={handleIsActiveChange} MenuProps={MenuProps}>
                                     {workingStatuses.map((workingStatus) => (
                                         <MenuItem
-                                            value={workingStatus.isActive}
+                                            value={workingStatus}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,

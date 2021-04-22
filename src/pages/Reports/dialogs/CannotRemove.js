@@ -8,7 +8,7 @@ import {
     DialogActions,
     Divider,
 } from '@material-ui/core'
-import { parseDateToString } from '../../../utils/ParseDateTime'
+import { parseDateToString } from '../../../utils/DateTimes'
 import classes from './CannotRemove.module.scss'
 
 function CannotRemove(props) {

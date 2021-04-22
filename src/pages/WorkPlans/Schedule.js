@@ -299,6 +299,7 @@ const Schedule = (props) => {
     }
 
     const [PIC, setPIC] = React.useState(null)
+
     // Search other's workplan
     const handleSearchNameChange = (e, newPIC) => {
         if (newPIC) {
@@ -306,6 +307,7 @@ const Schedule = (props) => {
             props.handleOnSearchFieldChange(newPIC.username)
         }
     }
+
     const onChange = e => {
         if (e.target.value) {
             setUsername(e.target.value)
@@ -313,6 +315,7 @@ const Schedule = (props) => {
 
         }
     }
+
     return (
         <div className="schedule-control-section">
             <div className="col-lg-12 control-section">

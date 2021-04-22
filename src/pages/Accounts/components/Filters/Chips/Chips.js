@@ -38,6 +38,8 @@ function Chips(props) {
     const [btnClearAll, setBtnClearAll] = useState(false)
 
     const handleChipDelete = (chipToDelete) => () => {
+        console.log('chipToDelete = ', chipToDelete);
+
         switch (chipToDelete.filterType) {
             case ACTIVE_FILTER:
                 dispatch({
