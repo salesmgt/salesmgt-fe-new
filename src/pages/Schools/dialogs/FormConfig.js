@@ -5,7 +5,7 @@ export const Consts = {
     operations: {
         cancel: 'Cancel',
         save: 'Save',
-        WithData: 'Withr Representative',
+        WithData: 'With Representative',
     },
     fields: {
         name: {

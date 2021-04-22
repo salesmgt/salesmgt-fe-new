@@ -12,8 +12,10 @@ import {
     MenuItem,
     FormControl,
     Button,
+    Menu,
 } from '@material-ui/core'
-import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdAdd, MdEdit, MdExpandMore, MdFilterList } from 'react-icons/md'
+import { FaFileImport } from 'react-icons/fa'
 import { SearchFields } from '../../../../components'
 import Chips from './Chips/Chips'
 import CreateSchool from '../../dialogs/CreateSchool'
@@ -141,48 +143,28 @@ function Filters() {
     const {
         params,
         dispatchParams,
-        // districts,
-        // schoolTypes,
-        // schoolLevels,
-        // schoolScales,
-        // schoolStatuses,
         district,
         schoolType,
         schoolLevel,
         schoolScale,
         schoolStatus,
-        // setDistrict,
-        // setSchoolType,
-        // setSchoolLevel,
-        // setSchoolScale,
-        // setSchoolStatus,
         isActive,
         workingStatuses,
         setFilter,
     } = useSchool()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+
+    const handleOpenCreateDialog = () => {
+        setAnchorEl(null);
+        setOpenCreateDialog(true);
+    }
 
     //================Handle useState() of filters================
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-
-        // setDistrict(selectedDistrict)
-        // if (selectedDistrict) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: {
-        //             filterType: 'district',
-        //             filterValue: selectedDistrict,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: { filterType: 'district', filterValue: '' },
-        //     })
-        // }
         setFilter(DISTRICT_FILTER, selectedDistrict)
         dispatchParams({
             type: ReducerActions.FILTER_DISTRICT,
@@ -195,23 +177,6 @@ function Filters() {
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-
-        // setSchoolType(selectedSchoolType)
-        // if (selectedSchoolType) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
-        //         payload: {
-        //             filterType: 'type',
-        //             filterValue: selectedSchoolType,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
-        //         payload: { filterType: 'type', filterValue: '' },
-        //     })
-        // }
         setFilter(TYPE_FILTER, selectedSchoolType)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_TYPE,
@@ -224,22 +189,6 @@ function Filters() {
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-
-        // setSchoolLevel(selectedSchoolLevel)
-        // if (selectedSchoolLevel) {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
-        //         payload: {
-        //             filterType: 'level',
-        //             filterValue: selectedSchoolLevel,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
-        //         payload: { filterType: 'level', filterValue: '' },
-        //     })
-        // }
         setFilter(LEVEL_FILTER, selectedSchoolLevel)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_LEVEL,
@@ -252,22 +201,6 @@ function Filters() {
 
     const handleSchoolScaleChange = (event) => {
         const selectedSchoolScale = event.target.value
-
-        // setSchoolScale(selectedSchoolScale)
-        // if (selectedSchoolScale) {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
-        //         payload: {
-        //             filterType: 'scale',
-        //             filterValue: selectedSchoolScale,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
-        //         payload: { filterType: 'scale', filterValue: '' },
-        //     })
-        // }
         setFilter(SCALE_FILTER, selectedSchoolScale)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_SCALE,
@@ -280,22 +213,6 @@ function Filters() {
 
     const handleSchoolStatusChange = (event) => {
         const selectedSchoolStatus = event.target.value
-
-        // setSchoolStatus(selectedSchoolStatus)
-        // if (selectedSchoolStatus) {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
-        //         payload: {
-        //             filterType: 'status',
-        //             filterValue: selectedSchoolStatus,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_STATUS,
-        //         payload: { filterType: 'status', filterValue: '' },
-        //     })
-        // }
         setFilter(STATUS_FILTER, selectedSchoolStatus)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_STATUS,
@@ -398,11 +315,22 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={() => setOpenCreateDialog(true)}
+                            onClick={(event) => setAnchorEl(event.currentTarget)}
+                        // onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;Create
+                            {/* &nbsp;Create */}
                         </Button>
+
+                        <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+                            <MenuItem onClick={() => handleOpenCreateDialog()}>
+                                <MdEdit /> &nbsp; &nbsp; Create
+                            </MenuItem>
+                            <MenuItem onClick={() => setAnchorEl(null)}>
+                                <FaFileImport /> &nbsp; &nbsp; Import
+                            </MenuItem>
+                        </Menu>
+
                         <CreateSchool
                             open={openCreateDialog}
                             onClose={() => setOpenCreateDialog(false)}

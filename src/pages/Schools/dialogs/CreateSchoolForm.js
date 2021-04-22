@@ -116,11 +116,6 @@ function CreateSchoolForm() {
         scale: schScales[0],
 
         showRep: false,
-
-        // reprName: '',
-        // reprIsMale: String(true),
-        // reprPhone: '',
-        // reprEmail: '',
     }
 
     const { control, handleSubmit, errors, formState, reset, watch } = useForm({

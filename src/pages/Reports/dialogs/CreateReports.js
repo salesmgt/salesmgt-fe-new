@@ -122,6 +122,10 @@ function CreateReports(props) {
     useEffect(getListTargets, []);
 
     const onSearchTargetChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
         typingTimeoutRef.current = setTimeout(() => {
             const searchKey = event.target.value;
             console.log('searchKey = ', searchKey);
@@ -153,22 +157,9 @@ function CreateReports(props) {
             description: e.des.value,
             positivity: e.pos.value,
             difficulty: e.dif.value,
-            futurePlan: e.plan.value, //=================
-            // address: '',
-            // avatar: '',
-            // commentedPerson: null,
-            // contextComments: null,
-            // district: '',
-            // fullName: '',
-            // purpose: 'Sales mới',
-            // reprIsMale: true,
-            // reprName: ''
+            futurePlan: e.plan.value,
         }
 
-        // if (!ArrayUtils.checkDuplicate(listReports, report.targetId)) {
-        // setListReports([...listReports, report])
-        // }
-        // let countDuplicate = 0;
         listReports.forEach(re => {
             if (re.targetId === report.targetId) {
                 // Remove target cũ, ghi đè bằng target đó bản chỉnh sửa
@@ -178,17 +169,6 @@ function CreateReports(props) {
             }
         });
         setListReports([...listReports, report])    // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list 
-
-        // Ko hiểu rõ lắm tại sao kiểu index này bị lệch gtrị, cái lấy đc cái ko
-        // console.log('Target ID: ', event.target[0].value);
-        // // console.log('Target ID: ', event.target[0].value.id);
-        // console.log('Result: ', event.target[1].value);
-        // console.log('Des: ', event.target[2].value);
-        // console.log('Pos: ', event.target[3].value);
-        // console.log('Dif: ', event.target[4].value);
-        // console.log('Future: ', event.target[5].value);
-        // console.log('event: ', event);
-        // console.log('targetSchool: ', event.target.targetSchool.value);
     }
 
     const removeReport = (event, targetId) => {
