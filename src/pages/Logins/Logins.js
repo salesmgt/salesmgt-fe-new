@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
+import { milkName } from '../../utils/Constants'
 import classes from './Logins.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -68,12 +69,12 @@ function Logins() {
         LoginsServices.checkUser(username, password)
             .then((data) => {
                 Cookies.setCookie('accessToken', data.token, 7)
-                Milk.setWithExpiry(
-                    'notMe',
+                Milk.setMilkExpiry(
+                    milkName.token,
                     userObj(data.username, data.roles),
                     2
                 )
-                setUser(Milk.getWithExpiry('notMe'))
+                setUser(Milk.getMilkExpiry(milkName.token))
             })
             .catch((error) => {
                 if (error.response) {

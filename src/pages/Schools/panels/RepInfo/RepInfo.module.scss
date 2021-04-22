@@ -2,11 +2,10 @@
 
 .panel {
     height: auto;
-    padding: 1rem;
     .action {
         display: flex;
         justify-content: flex-end;
-        padding: 0.75rem;
+        padding: 1rem 0.5rem;
         .submit {
             color: $common-white;
             background-color: $main-info;
@@ -19,22 +18,27 @@
         }
     }
     .content {
-        margin-bottom: 1rem;
         padding: 0.75rem;
-        border: 1px solid $divider;
-        border-radius: $default-radius;
-        .child {
-            // padding: 0.75rem;
-        }
-        .titleZone {
+        .wrapper {
             padding: 0.75rem;
-            .title {
-                font-weight: 600;
-                color: $secondary-text;
-            }
+            border: 1px solid $divider;
+            border-radius: $default-radius;
         }
-        .detailZone {
-            padding: 0.75rem;
+        .row {
+            padding: 0.5rem;
+        }
+        .rowx {
+            padding: 0rem 0.5rem;
+        }
+        .rowy {
+            padding: 0.5rem 0rem;
+        }
+        .header {
+            text-transform: uppercase;
+        }
+        .title {
+            font-weight: 600;
+            color: $secondary-text;
         }
     }
 }

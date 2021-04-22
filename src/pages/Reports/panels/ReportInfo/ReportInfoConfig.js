@@ -1,6 +1,8 @@
 export const Consts = {
     headers: {
-        child1: 'Report Detail',
+        child1: 'Report detail',
+        child2: 'Maneger comment',
+        child3: 'Comment',
     },
     operations: {
         cancel: 'Cancel',
@@ -23,7 +25,8 @@ export const Consts = {
             title: 'Future Plan',
         },
         cmt: {
-            title: 'Manager Comment',
+            hasCmt: 'Last comment by',
+            noCmt: 'No comments yet',
         },
     },
 }

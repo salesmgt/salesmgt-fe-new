@@ -1,7 +1,7 @@
 export const Consts = {
     headers: {
-        child1: 'ASSIGN DETAIL',
-        child2: 'SCHOOL DETAIL',
+        child1: 'Assign detail',
+        child2: 'School detail',
     },
     operations: {
         cancel: 'Cancel',

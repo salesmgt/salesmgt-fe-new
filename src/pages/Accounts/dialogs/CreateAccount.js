@@ -12,6 +12,10 @@ import CreateAccountForm from './CreateAccountForm'
 
 const stylesTitle = (theme) => ({
     root: {
+        // position: 'sticky',
+        // top: 0,
+       
+        // backgroundColor: 'red',
         margin: 0,
         padding: theme.spacing(2),
     },
@@ -39,7 +43,6 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 
 function CreateAccount(props) {
     const { open, onClose } = props
-    // const { onClose, roles } = props
 
     const { headers } = Consts
 

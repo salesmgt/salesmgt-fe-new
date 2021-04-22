@@ -41,6 +41,13 @@ export async function getReports(
     return data
 }
 
+export async function getReport(reportId) {
+    const response = await Api.get(`/reports/${reportId}`)
+    const data = await response.data
+
+    return data
+}
+
 export async function updateReport(reportId, report) {
     const response = await Api.put(`/reports/${reportId}`, report)
     // const data = await response.data
@@ -48,11 +55,33 @@ export async function updateReport(reportId, report) {
     return response
 }
 
+// List of target schools for reporting (for one user in a specific school year)
 export async function getTargetSchools(params) {
     const paramString = queryString.stringify(params);
     const response = await Api.get(`/targets?${paramString}`)
     const data = await response.data
     return data.list
+}
+
+export async function addReport(newReports) {
+    const response = await Api.post('/reports', newReports)
+    const data = await response.data
+
+    return data
+}
+
+export async function updateComment(reportId, comment) {
+    const response = await Api.patch(`/reports/${reportId}`, comment)
+    // const data = await response.data
+
+    return response
+}
+
+export async function removeReport(reportId) {
+    const response = await Api.delete(`/reports/${reportId}`, { reportId })
+    const data = await response.data
+
+    return data
 }
 
 // export async function getReports() {
@@ -68,17 +97,3 @@ export async function getTargetSchools(params) {
 
 //     return data
 // }
-
-export async function addReport(newReports) {
-    const response = await Api.post('/reports', newReports)
-    const data = await response.data
-
-    return data
-}
-
-export async function removeReport(reportId) {
-    const response = await Api.delete(`/reports/${reportId}`, { reportId })
-    const data = await response.data
-
-    return data
-}

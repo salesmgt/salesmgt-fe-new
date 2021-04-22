@@ -46,10 +46,12 @@ function RepInfo(props) {
 
     const defaultValues = {
         id: school?.id,
-        reprName: school?.reprName,
-        reprIsMale: String(school?.reprIsMale),
-        reprPhone: school?.reprPhone,
-        reprEmail: school?.reprEmail,
+        reprName: school?.reprName ? school?.reprName : '',
+        reprIsMale: String(school?.reprIsMale)
+            ? String(school?.reprIsMale)
+            : String(true),
+        reprPhone: school?.reprPhone ? school?.reprPhone : '',
+        reprEmail: school?.reprEmail ? school?.reprEmail : '',
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -60,10 +62,12 @@ function RepInfo(props) {
     useEffect(() => {
         reset({
             id: school?.id,
-            reprName: school?.reprName,
-            reprIsMale: String(school?.reprIsMale),
-            reprPhone: school?.reprPhone,
-            reprEmail: school?.reprEmail,
+            reprName: school?.reprName ? school?.reprName : '',
+            reprIsMale: String(school?.reprIsMale)
+                ? String(school?.reprIsMale)
+                : String(true),
+            reprPhone: school?.reprPhone ? school?.reprPhone : '',
+            reprEmail: school?.reprEmail ? school?.reprEmail : '',
         })
     }, [school])
 
@@ -131,225 +135,189 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                        <Grid container spacing={0}>
-                            {/* First child - Principal Detail*/}
+                        {/* Principal Detail */}
+                        <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
                                 item
                                 xs={12}
                                 sm={12}
-                                md={12}
-                                lg={12}
-                                className={classes.child}
+                                md={3}
+                                lg={3}
+                                className={classes.row}
+                            >
+                                <Typography
+                                    color="inherit"
+                                    className={classes.header}
+                                >
+                                    {headers.child1}
+                                </Typography>
+                            </Grid>
+                            {/* Detail */}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={7}
+                                lg={5}
+                                className={classes.row}
                             >
                                 <Grid container spacing={0}>
-                                    {/* Child header */}
                                     <Grid
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={3}
-                                        lg={3}
-                                        className={classes.titleZone}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
                                     >
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.title}
-                                        >
-                                            {headers.child1}
-                                        </Typography>
-                                    </Grid>
-                                    {/* Child body */}
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.detailZone}
-                                    >
-                                        <Grid container spacing={3}>
-                                            {/* Detail */}
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
+                                        <Controller
+                                            name="id"
+                                            control={control}
+                                            render={({ value }) => (
+                                                <input
+                                                    type="hidden"
                                                     name="id"
-                                                    control={control}
-                                                    render={({ value }) => (
-                                                        <input
-                                                            type="hidden"
-                                                            name="id"
-                                                            value={value}
-                                                        />
-                                                    )}
+                                                    value={value}
                                                 />
-                                                <Controller
-                                                    name="reprName"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.fullName
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            autoFocus
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.reprName
-                                                            }
-                                                            helperText={
-                                                                errors?.reprName
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
+                                            )}
+                                        />
+                                        <Controller
+                                            name="reprName"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={
+                                                        fields.fullName.title
+                                                    }
+                                                    variant="outlined"
+                                                    required
+                                                    fullWidth
+                                                    autoFocus
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.reprName}
+                                                    helperText={
+                                                        errors?.reprName
+                                                            ?.message
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <InputLabel>
-                                                    {fields.isMale.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="reprIsMale"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <RadioGroup
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            row
-                                                        >
-                                                            <FormControlLabel
-                                                                label="Male"
-                                                                value="true"
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                            />
-                                                            <FormControlLabel
-                                                                label="Female"
-                                                                value="false"
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                            />
-                                                        </RadioGroup>
-                                                    )}
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
+                                        <InputLabel>
+                                            {fields.isMale.title}
+                                        </InputLabel>
+                                        <Controller
+                                            name="reprIsMale"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <RadioGroup
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    row
+                                                >
+                                                    <FormControlLabel
+                                                        label="Male"
+                                                        value="true"
+                                                        control={<Radio />}
+                                                    />
+                                                    <FormControlLabel
+                                                        label="Female"
+                                                        value="false"
+                                                        control={<Radio />}
+                                                    />
+                                                </RadioGroup>
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
+                                        <Controller
+                                            name="reprPhone"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={fields.phone.title}
+                                                    variant="outlined"
+                                                    // required
+                                                    fullWidth
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.reprPhone}
+                                                    helperText={
+                                                        errors?.reprPhone
+                                                            ?.message
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="reprPhone"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.phone
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            // required
-                                                            fullWidth
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.reprPhone
-                                                            }
-                                                            helperText={
-                                                                errors
-                                                                    ?.reprPhone
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
+                                        <Controller
+                                            name="reprEmail"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={fields.email.title}
+                                                    variant="outlined"
+                                                    // required
+                                                    fullWidth
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.reprEmail}
+                                                    helperText={
+                                                        errors?.reprEmail
+                                                            ?.message
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="reprEmail"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.email
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            // required
-                                                            fullWidth
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.reprEmail
-                                                            }
-                                                            helperText={
-                                                                errors
-                                                                    ?.reprEmail
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                        </Grid>
+                                            )}
+                                        />
+                                    </Grid>
+                                    {/* Action */}
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.action}
+                                    >
+                                        <Button
+                                            className={classes.submit}
+                                            variant="contained"
+                                            disabled={!formState.isDirty}
+                                            type="submit"
+                                        >
+                                            {operations.save}
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            {/* Action */}
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={10}
-                                lg={8}
-                                className={classes.action}
-                            >
-                                <Button
-                                    className={classes.submit}
-                                    variant="contained"
-                                    disabled={!formState.isDirty}
-                                    type="submit"
-                                >
-                                    {operations.save}
-                                </Button>
-                            </Grid>
+                            {/* End Detail */}
                         </Grid>
                     </form>
                 </Grid>
