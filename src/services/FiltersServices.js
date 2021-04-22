@@ -32,14 +32,14 @@ export async function getSchoolTypes() {
     return data
 }
 
-export async function getSchoolStatuses() {
+export async function getSchoolStatus() {
     const response = await Api.get('/school-status')
     const data = await response.data
     return data
 }
 
 export async function getPICs(convert) {
-    const paramString = queryString.stringify(convert);
+    const paramString = queryString.stringify(convert)
     const response = await Api.get(`/users?${paramString}`)
     const data = await response.data
     return data.list

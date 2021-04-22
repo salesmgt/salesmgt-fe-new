@@ -1,4 +1,4 @@
-export function setWithExpiry(key, value, ttl) {
+export function setMilkExpiry(key, value, ttl) {
     const now = new Date()
 
     // `item` is an object which contains the original value
@@ -10,7 +10,7 @@ export function setWithExpiry(key, value, ttl) {
     localStorage.setItem(key, JSON.stringify(item))
 }
 
-export function getWithExpiry(key) {
+export function getMilkExpiry(key) {
     const itemStr = localStorage.getItem(key)
     // if the item doesn't exist, return null
     if (!itemStr) {
@@ -43,4 +43,8 @@ export function getMilk(key) {
     const item = JSON.parse(itemStr)
 
     return item.value
+}
+
+export function makeSour(key) {
+    localStorage.removeItem(key)
 }

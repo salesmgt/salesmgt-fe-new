@@ -8,7 +8,6 @@ import * as WorkPlansServices from './WorkPlansServices'
 import Schedule from './Schedule'
 
 function WorkPlans() {
-    // const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXB0bm4iLCJpYXQiOjE2MTgzMjE3NzQsImV4cCI6MTYxODkyNjU3NH0.A4oEvU_bHdKQc2FfxqLWOAsvi-GSrloYfQrm0wHeyU3NElY5DuIM-ERYkAyVyaezFWiawjD2iop8GHdkze3kzA'
     const [data, setData] = React.useState([])
     const [tree, setTree] = React.useState([{
         id: 1,

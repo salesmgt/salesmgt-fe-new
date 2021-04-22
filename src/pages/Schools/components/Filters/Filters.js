@@ -403,7 +403,7 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={() => {}}
+                            onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
                             &nbsp;Create

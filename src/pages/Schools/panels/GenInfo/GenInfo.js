@@ -82,16 +82,18 @@ function GenInfo(props) {
 
     const defaultValues = {
         id: school?.id,
-        name: school?.name,
-        address: school?.address,
-        district: school?.district,
+        name: school?.name ? school?.name : '',
+        address: school?.address ? school?.address : '',
+        district: school?.district ? school?.district : dists[0],
 
-        educationalLevel: school?.educationalLevel,
-        scale: school?.scale,
-        type: school?.type,
-        phone: school?.phone,
+        educationalLevel: school?.educationalLevel
+            ? school?.educationalLevel
+            : schEduLvls[0],
+        scale: school?.scale ? school?.scale : schScales[0],
+        type: school?.type ? school?.type : schTypes[0],
+        phone: school?.phone ? school?.phone : '',
 
-        active: school?.active,
+        active: school?.active ? school?.active : true,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -102,16 +104,18 @@ function GenInfo(props) {
     useEffect(() => {
         reset({
             id: school?.id,
-            name: school?.name,
-            address: school?.address,
-            district: school?.district,
+            name: school?.name ? school?.name : '',
+            address: school?.address ? school?.address : '',
+            district: school?.district ? school?.district : dists[0],
 
-            educationalLevel: school?.educationalLevel,
-            scale: school?.scale,
-            type: school?.type,
-            phone: school?.phone,
+            educationalLevel: school?.educationalLevel
+                ? school?.educationalLevel
+                : schEduLvls[0],
+            scale: school?.scale ? school?.scale : schScales[0],
+            type: school?.type ? school?.type : schTypes[0],
+            phone: school?.phone ? school?.phone : '',
 
-            active: school?.active,
+            active: school?.active ? school?.active : true,
         })
     }, [school])
 
@@ -187,408 +191,336 @@ function GenInfo(props) {
                     className={classes.content}
                 >
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                        <Grid container spacing={0}>
-                            {/* First child - School Detail*/}
+                        {/* School Detail */}
+
+                        <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
                                 item
                                 xs={12}
                                 sm={12}
-                                md={12}
-                                lg={12}
-                                className={classes.child}
+                                md={3}
+                                lg={3}
+                                className={classes.row}
+                            >
+                                <Typography
+                                    color="inherit"
+                                    className={classes.header}
+                                >
+                                    {headers.child1}
+                                </Typography>
+                            </Grid>
+                            {/* Detail */}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={7}
+                                lg={5}
+                                className={classes.row}
                             >
                                 <Grid container spacing={0}>
-                                    {/* Child header */}
                                     <Grid
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={3}
-                                        lg={3}
-                                        className={classes.titleZone}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
                                     >
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.title}
-                                        >
-                                            {headers.child1}
-                                        </Typography>
-                                    </Grid>
-                                    {/* Child body */}
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.detailZone}
-                                    >
-                                        <Grid container spacing={3}>
-                                            {/* Detail */}
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
+                                        <Controller
+                                            name="id"
+                                            control={control}
+                                            render={({ value }) => (
+                                                <input
+                                                    type="hidden"
                                                     name="id"
-                                                    control={control}
-                                                    render={({ value }) => (
-                                                        <input
-                                                            type="hidden"
-                                                            name="id"
-                                                            value={value}
-                                                        />
-                                                    )}
+                                                    value={value}
                                                 />
-                                                <Controller
-                                                    name="name"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.name
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            autoFocus
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.name
-                                                            }
-                                                            helperText={
-                                                                errors?.name
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
+                                            )}
+                                        />
+                                        <Controller
+                                            name="name"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={fields.name.title}
+                                                    variant="outlined"
+                                                    required
+                                                    fullWidth
+                                                    autoFocus
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.name}
+                                                    helperText={
+                                                        errors?.name?.message
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={9}
-                                                md={9}
-                                                lg={9}
-                                            >
-                                                <Controller
-                                                    name="address"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.addr
-                                                                    .title
-                                                            }
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.address
-                                                            }
-                                                            helperText={
-                                                                errors?.address
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={9}
+                                        md={8}
+                                        lg={8}
+                                        className={classes.row}
+                                    >
+                                        <Controller
+                                            name="address"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={fields.addr.title}
+                                                    variant="outlined"
+                                                    required
+                                                    fullWidth
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.address}
+                                                    helperText={
+                                                        errors?.address?.message
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={3}
-                                                md={3}
-                                                lg={3}
-                                            >
-                                                <InputLabel>
-                                                    {fields.dist.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="district"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={3}
+                                        md={4}
+                                        lg={4}
+                                        className={classes.row}
+                                    >
+                                        <InputLabel>
+                                            {fields.dist.title}
+                                        </InputLabel>
+                                        <Controller
+                                            name="district"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <Select
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    MenuProps={MenuProps}
+                                                    disableUnderline
+                                                >
+                                                    {dists.map((data) => (
+                                                        <MenuItem
+                                                            key={data}
+                                                            value={data}
+                                                            classes={{
+                                                                root:
+                                                                    styles.menuItemRoot,
+                                                                selected:
+                                                                    styles.menuItemSelected,
+                                                            }}
                                                         >
-                                                            {dists.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                            >
-                                                <InputLabel>
-                                                    {fields.eduLvl.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="educationalLevel"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
+                                                            {data}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={6}
+                                        lg={6}
+                                        className={classes.row}
+                                    >
+                                        <InputLabel>
+                                            {fields.eduLvl.title}
+                                        </InputLabel>
+                                        <Controller
+                                            name="educationalLevel"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <Select
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    MenuProps={MenuProps}
+                                                    disableUnderline
+                                                >
+                                                    {schEduLvls.map((data) => (
+                                                        <MenuItem
+                                                            key={data}
+                                                            value={data}
+                                                            classes={{
+                                                                root:
+                                                                    styles.menuItemRoot,
+                                                                selected:
+                                                                    styles.menuItemSelected,
+                                                            }}
                                                         >
-                                                            {schEduLvls.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                            >
-                                                <InputLabel>
-                                                    {fields.type.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="type"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
+                                                            {data}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={6}
+                                        lg={6}
+                                        className={classes.row}
+                                    >
+                                        <InputLabel>
+                                            {fields.type.title}
+                                        </InputLabel>
+                                        <Controller
+                                            name="type"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <Select
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    MenuProps={MenuProps}
+                                                    disableUnderline
+                                                >
+                                                    {schTypes.map((data) => (
+                                                        <MenuItem
+                                                            key={data}
+                                                            value={data}
+                                                            classes={{
+                                                                root:
+                                                                    styles.menuItemRoot,
+                                                                selected:
+                                                                    styles.menuItemSelected,
+                                                            }}
                                                         >
-                                                            {schTypes.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                            >
-                                                <InputLabel>
-                                                    {fields.scale.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="scale"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Select
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            MenuProps={
-                                                                MenuProps
-                                                            }
-                                                            disableUnderline
+                                                            {data}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={6}
+                                        lg={6}
+                                        className={classes.row}
+                                    >
+                                        <InputLabel>
+                                            {fields.scale.title}
+                                        </InputLabel>
+                                        <Controller
+                                            name="scale"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <Select
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    MenuProps={MenuProps}
+                                                    disableUnderline
+                                                >
+                                                    {schScales.map((data) => (
+                                                        <MenuItem
+                                                            key={data}
+                                                            value={data}
+                                                            classes={{
+                                                                root:
+                                                                    styles.menuItemRoot,
+                                                                selected:
+                                                                    styles.menuItemSelected,
+                                                            }}
                                                         >
-                                                            {schScales.map(
-                                                                (data) => (
-                                                                    <MenuItem
-                                                                        key={
-                                                                            data
-                                                                        }
-                                                                        value={
-                                                                            data
-                                                                        }
-                                                                        classes={{
-                                                                            root:
-                                                                                styles.menuItemRoot,
-                                                                            selected:
-                                                                                styles.menuItemSelected,
-                                                                        }}
-                                                                    >
-                                                                        {data}
-                                                                    </MenuItem>
-                                                                )
-                                                            )}
-                                                        </Select>
-                                                    )}
+                                                            {data}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
+                                        <Controller
+                                            name="phone"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={fields.tel.title}
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.phone}
+                                                    helperText={
+                                                        errors?.phone?.message
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <Controller
-                                                    name="phone"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <TextField
-                                                            label={
-                                                                fields.tel.title
-                                                            }
-                                                            variant="outlined"
-                                                            fullWidth
-                                                            value={value}
-                                                            onChange={onChange}
-                                                            error={
-                                                                !!errors.phone
-                                                            }
-                                                            helperText={
-                                                                errors?.phone
-                                                                    ?.message
-                                                            }
-                                                        />
-                                                    )}
+                                            )}
+                                        />
+                                    </Grid>
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
+                                        <InputLabel>
+                                            {fields.status.title}
+                                        </InputLabel>
+                                        <Controller
+                                            name="active"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <Switch
+                                                    checked={value}
+                                                    onChange={(e) =>
+                                                        onChange(
+                                                            e.target.checked
+                                                        )
+                                                    }
                                                 />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={12}
-                                                md={12}
-                                                lg={12}
-                                            >
-                                                <InputLabel>
-                                                    {fields.status.title}
-                                                </InputLabel>
-                                                <Controller
-                                                    name="active"
-                                                    control={control}
-                                                    render={({
-                                                        value,
-                                                        onChange,
-                                                    }) => (
-                                                        <Switch
-                                                            checked={value}
-                                                            onChange={(e) =>
-                                                                onChange(
-                                                                    e.target
-                                                                        .checked
-                                                                )
-                                                            }
-                                                        />
-                                                    )}
-                                                />
-                                            </Grid>
-                                        </Grid>
+                                            )}
+                                        />
+                                    </Grid>
+                                    {/* Action */}
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.action}
+                                    >
+                                        <Button
+                                            className={classes.submit}
+                                            variant="contained"
+                                            disabled={!formState.isDirty}
+                                            type="submit"
+                                        >
+                                            {operations.save}
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            {/* Second child - Contact detail*/}
-
-                            {/* Action */}
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={10}
-                                lg={8}
-                                className={classes.action}
-                            >
-                                <Button
-                                    className={classes.submit}
-                                    variant="contained"
-                                    disabled={!formState.isDirty}
-                                    type="submit"
-                                >
-                                    {operations.save}
-                                </Button>
-                            </Grid>
+                            {/* End Detail */}
                         </Grid>
                     </form>
                 </Grid>

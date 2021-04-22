@@ -10,3 +10,15 @@ export const statusNames = {
     customer: 'Đang hợp tác',
     pending: 'Ngưng hợp tác',
 }
+
+export const milkName = {
+    token: 'notMe',
+    dists: 'dists',
+    eduLvls: 'eduLvls',
+    types: 'types',
+    scales: 'scales',
+    status: 'status',
+    roles: 'roles',
+    schYears: 'schYears',
+    salesPurps: 'salesPurps',
+}

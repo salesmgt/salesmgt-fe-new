@@ -15,9 +15,9 @@ import classes from './MenuOptions.module.scss'
 function MenuOptions(props) {
     const { data } = props
 
-    const { url } = useRouteMatch()
-
     const { params } = useAccount()
+
+    const { url } = useRouteMatch()
 
     const [anchorEl, setAnchorEl] = useState(null)
 
