@@ -25,7 +25,7 @@ import {
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
-    // ACTIVE_FILTER,
+    ACTIVE_FILTER,
 } from './FilterConsts'
 
 import { useApp } from '../../../../hooks/AppContext'
@@ -156,6 +156,8 @@ function Filters() {
         // setSchoolLevel,
         // setSchoolScale,
         // setSchoolStatus,
+        isActive,
+        workingStatuses,
         setFilter,
     } = useSchool()
 
@@ -304,31 +306,20 @@ function Filters() {
         })
     }
 
-    //==============Handle action delete from Chips and btn "Clear all"==============
-    // const handleChipsRemoved = (removedFilters) => {
-    //     removedFilters.forEach((removedFilter) => {
-    //         switch (removedFilter) {
-    //             case 'district':
-    //                 setDistrict('All')
-    //                 break
-    //             case 'type':
-    //                 setSchoolType('All')
-    //                 break
-    //             case 'level':
-    //                 setSchoolLevel('All')
-    //                 break
-    //             case 'scale':
-    //                 setSchoolScale('All')
-    //                 break
-    //             case 'status':
-    //                 setSchoolStatus('All')
-    //                 break
-    //             default:
-    //                 break
-    //         }
-    //     })
-    // }
+    const handleIsActiveChange = (event) => {
+        const selectedIsActive = event.target.value
 
+        setFilter(ACTIVE_FILTER, selectedIsActive)
+        dispatchParams({
+            type: ReducerActions.FILTER_ACTIVE,
+            payload: {
+                filterType: ACTIVE_FILTER,
+                filterValue: selectedIsActive,
+            },
+        })
+    }
+
+    //==============Handle action delete from Chips and btn "Clear all"==============
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
@@ -347,6 +338,9 @@ function Filters() {
                 case STATUS_FILTER:
                     setFilter(STATUS_FILTER, '')
                     break
+                case ACTIVE_FILTER:
+                    setFilter(ACTIVE_FILTER, null)
+                    break
                 default:
                     break
             }
@@ -358,6 +352,7 @@ function Filters() {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
+        console.log('listChips: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -590,6 +585,26 @@ function Filters() {
                                             }}
                                         >
                                             {scale}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={6} sm={4} md={4} lg={4}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel>Working Status</InputLabel>
+                                <Select value={isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                    {workingStatuses.map((workingStatus) => (
+                                        <MenuItem
+                                            value={workingStatus}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {workingStatus === null ? 'All' : (workingStatus ? 'Active' : 'Inactive')}
                                         </MenuItem>
                                     ))}
                                 </Select>

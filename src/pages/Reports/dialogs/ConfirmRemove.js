@@ -18,13 +18,8 @@ function ConfirmRemove(props) {
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
-    // console.log("Confirm Remove - params: ", params);
-
     const handleRemove = (id) => {
-        // console.log('Vooooooo');
-        // console.log('id ne: ', data)
         removeReport(id).then((data) => {
-            console.log(`Remove report ${id} roi nha`, data);
             refreshAPI(page, limit, column, direction, searchKey, listFilters)
         }).catch((error) => {
             if (error.response) {

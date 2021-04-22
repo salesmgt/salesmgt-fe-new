@@ -137,48 +137,22 @@ function Filters() {
     const handleIsActiveChange = (event) => {
         const selectedIsActive = event.target.value
 
-        console.log('handleIsActiveChange - selectedIsActive: ', selectedIsActive);
+        // console.log('handleIsActiveChange - selectedIsActive: ', selectedIsActive);
 
-        // if (selectedIsActive) {
-        //     setIsActive({ isActive: true, status: "Active" });
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_ACTIVE,
-        //         payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } },
-        //     })
-        // } else {
-        //     setIsActive({ isActive: false, status: "Inactive" });
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_ACTIVE,
-        //         payload: { filterType: 'isActive', filterValue: { isActive: false, status: "Inactive" } },
-        //     })
-        // }
-
-        // ?????????????????????????????????????????
-        setFilter(ACTIVE_FILTER, selectedIsActive ? selectedIsActive : { isActive: true, status: "Active" })
+        // setFilter(ACTIVE_FILTER, selectedIsActive ? selectedIsActive : { isActive: true, status: "Active" })
+        setFilter(ACTIVE_FILTER, selectedIsActive)
         dispatchParams({
             type: ReducerActions.FILTER_ACTIVE,
             payload: {
                 filterType: ACTIVE_FILTER,
-                filterValue: selectedIsActive.isActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" },
+                filterValue: selectedIsActive,
+                // filterValue: selectedIsActive.isActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" },
             },
         })
     }
 
     const handleRoleChange = (event) => {
         const selectedRole = event.target.value
-        // setRole(selectedRole)
-        // if (selectedRole) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_ROLE,
-        //         payload: { filterType: 'role', filterValue: selectedRole },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_ROLE,
-        //         payload: { filterType: 'role', filterValue: '' },
-        //     })
-        // }
         setFilter(ROLE_FILTER, selectedRole)
         dispatchParams({
             type: ReducerActions.FILTER_ROLE,
@@ -189,29 +163,11 @@ function Filters() {
         })
     }
 
-    //==============Handle action delete from Chips and btn "Clear all"==============
-    // const handleChipsRemoved = (removedFilters) => {
-    //     removedFilters.forEach((removedFilter) => {
-    //         switch (removedFilter) {
-    //             case 'active':
-    //                 setActive(true)
-    //                 break
-    //             case 'role':
-    //                 setRole('All')
-    //                 break
-    //             default:
-    //                 break
-    //         }
-    //     })
-    // }
-
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                // case 'isActive':
                 case ACTIVE_FILTER:
-                    setFilter(ACTIVE_FILTER, { isActive: true, status: "Active" })
-                    // setIsActive({ isActive: true, status: "Active" })
+                    setFilter(ACTIVE_FILTER, null)
                     break
                 case ROLE_FILTER:
                     setFilter(ROLE_FILTER, '')
@@ -239,7 +195,7 @@ function Filters() {
         })
     }
 
-    console.log('isActive: ', isActive);
+    // console.log('isActive: ', isActive);
 
     return (
         <div className={styles.wrapper}>
@@ -290,7 +246,7 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Working Status</InputLabel>
-                                <Select value={isActive.status} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                <Select value={isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
                                     {workingStatuses.map((workingStatus) => (
                                         <MenuItem
                                             value={workingStatus}
@@ -300,7 +256,7 @@ function Filters() {
                                                 selected: classes.menuItemSelected,
                                             }}
                                         >
-                                            {workingStatus.status}
+                                            {workingStatus === null ? 'All' : (workingStatus ? 'Active' : 'Inactive')}
                                         </MenuItem>
                                     ))}
                                 </Select>

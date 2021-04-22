@@ -132,8 +132,6 @@ function CreateReports(props) {
         }, 300);
     }
 
-    // console.log('target nè: ', target)
-
     const handleTargetChange = (newTarget) => {
         setTarget(newTarget)
         console.log('newTarget: ', newTarget);
@@ -143,7 +141,6 @@ function CreateReports(props) {
     const addReports = (event) => {
         event.preventDefault();
         const e = event.target;
-        // console.log('event.target: ', event.target);
 
         const report = {
             username: user.username,
@@ -173,29 +170,14 @@ function CreateReports(props) {
         // }
         // let countDuplicate = 0;
         listReports.forEach(re => {
-            console.log('re.targetId = ', re.targetId);
-            console.log('this ID = ', report.targetId);
             if (re.targetId === report.targetId) {
                 // Remove target cũ, ghi đè bằng target đó bản chỉnh sửa
                 console.log('Remove duplicate target ', re.targetId);
                 setListReports([...ArrayUtils.removeItem(listReports, 'targetId', re.targetId)]);
                 // setListReports([...listReports, report])
             }
-            // countDuplicate++;
         });
         setListReports([...listReports, report])    // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list 
-        // if (countDuplicate === 0) {
-        //     setListReports([...listReports, report])
-        // }
-
-        console.log('==============Report value==============');
-        console.log('Target School name: ', report.schoolName);
-        console.log('Target ID: ', report.targetId);
-        console.log('Result: ', report.result);
-        console.log('Des: ', report.description);
-        console.log('Pos: ', report.positivity);
-        console.log('Dif: ', report.difficulty);
-        console.log('Future plan: ', report.futurePlan);
 
         // Ko hiểu rõ lắm tại sao kiểu index này bị lệch gtrị, cái lấy đc cái ko
         // console.log('Target ID: ', event.target[0].value);
@@ -213,9 +195,6 @@ function CreateReports(props) {
         setListReports([...ArrayUtils.removeItem(listReports, 'targetId', targetId)]);
         console.log('Remove target ', targetId);
     }
-
-    console.log('-----------------------------------------------------');
-    console.log('listReports: ', listReports);
 
     // Click on a row in the preview table --> data is displayed in form
     // const handleShowClickedRow = () => {

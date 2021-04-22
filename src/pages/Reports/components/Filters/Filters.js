@@ -332,9 +332,6 @@ function Filters() {
         const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
         const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
 
-        console.log('handleDateRangeChange - fromDate: ', fromDate);
-        console.log('handleDateRangeChange - toDate: ', toDate);
-
         setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
         dispatchParams({
             type: ReducerActions.FILTER_PURPOSE,
@@ -409,8 +406,6 @@ function Filters() {
         const listChips = []
         let newListFilters = { ...listFilters }
 
-        console.log('newListFilters: ', newListFilters);
-
         for (const chip in newListFilters) {
             if (chip === DATE_RANGE_FILTER) {
                 const fromDate = moment(
@@ -419,9 +414,6 @@ function Filters() {
                 const toDate = moment(
                     newListFilters[chip].filterValue[1]
                 ).format('MMM D, YYYY')
-
-                console.log('generateChipsArray - fromDate: ', newListFilters[chip].filterValue[0]);
-                console.log('generateChipsArray - toDate: ', newListFilters[chip].filterValue[1]);
 
                 if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
                     newListFilters = {
@@ -435,7 +427,6 @@ function Filters() {
             }
             listChips.push(newListFilters[chip])
         }
-        console.log('listChips: ', listChips);
         return listChips
     }
     //===============================================================================

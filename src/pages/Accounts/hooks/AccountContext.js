@@ -9,7 +9,8 @@ export function useAccount() {
 }
 
 let defaultFilters = {
-    isActive: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: 'Active' } },
+    // isActive: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: 'Active' } },
+    isActive: { filterType: ACTIVE_FILTER, filterValue: null },
     role: { filterType: ROLE_FILTER, filterValue: '' },
 }
 
@@ -33,18 +34,19 @@ function useAccountProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    const workingStatuses = [
-        { isActive: true, status: 'Active' },
-        { isActive: false, status: 'Inactive' }
-    ]
+    // const workingStatuses = [
+    //     { isActive: true, status: 'Active' },
+    //     { isActive: false, status: 'Inactive' }
+    // ]
+    const workingStatuses = [null, true, false];
 
     const [isActive, setIsActive] = useState(
         defaultFilters.isActive.filterValue
             ? defaultFilters.isActive.filterValue
-            : { isActive: true, status: 'Active' }
+            : null // { isActive: true, status: 'Active' }
     )
 
-    console.log('default isActive = ', isActive);
+    // console.log('default isActive = ', isActive);
 
     const [role, setRole] = useState(
         defaultFilters.role.filterValue ? defaultFilters.role.filterValue : ''
@@ -60,7 +62,7 @@ function useAccountProvider() {
 
     // Fix major BUG
     const setFilter = (key, value) => {
-        console.log('setFilter - value = ', value);
+        // console.log('setFilter - value = ', value);
 
         switch (key) {
             case ACTIVE_FILTER:
@@ -68,7 +70,7 @@ function useAccountProvider() {
                     ...defaultFilters,
                     isActive: { filterType: ACTIVE_FILTER, filterValue: value },
                 }
-                console.log('setFilter - value.status = ', value.status);
+                // console.log('setFilter - value.status = ', value.status);
                 setIsActive(value)
                 break
             case ROLE_FILTER:
