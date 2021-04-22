@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { useAuth } from '../hooks/AuthContext'
-import { roleNames } from '../utils/Constants'
+import { roleNames } from '../constants/Generals'
 
 function PublicRoute(props) {
     const { component: Component, restricted, ...rest } = props

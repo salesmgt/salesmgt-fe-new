@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import * as FiltersServices from '../services/FiltersServices'
 import * as Milk from '../utils/Milk'
-import { milkName } from '../utils/Constants'
+import { milkName } from '../constants/Generals'
 
 const AppContext = createContext()
 

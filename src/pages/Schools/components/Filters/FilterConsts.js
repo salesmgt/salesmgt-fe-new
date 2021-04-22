@@ -1,6 +1,0 @@
-export const DISTRICT_FILTER = 'district'
-export const TYPE_FILTER = 'type'
-export const LEVEL_FILTER = 'level'
-export const SCALE_FILTER = 'scale'
-export const STATUS_FILTER = 'status'
-export const ACTIVE_FILTER = 'isActive'

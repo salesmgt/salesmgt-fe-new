@@ -17,7 +17,7 @@ import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import Chips from './Chips/Chips'
 import CreateSchool from '../../dialogs/CreateSchool'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useSchool } from '../../hooks/SchoolContext'
 import {
     DISTRICT_FILTER,
@@ -26,7 +26,7 @@ import {
     SCALE_FILTER,
     STATUS_FILTER,
     // ACTIVE_FILTER,
-} from './FilterConsts'
+} from '../../../../constants/Filters'
 
 import { useApp } from '../../../../hooks/AppContext'
 

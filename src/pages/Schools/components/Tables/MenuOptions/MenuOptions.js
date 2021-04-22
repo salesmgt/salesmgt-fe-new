@@ -18,7 +18,7 @@ import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import { useSchool } from '../../../hooks/SchoolContext'
-import { roleNames } from '../../../../../utils/Constants'
+import { roleNames } from '../../../../../constants/Generals'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {

@@ -13,7 +13,7 @@ import ConfirmRemove from '../../../dialogs/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import { useReport } from '../../../hooks/ReportContext'
-import { roleNames } from '../../../../../utils/Constants'
+import { roleNames } from '../../../../../constants/Generals'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {

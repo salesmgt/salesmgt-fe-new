@@ -1,4 +1,4 @@
-import * as Actions from '../../../hooks/reducer-action-type'
+import * as Actions from '../../../constants/ActionTypes'
 
 export const ReportReducer = (params, action) => {
     const { type, payload } = action

@@ -17,7 +17,6 @@ import {
     ListItemAvatar,
     ListItemText,
     Avatar,
-    // ListSubheader,
     Button,
 } from '@material-ui/core'
 import {
@@ -27,7 +26,7 @@ import {
     MdFilterList,
 } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useReport } from '../../hooks/ReportContext'
 import Chips from './Chips/Chips'
 import { Autocomplete } from '@material-ui/lab'
@@ -41,7 +40,7 @@ import {
     PURPOSE_FILTER,
     STATUS_FILTER,
     DATE_RANGE_FILTER,
-} from './FilterConsts'
+} from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
 import styles from './Filters.module.scss'
 

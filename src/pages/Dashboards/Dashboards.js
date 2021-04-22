@@ -7,7 +7,7 @@ import { Animation, AnimationGroup, Loading } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import * as DashboardsServices from './DashboardsServices'
 import { rankData, chartData as ChartData, cardData } from './DashboardsConfig'
-import { roleNames } from '../../utils/Constants'
+import { roleNames } from '../../constants/Generals'
 import classes from './Dashboards.module.scss'
 
 function Dashboards() {

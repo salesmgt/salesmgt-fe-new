@@ -15,7 +15,7 @@ import {
     STATUS_FILTER,
     PURPOSE_FILTER,
     DATE_RANGE_FILTER,
-} from '../components/Filters/FilterConsts'
+} from '../../../constants/Filters'
 
 const ReportContext = createContext()
 

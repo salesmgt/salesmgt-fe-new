@@ -25,7 +25,7 @@ import {
 import PropTypes from 'prop-types'
 import { useSalesman } from '../../hooks/SalesmanContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination

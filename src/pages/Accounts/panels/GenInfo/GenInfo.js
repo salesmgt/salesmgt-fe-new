@@ -24,7 +24,7 @@ import { useApp } from '../../../../hooks/AppContext'
 import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import * as AccountsServices from '../../AccountsServices'
-import { roleNames } from '../../../../utils/Constants'
+import { roleNames } from '../../../../constants/Generals'
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({

@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
-import { milkName } from '../../utils/Constants'
+import { milkName } from '../../constants/Generals'
 import classes from './Logins.module.scss'
 
 const clientSchema = yup.object().shape({

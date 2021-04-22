@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import * as Milk from '../utils/Milk'
-import { milkName } from '../utils/Constants'
+import { milkName } from '../constants/Generals'
 
 const AuthContext = createContext()
 

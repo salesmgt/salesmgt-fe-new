@@ -14,7 +14,7 @@ import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './ReportInfoConfig'
 import * as ReportsServices from '../../ReportsServices'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { roleNames } from '../../../../utils/Constants'
+import { roleNames } from '../../../../constants/Generals'
 import classes from './ReportInfo.module.scss'
 
 const rpSchema = yup.object().shape({

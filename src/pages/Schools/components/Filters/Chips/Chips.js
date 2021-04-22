@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import { Button, Chip } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import * as ReducerActions from '../../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../../constants/ActionTypes'
 import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
-} from '../FilterConsts'
+} from '../../../../../constants/Filters'
 // import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({

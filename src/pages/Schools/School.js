@@ -3,7 +3,7 @@ import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, RepInfo } from './panels'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleNames, statusNames } from '../../utils/Constants'
+import { roleNames, statusNames } from '../../constants/Generals'
 import * as SchoolsServices from './SchoolsServices'
 
 function School() {

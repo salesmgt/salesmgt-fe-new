@@ -26,8 +26,8 @@ import {
 import PropTypes from 'prop-types'
 import { useAccount } from '../../hooks/AccountContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
-import { roleNames } from '../../../../utils/Constants'
+import * as ReducerActions from '../../../../constants/ActionTypes'
+import { roleNames } from '../../../../constants/Generals'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination

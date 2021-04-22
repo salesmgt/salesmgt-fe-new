@@ -12,7 +12,7 @@ import {
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
-} from '../components/Filters/FilterConsts'
+} from '../../../constants/Filters'
 // import * as FiltersServices from '../../../services/FiltersServices'
 // import { useHistory } from 'react-router-dom'
 

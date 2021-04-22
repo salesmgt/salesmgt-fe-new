@@ -28,7 +28,7 @@ import {
 import PropTypes from 'prop-types'
 import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 import classes from './Tables.module.scss'
 import moment from 'moment'
 

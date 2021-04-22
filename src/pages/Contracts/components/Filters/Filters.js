@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
-import * as ReducerActions from '../../../../hooks/reducer-action-type'
+import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useContract } from '../../hooks/ContractContext'
 import Chips from './Chips/Chips'
 import CreateAccount from '../../dialogs/CreateAccount'

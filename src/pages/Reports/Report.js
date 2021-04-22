@@ -3,7 +3,6 @@ import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { AssignInfo, ReportInfo } from './panels'
 import moment from 'moment'
-// import { roleNames, statusNames } from '../../utils/Constants'
 import * as ReportsServices from './ReportsServices'
 
 function Report() {
