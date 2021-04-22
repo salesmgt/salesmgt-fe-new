@@ -9,17 +9,13 @@ export function useAccount() {
 }
 
 let defaultFilters = {
-    isActive: { filterType: ACTIVE_FILTER, filterValue: true },
+    isActive: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: 'Active' } },
     role: { filterType: ROLE_FILTER, filterValue: '' },
 }
 
 function useAccountProvider() {
     // Reducer
     const [params, dispatchParams] = useReducer(AccountReducer, {
-        // listFilters: {
-        //     isActive: { filterType: 'isActive', filterValue: true },
-        //     role: { filterType: 'role', filterValue: '' },
-        // },
         listFilters: defaultFilters,
         searchKey: '',
         page: 0,
@@ -37,14 +33,18 @@ function useAccountProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    // const [active, setActive] = useState(true)
-    // const [role, setRole] = useState('')
+    const workingStatuses = [
+        { isActive: true, status: 'Active' },
+        { isActive: false, status: 'Inactive' }
+    ]
 
-    const [active, setActive] = useState(
+    const [isActive, setIsActive] = useState(
         defaultFilters.isActive.filterValue
             ? defaultFilters.isActive.filterValue
-            : true
+            : { isActive: true, status: 'Active' }
     )
+
+    console.log('default isActive = ', isActive);
 
     const [role, setRole] = useState(
         defaultFilters.role.filterValue ? defaultFilters.role.filterValue : ''
@@ -56,36 +56,20 @@ function useAccountProvider() {
 
     // Search field (do not have)
 
-    // Get filter's data
-    // const getRolesFilter = () => {
-    //     FiltersServices.getRoles()
-    //         .then((data) => {
-    //             setRoles(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
+    // Move API get filter's data to AppContext
 
-    // useEffect(() => {
-    //     getRolesFilter()
-    // }, [])
-
-    // fix major BUG
+    // Fix major BUG
     const setFilter = (key, value) => {
+        console.log('setFilter - value = ', value);
+
         switch (key) {
             case ACTIVE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
                     isActive: { filterType: ACTIVE_FILTER, filterValue: value },
                 }
-                setActive(value)
+                console.log('setFilter - value.status = ', value.status);
+                setIsActive(value)
                 break
             case ROLE_FILTER:
                 defaultFilters = {
@@ -102,7 +86,6 @@ function useAccountProvider() {
     return {
         params,
         dispatchParams,
-        // roles, // isActives,
         page,
         setPage,
         limit,
@@ -111,11 +94,12 @@ function useAccountProvider() {
         setDirection,
         column,
         setColumn,
-        active,
-        // setActive,
+        isActive,
+        // setIsActive,
         role,
         // setRole,
-        setFilter,
+        workingStatuses,
+        setFilter
     }
 }
 

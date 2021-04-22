@@ -17,15 +17,14 @@ import { roleNames } from '../../../../../constants/Generals'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data } = props
+    const { data, refreshAPI } = props
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [open, setOpen] = useState(false);
 
     const { user } = useAuth()
     const { url } = useRouteMatch()
 
     const { params } = useReport()
-
-    const [anchorEl, setAnchorEl] = useState(null)
-    const [open, setOpen] = useState(false)
 
     const stateData = {
         model: data,
@@ -66,11 +65,7 @@ function MenuOptions(props) {
         // else if (data.comments.length === 0) {
         else {
             return (
-                <ConfirmRemove
-                    open={open}
-                    onClose={() => setOpen(false)}
-                    data={data}
-                />
+                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
             )
         }
     }

@@ -12,7 +12,7 @@ import {
     PIC_FILTER,
     DISTRICT_FILTER,
     SCHOOL_YEAR_FILTER,
-    STATUS_FILTER,
+    // STATUS_FILTER,
     PURPOSE_FILTER,
     DATE_RANGE_FILTER,
 } from '../../../constants/Filters'
@@ -27,7 +27,7 @@ let defaultFilters = {
     PIC: { filterType: PIC_FILTER, filterValue: null },
     district: { filterType: DISTRICT_FILTER, filterValue: '' },
     schoolYear: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
-    status: { filterType: STATUS_FILTER, filterValue: '' },
+    // status: { filterType: STATUS_FILTER, filterValue: '' },
     purpose: { filterType: PURPOSE_FILTER, filterValue: '' },
     dateRange: { filterType: DATE_RANGE_FILTER, filterValue: [null, null] },
 }
@@ -91,11 +91,11 @@ function useReportProvider() {
             ? defaultFilters.purpose.filterValue
             : ''
     )
-    const [schoolStatus, setSchoolStatus] = useState(
-        defaultFilters.status.filterValue
-            ? defaultFilters.status.filterValue
-            : ''
-    )
+    // const [schoolStatus, setSchoolStatus] = useState(
+    //     defaultFilters.status.filterValue
+    //         ? defaultFilters.status.filterValue
+    //         : ''
+    // )
     const [dateRange, setDateRange] = useState(
         defaultFilters.dateRange.filterValue
             ? defaultFilters.dateRange.filterValue
@@ -142,13 +142,13 @@ function useReportProvider() {
                 }
                 setPurpose(value)
                 break
-            case STATUS_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    status: { filterType: STATUS_FILTER, filterValue: value },
-                }
-                setSchoolStatus(value)
-                break
+            // case STATUS_FILTER:
+            //     defaultFilters = {
+            //         ...defaultFilters,
+            //         status: { filterType: STATUS_FILTER, filterValue: value },
+            //     }
+            //     setSchoolStatus(value)
+            //     break
             case DATE_RANGE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
@@ -267,7 +267,7 @@ function useReportProvider() {
         // setSchoolYear,
         purpose,
         // setPurpose,
-        schoolStatus,
+        // schoolStatus,
         // setSchoolStatus,
         dateRange,
         // setDateRange,

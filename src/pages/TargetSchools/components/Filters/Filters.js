@@ -410,25 +410,25 @@ function Filters() {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 case 'schoolYear':
-                    setSchoolYear('All')
+                    setSchoolYear('')
                     break
                 case 'district':
-                    setDistrict('All')
+                    setDistrict('')
                     break
                 case 'type':
-                    setSchoolType('All')
+                    setSchoolType('')
                     break
                 case 'level':
-                    setSchoolLevel('All')
+                    setSchoolLevel('')
                     break
                 case 'scale':
-                    setSchoolScale('All')
+                    setSchoolScale('')
                     break
                 case 'PIC':
                     setPIC(null)
                     break
                 case 'purpose':
-                    setPurpose('All')
+                    setPurpose('')
                     break
                 default:
                     // break;
@@ -583,18 +583,18 @@ function Filters() {
                                             label="PICs"
                                             margin="normal"
                                             placeholder="PIC's name"
-                                            // ref={params.InputProps.ref}
-                                            // InputProps={{
-                                            //     ...params.InputProps,
-                                            //     startAdornment: (
-                                            //         <>
-                                            //             <InputAdornment position="start">
-                                            //                 <MdAccountCircle />
-                                            //             </InputAdornment>
-                                            //             {params.InputProps.startAdornment}
-                                            //         </>
-                                            //     )
-                                            // }}
+                                        // ref={params.InputProps.ref}
+                                        // InputProps={{
+                                        //     ...params.InputProps,
+                                        //     startAdornment: (
+                                        //         <>
+                                        //             <InputAdornment position="start">
+                                        //                 <MdAccountCircle />
+                                        //             </InputAdornment>
+                                        //             {params.InputProps.startAdornment}
+                                        //         </>
+                                        //     )
+                                        // }}
                                         />
                                     )
                                 }}

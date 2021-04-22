@@ -33,6 +33,7 @@ function Reports() {
         )
             .then((res) => {
                 setData(res)
+                console.log('Reports: ', res.list[0]);
             })
             .catch((error) => {
                 if (error.response) {
@@ -61,6 +62,7 @@ function Reports() {
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
+                refreshAPI={getAllReports}
             />
         </div>
     )

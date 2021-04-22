@@ -34,7 +34,6 @@ function TablePaginationActions(props) {
 
     const handleFirstPageButtonClick = (event) => {
         onChangePage(event, 0) // firstPage has index = 0
-
     }
 
     const handleLastPageButtonClick = (event) => {
@@ -154,15 +153,8 @@ SortableTableHeaders.propTypes = {
     onRequestSort: PropTypes.func.isRequired,
 }
 
-const useStyles = makeStyles(() => ({
-    itemText: {
-        fontSize: '0.875rem',
-    },
-}))
-
 // Customize component Table
 function Tables(props) {
-    const styles = useStyles()
     const { columns, rows, totalRecord, totalPage } = props
 
     const {
@@ -272,13 +264,13 @@ function Tables(props) {
                                             primary={row.address}
                                             secondary={row.district}
                                             classes={{
-                                                primary: styles.itemText,
-                                                secondary: styles.itemText,
+                                                primary: classes.itemText,
+                                                secondary: classes.itemText
                                             }}
                                         />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {row.reprisMale
+                                        {row.reprIsMale
                                             ? `Mr. ${row.reprName}`
                                             : `Ms. ${row.reprName}`}
                                     </TableCell>

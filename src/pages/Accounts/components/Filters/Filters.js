@@ -127,36 +127,39 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters() {
     const classes = useStyles()
 
-    const { roles } = useApp()
-
     //Use states which have been declared in the TargetSchoolContext
-    const {
-        params,
-        dispatchParams,
-        // roles,
-        active,
-        // setActive,
-        role,
-        // setRole,
-        setFilter,
-    } = useAccount()
+    const { params, dispatchParams, isActive, role, workingStatuses, setFilter } = useAccount()     // isActive,
+    const { roles } = useApp()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handleIsActiveChange = (event) => {
         const selectedIsActive = event.target.value
-        // setActive(selectedIsActive)
-        // dispatchParams({
-        //     type: ReducerActions.FILTER_ACTIVE,
-        //     payload: { filterType: 'isActive', filterValue: selectedIsActive },
-        // })
-        setFilter(ACTIVE_FILTER, selectedIsActive)
+
+        console.log('handleIsActiveChange - selectedIsActive: ', selectedIsActive);
+
+        // if (selectedIsActive) {
+        //     setIsActive({ isActive: true, status: "Active" });
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_ACTIVE,
+        //         payload: { filterType: 'isActive', filterValue: { isActive: true, status: "Active" } },
+        //     })
+        // } else {
+        //     setIsActive({ isActive: false, status: "Inactive" });
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_ACTIVE,
+        //         payload: { filterType: 'isActive', filterValue: { isActive: false, status: "Inactive" } },
+        //     })
+        // }
+
+        // ?????????????????????????????????????????
+        setFilter(ACTIVE_FILTER, selectedIsActive ? selectedIsActive : { isActive: true, status: "Active" })
         dispatchParams({
             type: ReducerActions.FILTER_ACTIVE,
             payload: {
                 filterType: ACTIVE_FILTER,
-                filterValue: selectedIsActive,
+                filterValue: selectedIsActive.isActive ? { isActive: true, status: "Active" } : { isActive: false, status: "Inactive" },
             },
         })
     }
@@ -205,11 +208,13 @@ function Filters() {
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
+                // case 'isActive':
                 case ACTIVE_FILTER:
-                    setFilter(ACTIVE_FILTER, true)
+                    setFilter(ACTIVE_FILTER, { isActive: true, status: "Active" })
+                    // setIsActive({ isActive: true, status: "Active" })
                     break
                 case ROLE_FILTER:
-                    setFilter(ROLE_FILTER, 'All')
+                    setFilter(ROLE_FILTER, '')
                     break
                 default:
                     break
@@ -233,6 +238,8 @@ function Filters() {
             payload: keyword,
         })
     }
+
+    console.log('isActive: ', isActive);
 
     return (
         <div className={styles.wrapper}>
@@ -282,33 +289,20 @@ function Filters() {
                     <Grid container>
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Is Active</InputLabel>
-                                <Select
-                                    value={active}
-                                    defaultValue={true}
-                                    onChange={handleIsActiveChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value={true}
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        True
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={false}
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        False
-                                    </MenuItem>
+                                <InputLabel>Working Status</InputLabel>
+                                <Select value={isActive.status} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                    {workingStatuses.map((workingStatus) => (
+                                        <MenuItem
+                                            value={workingStatus}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected: classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {workingStatus.status}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -331,7 +325,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {roles.map((role) => (
+                                    {roles?.map((role) => (
                                         <MenuItem
                                             key={role}
                                             value={role}

@@ -33,7 +33,6 @@ function WorkPlans() {
         }).then((data) => {
             console.log('data: ', data)
             setListPICs(data)
-            
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -300,9 +299,9 @@ function WorkPlans() {
         callAPITree(e)
     }
     const onChange = e => {
-        if(e){
-        setFilter({...filter,username: e})
-        callAPI({...filter,username: e})
+        if (e) {
+            setFilter({ ...filter, username: e })
+            callAPI({ ...filter, username: e })
         }
     }
     const onInputChange = e => {
@@ -318,7 +317,7 @@ function WorkPlans() {
             handleChangeView={handleChangeView}
             listPICs={listPICs}
             handleOnSearchFieldChange={onChange}
-            isEdit={user.username === filter.username ? false :true}
+            isEdit={user.username === filter.username ? false : true}
             handleInputChange={onInputChange}
         />
     )

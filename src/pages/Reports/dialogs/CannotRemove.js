@@ -8,6 +8,7 @@ import {
     DialogActions,
     Divider,
 } from '@material-ui/core'
+import { parseDateToString } from '../../../utils/DateTimes'
 import classes from './CannotRemove.module.scss'
 
 function CannotRemove(props) {
@@ -22,7 +23,7 @@ function CannotRemove(props) {
                     <p>
                         You cannot remove the report of school
                         <strong><em> {data?.educationalLevel} {data?.schoolName} </em></strong>
-                        on <strong>{data?.date}</strong>.
+                        on <strong>{parseDateToString(data?.date, 'DD/MM/YYYY')}</strong>.
                     </p>
                     <p>This report is already commented by {data?.comment?.fullName}.</p>
                 </DialogContentText>

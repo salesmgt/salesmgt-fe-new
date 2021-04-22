@@ -138,10 +138,10 @@ function Filters() {
         const selectedIsActive = event.target.value;
         setActive(selectedIsActive);
 
-        dispatchParams({
-            type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: 'isActive', filterValue: selectedIsActive }
-        })
+        // dispatchParams({
+        //     type: ReducerActions.FILTER_ACTIVE,
+        //     payload: { filterType: 'isActive', filterValue: selectedIsActive }
+        // })
     };
 
     const handleRoleChange = (event) => {
@@ -169,7 +169,7 @@ function Filters() {
                     setActive(true);
                     break;
                 case 'role':
-                    setRole("All");
+                    setRole('');
                     break;
                 default:
                     break;

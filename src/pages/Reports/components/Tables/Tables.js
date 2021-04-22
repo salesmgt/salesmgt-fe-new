@@ -29,8 +29,8 @@ import PropTypes from 'prop-types'
 import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
+import { parseDateToString } from '../../../../utils/DateTimes'
 import classes from './Tables.module.scss'
-import moment from 'moment'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -177,8 +177,8 @@ const useStyles = makeStyles(() => ({
 
 // Customize component Table
 function Tables(props) {
-    const styles = useStyles()
-    const { columns, rows, totalRecord, totalPage } = props
+    const styles = useStyles();
+    const { columns, rows, totalRecord, totalPage, refreshAPI } = props;
 
     const {
         params,
@@ -275,8 +275,8 @@ function Tables(props) {
                                 >
                                     {/* <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell> */}
                                     <TableCell className={classes.tBodyCell}>
-                                        {row.date} &nbsp;
-                                        {row.comment && (
+                                        {parseDateToString(row.date, 'DD/MM/YYYY')} &nbsp;
+                                        {row.contextComments && (
                                             <Badge
                                                 color="secondary"
                                                 variant="dot"
@@ -287,7 +287,7 @@ function Tables(props) {
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         <ListItemText
-                                            primary={`${row.educationalLevel} ${row.schoolName}`}
+                                            primary={`${row.level} ${row.schoolName}`}
                                             secondary={row.district}
                                             classes={{
                                                 primary: styles.itemTextLarge,
@@ -328,7 +328,7 @@ function Tables(props) {
                                         className={classes.tBodyCell}
                                         align="right"
                                     >
-                                        <MenuOptions data={row} />
+                                        <MenuOptions data={row} refreshAPI={refreshAPI} />
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -381,4 +381,5 @@ Tables.propTypes = {
     columns: PropTypes.array.isRequired,
     totalRecord: PropTypes.number.isRequired,
     totalPage: PropTypes.number.isRequired,
-}
+    refreshAPI: PropTypes.func
+};

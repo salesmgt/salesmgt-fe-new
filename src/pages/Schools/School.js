@@ -37,6 +37,12 @@ function School() {
             })
     }
 
+    // const repData = {
+    //     name: data?.reprName,
+    //     isMale: data?.reprIsMale,
+    //     phone: data?.reprPhone,
+    //     email: data?.reprEmail,
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         refreshPage(id)

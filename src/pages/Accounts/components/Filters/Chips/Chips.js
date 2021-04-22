@@ -38,24 +38,25 @@ function Chips(props) {
     const [btnClearAll, setBtnClearAll] = useState(false)
 
     const handleChipDelete = (chipToDelete) => () => {
+        console.log('chipToDelete = ', chipToDelete);
+
         switch (chipToDelete.filterType) {
-            case 'active':
+            case ACTIVE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_ACTIVE,
-                    payload: { filterType: ACTIVE_FILTER, filterValue: true },
+                    payload: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: "Active" } },
                 })
-                break
+                break;
 
-            case 'role':
+            case ROLE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_ROLE,
                     payload: { filterType: ROLE_FILTER, filterValue: '' },
                 })
-                break
+                break;
 
             default:
-                // break;
-                break
+                break;
         }
 
         if (!handleChipsRemoved) return
@@ -71,7 +72,7 @@ function Chips(props) {
 
         dispatch({
             type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: ACTIVE_FILTER, filterValue: true },
+            payload: { filterType: ACTIVE_FILTER, filterValue: { isActive: true, status: "Active" } }
         })
         dispatch({
             type: ReducerActions.FILTER_ROLE,
@@ -87,7 +88,8 @@ function Chips(props) {
     const handleShowClearAllButton = () => {
         let count = 0
         chips.forEach((chip) => {
-            if (chip.filterValue === '' || chip.filterValue === null) count++
+            if (chip.filterValue === '' || chip.filterValue === null)
+                count++;
         })
         return count
     }
@@ -111,16 +113,14 @@ function Chips(props) {
                                         chip.filterValue && (
                                             <Chip
                                                 label={chip.filterValue}
-                                                onDelete={handleChipDelete(
-                                                    chip
-                                                )}
+                                                onDelete={handleChipDelete(chip)}
                                                 className={classes.chip}
                                                 color="secondary"
                                             />
                                         )}
                                     {chip.filterType === ACTIVE_FILTER && (
                                         <Chip
-                                            label={chip.filterValue.toString()}
+                                            label={chip.filterValue.status}
                                             onDelete={handleChipDelete(chip)}
                                             className={classes.chip}
                                             color="secondary"

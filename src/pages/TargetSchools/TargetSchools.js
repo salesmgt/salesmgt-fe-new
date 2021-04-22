@@ -32,6 +32,7 @@ function TargetSchools() {
             listFilters
         ).then((res) => {
             setData(res)
+            console.log('Targets: ', res);
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
