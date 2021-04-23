@@ -25,6 +25,17 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
 import AssignMultiple from '../../dialogs/AssignMultiple'
+import {
+    SCHOOL_YEAR_FILTER,
+    DISTRICT_FILTER,
+    TYPE_FILTER,
+    LEVEL_FILTER,
+    SCALE_FILTER,
+    PIC_FILTER,
+    PURPOSE_FILTER,
+    STATUS_FILTER,
+} from '../../../../constants/Filters'
+import { useApp } from '../../../../hooks/AppContext'
 import styles from './Filters.module.scss'
 import NotifyAssign from '../../dialogs/NotifyAssign'
 import CreateTargetSchools from '../../dialogs/CreateTargetSchools'
@@ -165,16 +176,26 @@ function Filters() {
     // const { onGetTargets } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
+    const {
+        schYears,
+        dists,
+        schTypes,
+        schEduLvls,
+        schScales,
+        salesPurps,
+        // schStatus,
+    } = useApp()
+
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
         dispatchParams,
         PICs,
-        districts,
-        schoolYears,
-        schoolTypes,
-        schoolLevels,
-        schoolScales,
+        // districts,
+        // schoolYears,
+        // schoolTypes,
+        // schoolLevels,
+        // schoolScales,
         schoolYear,
         district,
         schoolType,
@@ -182,13 +203,15 @@ function Filters() {
         schoolScale,
         PIC,
         purpose,
-        setSchoolYear,
-        setDistrict,
-        setSchoolType,
-        setSchoolLevel,
-        setSchoolScale,
-        setPIC,
-        setPurpose,
+        // status,
+        // setSchoolYear,
+        // setDistrict,
+        // setSchoolType,
+        // setSchoolLevel,
+        // setSchoolScale,
+        // setPIC,
+        // setPurpose,
+        setFilter,
     } = useTargetSchool()
 
     // const { listFilters } = params  //, searchKey, sorting, paging
@@ -259,175 +282,263 @@ function Filters() {
     //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
         const selectedSchoolYear = event.target.value
-        setSchoolYear(selectedSchoolYear)
 
-        if (selectedSchoolYear) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_YEAR,
-                payload: {
-                    filterType: 'schoolYear',
-                    filterValue: selectedSchoolYear,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_YEAR,
-                payload: { filterType: 'schoolYear', filterValue: '' },
-            })
-        }
+        // setSchoolYear(selectedSchoolYear)
+        // if (selectedSchoolYear) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
+        //         payload: {
+        //             filterType: 'schoolYear',
+        //             filterValue: selectedSchoolYear,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
+        //         payload: { filterType: 'schoolYear', filterValue: '' },
+        //     })
+        // }
+        setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_YEAR,
+            payload: {
+                filterType: SCHOOL_YEAR_FILTER,
+                filterValue: selectedSchoolYear ? selectedSchoolYear : '',
+            },
+        })
     }
 
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-        console.log('selectedDistrict: ', selectedDistrict)
-        setDistrict(selectedDistrict)
 
-        if (selectedDistrict) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: {
-                    filterType: 'district',
-                    filterValue: selectedDistrict,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_DISTRICT,
-                payload: { filterType: 'district', filterValue: '' },
-            })
-        }
+        // setDistrict(selectedDistrict)
+        // if (selectedDistrict) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: {
+        //             filterType: 'district',
+        //             filterValue: selectedDistrict,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_DISTRICT,
+        //         payload: { filterType: 'district', filterValue: '' },
+        //     })
+        // }
+        setFilter(DISTRICT_FILTER, selectedDistrict)
+        dispatchParams({
+            type: ReducerActions.FILTER_DISTRICT,
+            payload: {
+                filterType: DISTRICT_FILTER,
+                filterValue: selectedDistrict ? selectedDistrict : '',
+            },
+        })
     }
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-        setSchoolType(selectedSchoolType)
 
-        if (selectedSchoolType) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: {
-                    filterType: 'type',
-                    filterValue: selectedSchoolType,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_TYPE,
-                payload: { filterType: 'type', filterValue: '' },
-            })
-        }
+        // setSchoolType(selectedSchoolType)
+        // if (selectedSchoolType) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //         payload: {
+        //             filterType: 'type',
+        //             filterValue: selectedSchoolType,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //         payload: { filterType: 'type', filterValue: '' },
+        //     })
+        // }
+        setFilter(TYPE_FILTER, selectedSchoolType)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_TYPE,
+            payload: {
+                filterType: TYPE_FILTER,
+                filterValue: selectedSchoolType ? selectedSchoolType : '',
+            },
+        })
     }
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-        setSchoolLevel(selectedSchoolLevel)
 
-        if (selectedSchoolLevel) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: {
-                    filterType: 'level',
-                    filterValue: selectedSchoolLevel,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                payload: { filterType: 'level', filterValue: '' },
-            })
-        }
+        // setSchoolLevel(selectedSchoolLevel)
+        // if (selectedSchoolLevel) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //         payload: {
+        //             filterType: 'level',
+        //             filterValue: selectedSchoolLevel,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //         payload: { filterType: 'level', filterValue: '' },
+        //     })
+        // }
+        setFilter(LEVEL_FILTER, selectedSchoolLevel)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_LEVEL,
+            payload: {
+                filterType: LEVEL_FILTER,
+                filterValue: selectedSchoolLevel ? selectedSchoolLevel : '',
+            },
+        })
     }
 
     const handleSchoolScaleChange = (event) => {
         const selectedSchoolScale = event.target.value
-        setSchoolScale(selectedSchoolScale)
 
-        if (selectedSchoolScale) {
-            // !== ''
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: {
-                    filterType: 'scale',
-                    filterValue: selectedSchoolScale,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_SCHOOL_SCALE,
-                payload: { filterType: 'scale', filterValue: '' },
-            })
-        }
+        // setSchoolScale(selectedSchoolScale)
+        // if (selectedSchoolScale) {
+        //     // !== ''
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //         payload: {
+        //             filterType: 'scale',
+        //             filterValue: selectedSchoolScale,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //         payload: { filterType: 'scale', filterValue: '' },
+        //     })
+        // }
+        setFilter(SCALE_FILTER, selectedSchoolScale)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_SCALE,
+            payload: {
+                filterType: SCALE_FILTER,
+                filterValue: selectedSchoolScale ? selectedSchoolScale : '',
+            },
+        })
     }
 
     const handlePICChange = (event, newPIC) => {
-        setPIC(newPIC)
-        console.log('handle change, new PIC', newPIC)
-        if (newPIC) {
-            //  !== null
-            dispatchParams({
-                type: ReducerActions.FILTER_PIC,
-                payload: { filterType: 'PIC', filterValue: newPIC },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_PIC,
-                payload: { filterType: 'PIC', filterValue: null },
-            })
-        }
+        // setPIC(newPIC)
+        // console.log('handle change, new PIC', newPIC)
+        // if (newPIC) {
+        //     //  !== null
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PIC,
+        //         payload: { filterType: 'PIC', filterValue: newPIC },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PIC,
+        //         payload: { filterType: 'PIC', filterValue: null },
+        //     })
+        // }
+        setFilter(PIC_FILTER, newPIC)
+        dispatchParams({
+            type: ReducerActions.FILTER_PIC,
+            payload: {
+                filterType: PIC_FILTER,
+                filterValue: newPIC ? newPIC : null,
+            },
+        })
     }
 
     const handlePurposeChange = (event) => {
         const selectedPurpose = event.target.value
-        setPurpose(selectedPurpose)
 
-        if (selectedPurpose) {
-            // !== '' && selectedPurpose !== undefined
-            dispatchParams({
-                type: ReducerActions.FILTER_PURPOSE,
-                payload: {
-                    filterType: 'purpose',
-                    filterValue: selectedPurpose,
-                },
-            })
-        } else {
-            dispatchParams({
-                type: ReducerActions.FILTER_PURPOSE,
-                payload: { filterType: 'purpose', filterValue: '' },
-            })
-        }
+        // setPurpose(selectedPurpose)
+        // if (selectedPurpose) {
+        //     // !== '' && selectedPurpose !== undefined
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PURPOSE,
+        //         payload: {
+        //             filterType: 'purpose',
+        //             filterValue: selectedPurpose,
+        //         },
+        //     })
+        // } else {
+        //     dispatchParams({
+        //         type: ReducerActions.FILTER_PURPOSE,
+        //         payload: { filterType: 'purpose', filterValue: '' },
+        //     })
+        // }
+        setFilter(PURPOSE_FILTER, selectedPurpose)
+        dispatchParams({
+            type: ReducerActions.FILTER_PURPOSE,
+            payload: {
+                filterType: PURPOSE_FILTER,
+                filterValue: selectedPurpose ? selectedPurpose : '',
+            },
+        })
     }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
+    // const handleChipsRemoved = (removedFilters) => {
+    //     removedFilters.forEach((removedFilter) => {
+    //         switch (removedFilter) {
+    //             case 'schoolYear':
+    //                 setSchoolYear('')
+    //                 break
+    //             case 'district':
+    //                 setDistrict('')
+    //                 break
+    //             case 'type':
+    //                 setSchoolType('')
+    //                 break
+    //             case 'level':
+    //                 setSchoolLevel('')
+    //                 break
+    //             case 'scale':
+    //                 setSchoolScale('')
+    //                 break
+    //             case 'PIC':
+    //                 setPIC(null)
+    //                 break
+    //             case 'purpose':
+    //                 setPurpose('')
+    //                 break
+    //             default:
+    //                 // break;
+    //                 break
+    //         }
+    //     })
+    // }
+
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                case 'schoolYear':
-                    setSchoolYear('')
+                case SCHOOL_YEAR_FILTER:
+                    setFilter(SCHOOL_YEAR_FILTER, '')
                     break
-                case 'district':
-                    setDistrict('')
+                case DISTRICT_FILTER:
+                    setFilter(DISTRICT_FILTER, '')
                     break
-                case 'type':
-                    setSchoolType('')
+                case TYPE_FILTER:
+                    setFilter(TYPE_FILTER, '')
                     break
-                case 'level':
-                    setSchoolLevel('')
+                case LEVEL_FILTER:
+                    setFilter(LEVEL_FILTER, '')
                     break
-                case 'scale':
-                    setSchoolScale('')
+                case SCALE_FILTER:
+                    setFilter(SCALE_FILTER, '')
                     break
-                case 'PIC':
-                    setPIC(null)
+                case PIC_FILTER:
+                    setFilter(PIC_FILTER, null)
                     break
-                case 'purpose':
-                    setPurpose('')
+                case PURPOSE_FILTER:
+                    setFilter(PURPOSE_FILTER, '')
                     break
+                // case STATUS_FILTER:
+                //     setFilter(STATUS_FILTER, '')
+                //     break
                 default:
-                    // break;
                     break
             }
         })
@@ -553,18 +664,18 @@ function Filters() {
                                             label="PICs"
                                             margin="normal"
                                             placeholder="PIC's name"
-                                        // ref={params.InputProps.ref}
-                                        // InputProps={{
-                                        //     ...params.InputProps,
-                                        //     startAdornment: (
-                                        //         <>
-                                        //             <InputAdornment position="start">
-                                        //                 <MdAccountCircle />
-                                        //             </InputAdornment>
-                                        //             {params.InputProps.startAdornment}
-                                        //         </>
-                                        //     )
-                                        // }}
+                                            // ref={params.InputProps.ref}
+                                            // InputProps={{
+                                            //     ...params.InputProps,
+                                            //     startAdornment: (
+                                            //         <>
+                                            //             <InputAdornment position="start">
+                                            //                 <MdAccountCircle />
+                                            //             </InputAdornment>
+                                            //             {params.InputProps.startAdornment}
+                                            //         </>
+                                            //     )
+                                            // }}
                                         />
                                     )
                                 }}
@@ -620,59 +731,20 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {/* <ListSubheader className={classes.option}><em>Leads</em></ListSubheader> */}
-                                    <MenuItem
-                                        value="Sales mới"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Sales mới
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Theo dõi"
-                                        className={classes.lastOption}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Theo dõi
-                                    </MenuItem>
-                                    {/* <ListSubheader className={classes.option}><em>Customers</em></ListSubheader> */}
-                                    <MenuItem
-                                        value="Chăm sóc"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Chăm sóc
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Tái ký hợp đồng"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Tái ký hợp đồng
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Ký mới hợp đồng"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Ký mới hợp đồng
-                                    </MenuItem>
-                                    {/* <ListSubheader className={classes.option}><em>Ngưng hợp tác</em></ListSubheader> */}
+                                    {salesPurps.map((purp) => (
+                                        <MenuItem
+                                            key={purp}
+                                            value={purp}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {purp}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -702,7 +774,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {districts.map((dist) => (
+                                    {dists.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -738,7 +810,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolYears.map((year) => (
+                                    {schYears.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -781,7 +853,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolTypes.map((type) => (
+                                    {schTypes.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -817,7 +889,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolLevels.map((level) => (
+                                    {schEduLvls.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
@@ -853,7 +925,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schoolScales.map((scale) => (
+                                    {schScales.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}
@@ -870,6 +942,41 @@ function Filters() {
                                 </Select>
                             </FormControl>
                         </Grid>
+                        {/* <Grid item xs={6} sm={6} md={4} lg={3}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel>School Statuses</InputLabel>
+                                <Select
+                                    value={schoolStatus}
+                                    onChange={handleSchoolStatusChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {schStatus.map((status) => (
+                                        <MenuItem
+                                            key={status}
+                                            value={status}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {status}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid> */}
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

@@ -46,8 +46,6 @@ function useAccountProvider() {
             : null // { isActive: true, status: 'Active' }
     )
 
-    // console.log('default isActive = ', isActive);
-
     const [role, setRole] = useState(
         defaultFilters.role.filterValue ? defaultFilters.role.filterValue : ''
     )

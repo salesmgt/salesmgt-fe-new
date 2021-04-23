@@ -12,8 +12,8 @@ import {
     Switch,
 } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
 import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './GenInfoConfig'

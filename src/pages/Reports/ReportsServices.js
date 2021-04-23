@@ -55,11 +55,19 @@ export async function updateReport(reportId, report) {
     return response
 }
 
+export async function updateComment(reportId, comment) {
+    const response = await Api.patch(`/reports/${reportId}`, comment)
+    // const data = await response.data
+
+    return response
+}
+
 // List of target schools for reporting (for one user in a specific school year)
 export async function getTargetSchools(params) {
-    const paramString = queryString.stringify(params);
+    const paramString = queryString.stringify(params)
     const response = await Api.get(`/targets?${paramString}`)
     const data = await response.data
+
     return data.list
 }
 
@@ -68,13 +76,6 @@ export async function addReport(newReports) {
     const data = await response.data
 
     return data
-}
-
-export async function updateComment(reportId, comment) {
-    const response = await Api.patch(`/reports/${reportId}`, comment)
-    // const data = await response.data
-
-    return response
 }
 
 export async function removeReport(reportId) {

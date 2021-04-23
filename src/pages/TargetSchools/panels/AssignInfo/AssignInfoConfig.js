@@ -1,12 +1,11 @@
 export const Consts = {
     headers: {
-        child1: 'Create School',
-        child2: 'Import File'
+        child1: 'Assign detail',
+        child2: 'School detail',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
-        WithData: 'With Representative',
     },
     fields: {
         name: {
@@ -17,9 +16,6 @@ export const Consts = {
         },
         dist: {
             title: 'District',
-        },
-        status: {
-            title: 'School Active',
         },
         eduLvl: {
             title: 'Educational Level',
@@ -33,23 +29,23 @@ export const Consts = {
         salesStatus: {
             title: 'School Status',
         },
-        des: {
-            title: 'Description',
-        },
         tel: {
             title: 'Tel',
         },
-        repName: {
-            title: 'Full Name',
+        reprName: {
+            title: 'Principal Name',
         },
-        repGender: {
-            title: 'Gender',
+        reprIsMale: {
+            title: 'Principal Gender',
         },
-        repEmail: {
-            title: 'Email',
+        pic: {
+            title: 'PIC',
         },
-        repPhone: {
-            title: 'Phone Number',
+        purpose: {
+            title: 'Sales Purpose',
+        },
+        schlYear: {
+            title: 'Shool Year',
         },
     },
 }

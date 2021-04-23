@@ -10,13 +10,12 @@
 .dialogAct {
     padding: 1rem !important;
     .btnSave {
-        color: $common-white !important;
-        background-color: $main-info !important;
+        color: $trust;
         &:hover {
-            background-color: $dark-info !important;
+            color: $light-info;
         }
         &:disabled {
-            background-color: $divider !important;
+            color: $disabled;
         }
     }
 }

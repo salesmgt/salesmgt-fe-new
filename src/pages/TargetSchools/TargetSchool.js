@@ -1,71 +1,121 @@
-import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
-import { GenInfo, AsgInfo } from './panels'
-import { NotFound } from '../../components'
-import { useTargetSchool } from './hooks/TargetSchoolContext'
+import { GenInfo, RepInfo, AssignInfo } from './panels'
+import { useAuth } from '../../hooks/AuthContext'
+import { roleNames, statusNames } from '../../constants/Generals'
+import * as TargetSchoolsServices from './TargetSchoolsServices'
 
 function TargetSchool() {
     const [tabValue, setTabValue] = useState(0)
 
+    const { user } = useAuth()
+
+    const { id } = useParams()
     const location = useLocation()
+    const history = useHistory()
 
-    const data = location.state?.data
+    const stateData = location.state?.data
+    const [target, setTarget] = useState(stateData?.model)
 
-    // const { params } = useTargetSchool()
-    // console.log('Detail page: ', params)
+    console.log(target)
 
-    if (!data) {
-        return <NotFound />
-    }
-    console.log(data)
-    const schData = {
-        schName: data?.schoolName,
-        addr: data?.address,
-        dist: data?.district,
-        year: data?.schoolYear,
-        level: data?.level,
-        scale: data?.schoolScale,
-        status: data?.schoolStatus,
-        type: data?.schoolType,
-        des: data?.schoolDescription,
-        note: data?.note,
+    // let isMounted = true
+    // const refreshPage = (targetId) => {
+    //     TargetSchoolsServices.getTargetSchools(targetId)
+    //         .then((data) => {
+    //             if (isMounted) {
+    //                 setTarget(data)
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
 
-        repName: data?.reprName,
-        reprIsMale: data?.reprIsMale,
-        repPhone: data?.reprPhone,
-        repEmail: data?.reprEmail,
-    }
-
-    const asgData = {
-        avatar: data?.avatar,
-        name: data?.username,
-        fullName: data?.fullName,
-        phone: data?.userPhone,
-        email: data?.userEmail,
-        purp: data?.purpose,
-    }
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // useEffect(() => {
+    //     refreshPage(id)
+    //     return () => {
+    //         // eslint-disable-next-line react-hooks/exhaustive-deps
+    //         isMounted = false
+    //     }
+    // }, [])
 
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
 
     return (
-        <DetailLayouts
-            linkBack="Target Schools"
-            header={data.schoolName}
-            tabs={['General Info', 'Assign Info']}
-            subHeader={data.schoolYear}
-            isStatus={false}
-            tabValue={tabValue}
-            handleChangeTab={handleChangeTab}
-        >
-            {/* General Info */}
-            {tabValue === 0 && <GenInfo data={schData} />}
+        <>
+            {(user.roles[0] === roleNames.manager ||
+                user.roles[0] === roleNames.supervisor) && (
+                    <DetailLayouts
+                        linkBack="Target Schools"
+                        header={target.schoolName}
+                        tabs={['Assign Info', 'School Info']}
+                        subHeader={target.schoolYear}
+                        // isStatus={false}
+                        tabValue={tabValue}
+                        handleChangeTab={handleChangeTab}
+                    >
+                        {tabValue === 0 && (
+                            <AssignInfo
+                                target={target}
+                            // refreshPage={refreshPage}
+                            />
+                        )}
 
-            {/* Assign Info */}
-            {tabValue === 1 && <AsgInfo data={asgData} />}
-        </DetailLayouts>
+                        {tabValue === 1 && <GenInfo target={target} />}
+
+                        {tabValue === 2 && (
+                            <RepInfo
+                                target={target}
+                            // refreshPage={refreshPage}
+                            />
+                        )}
+                    </DetailLayouts>
+                )}
+
+            {user.roles[0] === roleNames.salesman && (
+                <DetailLayouts
+                    linkBack="Target Schools"
+                    header={target.schoolName}
+                    tabs={[
+                        'School Info',
+                        'Assign Info',
+                        'Principal Info',
+                        // 'Contract Info',
+                    ]}
+                    subHeader={target.schoolYear}
+                    // isStatus={false}
+                    tabValue={tabValue}
+                    handleChangeTab={handleChangeTab}
+                >
+                    {tabValue === 0 && (
+                        <AssignInfo
+                            target={target}
+                        // refreshPage={refreshPage}
+                        />
+                    )}
+
+                    {tabValue === 1 && <GenInfo target={target} />}
+
+                    {tabValue === 2 && (
+                        <RepInfo
+                            target={target}
+                        // refreshPage={refreshPage}
+                        />
+                    )}
+                </DetailLayouts>
+            )}
+        </>
     )
 }
 

@@ -114,12 +114,17 @@
             }
         }
         .saveBtn {
-            color: $dark-info;
+            color: $trust;
+            &:hover {
+                color: $light-info;
+            }
+            &:disabled {
+                color: $disabled;
+            }
         }
         .account {
             margin-bottom: 1.6rem;
         }
-
         .me {
             margin-bottom: 1.6rem;
         }

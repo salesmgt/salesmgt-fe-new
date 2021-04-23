@@ -26,7 +26,7 @@ import { CardHeaders } from './components'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import * as Cookies from '../../utils/Cookies'
+// import * as Cookies from '../../utils/Cookies'
 import { useAuth } from '../../hooks/AuthContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
@@ -86,7 +86,10 @@ const serverSchema = [
 ]
 
 function Profiles() {
-    const { user, setUser } = useAuth()
+    const {
+        user,
+        // setUser
+    } = useAuth()
 
     const location = useLocation()
     const history = useHistory()
@@ -102,14 +105,24 @@ function Profiles() {
 
     const [expanded, setExpanded] = useState(false)
 
+    const pwdValues = { oldPassword: '', newPassword: '', confirmPassword: '' }
+
+    const emailValues = { email: '' }
+
+    const phoneValues = { phone: '' }
+
+    const addrValues = { address: '' }
+
     const {
         handleSubmit: pwdSubmit,
         errors: pwdErrors,
         register: pwdRegister,
         reset: pwdReset,
         setError: setPwdError,
+        formState: pwdState,
     } = useForm({
         resolver: yupResolver(pwdSchema),
+        defaultValues: pwdValues,
     })
 
     const {
@@ -117,8 +130,10 @@ function Profiles() {
         errors: emailErrors,
         register: emailRegister,
         reset: emailReset,
+        formState: emailState,
     } = useForm({
         resolver: yupResolver(emailSchema),
+        defaultValues: emailValues,
     })
 
     const {
@@ -126,8 +141,10 @@ function Profiles() {
         errors: phoneErrors,
         register: phoneRegister,
         reset: phoneReset,
+        formState: phoneState,
     } = useForm({
         resolver: yupResolver(phoneSchema),
+        defaultValues: phoneValues,
     })
 
     const {
@@ -135,8 +152,10 @@ function Profiles() {
         errors: addrErrors,
         register: addrRegister,
         reset: addrReset,
+        formState: addrState,
     } = useForm({
         resolver: yupResolver(addrSchema),
+        defaultValues: addrValues,
     })
 
     let isMounted = true
@@ -290,6 +309,11 @@ function Profiles() {
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+                pwdReset({
+                    oldPassword: '',
+                    newPassword: '',
+                    confirmPassword: '',
+                })
             })
             .catch((error) => {
                 if (error.response) {
@@ -311,7 +335,7 @@ function Profiles() {
                     type: 'error',
                 })
             })
-        pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
+        // pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
     }
 
     const onEmailSubmit = (data) => {
@@ -323,6 +347,7 @@ function Profiles() {
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+                emailReset({ email: '' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -338,7 +363,7 @@ function Profiles() {
                     type: 'error',
                 })
             })
-        emailReset({ email: '' })
+        // emailReset({ email: '' })
     }
 
     const onPhoneSubmit = (data) => {
@@ -350,6 +375,7 @@ function Profiles() {
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+                phoneReset({ phone: '' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -365,7 +391,7 @@ function Profiles() {
                     type: 'error',
                 })
             })
-        phoneReset({ phone: '' })
+        // phoneReset({ phone: '' })
     }
 
     const onAddrSubmit = (data) => {
@@ -377,6 +403,7 @@ function Profiles() {
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+                addrReset({ address: '' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -392,14 +419,14 @@ function Profiles() {
                     type: 'error',
                 })
             })
-        addrReset({ address: '' })
+        // addrReset({ address: '' })
     }
 
-    const handleLogout = () => {
-        Cookies.setCookie('accessToken', '', 0)
-        localStorage.clear()
-        setUser()
-    }
+    // const handleLogout = () => {
+    //     Cookies.setCookie('accessToken', '', 0)
+    //     localStorage.clear()
+    //     setUser()
+    // }
 
     // -------------------------------------------Page config-------------------------------------------
 
@@ -629,22 +656,26 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="small"
+                                            type="submit"
+                                            disabled={!pwdState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="small"
                                             onClick={() =>
                                                 pwdReset({
                                                     pwdErrors: false,
+                                                    oldPassword: '',
+                                                    newPassword: '',
+                                                    confirmPassword: '',
                                                 })
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -813,22 +844,24 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="small"
+                                            type="submit"
+                                            disabled={!emailState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="small"
                                             onClick={() =>
                                                 emailReset({
                                                     emailErrors: false,
+                                                    email: '',
                                                 })
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -914,22 +947,24 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="small"
+                                            type="submit"
+                                            disabled={!phoneState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="small"
                                             onClick={() =>
                                                 phoneReset({
                                                     phoneErrors: false,
+                                                    phone: '',
                                                 })
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -1014,22 +1049,24 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="small"
+                                            type="submit"
+                                            disabled={!addrState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="small"
                                             onClick={() =>
                                                 addrReset({
                                                     addrErrors: false,
+                                                    address: '',
                                                 })
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>

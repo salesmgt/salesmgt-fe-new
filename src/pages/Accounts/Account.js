@@ -57,7 +57,6 @@ function Account() {
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >
-            {/* General Info */}
             {tabValue === 0 && (
                 <GenInfo account={account} refreshPage={refreshPage} />
             )}

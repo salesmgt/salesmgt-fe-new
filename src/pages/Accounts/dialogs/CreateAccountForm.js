@@ -97,12 +97,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function CreateAccountForm() {
+function CreateAccountForm(props) {
+    const { onClose } = props
+    const { operations, fields } = Consts
     const styles = useStyles()
 
     const { roles } = useApp()
-
-    const { operations, fields } = Consts
 
     const history = useHistory()
 
@@ -361,8 +361,15 @@ function CreateAccountForm() {
                     </Grid>
                 </DialogContent>
                 <DialogActions className={classes.dialogAct}>
-                    {/* <Button
-                        variant="contained"
+                    <Button
+                        className={classes.btnSave}
+                        type="submit"
+                        disabled={!formState.isDirty}
+                        onClick={handleSubmit(onSubmit)}
+                    >
+                        {operations.save}
+                    </Button>
+                    <Button
                         onClick={() => {
                             reset({
                                 errors: false,
@@ -378,16 +385,7 @@ function CreateAccountForm() {
                             onClose()
                         }}
                     >
-                        Cancel
-                    </Button> */}
-                    <Button
-                        className={classes.btnSave}
-                        variant="contained"
-                        type="submit"
-                        disabled={!formState.isDirty}
-                        onClick={handleSubmit(onSubmit)}
-                    >
-                        {operations.save}
+                        {operations.cancel}
                     </Button>
                 </DialogActions>
             </form>
