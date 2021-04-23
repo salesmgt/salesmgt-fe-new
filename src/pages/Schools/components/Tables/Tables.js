@@ -249,7 +249,7 @@ function Tables(props) {
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell
-                                        className={classes.tCellSchoolName}
+                                        className={row.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
                                     >
                                         {row.educationalLevel} {row.name}
                                     </TableCell>

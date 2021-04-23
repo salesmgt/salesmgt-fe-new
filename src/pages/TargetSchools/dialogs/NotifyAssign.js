@@ -42,36 +42,32 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmRemove(props) {
-    const { open, onClose, data } = props
-
-    const handleRemove = () => {
-        // Gọi API xóa
-        console.log('Remove nha');
-
-        onClose();
-    }
+    const { open, onClose } = props
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitleWithIconClose onClose={onClose}>Confirm Remove</DialogTitleWithIconClose>
+            <DialogTitleWithIconClose onClose={onClose}>Notify</DialogTitleWithIconClose>
             {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
                     <p>
-                        Do you really want to remove
-                        <strong><em> {data.level} {data.schoolName} </em></strong>
-                        from list of target schools in <strong>{data.schoolYear}</strong>?
+                        In the Target School table, please choose target schools you want to assign.
                     </p>
-                    <p>This process cannot be undone.</p>
+                    <p>
+                        <i>
+                            <b>Tips:</b> Filters and search box
+                            may help you find schools faster.
+                        </i>
+                    </p>
                 </DialogContentText>
             </DialogContent>
             {/* <Divider /> */}
             <DialogActions>
-                <Button variant="contained" className={classes.btnRemove} onClick={handleRemove} autoFocus>
-                    Remove
-                </Button>
-                <Button variant="contained" onClick={onClose}>
+                {/* <Button variant="contained" onClick={onClose}>
                     Cancel
+                </Button> */}
+                <Button variant="contained" onClick={onClose} autoFocus>
+                    OK, I understood
                 </Button>
             </DialogActions>
         </Dialog>

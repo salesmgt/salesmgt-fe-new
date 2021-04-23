@@ -101,7 +101,7 @@ function CreateReports(props) {
     const getListTargets = (searchKey) => {
         ReportsServices.getTargetSchools({ username: user.username, schoolYear: calculateSchoolYear(), key: searchKey }).then(data => {
             setTargets(data);
-            console.log('list targets = ', data);
+            // console.log('list targets = ', data);
             // Tại sao có 1 số searchKey (VD: tohu) bị văng lỗi "TypeError: Cannot read property 'filter' of null"???
         }).catch((error) => {
             if (error.response) {
@@ -197,8 +197,8 @@ function CreateReports(props) {
     const calculateSchoolYear = () => {
         const thisYear = new Date().getFullYear();
         const thisMonth = new Date().getMonth();
-        console.log(`${thisMonth}/${thisYear}`);
-        console.log(`This school year: ${thisYear - 1}-${thisYear}`);
+        // console.log(`${thisMonth}/${thisYear}`);
+        // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
 
         if (thisMonth < 7)
             return `${thisYear - 1}-${thisYear}`;
@@ -227,7 +227,7 @@ function CreateReports(props) {
             <DialogTitleWithIconClose onClose={handleCloseDialog}>
                 {headers.child1}
             </DialogTitleWithIconClose>
-            <Divider />
+            {/* <Divider /> */}
             {/* <form noValidate onSubmit={handleSubmit(onSubmit)}> */}
             <DialogContent className={classes.wrapper}>
                 <form onSubmit={addReports}>
@@ -481,11 +481,8 @@ function CreateReports(props) {
                     </Grid>
                 </form>
             </DialogContent>
-            <Divider />
+            {/* <Divider /> */}
             <DialogActions className="">
-                <Button variant="contained" onClick={handleCloseDialog}>
-                    {operations.cancel}
-                </Button>
                 <Button
                     className={classes.btnSave}
                     variant="contained"
@@ -495,6 +492,9 @@ function CreateReports(props) {
                     onClick={handleCreateReport}
                 >
                     {operations.save}
+                </Button>
+                <Button variant="contained" onClick={handleCloseDialog}>
+                    {operations.cancel}
                 </Button>
             </DialogActions>
             {/* </form> */}

@@ -1,43 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Button,
-    TextField,
     Dialog,
     DialogContent,
     DialogActions,
     IconButton,
-    FormControlLabel,
-    Switch,
     DialogTitle,
     Divider,
     Grid,
     Typography,
     withStyles,
-    InputAdornment,
-    ListItem,
-    Avatar,
-    ListItemText,
-    ListItemAvatar,
-    TableHead,
-    Table,
-    TableCell,
-    TableContainer,
-    TableRow,
-    TableBody,
-    InputLabel,
+    makeStyles,
+    MenuItem,
     FormControl,
     Select,
-    MenuItem,
-    ListSubheader,
-    makeStyles,
-    Paper,
 } from '@material-ui/core'
-import { MdAccountCircle, MdClose } from 'react-icons/md'
+import { DataGrid } from '@material-ui/data-grid';
+import { MdClose } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Autocomplete } from '@material-ui/lab'
-import { useTargetSchool } from '../hooks/TargetSchoolContext'
+import { columns } from './CreateTargetSchoolsConfig'
+import { useHistory } from "react-router"
+import { getAllSchools } from '../TargetSchoolsServices'
 import classes from './CreateTargetSchools.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -90,31 +76,75 @@ function CreateTargetSchools(props) {
         resolver: yupResolver(clientSchema),
     })
     // const [open, setOpen] = useToggle()
+    const history = useHistory()
+
+    const [rows, setRows] = useState([])
+    const getListSchools = () => {
+        getAllSchools().then((data) => {
+            setRows(data.list)
+            console.log('rows schools: ', data.list[0]);
+        })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+    }
+
+    useEffect(getListSchools, [])
+
+    // if (!rows) {
+    //     return null
+    // }
 
     const onSubmit = (data) => {
         console.log(data)
     }
 
+    const calculateSchoolYear = () => {
+        const thisYear = new Date().getFullYear();
+        const thisMonth = new Date().getMonth();
+        // console.log(`${thisMonth}/${thisYear}`);
+        // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
+
+        if (thisMonth < 7)
+            return `${thisYear - 1}-${thisYear}`;
+        else return `${thisYear}-${thisYear + 1}`
+    }
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
-                Assign Salesman to Target School
+                Create Target Schools
             </DialogTitleWithIconClose>
-            <Divider />
+            {/* <Divider /> */}
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent className={classes.wrapper}>
-                    <Grid container spacing={4}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-
+                            <Grid item xs>
+                                <Typography variant="subtitle1">Choose target schools from the list below:</Typography>
+                                <Typography variant="subtitle2" className={classes.schoolYear}>School year: {calculateSchoolYear()}</Typography>
+                            </Grid>
+                            <Grid item xs>
+                                <div style={{ height: 400, width: '100%' }}>
+                                    <DataGrid rows={rows} columns={columns} pageSize={10} checkboxSelection />
+                                </div>
+                            </Grid>
                         </Grid>
                     </Grid>
-
-
                 </DialogContent>
-                <Divider />
+                {/* <Divider /> */}
                 <DialogActions className="">
                     <Button variant="contained" type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
                         Save
+                    </Button>
+                    <Button variant="contained" onClick={onClose}>
+                        Cancel
                     </Button>
                 </DialogActions>
             </form>
@@ -123,56 +153,3 @@ function CreateTargetSchools(props) {
 }
 
 export default CreateTargetSchools
-
-
-//     < TextField
-// label = "Title"
-// name = "title"
-// className = ""
-// variant = "outlined"
-// autoFocus
-// required
-// fullWidth
-// InputLabelProps = {{
-//     shrink: true,
-//                         }}
-// inputRef = { register }
-// error = {!!errors.title}
-// helperText = { errors?.title?.message }
-//     />
-//                     <FormControlLabel
-//                         className=""
-//                         label="All Day"
-//                         control={
-//                             <Switch
-//                                 // checked={form.allDay}
-//                                 id="allDay"
-//                                 name="allDay"
-//                             // onChange={handleChange}
-//                             />
-//                         }
-//                     />
-
-//                     <TextField
-//                         label="Remark"
-//                         name="remark"
-//                         className=""
-//                         variant="outlined"
-//                         fullWidth
-//                         inputRef={register}
-//                         error={!!errors.remark}
-//                         helperText={errors?.remark?.message}
-//                     />
-//                     <TextField
-//                         label="Description"
-//                         name="des"
-//                         className=""
-//                         variant="outlined"
-//                         type="text"
-//                         multiline
-//                         rows={5}
-//                         fullWidth
-//                         inputRef={register}
-//                     // error={!!errors.des}
-//                     // helperText={errors?.des?.message}
-//                     />

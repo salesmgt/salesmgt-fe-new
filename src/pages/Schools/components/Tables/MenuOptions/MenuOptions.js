@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
     IconButton,
     ListItemIcon,
     ListItemText,
@@ -14,7 +7,7 @@ import {
     MenuItem,
 } from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
-import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
+import { MdMoreVert, MdInfo } from 'react-icons/md'
 import PropTypes from 'prop-types'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import { useSchool } from '../../../hooks/SchoolContext'
@@ -30,7 +23,7 @@ function MenuOptions(props) {
     const { url } = useRouteMatch()
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [openConfirmation, setOpenConfirmation] = useState(false)
+    // const [openConfirmation, setOpenConfirmation] = useState(false)
 
     const stateData = {
         model: data,
@@ -46,16 +39,16 @@ function MenuOptions(props) {
         setAnchorEl(null)
     }
 
-    const handleOpenConfirmation = () => {
-        setAnchorEl(null)
-        setOpenConfirmation(true)
-    }
+    // const handleOpenConfirmation = () => {
+    //     setAnchorEl(null)
+    //     setOpenConfirmation(true)
+    // }
 
-    const handleRemove = () => {
-        setOpenConfirmation(false)
+    // const handleRemove = () => {
+    //     setOpenConfirmation(false)
 
-        // Gọi API DELETE --> load lại trang
-    }
+    //     // Gọi API DELETE --> load lại trang
+    // }
 
     const renderMenus = (role) => {
         switch (role) {
@@ -77,7 +70,7 @@ function MenuOptions(props) {
                                 View details
                             </ListItemText>
                         </MenuItem>
-                        <>
+                        {/* <>
                             <MenuItem onClick={handleOpenConfirmation}>
                                 <ListItemIcon className={classes.itemIcon}>
                                     <MdDelete fontSize="large" />
@@ -132,7 +125,7 @@ function MenuOptions(props) {
                                     </Button>
                                 </DialogActions>
                             </Dialog>
-                        </>
+                        </> */}
                     </>
                 )
 

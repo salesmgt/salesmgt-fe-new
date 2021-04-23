@@ -7,11 +7,42 @@ import {
     DialogContentText,
     DialogActions,
     Divider,
+    withStyles,
+    Typography,
+    IconButton,
 } from '@material-ui/core'
 import { removeReport } from '../ReportsServices'
 import { parseDateToString } from '../../../utils/DateTimes'
 import classes from './ConfirmRemove.module.scss'
 import { useReport } from '../hooks/ReportContext'
+import { MdClose } from 'react-icons/md'
+
+const stylesTitle = (theme) => ({
+    root: {
+        margin: 0,
+        padding: theme.spacing(2),
+    },
+    closeButton: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        color: theme.palette.grey[500],
+    },
+});
+
+const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+        <DialogTitle disableTypography className={classes.root} {...other}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                    <MdClose />
+                </IconButton>
+            ) : null}
+        </DialogTitle>
+    );
+});
 
 function ConfirmRemove(props) {
     const { open, onClose, data, refreshAPI } = props
@@ -36,8 +67,8 @@ function ConfirmRemove(props) {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Confirm Remove</DialogTitle>
-            <Divider />
+            <DialogTitleWithIconClose onClose={onClose}>Confirm Remove</DialogTitleWithIconClose>
+            {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
                     <p>
@@ -48,13 +79,13 @@ function ConfirmRemove(props) {
                     <p>This process cannot be undone.</p>
                 </DialogContentText>
             </DialogContent>
-            <Divider />
+            {/* <Divider /> */}
             <DialogActions>
-                <Button variant="contained" onClick={onClose}>
-                    Cancel
-                </Button>
                 <Button variant="contained" className={classes.btnRemove} onClick={() => handleRemove(data.id)} autoFocus>
                     Remove
+                </Button>
+                <Button variant="contained" onClick={onClose}>
+                    Cancel
                 </Button>
             </DialogActions>
         </Dialog>

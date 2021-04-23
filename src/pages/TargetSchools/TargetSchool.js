@@ -12,8 +12,8 @@ function TargetSchool() {
 
     const data = location.state?.data
 
-    const { params } = useTargetSchool()
-    console.log('Detail page: ', params)
+    // const { params } = useTargetSchool()
+    // console.log('Detail page: ', params)
 
     if (!data) {
         return <NotFound />
@@ -32,7 +32,7 @@ function TargetSchool() {
         note: data?.note,
 
         repName: data?.reprName,
-        repIsMale: data?.reprisMale,
+        reprIsMale: data?.reprIsMale,
         repPhone: data?.reprPhone,
         repEmail: data?.reprEmail,
     }

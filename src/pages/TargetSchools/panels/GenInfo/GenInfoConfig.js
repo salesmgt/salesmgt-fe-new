@@ -25,7 +25,7 @@ export const Consts = {
                 title: 'Name',
             },
             isMale: {
-                title: 'isMale',
+                title: 'Gender',
             },
             phone: {
                 title: 'Phone',

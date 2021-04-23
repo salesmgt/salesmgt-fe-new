@@ -93,7 +93,7 @@ function GenInfo(props) {
         schName: data?.schName,
         dist: data?.dist,
         repName: data?.repName,
-        repIsMale: String(data?.repIsMale),
+        reprIsMale: String(data?.reprIsMale),
         repPhone: data?.repPhone,
         repEmail: data?.repEmail,
     }
@@ -339,7 +339,7 @@ function GenInfo(props) {
                                                     {fields.rep.isMale.title}
                                                 </InputLabel>
                                                 <Controller
-                                                    name="repIsMale"
+                                                    name="reprIsMale"
                                                     control={control}
                                                     render={({
                                                         value,

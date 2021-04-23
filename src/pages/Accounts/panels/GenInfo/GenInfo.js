@@ -135,7 +135,7 @@ function GenInfo(props) {
         const model = {
             ...data,
             fullName: account?.fullName,
-            gender: data?.gender === 'true' ? true : false,
+            isMale: data?.isMale === 'true' ? true : false,
             birthDate: data?.birthDate
                 ? moment(data?.birthDate).format('YYYY-MM-DD')
                 : null,

@@ -47,3 +47,9 @@ export async function getDashboardsByKeys(...keys) {
 
     return data
 }
+
+export async function getAllSchools() {
+    const response = await Api.get('/schools');
+    const data = await response.data;
+    return data;
+}

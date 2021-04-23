@@ -39,7 +39,7 @@ function School() {
 
     // const repData = {
     //     name: data?.reprName,
-    //     isMale: data?.reprIsMale,
+    //     reprIsMale: data?.reprIsMale,
     //     phone: data?.reprPhone,
     //     email: data?.reprEmail,
     // }

@@ -160,6 +160,9 @@ const MuiAccordionDetails = withStyles(() => ({
 }))(AccordionDetails)
 
 function Filters() {
+
+    console.log('filter reports nè')
+
     const classes = useStyles()
 
     const { dists, schYears } = useApp()

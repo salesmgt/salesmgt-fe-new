@@ -14,7 +14,7 @@ import {
     Button,
     Menu,
 } from '@material-ui/core'
-import { MdAdd, MdEdit, MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdAdd, MdCreate, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { FaFileImport } from 'react-icons/fa'
 import { SearchFields } from '../../../../components'
 import Chips from './Chips/Chips'
@@ -269,7 +269,7 @@ function Filters() {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
-        console.log('listChips: ', listChips);
+        // console.log('listChips: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -324,7 +324,7 @@ function Filters() {
 
                         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                             <MenuItem onClick={() => handleOpenCreateDialog()}>
-                                <MdEdit /> &nbsp; &nbsp; Create
+                                <MdCreate /> &nbsp; &nbsp; Create
                             </MenuItem>
                             <MenuItem onClick={() => setAnchorEl(null)}>
                                 <FaFileImport /> &nbsp; &nbsp; Import

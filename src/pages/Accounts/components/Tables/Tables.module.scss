@@ -46,6 +46,13 @@
         }
       }
     }
+    
+    .tCellInactiveAccount {
+      padding: 0.15rem 1rem;
+      color: $grey-400;
+      font-style: italic;
+      text-decoration: line-through $grey-400;
+    }
 
     .noRecord {
       color: gray !important;

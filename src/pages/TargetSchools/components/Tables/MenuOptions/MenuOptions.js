@@ -95,14 +95,14 @@ function MenuOptions(props) {
                         View details
                     </ListItemText>
                 </MenuItem>
-                <MenuItem onClick={handleCloseMenus}>
+                {/* <MenuItem onClick={handleCloseMenus}>
                     <ListItemIcon className={classes.itemIcon}>
                         <MdDescription fontSize="large" />
                     </ListItemIcon>
                     <ListItemText className={classes.itemText}>
                         View reports
                     </ListItemText>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={handleCloseMenus}>
                     <ListItemIcon className={classes.itemIcon}>
                         <MdPersonAdd fontSize="large" />

@@ -13,7 +13,7 @@ export const Consts = {
         fullName: {
             title: 'Full Name',
         },
-        gender: {
+        reprIsMale: {
             title: 'Gender',
         },
         birthDate: {

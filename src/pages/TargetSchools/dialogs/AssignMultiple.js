@@ -72,11 +72,11 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     );
 });
 
-const StyledTableContainer = withStyles((theme) => ({
-    root: {
-        width: "max-content"
-    }
-}))(TableContainer);
+// const StyledTableContainer = withStyles((theme) => ({
+//     root: {
+//         width: "max-content"
+//     }
+// }))(TableContainer);
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38;
@@ -92,6 +92,7 @@ const MenuProps = {
 const useStyles = makeStyles((theme) => ({
     formControl: {
         // margin: theme.spacing(1),
+        marginTop: '0.8rem',
         minWidth: 160,
         // maxWidth: 180
     },
@@ -139,15 +140,16 @@ function AssignMultiple(props) {
 
     const { PICs } = useTargetSchool()
 
-    const columns = [
-        { key: "no", name: 'No' },
-        { key: "schoolName", name: 'School Name' },
-        { key: "user.fullName", name: 'PIC' },
-        { key: "targetPurposeName", name: 'Purpose' }
-    ]
+    // const columns = [
+    //     { key: "no", name: 'No' },
+    //     { key: "schoolName", name: 'School Name' },
+    //     { key: "user.fullName", name: 'PIC' },
+    //     { key: "targetPurposeName", name: 'Purpose' }
+    // ]
     // const [open, setOpen] = useToggle()
     const [PIC, setPIC] = useState(null)
-    const [purpose, setPurpose] = useState({})    // Hiện tại chỉ lưu đc purpose của 1 trường
+    const [purpose, setPurpose] = useState('')
+    // const [purpose, setPurpose] = useState({})    // Hiện tại chỉ lưu đc purpose của 1 trường
     // Tức là mỗi lần chọn nó sẽ đè gtri mới lên nhau. Sau này update lên là 1 [] các purpose hoặc
     // cứ để 1 obj cũng đc nhưng cần ghi lại cái trường này vao đâu đó luôn để gửi cho API còn Assign.
 
@@ -160,14 +162,16 @@ function AssignMultiple(props) {
         setPIC(newPIC);
     };
 
-    const handlePurposeChange = (event, target) => {
-        target.purpose = event.target.value;
-        // console.log('event.target.value = ', event.target.value);
-        // console.log('target = ', target);
-        setPurpose({
-            id: target.id,
-            value: target.purpose
-        });
+    const handlePurposeChange = (event) => {    // , target
+        setPurpose(event.target.value)
+        // target.purpose = event.target.value;
+        // // console.log('event.target.value = ', event.target.value);
+        // // console.log('target = ', target);
+        // setPurpose({
+        //     id: target.id,
+        //     value: target.purpose
+        // });
+
         // const selectedPurpose = {
         //     // schoolIndex: schoolIndex,
         //     purpose: event.target.value
@@ -186,60 +190,140 @@ function AssignMultiple(props) {
             <DialogTitleWithIconClose onClose={onClose}>
                 Assign Salesman to Target School
             </DialogTitleWithIconClose>
-            <Divider />
+            {/* <Divider /> */}
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent className={classes.wrapper}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Autocomplete
-                                autoComplete
-                                autoSelect
-                                autoHighlight
-                                clearOnEscape
-                                options={PICs}
-                                getOptionLabel={(pic) => pic.fullName}
-                                value={PIC}
-                                renderInput={(params) =>
-                                    <TextField
-                                        {...params}
-                                        label="PICs"
-                                        name="PIC"
-                                        inputRef={register}
-                                        error={!!errors.PIC}
-                                        helperText={errors?.PIC?.message}
-                                        margin="normal"
-                                        placeholder="PIC will be assigned"
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            startAdornment: (
-                                                <>
-                                                    <InputAdornment position="start">
-                                                        <MdAccountCircle />
-                                                    </InputAdornment>
-                                                    {params.InputProps.startAdornment}
-                                                </>
-                                            )
+                            <Grid container>
+                                <Grid item xs={12} sm={12} md={6} lg={4}>
+                                    <Autocomplete
+                                        autoComplete
+                                        autoSelect
+                                        autoHighlight
+                                        clearOnEscape
+                                        options={PICs}
+                                        getOptionLabel={(pic) => pic.fullName}
+                                        value={PIC}
+                                        renderInput={(params) =>
+                                            <TextField
+                                                {...params}
+                                                label="PICs"
+                                                name="PIC"
+                                                inputRef={register}
+                                                error={!!errors.PIC}
+                                                helperText={errors?.PIC?.message}
+                                                margin="normal"
+                                                placeholder="PIC will be assigned"
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    startAdornment: (
+                                                        <>
+                                                            <InputAdornment position="start">
+                                                                <MdAccountCircle />
+                                                            </InputAdornment>
+                                                            {params.InputProps.startAdornment}
+                                                        </>
+                                                    )
+                                                }}
+                                            />
+                                        }
+                                        renderOption={(option) => {
+                                            return (
+                                                <ListItem className={classes.itemPIC}>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={option.avatar} />
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
+                                                </ListItem>
+                                            );
                                         }}
+                                        className={styles.autoComplete}
+                                        onChange={(event, newPIC) => handlePICChange(event, newPIC)}
                                     />
-                                }
-                                renderOption={(option) => {
-                                    return (
-                                        <ListItem className={classes.itemPIC}>
-                                            <ListItemAvatar>
-                                                <Avatar src={option.avatar} />
-                                            </ListItemAvatar>
-                                            <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
-                                        </ListItem>
-                                    );
-                                }}
-                                className={styles.autoComplete}
-                                onChange={(event, newPIC) => handlePICChange(event, newPIC)}
-                            />
+                                </Grid>
+                                <Grid item xs={12} sm={12} md={6} lg={4}>
+                                    <FormControl className={styles.formControl}>
+                                        <InputLabel>Purposes</InputLabel>
+                                        <Select
+                                            value={purpose}
+                                            onChange={handlePurposeChange}
+                                            MenuProps={MenuProps}
+                                        // name='purpose'
+                                        // inputRef={register}
+                                        // error={!!errors.purpose}
+                                        >
+                                            <MenuItem
+                                                value=""
+                                                className={styles.lastOption}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                None
+                                            </MenuItem>
+
+                                            <MenuItem
+                                                value="Sales mới"
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Sales mới
+                                            </MenuItem>
+                                            <MenuItem
+                                                value="Theo dõi"
+                                                className={styles.lastOption}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Theo dõi
+                                            </MenuItem>
+
+                                            <MenuItem
+                                                value="Chăm sóc"
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Chăm sóc
+                                            </MenuItem>
+                                            <MenuItem
+                                                value="Tái ký hợp đồng"
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Tái ký hợp đồng
+                                            </MenuItem>
+                                            <MenuItem
+                                                value="Ký mới hợp đồng"
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Ký mới hợp đồng
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                         </Grid>
 
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Typography variant='subtitle1'>List of assigned schools:</Typography>
-                            <StyledTableContainer className={classes.container} component={Paper}>
+                            <TableContainer className={classes.container} component={Paper}>
                                 <Table className={classes.table} stickyHeader size="small">
                                     <TableHead>
                                         <TableRow className={classes.tHead}>
@@ -252,11 +336,11 @@ function AssignMultiple(props) {
                                                     {col.name}
                                                 </TableCell>
                                             ))} */}
-                                            <TableCell className={classes.tHeadCellNo} align='center'>No.</TableCell>
-                                            <TableCell className={classes.tHeadCellName}>School Name</TableCell>
-                                            <TableCell className={classes.tHeadCellPic}>PIC</TableCell>
-                                            <TableCell className={classes.tHeadCellPurpose}>Purpose</TableCell>
-                                            <TableCell className={classes.tHeadCellNote}>Note</TableCell>
+                                            <TableCell className={classes.tHeadCell} align='center'>#</TableCell>
+                                            <TableCell className={classes.tHeadCell}>School Name</TableCell>
+                                            <TableCell className={classes.tHeadCell}>PIC</TableCell>
+                                            <TableCell className={classes.tHeadCell}>Purpose</TableCell>
+                                            <TableCell className={classes.tHeadCell}>Note</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody className={classes.tBody}>
@@ -291,107 +375,28 @@ function AssignMultiple(props) {
                                                     )}
                                                 </TableCell>   {/**Trần Thị Xuân Tuyền */}
                                                 <TableCell className={classes.tBodyCell}>
-                                                    <FormControl className={styles.formControl}>
-                                                        <InputLabel>Purposes</InputLabel>
-                                                        <Select
-                                                            // value={purpose.schoolIndex === index ? purpose.purpose : ''}
-                                                            // value={purpose.schoolIndex === index && purpose.purpose}
-                                                            value={row.purpose}
-                                                            // value={purpose.value}
-                                                            onChange={(event, school) => handlePurposeChange(event, row)}
-                                                            // onChange={handlePurposeChange}
-                                                            // inputProps={{ style: { fontSize: '0.3rem'}}}
-                                                            MenuProps={MenuProps}
-                                                        // name='purpose'
-                                                        // inputRef={register}
-                                                        // error={!!errors.purpose}
-                                                        >
-                                                            <MenuItem
-                                                                value=""
-                                                                className={styles.lastOption}
-                                                                classes={{
-                                                                    root: styles.menuItemRoot,
-                                                                    selected: styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                None
-                                                            </MenuItem>
-                                                            {/* <ListSubheader className={styles.option}><em>Leads</em></ListSubheader> */}
-                                                            <MenuItem
-                                                                value="Sales mới"
-                                                                className={styles.option}
-                                                                classes={{
-                                                                    root: styles.menuItemRoot,
-                                                                    selected: styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                Sales mới
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                value="Theo dõi"
-                                                                className={styles.lastOption}
-                                                                classes={{
-                                                                    root: styles.menuItemRoot,
-                                                                    selected: styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                Theo dõi
-                                                            </MenuItem>
-                                                            {/* <ListSubheader className={styles.option}><em>Customers</em></ListSubheader> */}
-                                                            <MenuItem
-                                                                value="Chăm sóc"
-                                                                className={styles.option}
-                                                                classes={{
-                                                                    root: styles.menuItemRoot,
-                                                                    selected: styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                Chăm sóc
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                value="Tái ký hợp đồng"
-                                                                className={styles.option}
-                                                                classes={{
-                                                                    root: styles.menuItemRoot,
-                                                                    selected: styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                Tái ký hợp đồng
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                value="Ký mới hợp đồng"
-                                                                className={styles.option}
-                                                                classes={{
-                                                                    root: styles.menuItemRoot,
-                                                                    selected: styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                Ký mới hợp đồng
-                                                            </MenuItem>
-                                                            {/* <ListSubheader className={styles.option}><em>Ngưng hợp tác</em></ListSubheader> */}
-                                                        </Select>
-                                                    </FormControl>
+                                                    {purpose}
                                                 </TableCell>
-                                                <TableCell className={classes.tBodyCell} contentEditable>
+                                                <TableCell className={classes.tBodyCell}> {/*contentEditable */}
                                                     {row.note}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
-                            </StyledTableContainer>
+                            </TableContainer>
                         </Grid>
                     </Grid>
 
 
                 </DialogContent>
-                <Divider />
+                {/* <Divider /> */}
                 <DialogActions className="">
-                    <Button variant="contained" onClick={onClose}>
-                        Cancel
-                    </Button>
                     <Button variant="contained" type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
                         Save
+                    </Button>
+                    <Button variant="contained" onClick={onClose}>
+                        Cancel
                     </Button>
                 </DialogActions>
             </form>

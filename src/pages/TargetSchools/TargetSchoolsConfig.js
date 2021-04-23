@@ -1,8 +1,8 @@
 // import { MdDelete, MdDescription, MdInfo, MdPersonAdd } from "react-icons/md"
 
 export const columns = [
-    // { key: "checkbox", name: '', sortable: false },
-    { key: 'no', name: 'No', sortable: false },
+    // { key: "ckb", name: '', sortable: false },
+    // { key: 'no', name: 'No', sortable: false },
     { key: 'schoolName', name: 'School Name', sortable: true },
     // { key: "school.district.name", name: 'District', sortable: true },
     { key: 'school.reprName', name: 'Principal', sortable: true },

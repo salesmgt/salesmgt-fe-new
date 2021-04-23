@@ -78,7 +78,7 @@ function RepInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
-            reprIsMale: data.isMale === 'true' ? true : false,
+            reprIsMale: data.reprIsMale === 'true' ? true : false,
 
             name: school?.name,
             address: school?.address,
@@ -214,7 +214,7 @@ function RepInfo(props) {
                                         className={classes.row}
                                     >
                                         <InputLabel>
-                                            {fields.isMale.title}
+                                            {fields.reprIsMale.title}
                                         </InputLabel>
                                         <Controller
                                             name="reprIsMale"

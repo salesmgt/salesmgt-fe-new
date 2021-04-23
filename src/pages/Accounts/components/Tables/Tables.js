@@ -257,7 +257,10 @@ function Tables(props) {
                                     >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell
+                                        className={(row.isActive === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                    // className={(row.isActive !== null && row.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
+                                    >
                                         {row.username}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>

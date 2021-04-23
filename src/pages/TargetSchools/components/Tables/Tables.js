@@ -117,7 +117,7 @@ TablePaginationActions.propTypes = {
 }
 
 function SortableTableHeaders(props) {
-    const { columns, direction, column, onRequestSort } = props
+    const { columns, direction, column, onRequestSort, numSelected, rowCount, onSelectAllClick } = props
     const createSortHandler = (col, direction) => {
         onRequestSort(col, direction)
     }
@@ -141,11 +141,19 @@ function SortableTableHeaders(props) {
     return (
         <TableHead>
             <TableRow className={classes.tHead}>
+                <TableCell padding="checkbox" className={classes.tHeadCell}>
+                    <Checkbox
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                    />
+                </TableCell>
                 {columns.map((col) => (
                     <TableCell
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
+                        align={col.key === 'no' ? 'right' : (col.key === 'user.fullName' ? 'center' : 'left')}
                     >
                         <MuiTableSortLabel
                             active={column === col.key}
@@ -166,6 +174,9 @@ SortableTableHeaders.propTypes = {
     direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
     column: PropTypes.string.isRequired,
     onRequestSort: PropTypes.func.isRequired,
+    numSelected: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
 }
 
 const useStyles = makeStyles(() => ({
@@ -204,28 +215,38 @@ function Tables(props) {
         setDirection,
     } = useTargetSchool()
 
-    // Destructing TargetSchoolReducer
-    // const { sorting, paging } = params  // , listFilters, searchKey
-    // const { column, direction } = sorting
+    const [selectedRows, setSelectedRows] = React.useState([]);
 
-    // const { page, limit } = paging
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+            const newSelecteds = rows.map((row) => row.id);
+            setSelectedRows(newSelecteds);
+            return;
+        }
+        setSelectedRows([]);
+    };
 
-    // const [avatarUrl, setAvatarUrl] = useState('')
+    const handleClick = (event, id) => {
+        const selectedIndex = selectedRows.indexOf(id);
+        let newSelected = [];
 
-    // storage.ref('images/avatars').child('cute.jpg').getDownloadURL().then(url => {
-    //     setAvatarUrl(url)
-    //     console.log('imagesRef: ', url)
-    //     return url;
-    // })
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedRows, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedRows.slice(1));
+        } else if (selectedIndex === selectedRows.length - 1) {
+            newSelected = newSelected.concat(selectedRows.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedRows.slice(0, selectedIndex),
+                selectedRows.slice(selectedIndex + 1),
+            );
+        }
 
-    // const fetchAvatarURL = (imageName) => {
-    //     console.log('aaaaaaaaaaa')
-    //     storage.ref('images/avatars').child(imageName).getDownloadURL().then(url => {
-    //         setAvatarUrl(url)
-    //         console.log('imagesRef: ', url)
-    //         return url;
-    //     })
-    // };
+        setSelectedRows(newSelected);
+    };
+
+    const isSelected = (id) => selectedRows.indexOf(id) !== -1;
 
     // ====================Paging====================
     const handleChangePage = (event, newPage) => {
@@ -272,33 +293,8 @@ function Tables(props) {
     }
 
     // ====================Sorting====================
-    // const handleRequestSort = () => {
-    //   const isAsc = column === columnName && direction === 'asc';
-    //   setDirection(isAsc ? 'desc' : 'asc');
-    //   setColumn(columnName);
-
-    //   // console.log('event: ', event.target);
-    //   // console.log('columnName: ', columnName);
-    //   // console.log('direction: ', isAsc);
-
-    //   // Xử lý logic (dispatch reducer, gọi API,... ở đây)
-    //   dispatchParams({
-    //     type: ReducerActions.SORT_BY,
-    //     payload: {
-    //       paramName: 'sorting',
-    //       paramValue: {
-    //         column: columnName,
-    //         direction: isAsc ? 'ASC' : 'DES'
-    //       }
-    //     }
-    //   })
-    // };
-
     const onSortBy = (col, direction) => {
-        // console.log('onSortBy() - column: ', col)
         if (col.sortable) {
-            // console.log(`call api sortBy ${col.key}, direction=${direction}`);
-
             setDirection(direction === 'desc' ? 'asc' : 'desc')
             setColumn(col.key)
 
@@ -310,14 +306,6 @@ function Tables(props) {
                     direction: direction,
                 },
             })
-            // onGetTargets(params.page, params.limit, col.key, direction, params.searchKey, params.listFilters);
-
-            // console.log('============onSortBy============');
-            // console.log('page = ', params.page);
-            // console.log('limit = ', params.limit);
-            // console.log('column = ', params.column);
-            // console.log('direction = ', params.direction);
-            // console.log('searchKey = ', params.searchKey);
         }
     }
 
@@ -357,6 +345,7 @@ function Tables(props) {
     // }
 
     //=================================================================================
+    let isItemSelected = false;
 
     return (
         <div className={classes.wrapper}>
@@ -372,57 +361,72 @@ function Tables(props) {
                         direction={direction}
                         column={column}
                         onRequestSort={onSortBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        rowCount={totalRecord ? totalRecord : 0}
+                        numSelected={selectedRows.length}
                     />
                     <TableBody className={classes.tBody}>
                         {rows?.length > 0 ? (
-                            rows.map((row, index) => (
-                                <TableRow
-                                    key={row.id}
-                                    className={classes.tBodyRow}
-                                >
-                                    {/* <TableCell>Checkbox</TableCell> */}
-                                    <TableCell
-                                        className={classes.tBodyCell}
-                                        align="center"
+                            rows.map((row, index) => {
+                                isItemSelected = isSelected(row.id);
+                                {/* console.log('isItemSelected: ', isItemSelected) */ }
+                                return (
+                                    <TableRow
+                                        key={row.id}
+                                        className={classes.tBodyRow}
+                                        // hover
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        tabIndex={-1}
+                                        selected={isItemSelected}
                                     >
-                                        {params.page * params.limit + index + 1}
-                                    </TableCell>
-                                    {/* <TableCell className={classes.tCellSchoolName}>
+                                        <TableCell padding="checkbox"
+                                            onClick={(event) => handleClick(event, row.id)}
+                                        >
+                                            <Checkbox checked={isItemSelected} />
+                                        </TableCell>
+                                        {/* <TableCell
+                                            className={classes.tBodyCell}
+                                            align="center"
+                                        >
+                                            {params.page * params.limit + index + 1}
+                                        </TableCell> */}
+                                        {/* <TableCell className={classes.tCellSchoolName}>
                                         {/**row.type*./} {row.schoolName}
                                     </TableCell> */}
-                                    <TableCell className={classes.tBodyCell}>
-                                        <ListItemText
-                                            primary={`${row.level} ${row.schoolName}`}
-                                            secondary={row.district}
-                                            classes={{
-                                                primary: styles.itemTextLarge,
-                                                secondary:
-                                                    styles.itemTextMedium,
-                                            }}
+                                        <TableCell className={classes.tBodyCell}>
+                                            <ListItemText
+                                                primary={`${row.level} ${row.schoolName}`}
+                                                secondary={row.district}
+                                                classes={{
+                                                    primary: styles.itemTextLarge,
+                                                    secondary:
+                                                        styles.itemTextMedium,
+                                                }}
                                             // primaryTypographyProps={classes.tCellPrimaryText}
                                             // primaryTypographyProps={{ style: { fontSize: '1rem' } }}
                                             // secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
-                                        />
-                                    </TableCell>
-                                    {/* <TableCell className={classes.tBodyCell}>
+                                            />
+                                        </TableCell>
+                                        {/* <TableCell className={classes.tBodyCell}>
                                         {row.district}
                                     </TableCell> */}
-                                    <TableCell
-                                        className={classes.tBodyCell}
+                                        <TableCell
+                                            className={classes.tBodyCell}
                                         // onMouseEnter={handlePopoverOpen}
                                         // onMouseLeave={handlePopoverClose}
-                                    >
-                                        {/* <Typography
+                                        >
+                                            {/* <Typography
                     aria-owns={!!anchorEl ? 'mouse-over-popover' : undefined}
                     aria-haspopup="true"
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                   > */}
-                                        {row.reprisMale
-                                            ? `Mr. ${row.reprName}`
-                                            : `Ms. ${row.reprName}`}
-                                        {/* </Typography> */}
-                                        {/* <Popover
+                                            {row.reprisMale
+                                                ? `Mr. ${row.reprName}`
+                                                : `Ms. ${row.reprName}`}
+                                            {/* </Typography> */}
+                                            {/* <Popover
                     className={classes.popover}
                     classes={{
                       paper: classes.paper,
@@ -444,44 +448,45 @@ function Tables(props) {
                     <Typography>{row.reprEmail}</Typography>
                     <Typography>{row.reprPhone}</Typography>
                   </Popover> */}
-                                    </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        <ListItem className={classes.itemPIC}>
-                                            <ListItemAvatar>
-                                                {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
-                                                <Avatar src={row.avatar} />
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                className={classes.picName}
-                                                primary={row.fullName}
-                                                secondary={row.username}
-                                                classes={{
-                                                    primary:
-                                                        styles.itemTextMedium,
-                                                    secondary:
-                                                        styles.itemTextSmall,
-                                                }}
-                                            />
-                                        </ListItem>
-                                    </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        {row.schoolYear}
-                                    </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        {setPurposeChipColor(row.purpose)}
-                                    </TableCell>
-                                    <TableCell
-                                        className={classes.tBodyCell}
-                                        align="right"
-                                    >
-                                        <MenuOptions data={row} />
-                                        {/* <IconButton color="primary" onClick={handleOpenMenuOptions}>
+                                        </TableCell>
+                                        <TableCell className={classes.tBodyCell}>
+                                            <ListItem className={classes.itemPIC}>
+                                                <ListItemAvatar>
+                                                    {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
+                                                    <Avatar src={row.avatar} />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    className={classes.picName}
+                                                    primary={row.fullName}
+                                                    secondary={row.username}
+                                                    classes={{
+                                                        primary:
+                                                            styles.itemTextMedium,
+                                                        secondary:
+                                                            styles.itemTextSmall,
+                                                    }}
+                                                />
+                                            </ListItem>
+                                        </TableCell>
+                                        <TableCell className={classes.tBodyCell}>
+                                            {row.schoolYear}
+                                        </TableCell>
+                                        <TableCell className={classes.tBodyCell}>
+                                            {setPurposeChipColor(row.purpose)}
+                                        </TableCell>
+                                        <TableCell
+                                            className={classes.tBodyCell}
+                                            align="right"
+                                        >
+                                            <MenuOptions data={row} />
+                                            {/* <IconButton color="primary" onClick={handleOpenMenuOptions}>
                                             <MdMoreVert />
                                         </IconButton>
                                         {anchorEl && <MenuOptions data={row} />} */}
-                                    </TableCell>
-                                </TableRow>
-                            ))
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })
                         ) : (
                             <TableRow className={classes.tBodyRow}>
                                 <TableCell
@@ -490,7 +495,7 @@ function Tables(props) {
                                     colspan="100%"
                                 >
                                     No records found.
-                                </TableCell>
+                                    </TableCell>
                             </TableRow>
                         )}
                     </TableBody>

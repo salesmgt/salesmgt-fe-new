@@ -10,7 +10,7 @@ export const Consts = {
         fullName: {
             title: 'Full Name',
         },
-        isMale: {
+        reprIsMale: {
             title: 'Gender',
         },
         email: {

@@ -17,12 +17,6 @@ import {
     ListItemAvatar,
     ListItemText,
     Button,
-    Dialog,
-    DialogTitle,
-    Divider,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import { MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
@@ -32,6 +26,8 @@ import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
 import AssignMultiple from '../../dialogs/AssignMultiple'
 import styles from './Filters.module.scss'
+import NotifyAssign from '../../dialogs/NotifyAssign'
+import CreateTargetSchools from '../../dialogs/CreateTargetSchools'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -199,7 +195,7 @@ function Filters() {
 
     const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
     const [openAssignDialog, setOpenAssignDialog] = useState(false)
-    // const [openCreateDialog, setOpenCreateDialog] = useState(false)
+    const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     const selectedSchools = [
         {
@@ -455,15 +451,16 @@ function Filters() {
     }
 
     const handleOpenCreateDialog = () => {
-        console.log('create dialog')
+        // console.log('create dialog')
+        setOpenCreateDialog(true)
     }
 
     const handleOpenAssignDialog = () => {
         if (selectedSchools.length > 0) {
-            console.log('assign dialog')
+            // console.log('assign dialog')
             setOpenAssignDialog(true)
         } else {
-            console.log('noti dialog: ')
+            // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
         }
     }
@@ -508,6 +505,11 @@ function Filters() {
                             <MdAdd fontSize="large" />
                             &nbsp;Create
                         </Button>
+
+                        <CreateTargetSchools
+                            open={openCreateDialog}
+                            onClose={() => setOpenCreateDialog(false)}
+                        />
                     </Box>
                     <Box className={classes.flexItem}>
                         <Button
@@ -525,42 +527,10 @@ function Filters() {
                             rows={selectedSchools}
                         />
                         {/* Have not checked target schools */}
-                        <Dialog
+                        <NotifyAssign
                             open={openNotifyDialog}
                             onClose={() => setOpenNotifyDialog(false)}
-                        >
-                            <DialogTitle>Notify</DialogTitle>
-                            <Divider />
-                            <DialogContent>
-                                <DialogContentText
-                                    className={classes.dialogText}
-                                >
-                                    <p>
-                                        In the Target School table, please
-                                        choose target schools you want to
-                                        assign.
-                                    </p>
-                                    <p>
-                                        <i>
-                                            <b>Tips:</b> Filters and search box
-                                            may help you find schools faster.
-                                        </i>
-                                    </p>
-                                </DialogContentText>
-                            </DialogContent>
-                            <Divider />
-                            <DialogActions>
-                                <Button
-                                    variant="contained"
-                                    disableElevation
-                                    autoFocus
-                                    className={classes.btnRemove}
-                                    onClick={() => setOpenNotifyDialog(false)}
-                                >
-                                    OK
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
+                        />
                     </Box>
                 </Box>
                 <MuiAccordionDetails>
