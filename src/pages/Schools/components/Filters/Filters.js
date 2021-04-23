@@ -19,6 +19,7 @@ import { FaFileImport } from 'react-icons/fa'
 import { SearchFields } from '../../../../components'
 import Chips from './Chips/Chips'
 import CreateSchool from '../../dialogs/CreateSchool'
+import ImportFile from '../../dialogs/ImportFile'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useSchool } from '../../hooks/SchoolContext'
 import {
@@ -154,12 +155,17 @@ function Filters() {
     } = useSchool()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
+    const [openImportDialog, setOpenImportDialog] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState(null);
-
 
     const handleOpenCreateDialog = () => {
         setAnchorEl(null);
         setOpenCreateDialog(true);
+    }
+
+    const handleOpenImportDialog = () => {
+        setAnchorEl(null);
+        setOpenImportDialog(true);
     }
 
     //================Handle useState() of filters================
@@ -326,7 +332,7 @@ function Filters() {
                             <MenuItem onClick={() => handleOpenCreateDialog()}>
                                 <MdEdit /> &nbsp; &nbsp; Create
                             </MenuItem>
-                            <MenuItem onClick={() => setAnchorEl(null)}>
+                            <MenuItem onClick={() => handleOpenImportDialog()}>
                                 <FaFileImport /> &nbsp; &nbsp; Import
                             </MenuItem>
                         </Menu>
@@ -334,6 +340,10 @@ function Filters() {
                         <CreateSchool
                             open={openCreateDialog}
                             onClose={() => setOpenCreateDialog(false)}
+                        />
+                        <ImportFile
+                            open={openImportDialog}
+                            onClose={() => setOpenImportDialog(false)}
                         />
                     </Box>
                 </Box>
