@@ -15,6 +15,10 @@ export const SchoolReducer = (params, action) => {
             return { ...params, page: 0, listFilters: { ...listFilters, scale: payload } }
         case Actions.FILTER_SCHOOL_STATUS:
             return { ...params, page: 0, listFilters: { ...listFilters, status: payload } }
+        case Actions.FILTER_ACTIVE:
+            return {
+                ...params, page: 0, listFilters: { ...listFilters, isActive: payload }
+            }
 
         case Actions.ENTER_SEARCH_KEYWORD:
             return { ...params, page: 0, searchKey: payload }

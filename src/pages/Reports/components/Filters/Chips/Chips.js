@@ -199,7 +199,7 @@ function Chips(props) {
                 count++
             }
         })
-        console.log('count = ', count);
+        // console.log('count = ', count);
         return count
     }
 

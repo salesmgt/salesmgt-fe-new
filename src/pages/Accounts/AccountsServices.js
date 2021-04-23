@@ -14,7 +14,10 @@ export async function getAccounts(
 
     if (filters) {
         // url = filters['isActive'].filterValue ? url.concat('&active=true') : url.concat('&active=false');
-        url = url.concat(`&active=${filters['isActive'].filterValue.isActive}`)
+        // url = url.concat(`&active=${filters['isActive'].filterValue.isActive}`)
+        url = filters['isActive'].filterValue !== null
+            ? url.concat(`&active=${filters['isActive'].filterValue}`)
+            : url
         url = filters['role'].filterValue
             ? url.concat(`&role=${filters['role'].filterValue}`)
             : url

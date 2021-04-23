@@ -9,6 +9,7 @@ import {
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
+    ACTIVE_FILTER
 } from '../../../../../constants/Filters'
 // import classes from './Chips.module.scss'
 
@@ -81,6 +82,13 @@ function Chips(props) {
                 })
                 break
 
+            case ACTIVE_FILTER:
+                dispatch({
+                    type: ReducerActions.FILTER_ACTIVE,
+                    payload: { filterType: ACTIVE_FILTER, filterValue: null },
+                })
+                break
+
             default:
                 // break;
                 break
@@ -117,6 +125,10 @@ function Chips(props) {
             type: ReducerActions.FILTER_SCHOOL_STATUS,
             payload: { filterType: STATUS_FILTER, filterValue: '' },
         })
+        dispatch({
+            type: ReducerActions.FILTER_ACTIVE,
+            payload: { filterType: ACTIVE_FILTER, filterValue: null },
+        })
 
         const removedFilters = [
             DISTRICT_FILTER,
@@ -124,6 +136,7 @@ function Chips(props) {
             LEVEL_FILTER,
             SCALE_FILTER,
             STATUS_FILTER,
+            ACTIVE_FILTER
         ]
 
         handleChipsRemoved(removedFilters)
@@ -134,12 +147,12 @@ function Chips(props) {
         chips.forEach((chip) => {
             if (chip.filterValue === '' || chip.filterValue === null) count++
         })
-        return count
+        return count;
     }
 
     return (
         <>
-            {handleShowClearAllButton() !== 5 && (
+            {handleShowClearAllButton() !== 6 && (
                 <div className={classes.root}>
                     <Button
                         size="small"
@@ -151,20 +164,24 @@ function Chips(props) {
                     <ul className={classes.ul}>
                         {chips.map((chip) => {
                             return (
-                                <>
-                                    {chip.filterValue && (
-                                        <li key={chip.filterType}>
-                                            <Chip
-                                                label={chip.filterValue}
-                                                onDelete={handleChipDelete(
-                                                    chip
-                                                )}
-                                                className={classes.chip}
-                                                color="secondary"
-                                            />
-                                        </li>
-                                    )}
-                                </>
+                                <li key={chip.filterType}>
+                                    {chip.filterType !== ACTIVE_FILTER && chip.filterValue &&
+                                        <Chip
+                                            label={chip.filterValue}
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                    {chip.filterType === ACTIVE_FILTER && chip.filterValue !== null &&
+                                        <Chip
+                                            label={chip.filterValue ? 'Active' : 'Inactive'}
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                </li>
                             )
                         })}
                     </ul>

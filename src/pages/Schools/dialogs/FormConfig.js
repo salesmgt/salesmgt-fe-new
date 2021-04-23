@@ -1,11 +1,12 @@
 export const Consts = {
     headers: {
         child1: 'Create School',
+        child2: 'Import File'
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
-        WithData: 'Withr Representative',
+        WithData: 'With Representative',
     },
     fields: {
         name: {

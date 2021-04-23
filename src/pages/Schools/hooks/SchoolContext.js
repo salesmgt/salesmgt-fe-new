@@ -11,6 +11,7 @@ import {
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
+    ACTIVE_FILTER
 } from '../../../constants/Filters'
 // import * as FiltersServices from '../../../services/FiltersServices'
 // import { useHistory } from 'react-router-dom'
@@ -27,6 +28,7 @@ let defaultFilters = {
     level: { filterType: LEVEL_FILTER, filterValue: '' },
     scale: { filterType: SCALE_FILTER, filterValue: '' },
     status: { filterType: STATUS_FILTER, filterValue: '' },
+    isActive: { filterType: ACTIVE_FILTER, filterValue: null },
 }
 
 function useSchoolProvider() {
@@ -34,13 +36,6 @@ function useSchoolProvider() {
 
     // Reducer
     const [params, dispatchParams] = useReducer(SchoolReducer, {
-        // listFilters: {
-        //     district: { filterType: 'district', filterValue: '' },
-        //     type: { filterType: 'type', filterValue: '' },
-        //     level: { filterType: 'level', filterValue: '' },
-        //     scale: { filterType: 'scale', filterValue: '' },
-        //     status: { filterType: 'status', filterValue: '' },
-        // },
         listFilters: defaultFilters,
         searchKey: '',
         page: 0,
@@ -58,12 +53,6 @@ function useSchoolProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    // const [district, setDistrict] = useState('')
-    // const [schoolType, setSchoolType] = useState('')
-    // const [schoolLevel, setSchoolLevel] = useState('')
-    // const [schoolScale, setSchoolScale] = useState('')
-    // const [schoolStatus, setSchoolStatus] = useState('')
-
     const [district, setDistrict] = useState(
         defaultFilters.district.filterValue
             ? defaultFilters.district.filterValue
@@ -83,6 +72,13 @@ function useSchoolProvider() {
             ? defaultFilters.status.filterValue
             : ''
     )
+    const [isActive, setIsActive] = useState(
+        defaultFilters.isActive.filterValue
+            ? defaultFilters.isActive.filterValue
+            : null
+    )
+
+    const workingStatuses = [null, true, false];
 
     // fix major BUG
     const setFilter = (key, value) => {
@@ -125,117 +121,25 @@ function useSchoolProvider() {
                 }
                 setSchoolStatus(value)
                 break
+            case ACTIVE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    isActive: { filterType: ACTIVE_FILTER, filterValue: value },
+                }
+                setIsActive(value)
+                break
             default:
                 break
         }
     }
 
-    // // APIs
-    // const [districts, setDistricts] = useState([])
-    // const [schoolTypes, setSchoolTypes] = useState([])
-    // const [schoolLevels, setSchoolLevels] = useState([])
-    // const [schoolScales, setSchoolScales] = useState([])
-    // const [schoolStatuses, setSchoolStatuses] = useState([])
+    // APIs "get filters' data" moves to AppContext
 
-    // // Search field (do not have)
-
-    // // Get filters' data
-    // const getDistrictsFilter = () => {
-    //     FiltersServices.getDistricts()
-    //         .then((data) => {
-    //             setDistricts(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
-    // const getSchoolTypesFilter = () => {
-    //     FiltersServices.getSchoolTypes()
-    //         .then((data) => {
-    //             setSchoolTypes(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
-    // const getSchoolLevelsFilter = () => {
-    //     FiltersServices.getEducationalLevels()
-    //         .then((data) => {
-    //             setSchoolLevels(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
-    // const getSchoolScalesFilter = () => {
-    //     FiltersServices.getSchoolScales()
-    //         .then((data) => {
-    //             setSchoolScales(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
-    // const getSchoolStatusesFilter = () => {
-    //     FiltersServices.getSchoolStatuses()
-    //         .then((data) => {
-    //             setSchoolStatuses(data)
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
-    // useEffect(() => {
-    //     getDistrictsFilter()
-    //     getSchoolTypesFilter()
-    //     getSchoolLevelsFilter()
-    //     getSchoolScalesFilter()
-    //     getSchoolStatusesFilter()
-    // }, [])
+    // Search field (do not have)
 
     return {
         params,
         dispatchParams,
-        // districts,
-        // schoolTypes,
-        // schoolLevels,
-        // schoolScales,
-        // schoolStatuses,
         page,
         setPage,
         limit,
@@ -245,15 +149,12 @@ function useSchoolProvider() {
         column,
         setColumn,
         district,
-        // setDistrict,
         schoolType,
-        // setSchoolType,
         schoolLevel,
-        // setSchoolLevel,
         schoolScale,
-        // setSchoolScale,
         schoolStatus,
-        // setSchoolStatus,
+        isActive,
+        workingStatuses,
         setFilter,
     }
 }

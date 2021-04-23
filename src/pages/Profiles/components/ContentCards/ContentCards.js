@@ -6,8 +6,8 @@ import classes from './ContentCards.module.scss'
 
 function ContentCards(props) {
     const { title, detail, icon } = props
-    console.log(detail)
-    console.log(typeof detail)
+    // console.log(detail)
+    // console.log(typeof detail)
 
     const configElement = (icon, detail) => {
         if (icon === 'none') {
