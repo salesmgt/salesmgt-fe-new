@@ -15,8 +15,8 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { MdClose } from 'react-icons/md'
 import { FaFileImport } from 'react-icons/fa'
 import { Consts } from './FormConfig'
-import { storage} from '../../../services/firebase'
 import * as XLSX from 'xlsx'
+import { storage } from '../../../services/firebase'
 import classes from './ImportFile.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -59,9 +59,28 @@ function ImportFile(props) {
     const handleClose = () => {
         onClose(false);
       };
-    const preventDefault = (event) =>{
-           event.preventDefault();     
-      }
+    const downloadFile = (event) =>{
+          event.preventDefault();
+          return new Promise((resolve, reject) => { 
+          storage
+                .ref('documents/Import_Sample.xlsx')
+                .getDownloadURL()
+                .then((url) => {
+                     console.log('getDownloadURL(): ', url);
+                     const xhr = new XMLHttpRequest();
+                     xhr.responseType = 'blob';
+                     xhr.onload = (event) => {
+                       const blob = xhr.response;
+                     };
+                     xhr.open('GET', url);
+                    //  xhr.setRequestHeader("access-control-allow-headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
+                     xhr.send();
+                    // resolve(url)
+                })
+             
+      })}
+
+
     const handleUploadAvatar = (event) =>{
         const filePath =event.target.files[0];
        setFileName(filePath.name)    
@@ -126,7 +145,7 @@ setText(array.length)
             To import file to this system, please select a file in your device. The system only accepts <strong> xlsx, xls, csv</strong> file format.
           </DialogContentText>
             <Alert variant="outlined" severity="info">
-                Please <Link href="#" onClick={preventDefault} >
+                Please <Link underline='always' href="#" onClick={downloadFile} >
       click here </Link> to download an import sample file
             </Alert>
                     <label className={classes.customfileupload}>
@@ -151,10 +170,7 @@ setText(array.length)
       </Alert>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="primary"  variant="contained">
             Save
           </Button>
         </DialogActions>
