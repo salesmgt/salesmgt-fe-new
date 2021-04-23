@@ -3,7 +3,10 @@ import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, RepInfo } from './panels'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleNames, statusNames } from '../../constants/Generals'
+import {
+    roleNames,
+    // statusNames
+} from '../../constants/Generals'
 import * as SchoolsServices from './SchoolsServices'
 
 function School() {
@@ -37,12 +40,6 @@ function School() {
             })
     }
 
-    // const repData = {
-    //     name: data?.reprName,
-    //     isMale: data?.reprIsMale,
-    //     phone: data?.reprPhone,
-    //     email: data?.reprEmail,
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         refreshPage(id)
@@ -56,18 +53,18 @@ function School() {
         setTabValue(value)
     }
 
-    const getTabsByStatus = (status) => {
-        switch (status) {
-            case statusNames.lead:
-                return ['General Info', 'Principal Info']
-            case statusNames.customer:
-                return ['General Info', 'Principal Info', 'Contracts Info']
-            case statusNames.pending:
-                return ['General Info', 'Principal Info', 'Contracts Info']
-            default:
-                break
-        }
-    }
+    // const getTabsByStatus = (status) => {
+    //     switch (status) {
+    //         case statusNames.lead:
+    //             return ['General Info', 'Principal Info']
+    //         case statusNames.customer:
+    //             return ['General Info', 'Principal Info', 'Contracts Info']
+    //         case statusNames.pending:
+    //             return ['General Info', 'Principal Info', 'Contracts Info']
+    //         default:
+    //             break
+    //     }
+    // }
 
     // const currStatus = 'Ngưng hợp tác'
     // console.log('detail status', school.status)
@@ -84,18 +81,16 @@ function School() {
                     tabValue={tabValue}
                     handleChangeTab={handleChangeTab}
                 >
-                    {/* General Info */}
                     {tabValue === 0 && (
                         <GenInfo school={school} refreshPage={refreshPage} />
                     )}
 
-                    {/* Principal Info */}
                     {tabValue === 1 && (
                         <RepInfo school={school} refreshPage={refreshPage} />
                     )}
                 </DetailLayouts>
             )}
-            {user.roles[0] === roleNames.manager && (
+            {/* {user.roles[0] === roleNames.manager && (
                 <DetailLayouts
                     linkBack="Schools"
                     header={school?.name}
@@ -105,17 +100,14 @@ function School() {
                     tabValue={tabValue}
                     handleChangeTab={handleChangeTab}
                 >
-                    {/* General Info */}
                     {tabValue === 0 && (
                         <GenInfo school={school} refreshPage={refreshPage} />
                     )}
 
-                    {/* Principal Info */}
                     {tabValue === 1 && (
                         <RepInfo school={school} refreshPage={refreshPage} />
                     )}
 
-                    {/* Contract Info */}
                     {tabValue === 2 && (
                         <RepInfo school={school} refreshPage={refreshPage} />
                     )}
@@ -131,41 +123,17 @@ function School() {
                     tabValue={tabValue}
                     handleChangeTab={handleChangeTab}
                 >
-                    {/* General Info */}
                     {tabValue === 0 && (
                         <GenInfo school={school} refreshPage={refreshPage} />
                     )}
 
-                    {/* Principal Info */}
                     {tabValue === 1 && (
                         <RepInfo school={school} refreshPage={refreshPage} />
                     )}
                 </DetailLayouts>
-            )}
+            )} */}
         </>
     )
 }
 
 export default School
-
-// const schData = {
-//     id: data?.id,
-//     name: data?.name,
-//     address: data?.address,
-//     district: data?.district,
-
-//     educationalLevel: data?.educationalLevel,
-//     type: data?.type,
-//     scale: data?.scale,
-//     phone: data?.phone,
-
-//     description: data?.description,
-//     status: data?.status,
-
-//     active: data?.active,
-
-//     reprName: data?.reprName,
-//     reprIsMale: data?.reprIsMale,
-//     reprPhone: data?.reprPhone,
-//     reprEmail: data?.reprEmail,
-// }

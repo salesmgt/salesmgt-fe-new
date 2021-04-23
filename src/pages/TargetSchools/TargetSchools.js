@@ -11,8 +11,7 @@ function TargetSchools() {
 
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
-    // const { schoolYear, district, PIC, purpose, level, scale, type } = listFilters
-
+  
     const [data, setData] = useState({})
 
     function onGetTargets(
@@ -30,18 +29,19 @@ function TargetSchools() {
             direction,
             searchKey,
             listFilters
-        ).then((res) => {
-            setData(res)
-            console.log('Targets: ', res);
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+        )
+            .then((res) => {
+                setData(res)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     useEffect(() => {

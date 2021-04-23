@@ -108,7 +108,7 @@ function useReportProvider() {
             case PIC_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
-                    district: {
+                    PIC: {
                         filterType: PIC_FILTER,
                         filterValue: value,
                     },
@@ -128,7 +128,7 @@ function useReportProvider() {
             case SCHOOL_YEAR_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
-                    level: {
+                    schoolYear: {
                         filterType: SCHOOL_YEAR_FILTER,
                         filterValue: value,
                     },
@@ -138,7 +138,7 @@ function useReportProvider() {
             case PURPOSE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
-                    scale: { filterType: PURPOSE_FILTER, filterValue: value },
+                    purpose: { filterType: PURPOSE_FILTER, filterValue: value },
                 }
                 setPurpose(value)
                 break
@@ -152,7 +152,7 @@ function useReportProvider() {
             case DATE_RANGE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
-                    status: {
+                    dateRange: {
                         filterType: DATE_RANGE_FILTER,
                         filterValue: value,
                     },

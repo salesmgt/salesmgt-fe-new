@@ -1,16 +1,116 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Grid, Typography, Icon, Avatar } from '@material-ui/core'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
-import { Loading } from '../../../../components'
+import { useForm, Controller } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useApp } from '../../../../hooks/AppContext'
+import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
+import * as TargetSchoolsServices from '../../TargetSchoolsServices'
 import classes from './AssignInfo.module.scss'
 
-function AssignInfo(props) {
-    const { report } = props
-    const { headers, fields } = Consts
+const clientSchema = yup.object().shape({
+    // reprName: yup
+    //     .string()
+    //     .trim()
+    //     .min(4, 'Name must be at least 4 characters')
+    //     .max(30, 'Name must be at most 30 characters')
+    //     .required('Name is required'),
+    // reprPhone: yup
+    //     .string()
+    //     .max(10, 'Phone must be at most 10 digits')
+    //     .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+    // reprEmail: yup.string().trim().email('Invalid email'),
+})
 
-    if (!report) {
+function AssignInfo(props) {
+    const { target, refreshPage } = props
+    const { headers, operations, fields } = Consts
+
+    const history = useHistory()
+
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
+
+    const { schYears, salesPurps } = useApp()
+
+    const defaultValues = {
+        id: target?.id,
+        schoolYear: target?.schoolYear ? target?.schoolYear : schYears[0],
+        purpose: target?.purpose ? target?.purpose : salesPurps[0],
+        username: target?.username ? target?.username : '',
+        note: target?.note ? target?.note : '',
+    }
+
+    const { control, errors, handleSubmit, formState, reset } = useForm({
+        resolver: yupResolver(clientSchema),
+        defaultValues: defaultValues,
+    })
+
+    useEffect(() => {
+        reset({
+            id: target?.id,
+            schoolYear: target?.schoolYear ? target?.schoolYear : schYears[0],
+            purpose: target?.purpose ? target?.purpose : salesPurps[0],
+            username: target?.username ? target?.username : '',
+            note: target?.note ? target?.note : '',
+        })
+    }, [target])
+
+    if (!target) {
         return <Loading />
+    }
+
+    const onSubmit = (data) => {
+        const model = {
+            ...data,
+            // reprIsMale: data.isMale === 'true' ? true : false,
+
+            // name: school?.name,
+            // address: school?.address,
+            // district: school?.district,
+
+            // educationalLevel: school?.educationalLevel,
+            // type: school?.type,
+            // scale: school?.scale,
+            // phone: school?.phone,
+
+            // description: school?.description,
+            // status: school?.status,
+
+            // active: school?.active,
+        }
+
+        // TargetSchoolsServices.updateTarget(data.id, model)
+        //     .then((res) => {
+        //         refreshPage(data.id)
+        //         setNotify({
+        //             isOpen: true,
+        //             message: 'Updated Successfully',
+        //             type: 'success',
+        //         })
+        //     })
+        //     .catch((error) => {
+        //         if (error.response) {
+        //             console.log(error)
+        //             history.push({
+        //                 pathname: '/errors',
+        //                 state: { error: error.response.status },
+        //             })
+        //         }
+        //         setNotify({
+        //             isOpen: true,
+        //             message: 'Update Unsuccessful',
+        //             type: 'error',
+        //         })
+        //     })
+
+        alert(JSON.stringify(model))
     }
 
     return (
@@ -80,18 +180,18 @@ function AssignInfo(props) {
                                 >
                                     <Typography color="inherit">
                                         <div className={classes.user}>
-                                            {report?.avatar ? (
+                                            {target?.avatar ? (
                                                 <Avatar
                                                     className={classes.avatar}
                                                     alt="user avatar"
-                                                    src={report?.avatar}
+                                                    src={target?.avatar}
                                                 />
                                             ) : (
                                                 <Avatar
                                                     className={classes.avatar}
                                                 >
                                                     {
-                                                        report?.fullName
+                                                        target?.fullName
                                                             .split(' ')
                                                             .pop()[0]
                                                     }
@@ -103,12 +203,12 @@ function AssignInfo(props) {
                                                     component="span"
                                                     className={classes.fullName}
                                                 >
-                                                    {report?.fullName}
+                                                    {target?.fullName}
                                                 </Typography>
                                                 <Typography
                                                     className={classes.username}
                                                 >
-                                                    {report?.username}
+                                                    {target?.username}
                                                 </Typography>
                                             </div>
                                         </div>
@@ -154,7 +254,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.schoolYear}
+                                        {target?.schoolYear}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -197,7 +297,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.purpose}
+                                        {target?.purpose}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -270,7 +370,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.schoolName}
+                                        {target?.schoolName}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -313,7 +413,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.address}
+                                        {target?.address}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -356,7 +456,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.district}
+                                        {target?.district}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -399,7 +499,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.level}
+                                        {target?.level}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -442,7 +542,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.reprName}
+                                        {target?.reprName}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -489,12 +589,12 @@ function AssignInfo(props) {
                                             color="inherit"
                                             className={classes.gender}
                                         >
-                                            {report?.reprIsMale
+                                            {target?.reprIsMale
                                                 ? 'Male'
                                                 : 'Female'}
                                         </Typography>
                                         <Icon>
-                                            {report?.reprIsMale ? (
+                                            {target?.reprIsMale ? (
                                                 <AiOutlineMan color="#005BB5" />
                                             ) : (
                                                 <AiOutlineWoman color="#E26A89" />

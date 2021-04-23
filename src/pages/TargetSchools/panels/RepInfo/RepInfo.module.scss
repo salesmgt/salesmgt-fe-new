@@ -2,11 +2,10 @@
 
 .panel {
     height: auto;
-    padding: 1rem;
     .action {
         display: flex;
         justify-content: flex-end;
-        padding: 0.75rem;
+        padding: 1rem 0.5rem;
         .submit {
             color: $common-white;
             background-color: $main-info;
@@ -20,18 +19,26 @@
     }
     .content {
         padding: 0.75rem;
-        .child {
+        .wrapper {
             padding: 0.75rem;
+            border: 1px solid $divider;
+            border-radius: $default-radius;
         }
-        .titleZone {
-            padding: 0.75rem;
-            .title {
-                font-weight: 600;
-                color: $secondary-text;
-            }
+        .row {
+            padding: 0.5rem;
         }
-        .detailZone {
-            padding: 0.75rem;
+        .rowx {
+            padding: 0rem 0.5rem;
+        }
+        .rowy {
+            padding: 0.5rem 0rem;
+        }
+        .header {
+            text-transform: uppercase;
+        }
+        .title {
+            font-weight: 600;
+            color: $secondary-text;
         }
     }
 }

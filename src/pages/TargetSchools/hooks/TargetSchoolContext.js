@@ -5,12 +5,19 @@ import React, {
     useEffect,
     useReducer,
 } from 'react'
-import * as FiltersServices from '../../../services/FiltersServices'
 import { useHistory } from 'react-router-dom'
 import { TargetSchoolReducer } from './TargetSchoolReducer'
-// import queryString from 'query-string'
-// import { schoolYears, districts, schoolTypes, schoolLevels, schoolScales, PICs } from '../../data/mock-data'
-// import { TargetSchoolReducer } from './TargetSchoolReducer'
+import * as FiltersServices from '../../../services/FiltersServices'
+import {
+    DISTRICT_FILTER,
+    TYPE_FILTER,
+    LEVEL_FILTER,
+    SCALE_FILTER,
+    PURPOSE_FILTER,
+    PIC_FILTER,
+    SCHOOL_YEAR_FILTER,
+    // STATUS_FILTER,
+} from '../../../constants/Filters'
 
 const TargetSchoolContext = createContext()
 
@@ -18,20 +25,32 @@ export function useTargetSchool() {
     return useContext(TargetSchoolContext)
 }
 
+let defaultFilters = {
+    schoolYear: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
+    district: { filterType: DISTRICT_FILTER, filterValue: '' },
+    type: { filterType: TYPE_FILTER, filterValue: '' },
+    level: { filterType: LEVEL_FILTER, filterValue: '' },
+    scale: { filterType: SCALE_FILTER, filterValue: '' },
+    PIC: { filterType: PIC_FILTER, filterValue: null },
+    purpose: { filterType: PURPOSE_FILTER, filterValue: '' },
+    // status: { filterType: STATUS_FILTER, filterValue: '' },
+}
+
 function useTargetSchoolProvider() {
     const history = useHistory()
 
     // Reducer
     const [params, dispatchParams] = useReducer(TargetSchoolReducer, {
-        listFilters: {
-            schoolYear: { filterType: 'schoolYear', filterValue: '' },
-            district: { filterType: 'district', filterValue: '' },
-            type: { filterType: 'type', filterValue: '' },
-            level: { filterType: 'level', filterValue: '' },
-            scale: { filterType: 'scale', filterValue: '' },
-            PIC: { filterType: 'PIC', filterValue: null },
-            purpose: { filterType: 'purpose', filterValue: '' },
-        },
+        // listFilters: {
+        //     schoolYear: { filterType: 'schoolYear', filterValue: '' },
+        //     district: { filterType: 'district', filterValue: '' },
+        //     type: { filterType: 'type', filterValue: '' },
+        //     level: { filterType: 'level', filterValue: '' },
+        //     scale: { filterType: 'scale', filterValue: '' },
+        //     PIC: { filterType: 'PIC', filterValue: null },
+        //     purpose: { filterType: 'purpose', filterValue: '' },
+        // },
+        listFilters: defaultFilters,
         searchKey: '',
         page: 0,
         limit: 10,
@@ -48,109 +67,131 @@ function useTargetSchoolProvider() {
     const [direction, setDirection] = useState(params.direction)
 
     //Filters
-    const [schoolYear, setSchoolYear] = useState('')
-    const [district, setDistrict] = useState('')
-    const [schoolType, setSchoolType] = useState('')
-    const [schoolLevel, setSchoolLevel] = useState('')
-    const [schoolScale, setSchoolScale] = useState('')
-    const [PIC, setPIC] = useState(null)
-    const [purpose, setPurpose] = useState('')
+    // const [schoolYear, setSchoolYear] = useState('')
+    // const [district, setDistrict] = useState('')
+    // const [schoolType, setSchoolType] = useState('')
+    // const [schoolLevel, setSchoolLevel] = useState('')
+    // const [schoolScale, setSchoolScale] = useState('')
+    // const [PIC, setPIC] = useState(null)
+    // const [purpose, setPurpose] = useState('')
+
+    const [schoolYear, setSchoolYear] = useState(
+        defaultFilters.schoolYear.filterValue
+            ? defaultFilters.schoolYear.filterValue
+            : ''
+    )
+    const [district, setDistrict] = useState(
+        defaultFilters.district.filterValue
+            ? defaultFilters.district.filterValue
+            : ''
+    )
+    const [schoolType, setSchoolType] = useState(
+        defaultFilters.type.filterValue ? defaultFilters.type.filterValue : ''
+    )
+    const [schoolLevel, setSchoolLevel] = useState(
+        defaultFilters.level.filterValue ? defaultFilters.level.filterValue : ''
+    )
+    const [schoolScale, setSchoolScale] = useState(
+        defaultFilters.scale.filterValue ? defaultFilters.scale.filterValue : ''
+    )
+    const [PIC, setPIC] = useState(
+        defaultFilters.PIC.filterValue ? defaultFilters.PIC.filterValue : null
+    )
+    const [purpose, setPurpose] = useState(
+        defaultFilters.purpose.filterValue
+            ? defaultFilters.purpose.filterValue
+            : ''
+    )
+    // const [schoolStatus, setSchoolStatus] = useState(
+    //     defaultFilters.status.filterValue
+    //         ? defaultFilters.status.filterValue
+    //         : ''
+    // )
+
+    // fix major BUG
+    const setFilter = (key, value) => {
+        switch (key) {
+            case SCHOOL_YEAR_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    schoolYear: {
+                        filterType: SCHOOL_YEAR_FILTER,
+                        filterValue: value,
+                    },
+                }
+                setSchoolYear(value)
+                break
+            case DISTRICT_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    district: {
+                        filterType: DISTRICT_FILTER,
+                        filterValue: value,
+                    },
+                }
+                setDistrict(value)
+                break
+            case TYPE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    type: { filterType: TYPE_FILTER, filterValue: value },
+                }
+                setSchoolType(value)
+                break
+            case LEVEL_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    level: { filterType: LEVEL_FILTER, filterValue: value },
+                }
+                setSchoolLevel(value)
+                break
+            case SCALE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    scale: { filterType: SCALE_FILTER, filterValue: value },
+                }
+                setSchoolScale(value)
+                break
+            case PIC_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    PIC: {
+                        filterType: PIC_FILTER,
+                        filterValue: value,
+                    },
+                }
+                setPIC(value)
+                break
+            case PURPOSE_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    purpose: { filterType: PURPOSE_FILTER, filterValue: value },
+                }
+                setPurpose(value)
+                break
+            // case STATUS_FILTER:
+            //     defaultFilters = {
+            //         ...defaultFilters,
+            //         status: { filterType: STATUS_FILTER, filterValue: value },
+            //     }
+            //     setSchoolStatus(value)
+            //     break
+            default:
+                break
+        }
+    }
 
     // APIs
     const [PICs, setPICs] = useState([])
-    const [schoolYears, setSchoolYears] = useState([])
-    const [districts, setDistricts] = useState([])
-    const [schoolTypes, setSchoolTypes] = useState([])
-    const [schoolLevels, setSchoolLevels] = useState([])
-    const [schoolScales, setSchoolScales] = useState([])
+    // const [schoolYears, setSchoolYears] = useState([])
+    // const [districts, setDistricts] = useState([])
+    // const [schoolTypes, setSchoolTypes] = useState([])
+    // const [schoolLevels, setSchoolLevels] = useState([])
+    // const [schoolScales, setSchoolScales] = useState([])
 
     // Search field (do not have)
 
-    // Get filters' data
-    const getSchoolYearsFilter = () => {
-        FiltersServices.getSchoolYears()
-            .then((data) => {
-                setSchoolYears(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
-
-    const getDistrictsFilter = () => {
-        FiltersServices.getDistricts()
-            .then((data) => {
-                setDistricts(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
-    // useEffect(getDistrictsFilter, [])
-
-    const getSchoolTypesFilter = () => {
-        FiltersServices.getSchoolTypes()
-            .then((data) => {
-                setSchoolTypes(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
-    // useEffect(getSchoolTypesFilter, [])
-
-    const getSchoolLevelsFilter = () => {
-        FiltersServices.getEducationalLevels()
-            .then((data) => {
-                setSchoolLevels(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
-    // useEffect(getSchoolLevelsFilter, [])
-
-    const getSchoolScalesFilter = () => {
-        FiltersServices.getSchoolScales()
-            .then((data) => {
-                setSchoolScales(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
-    }
-
-    const getPICsFilter2 = () => {
+    const getPICsFilter = () => {
         FiltersServices.getPICs()
             .then((data) => {
                 setPICs(data)
@@ -168,12 +209,12 @@ function useTargetSchoolProvider() {
 
     useEffect(() => {
         // Ko đc gọi hết API 1 lượt trong cùng 1 useEffect
-        getSchoolYearsFilter() // vì như vậy sẽ rất khó quản lý lỗi từ thằng nào
-        getDistrictsFilter()
-        getSchoolTypesFilter()
-        getSchoolLevelsFilter()
-        getSchoolScalesFilter()
-        getPICsFilter2()
+        // getSchoolYearsFilter() // vì như vậy sẽ rất khó quản lý lỗi từ thằng nào
+        // getDistrictsFilter()
+        // getSchoolTypesFilter()
+        // getSchoolLevelsFilter()
+        // getSchoolScalesFilter()
+        getPICsFilter()
     }, [])
 
     //================Parse object "params" --> query-string================
@@ -183,11 +224,11 @@ function useTargetSchoolProvider() {
         params,
         dispatchParams,
         PICs,
-        districts,
-        schoolYears,
-        schoolTypes,
-        schoolLevels,
-        schoolScales,
+        // districts,
+        // schoolYears,
+        // schoolTypes,
+        // schoolLevels,
+        // schoolScales,
         page,
         setPage,
         limit,
@@ -197,19 +238,20 @@ function useTargetSchoolProvider() {
         column,
         setColumn,
         schoolYear,
-        setSchoolYear,
+        // setSchoolYear,
         district,
-        setDistrict,
+        // setDistrict,
         schoolType,
-        setSchoolType,
+        // setSchoolType,
         schoolLevel,
-        setSchoolLevel,
+        // setSchoolLevel,
         schoolScale,
-        setSchoolScale,
+        // setSchoolScale,
         PIC,
-        setPIC,
+        // setPIC,
         purpose,
-        setPurpose,
+        // setPurpose,
+        setFilter,
     }
 }
 

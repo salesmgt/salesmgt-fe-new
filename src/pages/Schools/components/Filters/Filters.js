@@ -27,9 +27,7 @@ import {
     STATUS_FILTER,
     // ACTIVE_FILTER,
 } from '../../../../constants/Filters'
-
 import { useApp } from '../../../../hooks/AppContext'
-
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============

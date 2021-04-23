@@ -92,7 +92,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function CreateSchoolForm() {
+function CreateSchoolForm(props) {
+    const { onClose } = props
     const { operations, fields } = Consts
     const styles = useStyles()
 
@@ -462,12 +463,30 @@ function CreateSchoolForm() {
                 <DialogActions className={classes.dialogAct}>
                     <Button
                         className={classes.btnSave}
-                        variant="contained"
                         type="submit"
                         disabled={!formState.isDirty}
                         onClick={handleSubmit(onSubmit)}
                     >
                         {operations.save}
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            reset({
+                                errors: false,
+                                name: '',
+                                address: '',
+                                district: dists[0],
+                                phone: '',
+                                educationalLevel: schEduLvls[0],
+                                type: schTypes[0],
+                                scale: schScales[0],
+
+                                showRep: false,
+                            })
+                            onClose()
+                        }}
+                    >
+                        {operations.cancel}
                     </Button>
                 </DialogActions>
             </form>

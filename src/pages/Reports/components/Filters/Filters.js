@@ -162,7 +162,7 @@ const MuiAccordionDetails = withStyles(() => ({
 function Filters() {
     const classes = useStyles()
 
-    const { dists, schYears } = useApp()
+    const { dists, schYears, salesPurps } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -331,14 +331,11 @@ function Filters() {
         const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
         const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
 
-        console.log('handleDateRangeChange - fromDate: ', fromDate);
-        console.log('handleDateRangeChange - toDate: ', toDate);
-
         setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
         dispatchParams({
-            type: ReducerActions.FILTER_PURPOSE,
+            type: ReducerActions.FILTER_DATE_RANGE,
             payload: {
-                filterType: PURPOSE_FILTER,
+                filterType: DATE_RANGE_FILTER,
                 filterValue: [fromDate, toDate]
                     ? [fromDate, toDate]
                     : [null, null],
@@ -380,18 +377,12 @@ function Filters() {
                 case PIC_FILTER:
                     setFilter(PIC_FILTER, null)
                     break
-                // case PIC_FILTER:
-                //     setPIC(null)
-                //     break
                 case DISTRICT_FILTER:
                     setFilter(DISTRICT_FILTER, '')
                     break
                 case SCHOOL_YEAR_FILTER:
                     setFilter(SCHOOL_YEAR_FILTER, '')
                     break
-                // case STATUS_FILTER:
-                //     setFilter(STATUS_FILTER, '')
-                //     break
                 case PURPOSE_FILTER:
                     setFilter(PURPOSE_FILTER, '')
                     break
@@ -408,8 +399,6 @@ function Filters() {
         const listChips = []
         let newListFilters = { ...listFilters }
 
-        console.log('newListFilters: ', newListFilters);
-
         for (const chip in newListFilters) {
             if (chip === DATE_RANGE_FILTER) {
                 const fromDate = moment(
@@ -418,10 +407,6 @@ function Filters() {
                 const toDate = moment(
                     newListFilters[chip].filterValue[1]
                 ).format('MMM D, YYYY')
-
-                console.log('generateChipsArray - fromDate: ', newListFilters[chip].filterValue[0]);
-                console.log('generateChipsArray - toDate: ', newListFilters[chip].filterValue[1]);
-
                 if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
                     newListFilters = {
                         ...newListFilters,
@@ -434,7 +419,6 @@ function Filters() {
             }
             listChips.push(newListFilters[chip])
         }
-        console.log('listChips: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -500,7 +484,6 @@ function Filters() {
                                 autoHighlight
                                 clearOnEscape
                                 options={PICs}
-                                // getOptionLabel={(pic) => pic.fullName}
                                 getOptionLabel={(PIC) => PIC.fullName}
                                 value={PIC}
                                 renderInput={(params) => (
@@ -674,7 +657,7 @@ function Filters() {
                                 >
                                     <MenuItem
                                         value=""
-                                        className={classes.lastOption}
+                                        className={classes.option}
                                         classes={{
                                             root: classes.menuItemRoot,
                                             selected: classes.menuItemSelected,
@@ -682,59 +665,20 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {/* <ListSubheader className={classes.option}><em>Leads</em></ListSubheader> */}
-                                    <MenuItem
-                                        value="Sales mới"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Sales mới
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Theo dõi"
-                                        className={classes.lastOption}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Theo dõi
-                                    </MenuItem>
-                                    {/* <ListSubheader className={classes.option}><em>Customers</em></ListSubheader> */}
-                                    <MenuItem
-                                        value="Chăm sóc"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Chăm sóc
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Tái ký hợp đồng"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Tái ký hợp đồng
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Ký mới hợp đồng"
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        Ký mới hợp đồng
-                                    </MenuItem>
-                                    {/* <ListSubheader className={classes.option}><em>Ngưng hợp tác</em></ListSubheader> */}
+                                    {salesPurps.map((purp) => (
+                                        <MenuItem
+                                            key={purp}
+                                            value={purp}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {purp}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>

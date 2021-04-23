@@ -32,7 +32,7 @@ import { Consts } from './FormConfig'
 import * as ReportsServices from '../ReportsServices'
 import { useHistory } from 'react-router'
 import * as ArrayUtils from '../../../utils/Arrays'
-import { } from '../../../utils/DateTimes'
+import {} from '../../../utils/DateTimes'
 import { useAuth } from '../../../hooks/AuthContext'
 import classes from './CreateReports.module.scss'
 
@@ -80,7 +80,7 @@ function CreateReports(props) {
     const { user } = useAuth()
     const history = useHistory()
 
-    const typingTimeoutRef = useRef(null);
+    const typingTimeoutRef = useRef(null)
 
     const { register, errors } = useForm({
         // getValues, , setError, control, handleSubmit, formState
@@ -99,19 +99,25 @@ function CreateReports(props) {
     const [targets, setTargets] = useState([])
 
     const getListTargets = (searchKey) => {
-        ReportsServices.getTargetSchools({ username: user.username, schoolYear: calculateSchoolYear(), key: searchKey }).then(data => {
-            setTargets(data);
-            console.log('list targets = ', data);
-            // Tại sao có 1 số searchKey (VD: tohu) bị văng lỗi "TypeError: Cannot read property 'filter' of null"???
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
+        ReportsServices.getTargetSchools({
+            username: user.username,
+            schoolYear: calculateSchoolYear(),
+            key: searchKey,
         })
+            .then((data) => {
+                setTargets(data)
+                console.log('list targets = ', data)
+                // Tại sao có 1 số searchKey (VD: tohu) bị văng lỗi "TypeError: Cannot read property 'filter' of null"???
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
     // useEffect(() => {
     //     getListTargets()
@@ -119,30 +125,30 @@ function CreateReports(props) {
     //         cleanup
     //     }
     // }, [input])
-    useEffect(getListTargets, []);
+    useEffect(getListTargets, [])
 
     const onSearchTargetChange = (event) => {
         typingTimeoutRef.current = setTimeout(() => {
-            const searchKey = event.target.value;
-            console.log('searchKey = ', searchKey);
+            const searchKey = event.target.value
+            console.log('searchKey = ', searchKey)
             if (searchKey) {
                 // setTarget(searchKey);
-                getListTargets(searchKey);
+                getListTargets(searchKey)
             }
-        }, 300);
+        }, 300)
     }
 
     // console.log('target nè: ', target)
 
     const handleTargetChange = (newTarget) => {
         setTarget(newTarget)
-        console.log('newTarget: ', newTarget);
+        console.log('newTarget: ', newTarget)
     }
 
     const [listReports, setListReports] = useState([])
     const addReports = (event) => {
-        event.preventDefault();
-        const e = event.target;
+        event.preventDefault()
+        const e = event.target
         // console.log('event.target: ', event.target);
 
         const report = {
@@ -172,30 +178,36 @@ function CreateReports(props) {
         // setListReports([...listReports, report])
         // }
         // let countDuplicate = 0;
-        listReports.forEach(re => {
-            console.log('re.targetId = ', re.targetId);
-            console.log('this ID = ', report.targetId);
+        listReports.forEach((re) => {
+            console.log('re.targetId = ', re.targetId)
+            console.log('this ID = ', report.targetId)
             if (re.targetId === report.targetId) {
                 // Remove target cũ, ghi đè bằng target đó bản chỉnh sửa
-                console.log('Remove duplicate target ', re.targetId);
-                setListReports([...ArrayUtils.removeItem(listReports, 'targetId', re.targetId)]);
+                console.log('Remove duplicate target ', re.targetId)
+                setListReports([
+                    ...ArrayUtils.removeItem(
+                        listReports,
+                        'targetId',
+                        re.targetId
+                    ),
+                ])
                 // setListReports([...listReports, report])
             }
             // countDuplicate++;
-        });
-        setListReports([...listReports, report])    // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list 
+        })
+        setListReports([...listReports, report]) // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list
         // if (countDuplicate === 0) {
         //     setListReports([...listReports, report])
         // }
 
-        console.log('==============Report value==============');
-        console.log('Target School name: ', report.schoolName);
-        console.log('Target ID: ', report.targetId);
-        console.log('Result: ', report.result);
-        console.log('Des: ', report.description);
-        console.log('Pos: ', report.positivity);
-        console.log('Dif: ', report.difficulty);
-        console.log('Future plan: ', report.futurePlan);
+        console.log('==============Report value==============')
+        console.log('Target School name: ', report.schoolName)
+        console.log('Target ID: ', report.targetId)
+        console.log('Result: ', report.result)
+        console.log('Des: ', report.description)
+        console.log('Pos: ', report.positivity)
+        console.log('Dif: ', report.difficulty)
+        console.log('Future plan: ', report.futurePlan)
 
         // Ko hiểu rõ lắm tại sao kiểu index này bị lệch gtrị, cái lấy đc cái ko
         // console.log('Target ID: ', event.target[0].value);
@@ -210,39 +222,42 @@ function CreateReports(props) {
     }
 
     const removeReport = (event, targetId) => {
-        setListReports([...ArrayUtils.removeItem(listReports, 'targetId', targetId)]);
-        console.log('Remove target ', targetId);
+        setListReports([
+            ...ArrayUtils.removeItem(listReports, 'targetId', targetId),
+        ])
+        console.log('Remove target ', targetId)
     }
 
-    console.log('-----------------------------------------------------');
-    console.log('listReports: ', listReports);
+    console.log('-----------------------------------------------------')
+    console.log('listReports: ', listReports)
 
     // Click on a row in the preview table --> data is displayed in form
     // const handleShowClickedRow = () => {
     // }
 
     const handleCreateReport = () => {
-        ReportsServices.addReport(listReports).then(data => {
-            console.log('Add thành công rồi này!!!', data);
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+        ReportsServices.addReport(listReports)
+            .then((data) => {
+                console.log('Add thành công rồi này!!!', data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear();
-        const thisMonth = new Date().getMonth();
-        console.log(`${thisMonth}/${thisYear}`);
-        console.log(`This school year: ${thisYear - 1}-${thisYear}`);
+        const thisYear = new Date().getFullYear()
+        const thisMonth = new Date().getMonth()
+        console.log(`${thisMonth}/${thisYear}`)
+        console.log(`This school year: ${thisYear - 1}-${thisYear}`)
 
-        if (thisMonth < 7)
-            return `${thisYear - 1}-${thisYear}`;
+        if (thisMonth < 7) return `${thisYear - 1}-${thisYear}`
         else return `${thisYear}-${thisYear + 1}`
     }
 
@@ -252,8 +267,8 @@ function CreateReports(props) {
     }
 
     const handleCloseDialog = () => {
-        setListReports([]);
-        onClose();
+        setListReports([])
+        onClose()
     }
 
     return (
@@ -283,7 +298,11 @@ function CreateReports(props) {
                                         clearOnEscape
                                         options={targets ? targets : []}
                                         // getOptionLabel={(target) => target.schoolName}
-                                        getOptionLabel={(target) => target?.schoolName ? `${target?.level} ${target?.schoolName}` : null}
+                                        getOptionLabel={(target) =>
+                                            target?.schoolName
+                                                ? `${target?.level} ${target?.schoolName}`
+                                                : null
+                                        }
                                         value={target}
                                         renderInput={(params) => (
                                             <>
@@ -296,16 +315,28 @@ function CreateReports(props) {
                                                     required
                                                     inputRef={register}
                                                     error={!!errors.target}
-                                                    helperText={errors?.target?.message}
-                                                    className={classes.autoComplete}
-                                                    onChange={onSearchTargetChange}
+                                                    helperText={
+                                                        errors?.target?.message
+                                                    }
+                                                    className={
+                                                        classes.autoComplete
+                                                    }
+                                                    onChange={
+                                                        onSearchTargetChange
+                                                    }
                                                 />
-                                                <input type="hidden" name="level" value={target?.level} />
+                                                <input
+                                                    type="hidden"
+                                                    name="level"
+                                                    value={target?.level}
+                                                />
                                             </>
                                         )}
                                         renderOption={(target) => {
                                             return (
-                                                <ListItem className={classes.item}>
+                                                <ListItem
+                                                    className={classes.item}
+                                                >
                                                     <ListItemText
                                                         primary={
                                                             target?.schoolName
@@ -313,19 +344,29 @@ function CreateReports(props) {
                                                                 : null
                                                         }
                                                         secondary={
-                                                            target?.district ? target?.district : null
+                                                            target?.district
+                                                                ? target?.district
+                                                                : null
                                                         }
                                                         classes={{
-                                                            primary: classes.itemTextPrimary,
-                                                            secondary: classes.itemTextSecondary
+                                                            primary:
+                                                                classes.itemTextPrimary,
+                                                            secondary:
+                                                                classes.itemTextSecondary,
                                                         }}
                                                     />
                                                 </ListItem>
                                             )
                                         }}
-                                        onChange={(event, newTarget) => handleTargetChange(newTarget)}
+                                        onChange={(event, newTarget) =>
+                                            handleTargetChange(newTarget)
+                                        }
                                     />
-                                    <input type="hidden" name="targetId" value={target?.id} />
+                                    <input
+                                        type="hidden"
+                                        name="targetId"
+                                        value={target?.id}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <TextField
@@ -362,9 +403,9 @@ function CreateReports(props) {
                                         name="pos"
                                         variant="outlined"
                                         fullWidth
-                                    // inputRef={register}
-                                    // error={!!errors.positivity}
-                                    // helperText={errors?.positivity?.message}
+                                        // inputRef={register}
+                                        // error={!!errors.positivity}
+                                        // helperText={errors?.positivity?.message}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -373,9 +414,9 @@ function CreateReports(props) {
                                         name="dif"
                                         variant="outlined"
                                         fullWidth
-                                    // inputRef={register}
-                                    // error={!!errors.difficulty}
-                                    // helperText={errors?.difficulty?.message}
+                                        // inputRef={register}
+                                        // error={!!errors.difficulty}
+                                        // helperText={errors?.difficulty?.message}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -384,9 +425,9 @@ function CreateReports(props) {
                                         name="plan"
                                         variant="outlined"
                                         fullWidth
-                                    // inputRef={register}
-                                    // error={!!errors.plan}
-                                    // helperText={errors?.plan?.message}
+                                        // inputRef={register}
+                                        // error={!!errors.plan}
+                                        // helperText={errors?.plan?.message}
                                     />
                                 </Grid>
                             </Grid>
@@ -404,14 +445,17 @@ function CreateReports(props) {
                                                 variant="contained"
                                                 color="secondary"
                                                 type="submit"
-                                            // onClick={addReports}
+                                                // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />
                                             </Button>
                                         </Box>
                                         <Box>
                                             <Chip
-                                                label={parseDateToString(new Date(), 'dddd, DD/MM/YYYY')}
+                                                label={parseDateToString(
+                                                    new Date(),
+                                                    'dddd, DD/MM/YYYY'
+                                                )}
                                                 variant="default"
                                                 className={classes.chipDate}
                                             />
@@ -464,55 +508,77 @@ function CreateReports(props) {
                                                     >
                                                         Description
                                                     </TableCell>
-                                                    <TableCell className={classes.tHeadCell}></TableCell>
+                                                    <TableCell
+                                                        className={
+                                                            classes.tHeadCell
+                                                        }
+                                                    ></TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {listReports.map((row, index) => (
-                                                    <TableRow
-                                                        key={row.targetId}
-                                                        className={
-                                                            classes.tBodyRow
-                                                        }
-                                                    >
-                                                        <TableCell
-                                                            align="left"
+                                                {listReports.map(
+                                                    (row, index) => (
+                                                        <TableRow
+                                                            key={row.targetId}
                                                             className={
-                                                                classes.tBodyCell
+                                                                classes.tBodyRow
                                                             }
                                                         >
-                                                            {index + 1}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={
-                                                                classes.tBodyCell
-                                                            }
-                                                        >
-                                                            {`${row.level} ${row.schoolName}`}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={
-                                                                classes.tBodyCell
-                                                            }
-                                                        >
-                                                            {row.result}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={
-                                                                classes.tBodyCell
-                                                            }
-                                                        >
-                                                            {truncateString(
-                                                                row.description
-                                                            )}
-                                                        </TableCell>
-                                                        <TableCell className={classes.tBodyCell} align="right">
-                                                            <IconButton size="small" onClick={(event, id) => removeReport(event, row.targetId)}>
-                                                                <MdDelete />
-                                                            </IconButton>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
+                                                            <TableCell
+                                                                align="left"
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                            >
+                                                                {index + 1}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                            >
+                                                                {`${row.level} ${row.schoolName}`}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                            >
+                                                                {row.result}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                            >
+                                                                {truncateString(
+                                                                    row.description
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                                align="right"
+                                                            >
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={(
+                                                                        event,
+                                                                        id
+                                                                    ) =>
+                                                                        removeReport(
+                                                                            event,
+                                                                            row.targetId
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <MdDelete />
+                                                                </IconButton>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                )}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>

@@ -56,11 +56,10 @@ function Report() {
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >
-            {/* Report Info */}
             {tabValue === 0 && (
                 <ReportInfo report={report} refreshPage={refreshPage} />
             )}
-            {/* Assign Info */}
+
             {tabValue === 1 && <AssignInfo report={report} />}
         </DetailLayouts>
     )

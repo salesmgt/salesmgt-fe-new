@@ -13,28 +13,27 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useApp } from '../../../../hooks/AppContext'
 import { Snackbars, Loading } from '../../../../components'
-import { Consts } from './GenInfoConfig'
+import { Consts } from './RepInfoConfig'
 import * as TargetSchoolsServices from '../../TargetSchoolsServices'
-import classes from './GenInfo.module.scss'
+import classes from './RepInfo.module.scss'
 
 const clientSchema = yup.object().shape({
-    // reprName: yup
-    //     .string()
-    //     .trim()
-    //     .min(4, 'Name must be at least 4 characters')
-    //     .max(30, 'Name must be at most 30 characters')
-    //     .required('Name is required'),
-    // reprPhone: yup
-    //     .string()
-    //     .max(10, 'Phone must be at most 10 digits')
-    //     .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
-    // reprEmail: yup.string().trim().email('Invalid email'),
+    reprName: yup
+        .string()
+        .trim()
+        .min(4, 'Name must be at least 4 characters')
+        .max(30, 'Name must be at most 30 characters')
+        .required('Name is required'),
+    reprPhone: yup
+        .string()
+        .max(10, 'Phone must be at most 10 digits')
+        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+    reprEmail: yup.string().trim().email('Invalid email'),
 })
 
 function RepInfo(props) {
-    const { school, refreshPage } = props
+    const { target, refreshPage } = props
     const { headers, operations, fields } = Consts
 
     const history = useHistory()
@@ -45,16 +44,14 @@ function RepInfo(props) {
         type: '',
     })
 
-    const { dists, schEduLvls, schTypes, schScales } = useApp()
-
     const defaultValues = {
-        id: school?.id,
-        reprName: school?.reprName ? school?.reprName : '',
-        reprIsMale: String(school?.reprIsMale)
-            ? String(school?.reprIsMale)
+        id: target?.id,
+        reprName: target?.reprName ? target?.reprName : '',
+        reprIsMale: String(target?.reprIsMale)
+            ? String(target?.reprIsMale)
             : String(true),
-        reprPhone: school?.reprPhone ? school?.reprPhone : '',
-        reprEmail: school?.reprEmail ? school?.reprEmail : '',
+        reprPhone: target?.reprPhone ? target?.reprPhone : '',
+        reprEmail: target?.reprEmail ? target?.reprEmail : '',
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -64,38 +61,38 @@ function RepInfo(props) {
 
     useEffect(() => {
         reset({
-            id: school?.id,
-            reprName: school?.reprName ? school?.reprName : '',
-            reprIsMale: String(school?.reprIsMale)
-                ? String(school?.reprIsMale)
+            id: target?.id,
+            reprName: target?.reprName ? target?.reprName : '',
+            reprIsMale: String(target?.reprIsMale)
+                ? String(target?.reprIsMale)
                 : String(true),
-            reprPhone: school?.reprPhone ? school?.reprPhone : '',
-            reprEmail: school?.reprEmail ? school?.reprEmail : '',
+            reprPhone: target?.reprPhone ? target?.reprPhone : '',
+            reprEmail: target?.reprEmail ? target?.reprEmail : '',
         })
-    }, [school])
+    }, [target])
 
-    if (!school) {
+    if (!target) {
         return <Loading />
     }
 
     const onSubmit = (data) => {
         const model = {
             ...data,
-            // reprIsMale: data.isMale === 'true' ? true : false,
+            reprIsMale: data.isMale === 'true' ? true : false,
 
-            // name: school?.name,
-            // address: school?.address,
-            // district: school?.district,
+            // name: target?.name,
+            // address: target?.address,
+            // district: target?.district,
 
-            // educationalLevel: school?.educationalLevel,
-            // type: school?.type,
-            // scale: school?.scale,
-            // phone: school?.phone,
+            // educationalLevel: target?.educationalLevel,
+            // type: target?.type,
+            // scale: target?.scale,
+            // phone: target?.phone,
 
-            // description: school?.description,
-            // status: school?.status,
+            // description: target?.description,
+            // status: target?.status,
 
-            // active: school?.active,
+            // active: target?.active,
         }
 
         TargetSchoolsServices.updateTarget(data.id, model)

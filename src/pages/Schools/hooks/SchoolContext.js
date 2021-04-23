@@ -2,7 +2,6 @@ import React, {
     useState,
     useContext,
     createContext,
-    // useEffect,
     useReducer,
 } from 'react'
 import { SchoolReducer } from './SchoolReducer'

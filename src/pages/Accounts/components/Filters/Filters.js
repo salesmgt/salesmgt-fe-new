@@ -239,8 +239,6 @@ function Filters() {
         })
     }
 
-    console.log('isActive: ', isActive);
-
     return (
         <div className={styles.wrapper}>
             <MuiAccordion>
