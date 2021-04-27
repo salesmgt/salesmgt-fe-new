@@ -178,7 +178,7 @@ function Chips(props) {
     }
 
     return (
-        <>
+        <div>
             {handleShowClearAllButton() !== 7 && (
                 <div className={classes.root}>
                     {' '}
@@ -196,9 +196,9 @@ function Chips(props) {
                         {/* {generateChips(chips).map(chip => {})} */}
                         {chips.map((chip) => {
                             return (
-                                <>
+                                <div key={chip.filterType}>
                                     {chip.filterValue && (
-                                        <li key={chip.filterType}>
+                                        <li>
                                             {chip.filterType === 'PIC' ? (
                                                 <Chip
                                                     label={
@@ -231,21 +231,21 @@ function Chips(props) {
                                             )}
                                         </li>
                                     )}
-                                </>
+                                </div>
                             )
                         })}
                     </ul>
                     {/* } */}
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
 export default React.memo(Chips)
 
-Chips.propTypes = {
-    chips: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    handleChipsRemoved: PropTypes.func,
-}
+// Chips.propTypes = {
+//     chips: PropTypes.array.isRequired,
+//     dispatch: PropTypes.func.isRequired,
+//     handleChipsRemoved: PropTypes.func,
+// }

@@ -18,8 +18,8 @@ function Reports() {
     function getAllReports(
         page = 0,
         limit = 10,
-        column = 'id',
-        direction = 'asc',
+        column = 'date',
+        direction = 'desc',
         searchKey,
         listFilters
     ) {
@@ -33,7 +33,7 @@ function Reports() {
         )
             .then((res) => {
                 setData(res)
-                console.log('Reports: ', res.list[0]);
+                // console.log('Reports: ', res.list[0]);
             })
             .catch((error) => {
                 if (error.response) {

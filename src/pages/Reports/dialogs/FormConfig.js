@@ -1,42 +1,84 @@
+import { parseDateToString } from "../../../utils/DateTimes"
+
 export const Consts = {
     headers: {
-        child1: 'Create Reports',
-        child2: 'Comment on Report',
-        child3: 'Confirm Remove',
-        child4: 'Cannot Remove',
+        create: 'Create Reports',
+        comment: 'Comment on Report',
+        confirm: 'Confirm Remove',
+        cannot: 'Cannot Remove',
+        child1: 'Preview:'
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
+        remove: 'Remove',
+        ok: 'OK, I understood',
     },
     fields: {
-        username: {
-            title: 'Username',
+        schoolName: {
+            name: 'targetName',
+            label: 'Target School Name',
         },
-        fullName: {
-            title: 'Full Name',
+        level: {
+            name: 'level',
         },
-        reprIsMale: {
-            title: 'Gender',
+        id: {
+            name: 'targetId',
         },
-        birthDate: {
-            title: 'Birthday',
-            format: 'dd/MM/yyyy',
+        result: {
+            name: 'result',
+            label: 'Result',
         },
-        email: {
-            title: 'Email',
+        description: {
+            name: 'description',
+            label: 'Description',
         },
-        phone: {
-            title: 'Phone Number',
+        positivity: {
+            name: 'positivity',
+            label: 'Positivity',
         },
-        addr: {
-            title: 'Address',
+        difficulty: {
+            name: 'difficulty',
+            label: 'Difficulty',
         },
-        status: {
-            title: 'Account Active',
-        },
-        roles: {
-            title: 'Roles',
+        futurePlan: {
+            name: 'futurePlan',
+            label: 'Future Plan',
         },
     },
+}
+
+export const columns = [
+    '#', 'School Name', 'Result', 'Description', ''
+]
+
+// Form "Create Reports" keys
+export const RESULT = 'result'
+export const DESCRIPTION = 'description'
+export const POSITIVITY = 'positivity'
+export const DIFFICULTY = 'difficulty'
+export const FUTURE_PLAN = 'futurePlan'
+
+export const confirmMessage = (schoolLevel, schoolName, date) => {
+    return (
+        <>
+            Do you really want to remove report of school
+            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            on <strong>{parseDateToString(date, 'DD/MM/YYYY')}</strong>?
+            <br />
+            This process cannot be undone.
+        </>
+    )
+}
+
+export const cannotMessage = (schoolLevel, schoolName, date, commentedPerson) => {
+    return (
+        <>
+            You cannot remove the report of school
+            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            on <strong>{parseDateToString(date, 'DD/MM/YYYY')}</strong>.
+            <br />
+            This report is already commented by {commentedPerson}.
+        </>
+    )
 }

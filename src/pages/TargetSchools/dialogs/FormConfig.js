@@ -1,39 +1,57 @@
+import { parseDateToString } from "../../../utils/DateTimes"
+
 export const Consts = {
     headers: {
-        child1: 'Create Account',
+        create: 'Create Target Schools',
+        assignMultiple: 'Assign Salesmen to Target Schools',
+        assignOne: 'Assign Salesman to Target School',
+        confirm: 'Confirm Remove',
+        cannot: 'Cannot Remove',
+        // child1: 'Preview: '
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
+        remove: 'Remove',
+        ok: 'OK, I understood',
     },
     fields: {
-        username: {
-            title: 'Username',
+        pic: {
+            name: 'pic',
+            label: 'PICs',
         },
-        fullName: {
-            title: 'Full Name',
-        },
-        reprIsMale: {
-            title: 'Gender',
-        },
-        birthDate: {
-            title: 'Birthday',
-            format: 'dd/MM/yyyy',
-        },
-        email: {
-            title: 'Email',
-        },
-        phone: {
-            title: 'Phone Number',
-        },
-        addr: {
-            title: 'Address',
-        },
-        status: {
-            title: 'Account Active',
-        },
-        roles: {
-            title: 'Roles',
+        purpose: {
+            name: 'purpose',
+            label: 'Purposes',
+            options: { none: 'None' },
         },
     },
+}
+
+export const columns = [
+    '#', 'School Name', 'PIC', 'Purpose', 'Note'
+]
+
+export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
+    return (
+        <>
+            Do you really want to remove
+            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            from list of target schools in <strong>{schoolYear}</strong>?
+            <br />
+            This process cannot be undone.
+        </>
+    )
+}
+
+export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
+    return (
+        <>
+            You cannot remove
+            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            from list of target schools in <strong>{schoolYear}</strong>.
+            <br />
+            This target school has been assigning to <strong>{PIC}</strong>.
+        </>
+    )
 }

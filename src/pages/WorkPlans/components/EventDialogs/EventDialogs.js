@@ -144,7 +144,7 @@ function EventDialogs() {
                         />
                     </DialogContent>
                     <DialogActions className="">
-                        <Button variant="contained" type="submit">
+                        <Button type="submit">
                             Save
                         </Button>
                         <IconButton onClick="">

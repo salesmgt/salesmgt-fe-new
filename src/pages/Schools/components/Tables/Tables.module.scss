@@ -33,6 +33,12 @@
     .tBodyCell {
       padding: 0.1rem 1rem
     }
+    .tCellInactive {
+      @extend .tBodyCell;
+      color: $grey-400;
+      font-style: italic;
+      text-decoration: line-through $grey-400;
+    }
 
     .noRecord {
       color: gray !important;
@@ -46,9 +52,7 @@
     }
     .tCellInactiveSchoolName {
       @extend .tCellSchoolName;
-      color: $grey-400;
-      font-style: italic;
-      text-decoration: line-through $grey-400;
+      @extend .tCellInactive;
     }
 
     .picName {

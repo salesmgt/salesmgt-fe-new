@@ -58,6 +58,6 @@ function MenuOptions(props) {
 
 export default MenuOptions
 
-MenuOptions.propTypes = {
-    data: PropTypes.array.isRequired,
-}
+// MenuOptions.propTypes = {
+//     data: PropTypes.object.isRequired,
+// }

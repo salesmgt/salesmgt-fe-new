@@ -1,21 +1,21 @@
 import React from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TablePagination,
-  IconButton,
-  Chip,
-  TableSortLabel,
-  withStyles,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
+    TableContainer,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    TablePagination,
+    IconButton,
+    Chip,
+    TableSortLabel,
+    withStyles,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Avatar,
 } from '@material-ui/core';
 import { MdFirstPage, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdLastPage } from 'react-icons/md';
 import PropTypes from 'prop-types';
@@ -31,10 +31,10 @@ function TablePaginationActions(props) {
 
     const { count, page, rowsPerPage, totalPage, onChangePage } = props
 
-  const handleFirstPageButtonClick = (event) => {
-    onChangePage(event, 0); // firstPage has index = 0
+    const handleFirstPageButtonClick = (event) => {
+        onChangePage(event, 0); // firstPage has index = 0
 
-  };
+    };
 
     const handleLastPageButtonClick = (event) => {
         onChangePage(event, Math.ceil(count / rowsPerPage) - 1)
@@ -93,13 +93,13 @@ function TablePaginationActions(props) {
     )
 }
 
-TablePaginationActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    totalPage: PropTypes.number.isRequired,
-}
+// TablePaginationActions.propTypes = {
+//     count: PropTypes.number.isRequired,
+//     page: PropTypes.number.isRequired,
+//     rowsPerPage: PropTypes.number.isRequired,
+//     onChangePage: PropTypes.func.isRequired,
+//     totalPage: PropTypes.number.isRequired,
+// }
 
 function SortableTableHeaders(props) {
     const { columns, direction, column, onRequestSort } = props
@@ -146,12 +146,12 @@ function SortableTableHeaders(props) {
     )
 }
 
-SortableTableHeaders.propTypes = {
-    columns: PropTypes.array.isRequired,
-    direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    column: PropTypes.string.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-}
+// SortableTableHeaders.propTypes = {
+//     columns: PropTypes.array.isRequired,
+//     direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
+//     column: PropTypes.string.isRequired,
+//     onRequestSort: PropTypes.func.isRequired,
+// }
 
 const useStyles = makeStyles(() => ({
     itemPIC: {
@@ -304,7 +304,7 @@ function Tables(props) {
                                 <TableCell
                                     className={classes.noRecord}
                                     component="td"
-                                    colspan="100%"
+                                    colSpan="100%"
                                 >
                                     No records found.
                                 </TableCell>
@@ -343,9 +343,9 @@ function Tables(props) {
 
 export default React.memo(Tables)
 
-Tables.propTypes = {
-    rows: PropTypes.array,
-    columns: PropTypes.array.isRequired,
-    totalRecord: PropTypes.number.isRequired,
-    totalPage: PropTypes.number.isRequired,
-}
+// Tables.propTypes = {
+//     rows: PropTypes.array,
+//     columns: PropTypes.array.isRequired,
+//     totalRecord: PropTypes.number.isRequired,
+//     totalPage: PropTypes.number.isRequired,
+// }

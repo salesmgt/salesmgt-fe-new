@@ -31,7 +31,7 @@ function WorkPlans() {
             active: true,
             fullName: e
         }).then((data) => {
-            console.log('data: ', data)
+            // console.log('data: ', data)
             setListPICs(data)
         }).catch((error) => {
             if (error.response) {
@@ -57,7 +57,7 @@ function WorkPlans() {
         }
         delete convert.id
         WorkPlansServices.save(convert).then(data => {
-            console.log('callAPISave success: ', data);
+            // console.log('callAPISave success: ', data);
             callAPI(filter)
             return
         }).catch((error) => {
@@ -97,7 +97,7 @@ function WorkPlans() {
         }
 
         WorkPlansServices.updateSave(occurrenceObj).then(data => {
-            console.log('callAPIUpdateSave success: ', data);
+            // console.log('callAPIUpdateSave success: ', data);
             callAPI(filter)
         }).catch((error) => {
             if (error.response) {
@@ -116,7 +116,7 @@ function WorkPlans() {
         if (!items) return;
 
         WorkPlansServices.remove(items).then(data => {
-            console.log('callAPIRemove success: ', data);
+            // console.log('callAPIRemove success: ', data);
             callAPI(filter);
         }).catch((error) => {
             if (error.response) {
@@ -153,11 +153,11 @@ function WorkPlans() {
             username: user.username
         }
         const { id } = e.data[0].parent
-        console.log(" heleluya ", item)
+        // console.log(" heleluya ", item)
 
         WorkPlansServices.removeUpdate(id, item).then(data => {
             callAPI(filter)
-            console.log('callAPIRemoveUpdate success: ', data);
+            // console.log('callAPIRemoveUpdate success: ', data);
 
         }).catch((error) => {
             if (error.response) {
@@ -184,11 +184,11 @@ function WorkPlans() {
             recurrenceRule: changedRecords[0].recurrenceRule,
             username: user.username
         }
-        console.log(" remove object nay sau khi convert ", item)
+        // console.log(" remove object nay sau khi convert ", item)
 
         WorkPlansServices.update(item).then(data => {
             callAPI(filter)
-            console.log('callAPIUpdate success: ', data)
+            // console.log('callAPIUpdate success: ', data)
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -217,7 +217,7 @@ function WorkPlans() {
                     recurrenceException: element.recurrenceException
                 }
             })
-            console.log('callAPI success: ', res.data)
+            // console.log('callAPI success: ', res.data)
             setData(res.data)
         }).catch((error) => {
             if (error.response) {

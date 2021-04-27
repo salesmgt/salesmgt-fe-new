@@ -233,60 +233,15 @@ function Filters() {
                     <Grid container>
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Is Active</InputLabel>
-                                <Select value={active} defaultValue={true} onChange={handleIsActiveChange} MenuProps={MenuProps}>
-                                    <MenuItem
-                                        value={true}
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        True
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={false}
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        False
-                                    </MenuItem>
-                                </Select>
+                                <InputLabel></InputLabel>
+                                <Select></Select>
                             </FormControl>
                         </Grid>
 
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Roles</InputLabel>
-                                <Select value={role} onChange={handleRoleChange} MenuProps={MenuProps}>
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        All
-                                    </MenuItem>
-                                    {roles.map((role) => (
-                                        <MenuItem
-                                            key={role}
-                                            value={role}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
-                                            }}
-                                        >
-                                            {role}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                <InputLabel></InputLabel>
+                                <Select></Select>
                             </FormControl>
                         </Grid>
                     </Grid>

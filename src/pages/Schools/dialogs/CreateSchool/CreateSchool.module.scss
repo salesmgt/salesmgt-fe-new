@@ -1,0 +1,21 @@
+@import '../../../../styles/Variables.module.scss';
+
+.dialogCont {
+    padding: 1rem !important;
+    .wrapper {
+        overflow-y: auto;
+    }
+}
+
+.dialogAct {
+    padding: 1rem !important;
+    .btnSave {
+        color: $trust;
+        &:hover {
+            color: $light-info;
+        }
+        &:disabled {
+            color: $disabled;
+        }
+    }
+}

@@ -11,6 +11,47 @@ export const columns = [
     { key: '', name: '', sortable: false },
 ]
 
+export const Consts = {
+    operations: {
+        filter: 'Filters',
+        search: {
+            placeholder: 'Search...'
+        },
+        create: 'Create',
+    },
+    filters: {
+        pic: {
+            title: 'PICs',
+            placeholder: "PIC's name",
+        },
+        purpose: {
+            title: 'Purposes',
+            options: { all: 'All' },
+        },
+        district: {
+            title: 'Districts',
+            options: { all: 'All' },
+        },
+        schoolYear: {
+            title: 'School Years',
+            options: { all: 'All' },
+        },
+        dateRange: {
+            titleFrom: 'From date',
+            titleTo: 'From date',
+            format: 'dd/mm/yyyy',
+        },
+    },
+    messages: {
+        notFound: 'No records found.'
+    },
+    menuItems: {
+        details: {
+            title: 'View details'
+        }
+    }
+}
+
 export const data = {
     list: [
         {

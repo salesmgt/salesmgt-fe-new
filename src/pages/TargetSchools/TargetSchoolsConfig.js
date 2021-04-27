@@ -1,6 +1,7 @@
 // import { MdDelete, MdDescription, MdInfo, MdPersonAdd } from "react-icons/md"
+import { roleNames } from '../../constants/Generals'
 
-export const columns = [
+const columns = [
     // { key: "ckb", name: '', sortable: false },
     // { key: 'no', name: 'No', sortable: false },
     { key: 'schoolName', name: 'School Name', sortable: true },
@@ -11,6 +12,78 @@ export const columns = [
     { key: 'targetPurposeName', name: 'Purpose', sortable: true },
     { key: '', name: '', sortable: false },
 ]
+
+export function getColumns(role) {
+    const [schoolName, principal, pic, schoolYear, purposes, actions] = columns
+
+    switch (role) {
+        case roleNames.manager:
+        case roleNames.supervisor:
+            return [schoolName, principal, pic, schoolYear, purposes, actions]
+        case roleNames.salesman:
+            return [schoolName, principal, schoolYear, purposes, actions]
+        default:
+            break
+    }
+}
+
+export const Consts = {
+    operations: {
+        filter: 'Filters',
+        search: {
+            placeholder: 'Search...'
+        },
+        create: 'Create',
+        assign: 'Assign',
+    },
+    filters: {
+        pic: {
+            title: 'PICs',
+            placeholder: "PIC's name",
+        },
+        purpose: {
+            title: 'Purposes',
+            options: { all: 'All' },
+        },
+        district: {
+            title: 'Districts',
+            options: { all: 'All' },
+        },
+        schoolYear: {
+            title: 'School Years',
+            options: { all: 'All' },
+        },
+        schoolType: {
+            title: 'School Types',
+            options: { all: 'All' },
+        },
+        schoolLevel: {
+            title: 'School Levels',
+            options: { all: 'All' },
+        },
+        schoolScale: {
+            title: 'School Scales',
+            options: { all: 'All' },
+        },
+    },
+    messages: {
+        notFound: 'No records found.'
+    },
+    menuItems: {
+        details: {
+            title: 'View details'
+        },
+        reports: {
+            title: 'View reports'
+        },
+        remove: {
+            title: 'Remove'
+        },
+        // assign: {
+        //     title: 'Assign'
+        // },
+    }
+}
 
 // export const menuOptions = [
 //     { icon: <MdInfo fontSize="large" />, text: 'View details' },

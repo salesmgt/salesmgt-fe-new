@@ -4,8 +4,8 @@ import queryString from 'query-string'
 export async function getReports(
     page = 0,
     limit = 10,
-    column = 'id',
-    direction = 'asc',
+    column = 'date',
+    direction = 'desc',
     searchKey = undefined,
     filters = undefined
 ) {

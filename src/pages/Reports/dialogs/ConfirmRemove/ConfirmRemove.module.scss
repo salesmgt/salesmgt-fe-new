@@ -1,0 +1,14 @@
+@import '../../../../styles/Variables.module.scss';
+
+.dialogText {
+    color: $common-black !important;
+}
+
+.btnRemove {
+    // color: $common-white !important;
+    color: $main-error !important;
+    // text-transform: none;
+    &:hover {
+        color: $dark-error !important;
+    }
+}

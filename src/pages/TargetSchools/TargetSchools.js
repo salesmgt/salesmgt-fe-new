@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
-import { columns } from './TargetSchoolsConfig'
 import { useTargetSchool } from './hooks/TargetSchoolContext'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
 import classes from './TargetSchools.module.scss'
@@ -11,7 +10,7 @@ function TargetSchools() {
 
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
-  
+
     const [data, setData] = useState({})
 
     function onGetTargets(
@@ -32,6 +31,7 @@ function TargetSchools() {
         )
             .then((res) => {
                 setData(res)
+                // console.log('targets: ', res);
             })
             .catch((error) => {
                 if (error.response) {
@@ -56,7 +56,6 @@ function TargetSchools() {
         <div className={classes.panel}>
             <Filters className={classes.filter} />
             <Tables
-                columns={columns}
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
