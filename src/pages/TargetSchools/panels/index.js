@@ -1,3 +1,3 @@
-export { default as GenInfo } from './GenInfo/GenInfo'
-export { default as RepInfo } from './RepInfo/RepInfo'
+export { default as SchoolInfo } from './SchoolInfo/SchoolInfo'
+export { default as MOUInfo } from './MOUInfo/MOUInfo'
 export { default as AssignInfo } from './AssignInfo/AssignInfo'

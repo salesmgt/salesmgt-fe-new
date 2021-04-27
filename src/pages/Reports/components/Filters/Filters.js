@@ -41,6 +41,7 @@ import {
     // STATUS_FILTER,
     DATE_RANGE_FILTER,
 } from '../../../../constants/Filters'
+import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import styles from './Filters.module.scss'
 
@@ -162,6 +163,7 @@ const MuiAccordionDetails = withStyles(() => ({
 function Filters() {
     const classes = useStyles()
 
+    const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext

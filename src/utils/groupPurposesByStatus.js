@@ -1,7 +1,7 @@
 import * as Milk from './Milk'
 
 export const generatePurposeSelections = (schStatus) => {
-    const listPurps = Milk.getMilk('salesPurps');
+    const salesPurps = Milk.getMilk('salesPurps');
     // let purpsSelections = [];
 
     switch (schStatus) {

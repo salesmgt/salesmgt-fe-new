@@ -154,16 +154,16 @@ function Filters() {
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
     const [openImportDialog, setOpenImportDialog] = useState(false)
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(null)
 
     const handleOpenCreateDialog = () => {
-        setAnchorEl(null);
-        setOpenCreateDialog(true);
+        setAnchorEl(null)
+        setOpenCreateDialog(true)
     }
 
     const handleOpenImportDialog = () => {
-        setAnchorEl(null);
-        setOpenImportDialog(true);
+        setAnchorEl(null)
+        setOpenImportDialog(true)
     }
 
     //================Handle useState() of filters================
@@ -273,7 +273,7 @@ function Filters() {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
-        console.log('listChips: ', listChips);
+
         return listChips
     }
     //===============================================================================
@@ -319,14 +319,21 @@ function Filters() {
                             className={classes.btn}
                             variant="contained"
                             color="secondary"
-                            onClick={(event) => setAnchorEl(event.currentTarget)}
-                        // onClick={() => setOpenCreateDialog(true)}
+                            onClick={(event) =>
+                                setAnchorEl(event.currentTarget)
+                            }
+                            // onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
                             {/* &nbsp;Create */}
                         </Button>
 
-                        <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+                        <Menu
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={() => setAnchorEl(null)}
+                        >
                             <MenuItem onClick={() => handleOpenCreateDialog()}>
                                 <MdEdit /> &nbsp; &nbsp; Create
                             </MenuItem>
@@ -530,17 +537,26 @@ function Filters() {
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>Working Status</InputLabel>
-                                <Select value={isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                <Select
+                                    value={isActive}
+                                    onChange={handleIsActiveChange}
+                                    MenuProps={MenuProps}
+                                >
                                     {workingStatuses.map((workingStatus) => (
                                         <MenuItem
                                             value={workingStatus}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
-                                            {workingStatus === null ? 'All' : (workingStatus ? 'Active' : 'Inactive')}
+                                            {workingStatus === null
+                                                ? 'All'
+                                                : workingStatus
+                                                ? 'Active'
+                                                : 'Inactive'}
                                         </MenuItem>
                                     ))}
                                 </Select>

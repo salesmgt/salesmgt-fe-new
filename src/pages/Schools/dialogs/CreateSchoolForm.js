@@ -41,7 +41,6 @@ const clientSchema = yup.object().shape({
         .trim()
         .min(4, 'Name must be at least 4 characters')
         .max(30, 'Name must be at most 30 characters'),
-    // .required('Name is required'),
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits')
@@ -49,13 +48,13 @@ const clientSchema = yup.object().shape({
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
-// const serverSchema = [
-//     {
-//         type: 'server',
-//         name: 'username',
-//         message: 'Username already exists',
-//     },
-// ]
+const serverSchema = [
+    {
+        type: 'server',
+        name: 'address',
+        message: 'School address already exists',
+    },
+]
 
 const ITEM_HEIGHT = 120
 const MenuProps = {
@@ -119,7 +118,15 @@ function CreateSchoolForm(props) {
         showRep: false,
     }
 
-    const { control, handleSubmit, errors, formState, reset, watch } = useForm({
+    const {
+        control,
+        handleSubmit,
+        errors,
+        setError,
+        formState,
+        reset,
+        watch,
+    } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
@@ -152,10 +159,16 @@ function CreateSchoolForm(props) {
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+                    if (error.response.status === 409) {
+                        serverSchema.forEach(({ name, type, message }) =>
+                            setError(name, { type, message })
+                        )
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                 }
                 setNotify({
                     isOpen: true,
@@ -169,10 +182,10 @@ function CreateSchoolForm(props) {
 
     return (
         <>
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                <DialogContent className={classes.dialogCont}>
+            <DialogContent className={classes.dialogCont}>
+                <form noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2} className={classes.wrapper}>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Grid item xs={12} sm={12} md={10} lg={10}>
                             <Controller
                                 name="name"
                                 control={control}
@@ -238,7 +251,7 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Grid item xs={12} sm={12} md={10} lg={10}>
                             <Controller
                                 name="phone"
                                 control={control}
@@ -371,7 +384,6 @@ function CreateSchoolForm(props) {
                                                 label={fields.repName.title}
                                                 variant="outlined"
                                                 fullWidth
-                                                autoFocus
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!!errors.reprName}
@@ -453,38 +465,37 @@ function CreateSchoolForm(props) {
                             </>
                         )}
                     </Grid>
-                </DialogContent>
+                </form>
+            </DialogContent>
+            <DialogActions className={classes.dialogAct}>
+                <Button
+                    className={classes.btnSave}
+                    type="submit"
+                    disabled={!formState.isDirty}
+                    onClick={handleSubmit(onSubmit)}
+                >
+                    {operations.save}
+                </Button>
+                <Button
+                    onClick={() => {
+                        reset({
+                            errors: false,
+                            name: '',
+                            address: '',
+                            district: dists[0],
+                            phone: '',
+                            educationalLevel: schEduLvls[0],
+                            type: schTypes[0],
+                            scale: schScales[0],
 
-                <DialogActions className={classes.dialogAct}>
-                    <Button
-                        className={classes.btnSave}
-                        type="submit"
-                        disabled={!formState.isDirty}
-                        onClick={handleSubmit(onSubmit)}
-                    >
-                        {operations.save}
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            reset({
-                                errors: false,
-                                name: '',
-                                address: '',
-                                district: dists[0],
-                                phone: '',
-                                educationalLevel: schEduLvls[0],
-                                type: schTypes[0],
-                                scale: schScales[0],
-
-                                showRep: false,
-                            })
-                            onClose()
-                        }}
-                    >
-                        {operations.cancel}
-                    </Button>
-                </DialogActions>
-            </form>
+                            showRep: false,
+                        })
+                        onClose()
+                    }}
+                >
+                    {operations.cancel}
+                </Button>
+            </DialogActions>
             <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )

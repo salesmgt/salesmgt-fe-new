@@ -29,6 +29,9 @@
         }
         .rowx {
             padding: 0rem 0.5rem;
+            @media (max-width: $md) {
+                padding: 0.25rem 0.5rem;
+            }
         }
         .rowy {
             padding: 0.5rem 0rem;
@@ -39,6 +42,25 @@
         .title {
             font-weight: 600;
             color: $secondary-text;
+        }
+        .genderZone {
+            display: flex;
+            flex-direction: row;
+            .gender {
+                margin-right: 0.5rem;
+            }
+        }
+        .statusCbZone {
+            padding: 0.25rem 0.75rem;
+            @media (max-width: $md) {
+                padding: 0.25rem 1.5rem;
+            }
+        }
+        .statusTxtZone {
+            padding: 0.5rem 0.75rem;
+            @media (max-width: $md) {
+                padding: 0.5rem 1.5rem;
+            }
         }
     }
 }

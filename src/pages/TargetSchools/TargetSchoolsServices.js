@@ -43,18 +43,46 @@ export async function getTargetSchools(
 }
 
 export async function getTarget(targetId) {
-    const response = await Api.get(`/reports/${targetId}`)
+    const response = await Api.get(`/targets/${targetId}`)
     const data = await response.data
 
     return data
 }
 
-export async function updateTarget(targetId, target) {
-    const response = await Api.put(`/reports/${targetId}`, target)
+export async function updateStatus(schoolId, target) {
+    const response = await Api.patch(`/schools/${schoolId}`, target)
     // const data = await response.data
 
     return response
 }
+
+export async function updatePrinciple(schoolId, target) {
+    const response = await Api.patch(`/schools/principal/${schoolId}`, target)
+    // const data = await response.data
+
+    return response
+}
+
+export async function updateTarget(targetId, target) {
+    const response = await Api.patch(`/targets/${targetId}`, target)
+    // const data = await response.data
+
+    return response
+}
+
+export async function updateMOU(mouId, mou) {
+    const response = await Api.put(`/memorandums/${mouId}`, mou)
+    // const data = await response.data
+
+    return response
+}
+
+// export async function updateTarget(targetId, target) {
+//     const response = await Api.put(`/targets/${targetId}`, target)
+//     // const data = await response.data
+
+//     return response
+// }
 
 // export async function updateSchool(id, school) {
 //     const response = await Api.put(`/schools/${id}`, school)

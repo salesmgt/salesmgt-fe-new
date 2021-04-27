@@ -3,8 +3,11 @@ import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo } from './panels'
 import * as AccountsServices from './AccountsServices'
+import { acctConsts } from './AccountsConfig'
+import { Loading } from '../../components'
 
 function Account() {
+    const { linkNames, tabNames } = acctConsts
     const [tabValue, setTabValue] = useState(0)
 
     const { id } = useParams()
@@ -42,18 +45,22 @@ function Account() {
         }
     }, [])
 
+    if (!account) {
+        return <Loading />
+    }
+
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
 
     return (
         <DetailLayouts
-            linkBack="Accounts"
+            linkBack={linkNames.back}
             avatar={account?.avatar}
             header={account?.fullName}
             subHeader={account?.active}
             isStatus={true}
-            tabs={['General Info']}
+            tabs={[tabNames.tab1]}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >

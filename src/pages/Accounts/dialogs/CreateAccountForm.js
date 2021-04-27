@@ -163,19 +163,25 @@ function CreateAccountForm(props) {
                 })
             })
             .catch((error) => {
-                if (error.response.status === 409) {
-                    serverSchema.forEach(({ name, type, message }) =>
-                        setError(name, { type, message })
-                    )
+                if (error.response) {
+                    console.log(error)
+                    if (
+                        error.response.status === 409 ||
+                        error.response.status === 500
+                    ) {
+                        serverSchema.forEach(({ name, type, message }) =>
+                            setError(name, { type, message })
+                        )
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                     setNotify({
                         isOpen: true,
                         message: 'Create Unsuccessful',
                         type: 'error',
-                    })
-                } else {
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
                     })
                 }
             })
@@ -185,8 +191,8 @@ function CreateAccountForm(props) {
 
     return (
         <>
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                <DialogContent className={classes.dialogCont}>
+            <DialogContent className={classes.dialogCont}>
+                <form noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
@@ -359,36 +365,37 @@ function CreateAccountForm(props) {
                             </FormControl>
                         </Grid>
                     </Grid>
-                </DialogContent>
-                <DialogActions className={classes.dialogAct}>
-                    <Button
-                        className={classes.btnSave}
-                        type="submit"
-                        disabled={!formState.isDirty}
-                        onClick={handleSubmit(onSubmit)}
-                    >
-                        {operations.save}
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            reset({
-                                errors: false,
-                                username: '',
-                                fullName: '',
-                                roleName: roles[3],
-                                phone: '',
-                                email: '',
-                                address: '',
-                                isMale: String(true),
-                                birthDate: null,
-                            })
-                            onClose()
-                        }}
-                    >
-                        {operations.cancel}
-                    </Button>
-                </DialogActions>
-            </form>
+                </form>
+            </DialogContent>
+            <DialogActions className={classes.dialogAct}>
+                <Button
+                    className={classes.btnSave}
+                    type="submit"
+                    disabled={!formState.isDirty}
+                    onClick={handleSubmit(onSubmit)}
+                >
+                    {operations.save}
+                </Button>
+                <Button
+                    onClick={() => {
+                        reset({
+                            errors: false,
+                            username: '',
+                            fullName: '',
+                            roleName: roles[3],
+                            phone: '',
+                            email: '',
+                            address: '',
+                            isMale: String(true),
+                            birthDate: null,
+                        })
+                        onClose()
+                    }}
+                >
+                    {operations.cancel}
+                </Button>
+            </DialogActions>
+
             <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )

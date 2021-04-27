@@ -12,6 +12,17 @@ export const columns = [
     { key: '', name: '', sortable: false },
 ]
 
+export const targetConsts = {
+    linkNames: {
+        back: 'Target Schools',
+    },
+    tabNames: {
+        tab1: 'School Info',
+        tab2: 'Assign Info',
+        tab3: 'Memorandum of Contract',
+    },
+}
+
 // export const menuOptions = [
 //     { icon: <MdInfo fontSize="large" />, text: 'View details' },
 //     { icon: <MdDescription fontSize="large" />, text: 'View reports' },

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { MajorBanner } from '../../assets/images'
 import {
     Container,
@@ -16,7 +16,9 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
-import { milkName } from '../../constants/Generals'
+// import { useApp } from '../../hooks/AppContext'
+import { milkNames, cookieNames } from '../../constants/Generals'
+// import * as FiltersServices from '../../services/FiltersServices'
 import classes from './Logins.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -43,22 +45,115 @@ const serverSchema = [
 ]
 
 function Logins() {
-    const {
-        register,
-        handleSubmit,
-        getValues,
-        errors,
-        setError,
-        clearErrors,
-    } = useForm({
-        resolver: yupResolver(clientSchema),
-    })
+    const { setUser } = useAuth()
+    // const {
+    //     setDists,
+    //     setSchEduLvls,
+    //     setSchTypes,
+    //     setSchScales,
+    //     setSchStatus,
+    //     setRoles,
+    //     setSchYears,
+    //     setSalesPurps,
+    // } = useApp()
 
     const history = useHistory()
 
-    const { setUser } = useAuth()
+    const { register, handleSubmit, errors, setError, clearErrors } = useForm({
+        resolver: yupResolver(clientSchema),
+    })
 
-    const handleLogin = (username, password) => {
+    // const getFiltersData = () => {
+    //     FiltersServices.getDistricts()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.dists, data)
+    //             setDists(Milk.getMilk(milkNames.dists))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getEducationalLevels()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.eduLvls, data)
+    //             setSchEduLvls(Milk.getMilk(milkNames.eduLvls))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getSchoolTypes()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.types, data)
+    //             setSchTypes(Milk.getMilk(milkNames.types))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getSchoolScales()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.scales, data)
+    //             setSchScales(Milk.getMilk(milkNames.scales))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getSchoolStatus()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.status, data)
+    //             setSchStatus(Milk.getMilk(milkNames.status))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getRoles()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.roles, data)
+    //             setRoles(Milk.getMilk(milkNames.roles))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getPurposes()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.salesPurps, data)
+    //             setSalesPurps(Milk.getMilk(milkNames.salesPurps))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     FiltersServices.getSchoolYears()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.schYears, data)
+    //             setSchYears(Milk.getMilk(milkNames.schYears))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+    // }
+
+    const onSubmit = (data) => {
         const userObj = (username, roles) => {
             return {
                 username: username,
@@ -66,15 +161,16 @@ function Logins() {
             }
         }
 
-        LoginsServices.checkUser(username, password)
+        LoginsServices.checkUser(data.username, data.password)
             .then((data) => {
-                Cookies.setCookie('accessToken', data.token, 7)
+                Cookies.setCookie(cookieNames.accessToken, data.token, 7)
                 Milk.setMilkExpiry(
-                    milkName.token,
+                    milkNames.token,
                     userObj(data.username, data.roles),
                     2
                 )
-                setUser(Milk.getMilkExpiry(milkName.token))
+                setUser(Milk.getMilkExpiry(milkNames.token))
+                // getFiltersData()
             })
             .catch((error) => {
                 if (error.response) {
@@ -94,10 +190,6 @@ function Logins() {
                     }
                 }
             })
-    }
-
-    const onSubmit = () => {
-        handleLogin(getValues('username'), getValues('password'))
     }
 
     return (

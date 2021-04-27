@@ -138,7 +138,10 @@ function useReportProvider() {
             case PURPOSE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
-                    purpose: { filterType: PURPOSE_FILTER, filterValue: value },
+                    purpose: {
+                        filterType: PURPOSE_FILTER,
+                        filterValue: value,
+                    },
                 }
                 setPurpose(value)
                 break

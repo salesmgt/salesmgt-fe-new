@@ -47,7 +47,7 @@ function CreateSchool(props) {
     const { headers } = Consts
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xs" scroll={'body'}>
+        <Dialog open={open} onClose={onClose}>
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.child1}
             </DialogTitleWithIconClose>

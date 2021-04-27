@@ -12,7 +12,6 @@ import {
     AccordionDetails,
     AccordionSummary,
     Button,
-    Divider,
     Grid,
     TextField,
     Icon,
@@ -40,11 +39,11 @@ const pwdSchema = yup.object().shape({
         .string()
         .notOneOf(
             [yup.ref('oldPassword'), null],
-            'The new password you entered is the same as your old password. Enter a different password'
+            'The new password you entered is the same as your old password. Please enter a different password'
         )
         .matches(
             /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
+            'Password must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
         ),
     confirmPassword: yup
         .string()
@@ -64,7 +63,7 @@ const phoneSchema = yup.object().shape({
     phone: yup
         .string()
         .required('Phone is required')
-        .max(10, 'Phone must be at most 10 digits')
+        .max(10, 'Phone number must be at most 10 digits')
         .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
 })
 
@@ -86,10 +85,7 @@ const serverSchema = [
 ]
 
 function Profiles() {
-    const {
-        user,
-        // setUser
-    } = useAuth()
+    const { user } = useAuth()
 
     const location = useLocation()
     const history = useHistory()
@@ -190,7 +186,7 @@ function Profiles() {
 
     if (!data) {
         if (id !== user.username) {
-            return <NotFound title="User not found!" />
+            return <NotFound title={operations.empty} />
         }
         return <Loading />
     }
@@ -492,7 +488,7 @@ function Profiles() {
                                             {fields.username.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} md={6} lg={6}>
+                                    <Grid item sm={6} md={6} lg={4}>
                                         <div className={classes.detailZone}>
                                             <Typography
                                                 className={classes.details}
@@ -525,7 +521,7 @@ function Profiles() {
                                                     {fields.password.title}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item sm={6} md={6} lg={6}>
+                                            <Grid item sm={6} md={6} lg={4}>
                                                 <TextField
                                                     className={clsx(
                                                         classes.details,
@@ -548,124 +544,191 @@ function Profiles() {
                                     <AccordionDetails
                                         className={classes.accorDetails}
                                     >
-                                        <Grid container direction="column">
+                                        <Grid container>
                                             <Grid
                                                 item
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                                className={classes.inputZone}
+                                                xs={12}
+                                                sm={12}
+                                                md={12}
+                                                lg={12}
                                             >
-                                                {pwdErrors.credential && (
-                                                    <Typography color="error">
-                                                        {
-                                                            pwdErrors.credential
-                                                                .message
+                                                <Grid container>
+                                                    <Grid
+                                                        item
+                                                        xs={1}
+                                                        sm={3}
+                                                        md={3}
+                                                        lg={3}
+                                                    />
+                                                    <Grid
+                                                        item
+                                                        xs={12}
+                                                        sm={6}
+                                                        md={6}
+                                                        lg={4}
+                                                        className={
+                                                            classes.inputZone
                                                         }
-                                                    </Typography>
-                                                )}
-                                                <TextField
-                                                    className={
-                                                        classes.inputField
-                                                    }
-                                                    fullWidth
-                                                    autoFocus
-                                                    required
-                                                    name="oldPassword"
-                                                    label={
-                                                        fields.password.labels
-                                                            .old
-                                                    }
-                                                    variant="outlined"
-                                                    type="password"
-                                                    inputRef={pwdRegister}
-                                                    error={
-                                                        !!pwdErrors.oldPassword
-                                                    }
-                                                    helperText={
-                                                        pwdErrors?.oldPassword
-                                                            ?.message
-                                                    }
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                                className={classes.inputZone}
-                                            >
-                                                <TextField
-                                                    className={
-                                                        classes.inputField
-                                                    }
-                                                    fullWidth
-                                                    required
-                                                    name="newPassword"
-                                                    label={
-                                                        fields.password.labels
-                                                            .new
-                                                    }
-                                                    variant="outlined"
-                                                    type="password"
-                                                    inputRef={pwdRegister}
-                                                    error={
-                                                        !!pwdErrors.newPassword
-                                                    }
-                                                    helperText={
-                                                        pwdErrors?.newPassword
-                                                            ?.message
-                                                    }
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                sm={6}
-                                                md={6}
-                                                lg={6}
-                                                className={classes.inputZone}
-                                            >
-                                                <TextField
-                                                    className={
-                                                        classes.inputField
-                                                    }
-                                                    fullWidth
-                                                    required
-                                                    name="confirmPassword"
-                                                    label={
-                                                        fields.password.labels
-                                                            .confirm
-                                                    }
-                                                    variant="outlined"
-                                                    type="password"
-                                                    inputRef={pwdRegister}
-                                                    error={
-                                                        !!pwdErrors.confirmPassword
-                                                    }
-                                                    helperText={
-                                                        pwdErrors
-                                                            ?.confirmPassword
-                                                            ?.message
-                                                    }
-                                                />
+                                                    >
+                                                        {pwdErrors.credential && (
+                                                            <Typography color="error">
+                                                                {
+                                                                    pwdErrors
+                                                                        .credential
+                                                                        .message
+                                                                }
+                                                            </Typography>
+                                                        )}
+                                                        <TextField
+                                                            className={
+                                                                classes.inputField
+                                                            }
+                                                            fullWidth
+                                                            autoFocus
+                                                            required
+                                                            name="oldPassword"
+                                                            label={
+                                                                fields.password
+                                                                    .labels.old
+                                                            }
+                                                            variant="outlined"
+                                                            type="password"
+                                                            inputRef={
+                                                                pwdRegister
+                                                            }
+                                                            error={
+                                                                !!pwdErrors.oldPassword
+                                                            }
+                                                            helperText={
+                                                                pwdErrors
+                                                                    ?.oldPassword
+                                                                    ?.message
+                                                            }
+                                                        />
+                                                    </Grid>
+                                                </Grid>
+
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                >
+                                                    <Grid container>
+                                                        <Grid
+                                                            item
+                                                            xs={1}
+                                                            sm={3}
+                                                            md={3}
+                                                            lg={3}
+                                                        />
+                                                        <Grid
+                                                            item
+                                                            xs={12}
+                                                            sm={6}
+                                                            md={6}
+                                                            lg={4}
+                                                            className={
+                                                                classes.inputZone
+                                                            }
+                                                        >
+                                                            <TextField
+                                                                className={
+                                                                    classes.inputField
+                                                                }
+                                                                fullWidth
+                                                                required
+                                                                name="newPassword"
+                                                                label={
+                                                                    fields
+                                                                        .password
+                                                                        .labels
+                                                                        .new
+                                                                }
+                                                                variant="outlined"
+                                                                type="password"
+                                                                inputRef={
+                                                                    pwdRegister
+                                                                }
+                                                                error={
+                                                                    !!pwdErrors.newPassword
+                                                                }
+                                                                helperText={
+                                                                    pwdErrors
+                                                                        ?.newPassword
+                                                                        ?.message
+                                                                }
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={12}
+                                                    md={12}
+                                                    lg={12}
+                                                >
+                                                    <Grid container>
+                                                        <Grid
+                                                            item
+                                                            xs={1}
+                                                            sm={3}
+                                                            md={3}
+                                                            lg={3}
+                                                        />
+                                                        <Grid
+                                                            item
+                                                            xs={12}
+                                                            sm={6}
+                                                            md={6}
+                                                            lg={4}
+                                                            className={
+                                                                classes.inputZone
+                                                            }
+                                                        >
+                                                            <TextField
+                                                                className={
+                                                                    classes.inputField
+                                                                }
+                                                                fullWidth
+                                                                required
+                                                                name="confirmPassword"
+                                                                label={
+                                                                    fields
+                                                                        .password
+                                                                        .labels
+                                                                        .confirm
+                                                                }
+                                                                variant="outlined"
+                                                                type="password"
+                                                                inputRef={
+                                                                    pwdRegister
+                                                                }
+                                                                error={
+                                                                    !!pwdErrors.confirmPassword
+                                                                }
+                                                                helperText={
+                                                                    pwdErrors
+                                                                        ?.confirmPassword
+                                                                        ?.message
+                                                                }
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </AccordionDetails>
-                                    <Divider />
+
                                     <AccordionActions
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                            disabled={!pwdState.isDirty}
-                                        >
-                                            {operations.save}
-                                        </Button>
-                                        <Button
                                             className={classes.cancelBtn}
-                                            size="small"
+                                            size="large"
                                             onClick={() =>
                                                 pwdReset({
                                                     pwdErrors: false,
@@ -676,6 +739,14 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
+                                        </Button>
+                                        <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!pwdState.isDirty}
+                                        >
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -700,7 +771,7 @@ function Profiles() {
                                             {fields.fullName.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} md={6} lg={6}>
+                                    <Grid item sm={6} md={6} lg={4}>
                                         <div className={classes.detailZone}>
                                             <Typography
                                                 className={classes.details}
@@ -720,14 +791,11 @@ function Profiles() {
                                             {fields.dob.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} md={6} lg={6}>
+                                    <Grid item sm={6} md={6} lg={4}>
                                         <div className={classes.detailZone}>
                                             <Typography
                                                 className={classes.details}
                                             >
-                                                {/* {new Date(
-                                                    birthDate
-                                                ).toLocaleDateString()} */}
                                                 {moment(birthDate).format(
                                                     'DD/MM/YYYY'
                                                 )}
@@ -745,7 +813,7 @@ function Profiles() {
                                             {fields.isMale.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid item sm={6} md={6} lg={6}>
+                                    <Grid item sm={6} md={6} lg={4}>
                                         <div className={classes.detailZone}>
                                             <Typography
                                                 className={classes.details}
@@ -788,7 +856,7 @@ function Profiles() {
                                                     {fields.email.title}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item sm={6} md={6} lg={6}>
+                                            <Grid item sm={6} md={6} lg={4}>
                                                 <TextField
                                                     className={clsx(
                                                         classes.details,
@@ -810,12 +878,20 @@ function Profiles() {
                                     <AccordionDetails
                                         className={classes.accorDetails}
                                     >
-                                        <Grid container direction="column">
+                                        <Grid container>
                                             <Grid
                                                 item
+                                                xs={1}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                            />
+                                            <Grid
+                                                item
+                                                xs={12}
                                                 sm={6}
                                                 md={6}
-                                                lg={6}
+                                                lg={4}
                                                 className={classes.inputZone}
                                             >
                                                 <TextField
@@ -839,21 +915,13 @@ function Profiles() {
                                             </Grid>
                                         </Grid>
                                     </AccordionDetails>
-                                    <Divider />
+
                                     <AccordionActions
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                            disabled={!emailState.isDirty}
-                                        >
-                                            {operations.save}
-                                        </Button>
-                                        <Button
                                             className={classes.cancelBtn}
-                                            size="small"
+                                            size="large"
                                             onClick={() =>
                                                 emailReset({
                                                     emailErrors: false,
@@ -862,6 +930,14 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
+                                        </Button>
+                                        <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!emailState.isDirty}
+                                        >
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -891,7 +967,7 @@ function Profiles() {
                                                     {fields.phone.title}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item sm={6} md={6} lg={6}>
+                                            <Grid item sm={6} md={6} lg={4}>
                                                 <TextField
                                                     className={clsx(
                                                         classes.details,
@@ -913,12 +989,20 @@ function Profiles() {
                                     <AccordionDetails
                                         className={classes.accorDetails}
                                     >
-                                        <Grid container direction="column">
+                                        <Grid container>
                                             <Grid
                                                 item
+                                                xs={1}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                            />
+                                            <Grid
+                                                item
+                                                xs={12}
                                                 sm={6}
                                                 md={6}
-                                                lg={6}
+                                                lg={4}
                                                 className={classes.inputZone}
                                             >
                                                 <TextField
@@ -942,21 +1026,13 @@ function Profiles() {
                                             </Grid>
                                         </Grid>
                                     </AccordionDetails>
-                                    <Divider />
+
                                     <AccordionActions
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                            disabled={!phoneState.isDirty}
-                                        >
-                                            {operations.save}
-                                        </Button>
-                                        <Button
                                             className={classes.cancelBtn}
-                                            size="small"
+                                            size="large"
                                             onClick={() =>
                                                 phoneReset({
                                                     phoneErrors: false,
@@ -965,6 +1041,14 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
+                                        </Button>
+                                        <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!phoneState.isDirty}
+                                        >
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -994,7 +1078,7 @@ function Profiles() {
                                                     {fields.address.title}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item sm={6} md={6} lg={6}>
+                                            <Grid item sm={6} md={6} lg={4}>
                                                 <TextField
                                                     className={clsx(
                                                         classes.details,
@@ -1016,12 +1100,20 @@ function Profiles() {
                                     <AccordionDetails
                                         className={classes.accorDetails}
                                     >
-                                        <Grid container direction="column">
+                                        <Grid container>
                                             <Grid
                                                 item
+                                                xs={1}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                            />
+                                            <Grid
+                                                item
+                                                xs={12}
                                                 sm={6}
                                                 md={6}
-                                                lg={6}
+                                                lg={4}
                                                 className={classes.inputZone}
                                             >
                                                 <TextField
@@ -1044,21 +1136,13 @@ function Profiles() {
                                             </Grid>
                                         </Grid>
                                     </AccordionDetails>
-                                    <Divider />
+
                                     <AccordionActions
                                         className={classes.accorActions}
                                     >
                                         <Button
-                                            className={classes.saveBtn}
-                                            size="small"
-                                            type="submit"
-                                            disabled={!addrState.isDirty}
-                                        >
-                                            {operations.save}
-                                        </Button>
-                                        <Button
                                             className={classes.cancelBtn}
-                                            size="small"
+                                            size="large"
                                             onClick={() =>
                                                 addrReset({
                                                     addrErrors: false,
@@ -1067,6 +1151,14 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
+                                        </Button>
+                                        <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!addrState.isDirty}
+                                        >
+                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>

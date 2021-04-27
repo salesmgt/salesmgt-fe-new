@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { GenInfo, RepInfo } from './panels'
-import { useAuth } from '../../hooks/AuthContext'
-import {
-    roleNames,
-    // statusNames
-} from '../../constants/Generals'
+// import { useAuth } from '../../hooks/AuthContext'
+// import { roleNames, statusNames } from '../../constants/Generals'
 import * as SchoolsServices from './SchoolsServices'
+import { schConsts } from './SchoolsConfig'
+import { Loading } from '../../components'
 
 function School() {
+    const { linkNames, tabNames } = schConsts
     const [tabValue, setTabValue] = useState(0)
 
-    const { user } = useAuth()
+    // const { user } = useAuth()
 
     const { id } = useParams()
     const location = useLocation()
@@ -49,6 +49,10 @@ function School() {
         }
     }, [])
 
+    if (!school) {
+        return <Loading />
+    }
+
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
@@ -71,25 +75,25 @@ function School() {
 
     return (
         <>
-            {user.roles[0] === roleNames.admin && (
-                <DetailLayouts
-                    linkBack="Schools"
-                    header={school?.name}
-                    subHeader={school?.active}
-                    isStatus={true}
-                    tabs={['General Info', 'Principal Info']}
-                    tabValue={tabValue}
-                    handleChangeTab={handleChangeTab}
-                >
-                    {tabValue === 0 && (
-                        <GenInfo school={school} refreshPage={refreshPage} />
-                    )}
+            {/* {user.roles[0] === roleNames.admin && ( */}
+            <DetailLayouts
+                linkBack={linkNames.back}
+                header={school?.name}
+                subHeader={school?.active}
+                isStatus={true}
+                tabs={[tabNames.tab1, tabNames.tab2]}
+                tabValue={tabValue}
+                handleChangeTab={handleChangeTab}
+            >
+                {tabValue === 0 && (
+                    <GenInfo school={school} refreshPage={refreshPage} />
+                )}
 
-                    {tabValue === 1 && (
-                        <RepInfo school={school} refreshPage={refreshPage} />
-                    )}
-                </DetailLayouts>
-            )}
+                {tabValue === 1 && (
+                    <RepInfo school={school} refreshPage={refreshPage} />
+                )}
+            </DetailLayouts>
+            {/* )} */}
             {/* {user.roles[0] === roleNames.manager && (
                 <DetailLayouts
                     linkBack="Schools"

@@ -23,8 +23,7 @@ const clientSchema = yup.object().shape({
         .string()
         .trim()
         .min(4, 'Name must be at least 4 characters')
-        .max(30, 'Name must be at most 30 characters')
-        .required('Name is required'),
+        .max(30, 'Name must be at most 30 characters'),
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits')
@@ -78,46 +77,37 @@ function RepInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
-            reprIsMale: data.isMale === 'true' ? true : false,
+            reprIsMale: data.reprIsMale === 'true' ? true : false,
 
-            // name: target?.name,
-            // address: target?.address,
-            // district: target?.district,
-
-            // educationalLevel: target?.educationalLevel,
-            // type: target?.type,
-            // scale: target?.scale,
-            // phone: target?.phone,
-
-            // description: target?.description,
-            // status: target?.status,
-
-            // active: target?.active,
+            // note: target?.note,
+            purpose: target?.purpose,
+            // schoolYear: target?.schoolYear,
         }
 
-        TargetSchoolsServices.updateTarget(data.id, model)
-            .then((res) => {
-                refreshPage(data.id)
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-                setNotify({
-                    isOpen: true,
-                    message: 'Update Unsuccessful',
-                    type: 'error',
-                })
-            })
+        // TargetSchoolsServices.updateTarget(data.id, model)
+        //     .then((res) => {
+        //         console.log(res)
+        //         refreshPage(data.id)
+        //         setNotify({
+        //             isOpen: true,
+        //             message: 'Updated Successfully',
+        //             type: 'success',
+        //         })
+        //     })
+        //     .catch((error) => {
+        //         if (error.response) {
+        //             console.log(error)
+        //             history.push({
+        //                 pathname: '/errors',
+        //                 state: { error: error.response.status },
+        //             })
+        //         }
+        //         setNotify({
+        //             isOpen: true,
+        //             message: 'Update Unsuccessful',
+        //             type: 'error',
+        //         })
+        //     })
 
         alert(JSON.stringify(model))
     }
@@ -190,7 +180,6 @@ function RepInfo(props) {
                                                         fields.fullName.title
                                                     }
                                                     variant="outlined"
-                                                    required
                                                     fullWidth
                                                     autoFocus
                                                     value={value}

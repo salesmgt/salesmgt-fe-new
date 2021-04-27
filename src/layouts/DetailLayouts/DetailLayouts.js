@@ -93,7 +93,7 @@ function DetailLayouts(props) {
                                     delay={300}
                                 >
                                     <Typography
-                                        variant="h4"
+                                        // variant="h5"
                                         className={classes.basicMain}
                                     >
                                         {header}
@@ -125,7 +125,7 @@ function DetailLayouts(props) {
                                         delay={300}
                                     >
                                         <Typography
-                                            variant="h6"
+                                            // variant="h6"
                                             className={classes.basicSub}
                                         >
                                             {subHeader}

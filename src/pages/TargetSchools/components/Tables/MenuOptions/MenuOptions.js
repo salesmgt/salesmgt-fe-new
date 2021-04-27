@@ -25,17 +25,24 @@ import PropTypes from 'prop-types'
 // import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove'
+import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
     const [anchorEl, setAnchorEl] = useState(null)
-    const [open, setOpen] = useState(false);
-
-    // console.log('data từ MenuOptions: ', data)
+    const [open, setOpen] = useState(false)
 
     // const { user } = useAuth()
     const { url } = useRouteMatch()
+
+    const { params } = useTargetSchool()
+
+    const stateData = {
+        model: data,
+        params: params,
+        pathName: `${url}/${data.username}`,
+    }
 
     const handleOpen = (event) => {
         setAnchorEl(event.currentTarget)
@@ -59,12 +66,19 @@ function MenuOptions(props) {
     const renderRemoveDialog = () => {
         if (data?.fullName) {
             return (
-                <CannotRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <CannotRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
             )
-        }
-        else {
+        } else {
             return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <ConfirmRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
             )
         }
     }
@@ -85,7 +99,7 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: `${url}/${data.id}`,
-                        state: { data: data },
+                        state: { data: stateData },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>

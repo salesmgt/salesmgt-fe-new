@@ -99,7 +99,7 @@ function GenInfo(props) {
             : String(true),
         birthDate: account?.birthDate ? account?.birthDate : null,
         roleName: account?.roleName ? account?.roleName : roleNames.salesman,
-        active: account?.active ? account?.active : true,
+        active: account?.active,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -119,7 +119,7 @@ function GenInfo(props) {
             roleName: account?.roleName
                 ? account?.roleName
                 : roleNames.salesman,
-            active: account?.active ? account?.active : true,
+            active: account?.active,
         })
     }, [account])
 

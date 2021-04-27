@@ -33,7 +33,6 @@ function Reports() {
         )
             .then((res) => {
                 setData(res)
-                console.log('Reports: ', res.list[0]);
             })
             .catch((error) => {
                 if (error.response) {

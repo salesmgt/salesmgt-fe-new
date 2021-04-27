@@ -7,6 +7,7 @@ export const Consts = {
         logout: 'Log Out',
         cancel: 'Cancel',
         save: 'Save',
+        empty: 'User not found!',
     },
     fields: {
         username: {

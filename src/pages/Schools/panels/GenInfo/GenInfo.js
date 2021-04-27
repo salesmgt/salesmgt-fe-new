@@ -93,7 +93,7 @@ function GenInfo(props) {
         type: school?.type ? school?.type : schTypes[0],
         phone: school?.phone ? school?.phone : '',
 
-        active: school?.active ? school?.active : true,
+        active: school?.active,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -115,7 +115,7 @@ function GenInfo(props) {
             type: school?.type ? school?.type : schTypes[0],
             phone: school?.phone ? school?.phone : '',
 
-            active: school?.active ? school?.active : true,
+            active: school?.active,
         })
     }, [school])
 
@@ -142,12 +142,12 @@ function GenInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
-            description: school?.description,
+            // description: school?.description,
             status: school?.status,
-            reprName: school?.reprName,
-            reprIsMale: school?.reprIsMale,
-            reprPhone: school?.reprPhone,
-            reprEmail: school?.reprEmail,
+            // reprName: school?.reprName,
+            // reprIsMale: school?.reprIsMale,
+            // reprPhone: school?.reprPhone,
+            // reprEmail: school?.reprEmail,
         }
 
         SchoolsServices.updateSchool(data.id, model)

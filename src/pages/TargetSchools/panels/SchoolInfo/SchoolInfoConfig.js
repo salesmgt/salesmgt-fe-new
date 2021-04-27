@@ -1,15 +1,17 @@
 export const Consts = {
     headers: {
-        child1: 'Assign detail',
-        child2: 'School detail',
+        child1: 'School Detail',
+        child2: 'Target School Status',
+        child3: 'Principal Detail',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
-        empty: 'Not assigned yet!',
-        restriction: `Sorry, you can't view this!`
     },
     fields: {
+        empty: {
+            title: 'N/A',
+        },
         name: {
             title: 'School Name',
         },
@@ -29,7 +31,7 @@ export const Consts = {
             title: 'School Type',
         },
         salesStatus: {
-            title: 'School Status',
+            title: 'Target School Status',
         },
         tel: {
             title: 'Tel',
@@ -38,10 +40,16 @@ export const Consts = {
             title: 'Description',
         },
         reprName: {
-            title: 'Principal Name',
+            title: 'Name',
         },
         reprIsMale: {
-            title: 'Principal Gender',
+            title: 'Gender',
+        },
+        reprEmail: {
+            title: 'Email',
+        },
+        reprPhone: {
+            title: 'Phone',
         },
         pic: {
             title: 'PIC',
