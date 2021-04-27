@@ -34,8 +34,8 @@ import classes from './CreateReports.module.scss'
 import { useReport } from '../../hooks/ReportContext'
 
 const clientSchema = yup.object().shape({
-    username: yup.string().trim().min(8).max(30).required(),
-    fullName: yup.string().trim().max(50).required(),
+    // username: yup.string().trim().min(8).max(30).required(),
+    // fullName: yup.string().trim().max(50).required(),
 })
 
 function CreateReportsForm(props) {

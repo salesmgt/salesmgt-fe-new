@@ -109,7 +109,7 @@ function RepInfo(props) {
         //         })
         //     })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (

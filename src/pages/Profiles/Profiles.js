@@ -63,7 +63,10 @@ const phoneSchema = yup.object().shape({
     phone: yup
         .string()
         .required('Phone is required')
-        .max(10, 'Phone number must be at most 10 digits')
+        .max(
+            10,
+            'Phone number must be at most 10 digits and has the correct format'
+        )
         .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
 })
 

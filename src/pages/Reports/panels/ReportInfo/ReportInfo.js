@@ -162,7 +162,7 @@ function RepInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     const onCmtSubmit = (data) => {
@@ -195,7 +195,7 @@ function RepInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (
@@ -439,7 +439,7 @@ function RepInfo(props) {
                                         >
                                             <Button
                                                 className={classes.submit}
-                                                variant="contained"
+                                                // variant="contained"
                                                 disabled={!rpState.isDirty}
                                                 type="submit"
                                             >

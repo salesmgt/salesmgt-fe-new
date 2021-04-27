@@ -43,9 +43,8 @@ const clientSchema = yup.object().shape({
     phone: yup
         .string()
         .required('Phone is required')
-        .max(10, 'Phone must be at most 10 digits')
+        .max(10, 'Phone must be at most 10 digits and has the correct format')
         .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
-
     email: yup
         .string()
         .trim()
@@ -186,7 +185,7 @@ function CreateAccountForm(props) {
                 }
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (

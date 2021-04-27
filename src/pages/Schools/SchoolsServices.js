@@ -28,9 +28,13 @@ export async function getSchools(
         url = filters['status'].filterValue
             ? url.concat(`&status=${filters['status'].filterValue}`)
             : url
+        url =
+            filters['isActive'].filterValue !== null
+                ? url.concat(`&active=${filters['isActive'].filterValue}`)
+                : url
     }
 
-    // console.log('url = ', url);
+    // console.log('url = ', url)
     const response = await Api.get(url)
 
     return response
@@ -59,6 +63,13 @@ export async function createSchool(school) {
 
 export async function updateSchool(id, school) {
     const response = await Api.put(`/schools/${id}`, school)
+    // const data = await response.data
+
+    return response
+}
+
+export async function importSchool(school) {
+    const response = await Api.post(`/schools/import`, school)
     // const data = await response.data
 
     return response

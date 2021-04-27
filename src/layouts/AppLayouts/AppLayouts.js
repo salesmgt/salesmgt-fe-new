@@ -85,51 +85,53 @@ function AppLayouts() {
 
     //---------------------------------------Notifications---------------------------------------
 
-    const notifData = 'notif-'.repeat(4).split('-')
+    // const notifData = 'notif-'.repeat(4).split('-')
 
-    const ITEM_HEIGHT = 48
-    const [notifAnchorEl, setNotifAnchorEl] = useState(null)
-    const isNotifMenuOpen = Boolean(notifAnchorEl)
+    // const ITEM_HEIGHT = 48
+    // const [notifAnchorEl, setNotifAnchorEl] = useState(null)
+    // const isNotifMenuOpen = Boolean(notifAnchorEl)
 
-    const handleNotifMenuOpen = useCallback((event) => {
-        setNotifAnchorEl(event.currentTarget)
-    }, [])
+    // const handleNotifMenuOpen = useCallback((event) => {
+    //     setNotifAnchorEl(event.currentTarget)
+    // }, [])
 
-    const handleNotifMenuClose = useCallback(() => {
-        setNotifAnchorEl(null)
-    }, [])
+    // const handleNotifMenuClose = useCallback(() => {
+    //     setNotifAnchorEl(null)
+    // }, [])
 
-    const notifMenuId = 'notif-menu'
-    const renderNotifMenu = (
-        <Menu
-            id={notifMenuId}
-            anchorEl={notifAnchorEl}
-            getContentAnchorEl={null}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            transformOrigin={{ vertical: 'center', horizontal: 'right' }}
-            keepMounted
-            open={isNotifMenuOpen}
-            onClose={handleNotifMenuClose}
-            PaperProps={{
-                style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: '20ch',
-                },
-            }}
-        >
-            {notifData.map((item, index) => {
-                return (
-                    <MenuItem
-                        key={index}
-                        onClick={handleNotifMenuClose}
-                        className={classes.notif}
-                    >
-                        <span>{item}</span>
-                    </MenuItem>
-                )
-            })}
-        </Menu>
-    )
+    // const notifMenuId = 'notif-menu'
+    // const renderNotifMenu = (
+    //     <Menu
+    //         id={notifMenuId}
+    //         anchorEl={notifAnchorEl}
+    //         getContentAnchorEl={null}
+    //         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+    //         transformOrigin={{ vertical: 'center', horizontal: 'right' }}
+    //         keepMounted
+    //         open={isNotifMenuOpen}
+    //         onClose={handleNotifMenuClose}
+    //         PaperProps={{
+    //             style: {
+    //                 maxHeight: ITEM_HEIGHT * 4.5,
+    //                 width: '20ch',
+    //             },
+    //         }}
+    //     >
+    //         {notifData.map((item, index) => {
+    //             return (
+    //                 <MenuItem
+    //                     key={index}
+    //                     onClick={handleNotifMenuClose}
+    //                     className={classes.notif}
+    //                 >
+    //                     <span>{item}</span>
+    //                 </MenuItem>
+    //             )
+    //         })}
+    //     </Menu>
+    // )
+
+    //----------------------------------------------------------------------------------------------
 
     useEffect(() => {
         UserServices.getProfile(user.username)
@@ -155,8 +157,6 @@ function AppLayouts() {
     //     console.log('has changed')
     // }, [notifAnchorEl])
 
-    //----------------------------------------------------------------------------------------------
-
     return (
         <div className={classes.root}>
             {/* AppBar area */}
@@ -178,20 +178,17 @@ function AppLayouts() {
 
                         <div className={classes.grow} />
 
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            className={classes.title}
-                        >
+                        <Typography variant="h5" className={classes.title}>
                             {getTitle}
                         </Typography>
 
                         {/* Remember to set badge content */}
-                        <IconButton onClick={handleNotifMenuOpen}>
+                        {/* <IconButton onClick={handleNotifMenuOpen}>
                             <StyledBadge badgeContent={4}>
                                 <MdNotifications />
                             </StyledBadge>
-                        </IconButton>
+                        </IconButton> */}
+
                         {/* <IconButton
                             edge="end"
                             component={Link}
@@ -202,7 +199,7 @@ function AppLayouts() {
                         <UserMenu userInfo={userInfo} />
                     </Toolbar>
                 </AppBar>
-                {renderNotifMenu}
+                {/* {renderNotifMenu} */}
             </IconContext.Provider>
 
             {/* Side menu area */}

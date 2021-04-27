@@ -186,7 +186,7 @@ function SchoolInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     const onStatusSubmit = (data) => {
@@ -221,7 +221,7 @@ function SchoolInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (

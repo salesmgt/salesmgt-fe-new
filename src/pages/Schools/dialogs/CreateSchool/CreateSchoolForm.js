@@ -30,11 +30,12 @@ const clientSchema = yup.object().shape({
         .string()
         .trim()
         .min(3, 'Name must be at least 3 characters')
+        .max(30, 'Name must be at most 30 characters')
         .required('Name is required'),
     address: yup.string().trim().required('Address is required'),
     phone: yup
         .string()
-        .max(11, 'Tel must be at most 11 digits')
+        .max(11, 'Tel must be at most 11 digits and has the correct format')
         .matches(/(02)+([0-9]{9})\b/g, 'Incorrect entry'),
     reprName: yup
         .string()
@@ -177,7 +178,7 @@ function CreateSchoolForm(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (

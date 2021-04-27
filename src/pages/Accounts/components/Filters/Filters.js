@@ -233,7 +233,7 @@ function Filters() {
                             onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;{operations.create}
+                            {/* &nbsp;{operations.create} */}
                         </Button>
                         <CreateAccount
                             open={openCreateDialog}

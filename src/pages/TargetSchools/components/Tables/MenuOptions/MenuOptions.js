@@ -7,12 +7,7 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import {
-    MdDelete,
-    MdDescription,
-    MdInfo,
-    MdMoreVert,
-} from 'react-icons/md'
+import { MdDelete, MdDescription, MdInfo, MdMoreVert } from 'react-icons/md'
 // import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
@@ -34,7 +29,7 @@ function MenuOptions(props) {
 
     const stateData = {
         model: data,
-        params: params,  // get from context
+        params: params, // get from context
         pathName: `${url}/${data.id}`,
     }
 
@@ -97,7 +92,15 @@ function MenuOptions(props) {
                         {menuItems.details.title}
                     </ListItemText>
                 </MenuItem>
-                <MenuItem onClick={handleCloseMenus}>
+
+                <MenuItem
+                    onClick={handleCloseMenus}
+                    component={Link}
+                    to={{
+                        pathname: '/apps/reports',
+                        state: { targetId: data.id },
+                    }}
+                >
                     <ListItemIcon className={classes.itemIcon}>
                         <MdDescription fontSize="large" />
                     </ListItemIcon>
@@ -105,6 +108,7 @@ function MenuOptions(props) {
                         {menuItems.reports.title}
                     </ListItemText>
                 </MenuItem>
+
                 {/* <MenuItem onClick={handleCloseMenus}>
                     <ListItemIcon className={classes.itemIcon}>
                         <MdPersonAdd fontSize="large" />

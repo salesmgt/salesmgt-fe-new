@@ -19,7 +19,13 @@ import {
     InputAdornment,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
+import {
+    MdAccountCircle,
+    MdAdd,
+    MdExpandMore,
+    MdFilterList,
+    MdPersonAdd,
+} from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
@@ -39,6 +45,8 @@ import NotifyAssign from '../../dialogs/NotifyAssign/NotifyAssign'
 import AssignMultiple from '../../dialogs/AssignMultiple/AssignMultiple'
 import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetSchools'
 import { Consts } from '../../TargetSchoolsConfig'
+import { useAuth } from '../../../../hooks/AuthContext'
+import { roleNames } from '../../../../constants/Generals'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -197,6 +205,8 @@ function Filters() {
         setFilter,
     } = useTargetSchool()
     const { operations, filters } = Consts
+
+    const { user } = useAuth()
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
@@ -598,7 +608,7 @@ function Filters() {
                             onClick={handleOpenCreateDialog}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;{operations.create}
+                            {/* &nbsp;{operations.create} */}
                         </Button>
 
                         <CreateTargetSchools
@@ -613,7 +623,7 @@ function Filters() {
                             color="secondary"
                             onClick={handleOpenAssignDialog}
                         >
-                            <MdPersonAdd fontSize="large" /> &nbsp; {operations.assign}
+                            <MdPersonAdd fontSize="large" />
                         </Button>
                         {/* Have checked target schools */}
                         <AssignMultiple
@@ -630,67 +640,87 @@ function Filters() {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid item xs={12} sm={6} md={5} lg={4}>
-                            <Autocomplete
-                                autoComplete
-                                autoSelect
-                                autoHighlight
-                                clearOnEscape
-                                options={PICs ? PICs : []}
-                                getOptionLabel={(pic) =>
-                                    pic.fullName ? pic.fullName : ''
-                                }
-                                value={PIC}
-                                renderInput={(params) => {
-                                    return (
-                                        <TextField
-                                            {...params}
-                                            label={filters.pic.title}
-                                            margin="normal"
-                                            placeholder={filters.pic.placeholder}
-                                            ref={params.InputProps.ref}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                startAdornment: (
-                                                    <>
-                                                        <InputAdornment position="start">
-                                                            <MdAccountCircle />
-                                                        </InputAdornment>
-                                                        {params.InputProps.startAdornment}
-                                                    </>
-                                                )
-                                            }}
-                                        />
-                                    )
-                                }}
-                                renderOption={(option) => {
-                                    return (
-                                        <div className={classes.itemPIC} key={option.username}>
-                                            <ListItemAvatar>
-                                                <Avatar src={option.avatar} />
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                primary={
-                                                    option.fullName
-                                                        ? option.fullName
-                                                        : ''
+                        {user.roles[0] !== roleNames.salesman && (
+                            <Grid item xs={12} sm={6} md={5} lg={4}>
+                                <Autocomplete
+                                    autoComplete
+                                    autoSelect
+                                    autoHighlight
+                                    clearOnEscape
+                                    options={PICs ? PICs : []}
+                                    getOptionLabel={(pic) =>
+                                        pic.fullName ? pic.fullName : ''
+                                    }
+                                    value={PIC}
+                                    renderInput={(params) => {
+                                        return (
+                                            <TextField
+                                                {...params}
+                                                label={filters.pic.title}
+                                                margin="normal"
+                                                placeholder={
+                                                    filters.pic.placeholder
                                                 }
-                                                classes={{
-                                                    primary:
-                                                        classes.itemTextPrimary,
+                                                ref={params.InputProps.ref}
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    startAdornment: (
+                                                        <>
+                                                            <InputAdornment position="start">
+                                                                <MdAccountCircle />
+                                                            </InputAdornment>
+                                                            {
+                                                                params
+                                                                    .InputProps
+                                                                    .startAdornment
+                                                            }
+                                                        </>
+                                                    ),
                                                 }}
                                             />
-                                        </div>
-                                    )
-                                }}
-                                className={classes.autoComplete}
-                                onChange={(event, newPIC) =>
-                                    handlePICChange(event, newPIC)
-                                }
-                            />
-                        </Grid>
+                                        )
+                                    }}
+                                    renderOption={(option) => {
+                                        return (
+                                            <div
+                                                className={classes.itemPIC}
+                                                key={option.username}
+                                            >
+                                                <ListItemAvatar>
+                                                    <Avatar
+                                                        src={option.avatar}
+                                                    />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={
+                                                        option.fullName
+                                                            ? option.fullName
+                                                            : ''
+                                                    }
+                                                    classes={{
+                                                        primary:
+                                                            classes.itemTextPrimary,
+                                                    }}
+                                                />
+                                            </div>
+                                        )
+                                    }}
+                                    className={classes.autoComplete}
+                                    onChange={(event, newPIC) =>
+                                        handlePICChange(event, newPIC)
+                                    }
+                                />
+                            </Grid>
+                        )}
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>{filters.purpose.title}</InputLabel>
                                 <Select
@@ -726,9 +756,18 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.district.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.district.title}
+                                </InputLabel>
                                 <Select
                                     value={district || ''}
                                     onChange={handleDistrictChange}
@@ -762,9 +801,18 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolYear.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolYear.title}
+                                </InputLabel>
                                 <Select
                                     value={schoolYear || ''}
                                     onChange={handleSchoolYearChange}
@@ -798,9 +846,18 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolType.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolType.title}
+                                </InputLabel>
                                 <Select
                                     value={schoolType || ''}
                                     onChange={handleSchoolTypeChange}
@@ -834,9 +891,18 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolLevel.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolLevel.title}
+                                </InputLabel>
                                 <Select
                                     value={schoolLevel || ''}
                                     onChange={handleSchoolLevelChange}
@@ -870,9 +936,18 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolScale.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolScale.title}
+                                </InputLabel>
                                 <Select
                                     value={schoolScale || ''}
                                     onChange={handleSchoolScaleChange}

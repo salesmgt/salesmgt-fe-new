@@ -167,7 +167,6 @@ const MuiAccordionDetails = withStyles(() => ({
 }))(AccordionDetails)
 
 function Filters() {
-
     // console.log('filter reports nè')
 
     const classes = useStyles()
@@ -479,7 +478,7 @@ function Filters() {
                             onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;{operations.create}
+                            {/* &nbsp;{operations.create} */}
                         </Button>
                         <CreateReports
                             open={openCreateDialog}
@@ -514,7 +513,10 @@ function Filters() {
                                                     <InputAdornment position="start">
                                                         <MdAccountCircle />
                                                     </InputAdornment>
-                                                    {params.InputProps.startAdornment}
+                                                    {
+                                                        params.InputProps
+                                                            .startAdornment
+                                                    }
                                                 </>
                                             ),
                                         }}
@@ -522,13 +524,18 @@ function Filters() {
                                 )}
                                 renderOption={(option) => {
                                     return (
-                                        <div className={classes.itemPIC} key={option.username}>
+                                        <div
+                                            className={classes.itemPIC}
+                                            key={option.username}
+                                        >
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
                                                 primary={
-                                                    option.fullName ? option.fullName : ''
+                                                    option.fullName
+                                                        ? option.fullName
+                                                        : ''
                                                 }
                                                 classes={{
                                                     primary:
@@ -545,7 +552,14 @@ function Filters() {
                             />
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>{filters.purpose.title}</InputLabel>
                                 <Select
@@ -581,9 +595,18 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.district.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.district.title}
+                                </InputLabel>
                                 <Select
                                     value={district || ''}
                                     onChange={handleDistrictChange}
@@ -627,7 +650,9 @@ function Filters() {
 
                         <Grid item xs={12} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolYear.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolYear.title}
+                                </InputLabel>
                                 <Select
                                     value={schoolYear || ''}
                                     onChange={handleSchoolYearChange}

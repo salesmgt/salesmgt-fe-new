@@ -73,7 +73,8 @@ function ContentAccordions(props) {
     })(Accordion)
 
     const onSubmit = (data) => {
-        return alert(JSON.stringify(data))
+        return
+        // alert(JSON.stringify(data))
     }
 
     return (

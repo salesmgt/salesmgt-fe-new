@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'
 import {
     Dialog,
     IconButton,
@@ -11,12 +11,14 @@ import {
     Button,
     Link,
 } from '@material-ui/core'
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from '@material-ui/lab'
 import { MdClose } from 'react-icons/md'
 import { FaFileImport } from 'react-icons/fa'
 import { Consts } from '../FormConfig'
 import * as XLSX from 'xlsx'
 import { storage } from '../../../../services/firebase'
+import { Snackbars } from '../../../../components'
+import * as SchoolsServices from '../../SchoolsServices'
 import classes from './ImportFile.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -50,49 +52,74 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     )
 })
 
-
 function ImportFile(props) {
+    const [data, setData] = useState([])
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
     const { open, onClose } = props
-    const { headers } = Consts
+    const {
+        headers,
+        excel,
+        contentText1,
+        contentText2,
+        fileFormat,
+        linkText,
+        contentLink,
+        alertType,
+        refFile,
+        alertText,
+    } = Consts
     const [fileName, setFileName] = React.useState('')
     const [text, setText] = React.useState(0)
+    const [link, setLink] = React.useState('')
+    const [isDisableButton, setIsDisableButton] = React.useState(true)
     const handleClose = () => {
-        onClose(false);
-    };
-    const downloadFile = (event) => {
-        event.preventDefault();
-        return new Promise((resolve, reject) => {
-            storage
-                .ref('documents/Import_Sample.xlsx')
-                .getDownloadURL()
-                .then((url) => {
-                    console.log('getDownloadURL(): ', url);
-                    const xhr = new XMLHttpRequest();
-                    xhr.responseType = 'blob';
-                    xhr.onload = (event) => {
-                        const blob = xhr.response;
-                    };
-                    xhr.open('GET', url);
-                    //  xhr.setRequestHeader("access-control-allow-headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
-                    xhr.send();
-                    // resolve(url)
-                })
-
-        })
+        setFileName('')
+        setText(0)
+        setIsDisableButton(true)
+        onClose(false)
     }
 
-
+    React.useEffect(() => {
+        return new Promise((resolve, reject) => {
+            storage
+                .ref(refFile)
+                .getDownloadURL()
+                .then((url) => {
+                    setLink(url)
+                })
+        })
+    }, [])
     const handleUploadAvatar = (event) => {
-        const filePath = event.target.files[0];
+        const filePath = event.target.files[0]
+
         setFileName(filePath.name)
         if (!filePath.name.match(/\.(xlsx|xls|csv|xml|xslx)$/)) {
-            alert('Invalid file type');
+            setNotify({
+                isOpen: true,
+                message: 'Error file type',
+                type: 'warning',
+            })
             event.target.value = ''
             setFileName('')
             setText(0)
-            return false;
-        }
-        else {
+            return false
+        } else {
+            if (filePath.size > 1572864) {
+                setNotify({
+                    isOpen: true,
+                    message:
+                        'Error file too large, only accept file less than 1.5Mb ',
+                    type: 'warning',
+                })
+                event.target.value = ''
+                setFileName('')
+                setText(0)
+                return false
+            }
             const promise = new Promise((resolve, reject) => {
                 const fileReader = new FileReader()
                 fileReader.readAsArrayBuffer(filePath)
@@ -104,79 +131,158 @@ function ImportFile(props) {
                     const data = XLSX.utils.sheet_to_json(ws)
                     resolve(data)
                 }
-                fileReader.onerror = error => {
+                fileReader.onerror = (error) => {
                     reject(error)
                 }
             })
             promise.then((e) => {
                 const array = []
-                e.forEach(item => {
-                    if (!item['Tên trường']) {
+                e.forEach((item) => {
+                    if (
+                        !item[excel.name] ||
+                        !item[excel.address] ||
+                        !item[excel.educationalLevel] ||
+                        !item[excel.scale] ||
+                        !item[excel.type] ||
+                        !item[excel.district] ||
+                        !item[excel.status]
+                    ) {
+                        setNotify({
+                            isOpen: true,
+                            message: 'Information is invalid',
+                            type: 'warning',
+                        })
                         event.target.value = ''
+                        setFileName('')
+                        setText(0)
                         return false
                     }
                     array.push({
-                        name: item['Tên trường'],
-                        educationalLevel: item['Cấp học'],
-                        phone: item['SĐT trường'],
-                        district: item['Quận/Huyện'],
-                        address: item['Địa chỉ (tồn tại duy nhất)'],
-                        reprName: item['Hiệu trưởng/Hiệu phó'],
-                        isMale: item['Giới tính'] === 'Nam' ? true : false,
-                        reprPhone: item['SĐT HT/HP'],
-                        reprEmail: item['Email HT/HP'],
-                        type: item['Loại hình'],
-                        scale: item['Quy mô'],
-                        status: item['Tình trạng'],
-                        description: item['Thông tin chi tiết']
+                        name: item[excel.name],
+                        educationalLevel: item[excel.educationalLevel],
+                        phone: item[excel.phone],
+                        district: item[excel.district],
+                        address: item[excel.address],
+                        reprName: item[excel.reprName],
+                        reprIsMale:
+                            item[excel.isMale] === excel.isMaleValue
+                                ? true
+                                : false,
+                        reprPhone: item[excel.reprPhone],
+                        reprEmail: item[excel.reprEmail],
+                        type: item[excel.type],
+                        scale: item[excel.scale],
+                        status: item[excel.status],
                     })
                 })
                 console.log(array)
                 setText(array.length)
+                if (array.length < 1) setIsDisableButton(true)
+                else {
+                    setIsDisableButton(false)
+                    setData(array)
+                }
             })
         }
     }
+    const handleSubmit = (e) => {
+        SchoolsServices.importSchool(data)
+            .then((res) => {
+                setNotify({
+                    isOpen: true,
+                    message: 'Created Successfully',
+                    type: 'success',
+                })
+                handleClose()
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response)
+                    console.log(error.response.data.message)
+
+                    // history.push({
+                    //     pathname: '/errors',
+                    //     state: { error: error.response.status },
+                    // })
+                    setNotify({
+                        isOpen: true,
+                        message: error.response.data.message,
+                        type: 'error',
+                    })
+                }
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Create Unsuccessful',
+                //     type: 'error',
+                // })
+            })
+    }
+
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xs" scroll={'body'}>
-            <DialogTitleWithIconClose onClose={onClose}>
-                {headers.child2}
-            </DialogTitleWithIconClose>
-            <DialogContent>
-                <DialogContentText>
-                    To import file to this system, please select a file in your device. The system only accepts <strong> xlsx, xls, csv</strong> file format.
-          </DialogContentText>
-                <Alert variant="outlined" severity="info">
-                    Please <Link underline='always' href="#" onClick={downloadFile} >
-                        click here </Link> to download an import sample file
-            </Alert>
-                <label className={classes.customfileupload}>
-                    <IconButton
-                        className={classes.uploadBtn}
-                        component="span"
-                    >
-                        <FaFileImport />
-                        <input
-                            id="icon-button-file"
-                            className={classes.inputAvatar}
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                            type="file"
-                            onChange={(event) => handleUploadAvatar(event)}
-                        />Choose file
+        <>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth="xs"
+                scroll={'body'}
+            >
+                <DialogTitleWithIconClose onClose={handleClose}>
+                    {headers.child2}
+                </DialogTitleWithIconClose>
+                <DialogContent>
+                    <DialogContentText>
+                        {contentText1}
+                        <strong>{fileFormat}</strong>
+                        {contentText2}
+                    </DialogContentText>
+                    <Alert variant="outlined" severity="info">
+                        <Link underline="always" href={link}>
+                            {linkText}{' '}
+                        </Link>{' '}
+                        {contentLink}
+                    </Alert>
+                    <label className={classes.customfileupload}>
+                        <IconButton
+                            className={classes.uploadBtn}
+                            component="span"
+                        >
+                            <FaFileImport />
+                            <input
+                                id="icon-button-file"
+                                className={classes.inputAvatar}
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                type="file"
+                                onChange={(event) => handleUploadAvatar(event)}
+                            />
+                            Choose file
                         </IconButton>
-                </label>
-                <label>{fileName} </label>
-                <Alert severity={text === 0 ? 'warning' : 'success'} className={classes.alert}>
-                    <AlertTitle >{text === 0 ? 'Warning' : 'Checked'}</AlertTitle>
-        Total rows will be inserted  — <strong>[{text}] rows</strong>
-                </Alert>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary" variant="contained">
-                    Save
-          </Button>
-            </DialogActions>
-        </Dialog>
+                    </label>
+                    <label>{fileName} </label>
+                    <Alert
+                        severity={text === 0 ? 'warning' : 'success'}
+                        className={classes.alert}
+                    >
+                        <AlertTitle>
+                            {text === 0 ? alertType.waring : alertType.success}
+                        </AlertTitle>
+                        {alertText}
+                        <strong>[{text}] row(s)</strong>
+                    </Alert>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleSubmit}
+                        color="primary"
+                        disabled={isDisableButton}
+                        variant="contained"
+                    >
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbars notify={notify} setNotify={setNotify} />
+        </>
     )
 }
 
-export default ImportFile;
+export default ImportFile

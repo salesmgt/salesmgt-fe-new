@@ -7,7 +7,8 @@ export async function getReports(
     column = 'date',
     direction = 'desc',
     searchKey = undefined,
-    filters = undefined
+    filters = undefined,
+    targetId
 ) {
     let url = `/reports?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
 
@@ -34,6 +35,7 @@ export async function getReports(
             ? url.concat(`&toDate=${filters['dateRange'].filterValue[1]}`)
             : url
     }
+    url = targetId ? url.concat(`&targetId=${targetId}`) : url
 
     const response = await Api.get(url)
     const data = await response.data

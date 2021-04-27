@@ -5,7 +5,7 @@ export const Consts = {
     },
     operations: {
         logout: 'Log Out',
-        cancel: 'Cancel',
+        cancel: 'Clear',
         save: 'Save',
         empty: 'User not found!',
     },
