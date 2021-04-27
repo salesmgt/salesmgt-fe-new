@@ -16,3 +16,34 @@ export const acctConsts = {
         tab1: 'General Info',
     },
 }
+
+export const Consts = {
+    operations: {
+        filter: 'Filters',
+        search: {
+            placeholder: 'Search...',
+        },
+        create: 'Create',
+    },
+    filters: {
+        workingStatus: {
+            title: 'Working Status',
+            options: {
+                all: 'All',
+                active: 'Active',
+                inactive: 'Inactive',
+            },
+        },
+        role: {
+            title: 'Roles',
+        },
+    },
+    messages: {
+        notFound: 'No records found.',
+    },
+    menuItems: {
+        details: {
+            title: 'View details',
+        },
+    },
+}

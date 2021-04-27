@@ -212,7 +212,7 @@ function RepInfo(props) {
                                         className={classes.row}
                                     >
                                         <InputLabel>
-                                            {fields.isMale.title}
+                                            {fields.reprIsMale.title}
                                         </InputLabel>
                                         <Controller
                                             name="reprIsMale"

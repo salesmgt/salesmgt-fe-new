@@ -35,6 +35,7 @@ function Accounts() {
             .then((res) => {
                 if (isMounted) {
                     setData(res.data)
+                    // console.log('accounts: ', res.data.list[0]);
                 }
             })
             .catch((error) => {

@@ -40,11 +40,37 @@
         .picName {
           font-size: 0.875rem !important;
         }
-        
-        .itemTextPrimary {
-          font-size: 0.875rem;
+      }
+
+      .listItemInactive {
+        padding: 0;
+        margin: 0;
+        color: $grey-400;
+        font-style: italic;
+        text-decoration: line-through $grey-400;
+
+        .picNameInactive {
+          font-size: 0.875rem !important;
+          color: $grey-400;
+          font-style: italic;
+          text-decoration: line-through $grey-400;
+        }
+
+        .picAvatarInactive {
+          opacity: 0.3;
         }
       }
+        
+      .itemTextPrimary {
+        font-size: 0.875rem;
+      }
+    }
+    
+    .tCellInactiveAccount {
+      padding: 0.15rem 1rem;
+      color: $grey-400;
+      font-style: italic;
+      text-decoration: line-through $grey-400;
     }
 
     .noRecord {

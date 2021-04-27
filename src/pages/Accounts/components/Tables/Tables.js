@@ -23,11 +23,12 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import PropTypes from 'prop-types'
 import { useAccount } from '../../hooks/AccountContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { roleNames } from '../../../../constants/Generals'
+import { Consts } from '../../AccountsConfig'
+// import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -97,13 +98,13 @@ function TablePaginationActions(props) {
     )
 }
 
-TablePaginationActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    totalPage: PropTypes.number.isRequired,
-}
+// TablePaginationActions.propTypes = {
+//     count: PropTypes.number.isRequired,
+//     page: PropTypes.number.isRequired,
+//     rowsPerPage: PropTypes.number.isRequired,
+//     onChangePage: PropTypes.func.isRequired,
+//     totalPage: PropTypes.number.isRequired,
+// }
 
 function SortableTableHeaders(props) {
     const { columns, direction, column, onRequestSort } = props
@@ -135,6 +136,7 @@ function SortableTableHeaders(props) {
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
+                        align={col.key === 'no' ? 'center' : 'left'}
                     >
                         <MuiTableSortLabel
                             active={column === col.key}
@@ -150,16 +152,17 @@ function SortableTableHeaders(props) {
     )
 }
 
-SortableTableHeaders.propTypes = {
-    columns: PropTypes.array.isRequired,
-    direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    column: PropTypes.string.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-}
+// SortableTableHeaders.propTypes = {
+//     columns: PropTypes.array.isRequired,
+//     direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
+//     column: PropTypes.string.isRequired,
+//     onRequestSort: PropTypes.func.isRequired,
+// }
 
 // Customize component Table
 function Tables(props) {
     const { columns, rows, totalRecord, totalPage } = props
+    const { messages } = Consts
 
     const {
         params,
@@ -257,16 +260,22 @@ function Tables(props) {
                                     >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell
+                                        // className={row.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
+                                        className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                    // className={(row.isActive !== null && row.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
+                                    >
                                         {row.username}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        <ListItem className={classes.listItem}>
-                                            <ListItemAvatar>
+                                    <TableCell
+                                        className={classes.tBodyCell}
+                                    >
+                                        <ListItem className={(row.active === false) ? classes.listItemInactive : classes.listItem}>
+                                            <ListItemAvatar className={(row.active === false) ? classes.picAvatarInactive : ''}>
                                                 <Avatar src={row.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
-                                                className={classes.picName}
+                                                className={(row.active === false) ? classes.picNameInactive : classes.picName}
                                                 primary={row.fullName}
                                                 classes={{
                                                     primary:
@@ -275,10 +284,14 @@ function Tables(props) {
                                             />
                                         </ListItem>
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell
+                                        className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                    >
                                         {row.phone}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell
+                                        className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                    >
                                         {row.email}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
@@ -297,9 +310,9 @@ function Tables(props) {
                                 <TableCell
                                     className={classes.noRecord}
                                     component="td"
-                                    colspan="100%"
+                                    colSpan="100%"
                                 >
-                                    No records found.
+                                    {messages.notFound}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -336,9 +349,9 @@ function Tables(props) {
 
 export default React.memo(Tables)
 
-Tables.propTypes = {
-    rows: PropTypes.array,
-    columns: PropTypes.array.isRequired,
-    totalRecord: PropTypes.number.isRequired,
-    totalPage: PropTypes.number.isRequired,
-}
+// Tables.propTypes = {
+//     rows: PropTypes.array,
+//     columns: PropTypes.array.isRequired,
+//     totalRecord: PropTypes.number.isRequired,
+//     totalPage: PropTypes.number.isRequired,
+// }

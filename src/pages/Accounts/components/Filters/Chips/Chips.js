@@ -97,7 +97,7 @@ function Chips(props) {
     }
 
     return (
-        <>
+        <div>
             {handleShowClearAllButton() !== 2 && (
                 <div className={classes.root}>
                     <Button
@@ -133,14 +133,14 @@ function Chips(props) {
                     </ul>
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
 export default React.memo(Chips)
 
-Chips.propTypes = {
-    chips: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    handleChipsRemoved: PropTypes.func,
-}
+// Chips.propTypes = {
+//     chips: PropTypes.array.isRequired,
+//     dispatch: PropTypes.func.isRequired,
+//     handleChipsRemoved: PropTypes.func,
+// }

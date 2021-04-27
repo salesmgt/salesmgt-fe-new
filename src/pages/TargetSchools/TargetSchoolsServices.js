@@ -107,3 +107,17 @@ export async function updateMOU(mouId, mou) {
 // export async function removeTargetSchool(targetSchoolId) {
 //     return await Api.delete('/targets', { targetSchoolId })
 // }
+
+
+export async function getDashboardsByKeys(...keys) {
+    const response = await Api.get('/dashbords', { ...keys })
+    const data = await response.data
+
+    return data
+}
+
+export async function getAllSchools() {
+    const response = await Api.get('/schools');
+    const data = await response.data;
+    return data;
+}

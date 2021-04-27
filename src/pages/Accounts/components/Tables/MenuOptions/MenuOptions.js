@@ -7,13 +7,15 @@ import {
     MenuItem,
 } from '@material-ui/core'
 import { MdMoreVert, MdInfo } from 'react-icons/md'
-import PropTypes from 'prop-types'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { useAccount } from '../../../hooks/AccountContext'
+import { Consts } from '../../../AccountsConfig'
+// import PropTypes from 'prop-types'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
+    const { menuItems } = Consts
 
     const { params } = useAccount()
 
@@ -58,7 +60,7 @@ function MenuOptions(props) {
                         <MdInfo fontSize="large" />
                     </ListItemIcon>
                     <ListItemText className={classes.itemText}>
-                        View details
+                        {menuItems.details.title}
                     </ListItemText>
                 </MenuItem>
             </Menu>
@@ -68,6 +70,6 @@ function MenuOptions(props) {
 
 export default MenuOptions
 
-MenuOptions.propTypes = {
-    data: PropTypes.array.isRequired,
-}
+// MenuOptions.propTypes = {
+//     data: PropTypes.object.isRequired,
+// }

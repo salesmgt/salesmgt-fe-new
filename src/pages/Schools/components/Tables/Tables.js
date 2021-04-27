@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { useTheme } from '@material-ui/core/styles'
 import {
     TableContainer,
     Table,
@@ -20,10 +20,11 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import PropTypes from 'prop-types'
 import { useSchool } from '../../hooks/SchoolContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
+import { Consts } from '../../SchoolsConfig'
+// import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -93,13 +94,13 @@ function TablePaginationActions(props) {
     )
 }
 
-TablePaginationActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    totalPage: PropTypes.number.isRequired,
-}
+// TablePaginationActions.propTypes = {
+//     count: PropTypes.number.isRequired,
+//     page: PropTypes.number.isRequired,
+//     rowsPerPage: PropTypes.number.isRequired,
+//     onChangePage: PropTypes.func.isRequired,
+//     totalPage: PropTypes.number.isRequired,
+// }
 
 function SortableTableHeaders(props) {
     const { columns, direction, column, onRequestSort } = props
@@ -131,6 +132,7 @@ function SortableTableHeaders(props) {
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
+                        align={col.key === 'no' ? 'center' : 'left'}
                     >
                         <MuiTableSortLabel
                             active={column === col.key}
@@ -142,20 +144,21 @@ function SortableTableHeaders(props) {
                     </TableCell>
                 ))}
             </TableRow>
-        </TableHead>
+        </TableHead >
     )
 }
 
-SortableTableHeaders.propTypes = {
-    columns: PropTypes.array.isRequired,
-    direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    column: PropTypes.string.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-}
+// SortableTableHeaders.propTypes = {
+//     columns: PropTypes.array.isRequired,
+//     direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
+//     column: PropTypes.string.isRequired,
+//     onRequestSort: PropTypes.func.isRequired,
+// }
 
 // Customize component Table
 function Tables(props) {
     const { columns, rows, totalRecord, totalPage } = props
+    const { messages } = Consts
 
     const {
         params,
@@ -249,7 +252,7 @@ function Tables(props) {
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell
-                                        className={classes.tCellSchoolName}
+                                        className={row.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
                                     >
                                         {row.educationalLevel} {row.name}
                                     </TableCell>
@@ -259,7 +262,9 @@ function Tables(props) {
                                     <TableCell className={classes.tBodyCell}>
                                         {row.address}
                                     </TableCell> */}
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell
+                                        className={row.active ? classes.tBodyCell : classes.tCellInactive}
+                                    >
                                         <ListItemText
                                             primary={row.address}
                                             secondary={row.district}
@@ -269,10 +274,15 @@ function Tables(props) {
                                             }}
                                         />
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        {row.reprIsMale
-                                            ? `Mr. ${row.reprName}`
-                                            : `Ms. ${row.reprName}`}
+                                    <TableCell
+                                        className={row.active ? classes.tBodyCell : classes.tCellInactive}
+                                    >
+                                        {row?.reprName
+                                            ? (row.reprIsMale
+                                                ? `Mr. ${row.reprName}`
+                                                : `Ms. ${row.reprName}`)
+                                            : ''
+                                        }
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {setStatusChipColor(row.status)}
@@ -290,9 +300,9 @@ function Tables(props) {
                                 <TableCell
                                     className={classes.noRecord}
                                     component="td"
-                                    colspan="100%"
+                                    colSpan="100%"
                                 >
-                                    No records found.
+                                    {messages.notFound}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -329,9 +339,9 @@ function Tables(props) {
 
 export default React.memo(Tables)
 
-Tables.propTypes = {
-    rows: PropTypes.array,
-    columns: PropTypes.array.isRequired,
-    totalRecord: PropTypes.number.isRequired,
-    totalPage: PropTypes.number.isRequired,
-}
+// Tables.propTypes = {
+//     rows: PropTypes.array,
+//     columns: PropTypes.array.isRequired,
+//     totalRecord: PropTypes.number.isRequired,
+//     totalPage: PropTypes.number.isRequired,
+// }

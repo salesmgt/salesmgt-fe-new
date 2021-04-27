@@ -77,7 +77,7 @@ function SearchFields(props) {
 
     typingTimeOutRef.current = setTimeout(() => {
       onChange(searchValue)
-    }, 450)
+    }, 300)
   }
   return (
     <div className={classes.search}>

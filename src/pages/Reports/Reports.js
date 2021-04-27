@@ -18,8 +18,8 @@ function Reports() {
     function getAllReports(
         page = 0,
         limit = 10,
-        column = 'id',
-        direction = 'asc',
+        column = 'date',
+        direction = 'desc',
         searchKey,
         listFilters
     ) {

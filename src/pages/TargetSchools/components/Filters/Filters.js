@@ -13,24 +13,17 @@ import {
     FormControl,
     TextField,
     Avatar,
-    ListItem,
     ListItemAvatar,
     ListItemText,
     Button,
-    Dialog,
-    DialogTitle,
-    Divider,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
+    InputAdornment,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import { MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
+import { MdAccountCircle, MdAdd, MdExpandMore, MdFilterList, MdPersonAdd } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import Chips from './Chips/Chips'
-import AssignMultiple from '../../dialogs/AssignMultiple'
 import {
     SCHOOL_YEAR_FILTER,
     DISTRICT_FILTER,
@@ -39,9 +32,13 @@ import {
     SCALE_FILTER,
     PIC_FILTER,
     PURPOSE_FILTER,
-    STATUS_FILTER,
+    // STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
+import NotifyAssign from '../../dialogs/NotifyAssign/NotifyAssign'
+import AssignMultiple from '../../dialogs/AssignMultiple/AssignMultiple'
+import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetSchools'
+import { Consts } from '../../TargetSchoolsConfig'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -99,21 +96,17 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: '0.5rem',
     },
     itemPIC: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: 0,
         margin: 0,
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
     },
-    padding: {
-        paddingTop: '0.3rem',
-        paddingLeft: '1.5rem',
-    },
     paddingTop: {
         paddingTop: '0.3rem',
-    },
-    paddingLeft: {
-        paddingLeft: '1.5rem',
     },
 }))
 
@@ -166,10 +159,9 @@ const MuiAccordionSummary = withStyles({
 
 const MuiAccordionDetails = withStyles((theme) => ({
     root: {
-        // backgroundColor: 'rgb(238, 238, 238)',
-        // backgroundColor: 'rgb(255, 255, 255)',
+        backgroundColor: 'rgb(255, 255, 255)',
         margin: '0.5rem 0',
-        padding: '0.3rem 0 1rem 1.5rem', // top (right-left) bottom
+        padding: '0 0 1rem 1.5rem', // top (right-left) bottom
         borderRadius: '8px',
     },
 }))(AccordionDetails)
@@ -195,11 +187,6 @@ function Filters() {
         params,
         dispatchParams,
         PICs,
-        // districts,
-        // schoolYears,
-        // schoolTypes,
-        // schoolLevels,
-        // schoolScales,
         schoolYear,
         district,
         schoolType,
@@ -207,22 +194,15 @@ function Filters() {
         schoolScale,
         PIC,
         purpose,
-        // status,
-        // setSchoolYear,
-        // setDistrict,
-        // setSchoolType,
-        // setSchoolLevel,
-        // setSchoolScale,
-        // setPIC,
-        // setPurpose,
         setFilter,
     } = useTargetSchool()
+    const { operations, filters } = Consts
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
     const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
     const [openAssignDialog, setOpenAssignDialog] = useState(false)
-    // const [openCreateDialog, setOpenCreateDialog] = useState(false)
+    const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     const selectedSchools = [
         {
@@ -566,15 +546,16 @@ function Filters() {
     }
 
     const handleOpenCreateDialog = () => {
-        console.log('create dialog')
+        // console.log('create dialog')
+        setOpenCreateDialog(true)
     }
 
     const handleOpenAssignDialog = () => {
         if (selectedSchools.length > 0) {
-            console.log('assign dialog')
+            // console.log('assign dialog')
             setOpenAssignDialog(true)
         } else {
-            console.log('noti dialog: ')
+            // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
         }
     }
@@ -591,7 +572,7 @@ function Filters() {
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
                             <MdFilterList className={styles.iconFilter} />{' '}
                             &nbsp;
-                            <Typography>Filters</Typography>{' '}
+                            <Typography>{operations.filter}</Typography>{' '}
                             {/* { renderCount }  */}
                         </MuiAccordionSummary>
                     </Box>
@@ -605,7 +586,7 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields
-                            placeholder="Search..."
+                            placeholder={operations.search.placeholder}
                             onChange={handleSearch}
                         />
                     </Box>
@@ -617,8 +598,13 @@ function Filters() {
                             onClick={handleOpenCreateDialog}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;Create
+                            &nbsp;{operations.create}
                         </Button>
+
+                        <CreateTargetSchools
+                            open={openCreateDialog}
+                            onClose={() => setOpenCreateDialog(false)}
+                        />
                     </Box>
                     <Box className={classes.flexItem}>
                         <Button
@@ -627,7 +613,7 @@ function Filters() {
                             color="secondary"
                             onClick={handleOpenAssignDialog}
                         >
-                            <MdPersonAdd fontSize="large" /> &nbsp; Assign
+                            <MdPersonAdd fontSize="large" /> &nbsp; {operations.assign}
                         </Button>
                         {/* Have checked target schools */}
                         <AssignMultiple
@@ -636,53 +622,21 @@ function Filters() {
                             rows={selectedSchools}
                         />
                         {/* Have not checked target schools */}
-                        <Dialog
+                        <NotifyAssign
                             open={openNotifyDialog}
                             onClose={() => setOpenNotifyDialog(false)}
-                        >
-                            <DialogTitle>Notify</DialogTitle>
-                            <Divider />
-                            <DialogContent>
-                                <DialogContentText
-                                    className={classes.dialogText}
-                                >
-                                    <p>
-                                        In the Target School table, please
-                                        choose target schools you want to
-                                        assign.
-                                    </p>
-                                    <p>
-                                        <i>
-                                            <b>Tips:</b> Filters and search box
-                                            may help you find schools faster.
-                                        </i>
-                                    </p>
-                                </DialogContentText>
-                            </DialogContent>
-                            <Divider />
-                            <DialogActions>
-                                <Button
-                                    variant="contained"
-                                    disableElevation
-                                    autoFocus
-                                    className={classes.btnRemove}
-                                    onClick={() => setOpenNotifyDialog(false)}
-                                >
-                                    OK
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
+                        />
                     </Box>
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={5} lg={4}>
                             <Autocomplete
                                 autoComplete
                                 autoSelect
                                 autoHighlight
                                 clearOnEscape
-                                options={PICs}
+                                options={PICs ? PICs : []}
                                 getOptionLabel={(pic) =>
                                     pic.fullName ? pic.fullName : ''
                                 }
@@ -691,27 +645,27 @@ function Filters() {
                                     return (
                                         <TextField
                                             {...params}
-                                            label="PICs"
+                                            label={filters.pic.title}
                                             margin="normal"
-                                            placeholder="PIC's name"
-                                            // ref={params.InputProps.ref}
-                                            // InputProps={{
-                                            //     ...params.InputProps,
-                                            //     startAdornment: (
-                                            //         <>
-                                            //             <InputAdornment position="start">
-                                            //                 <MdAccountCircle />
-                                            //             </InputAdornment>
-                                            //             {params.InputProps.startAdornment}
-                                            //         </>
-                                            //     )
-                                            // }}
+                                            placeholder={filters.pic.placeholder}
+                                            ref={params.InputProps.ref}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                startAdornment: (
+                                                    <>
+                                                        <InputAdornment position="start">
+                                                            <MdAccountCircle />
+                                                        </InputAdornment>
+                                                        {params.InputProps.startAdornment}
+                                                    </>
+                                                )
+                                            }}
                                         />
                                     )
                                 }}
                                 renderOption={(option) => {
                                     return (
-                                        <ListItem className={classes.itemPIC}>
+                                        <div className={classes.itemPIC} key={option.username}>
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
@@ -726,7 +680,7 @@ function Filters() {
                                                         classes.itemTextPrimary,
                                                 }}
                                             />
-                                        </ListItem>
+                                        </div>
                                     )
                                 }}
                                 className={classes.autoComplete}
@@ -736,18 +690,11 @@ function Filters() {
                             />
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={6}
-                            sm={4}
-                            md={4}
-                            lg={3}
-                            className={classes.padding}
-                        >
+                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Purposes</InputLabel>
+                                <InputLabel>{filters.purpose.title}</InputLabel>
                                 <Select
-                                    value={purpose}
+                                    value={purpose || ''}
                                     onChange={handlePurposeChange}
                                     MenuProps={MenuProps}
                                 >
@@ -759,9 +706,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.purpose.options.all}
                                     </MenuItem>
-                                    {salesPurps.map((purp) => (
+                                    {salesPurps?.map((purp) => (
                                         <MenuItem
                                             key={purp}
                                             value={purp}
@@ -779,18 +726,11 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={6}
-                            sm={4}
-                            md={4}
-                            lg={5}
-                            className={classes.paddingTop}
-                        >
+                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Districts</InputLabel>
+                                <InputLabel>{filters.district.title}</InputLabel>
                                 <Select
-                                    value={district}
+                                    value={district || ''}
                                     onChange={handleDistrictChange}
                                     MenuProps={MenuProps}
                                 >
@@ -802,9 +742,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.district.options.all}
                                     </MenuItem>
-                                    {dists.map((dist) => (
+                                    {dists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -822,11 +762,11 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={3} lg={3}>
+                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Years</InputLabel>
+                                <InputLabel>{filters.schoolYear.title}</InputLabel>
                                 <Select
-                                    value={schoolYear}
+                                    value={schoolYear || ''}
                                     onChange={handleSchoolYearChange}
                                     MenuProps={MenuProps}
                                 >
@@ -838,9 +778,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.schoolYear.options.all}
                                     </MenuItem>
-                                    {schYears.map((year) => (
+                                    {schYears?.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -858,18 +798,11 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={6}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingLeft}
-                        >
+                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Types</InputLabel>
+                                <InputLabel>{filters.schoolType.title}</InputLabel>
                                 <Select
-                                    value={schoolType}
+                                    value={schoolType || ''}
                                     onChange={handleSchoolTypeChange}
                                     MenuProps={MenuProps}
                                 >
@@ -881,9 +814,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.schoolType.options.all}
                                     </MenuItem>
-                                    {schTypes.map((type) => (
+                                    {schTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -901,11 +834,11 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={3} lg={3}>
+                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Levels</InputLabel>
+                                <InputLabel>{filters.schoolLevel.title}</InputLabel>
                                 <Select
-                                    value={schoolLevel}
+                                    value={schoolLevel || ''}
                                     onChange={handleSchoolLevelChange}
                                     MenuProps={MenuProps}
                                 >
@@ -917,9 +850,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.schoolLevel.options.all}
                                     </MenuItem>
-                                    {schEduLvls.map((level) => (
+                                    {schEduLvls?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
@@ -937,11 +870,11 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={3} lg={3}>
+                        <Grid item xs={12} sm={4} md={3} lg={3} className={classes.paddingTop}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Scales</InputLabel>
+                                <InputLabel>{filters.schoolScale.title}</InputLabel>
                                 <Select
-                                    value={schoolScale}
+                                    value={schoolScale || ''}
                                     onChange={handleSchoolScaleChange}
                                     MenuProps={MenuProps}
                                 >
@@ -953,9 +886,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.schoolScale.options.all}
                                     </MenuItem>
-                                    {schScales.map((scale) => (
+                                    {schScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}
@@ -976,7 +909,7 @@ function Filters() {
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
                                 <Select
-                                    value={schoolStatus}
+                                    value={schoolStatus || ''}
                                     onChange={handleSchoolStatusChange}
                                     MenuProps={MenuProps}
                                 >
@@ -990,7 +923,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schStatus.map((status) => (
+                                    {schStatus?.map((status) => (
                                         <MenuItem
                                             key={status}
                                             value={status}

@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
     IconButton,
     ListItemIcon,
     ListItemText,
@@ -14,23 +7,21 @@ import {
     MenuItem,
 } from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
-import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
-import PropTypes from 'prop-types'
-import { useAuth } from '../../../../../hooks/AuthContext'
+import { MdMoreVert, MdInfo } from 'react-icons/md'
 import { useSchool } from '../../../hooks/SchoolContext'
-import { roleNames } from '../../../../../constants/Generals'
+import { Consts } from '../../../SchoolsConfig'
+// import PropTypes from 'prop-types'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
+    const { menuItems } = Consts
 
-    const { user } = useAuth()
     const { params } = useSchool()
 
     const { url } = useRouteMatch()
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [openConfirmation, setOpenConfirmation] = useState(false)
 
     const stateData = {
         model: data,
@@ -46,139 +37,6 @@ function MenuOptions(props) {
         setAnchorEl(null)
     }
 
-    const handleOpenConfirmation = () => {
-        setAnchorEl(null)
-        setOpenConfirmation(true)
-    }
-
-    const handleRemove = () => {
-        setOpenConfirmation(false)
-
-        // Gọi API DELETE --> load lại trang
-    }
-
-    const renderMenus = (role) => {
-        switch (role) {
-            case roleNames.admin:
-                return (
-                    <>
-                        <MenuItem
-                            onClick={handleCloseMenus}
-                            component={Link}
-                            to={{
-                                pathname: `${url}/${data.id}`,
-                                state: { data: stateData },
-                            }}
-                        >
-                            <ListItemIcon className={classes.itemIcon}>
-                                <MdInfo fontSize="large" />
-                            </ListItemIcon>
-                            <ListItemText className={classes.itemText}>
-                                View details
-                            </ListItemText>
-                        </MenuItem>
-                        <>
-                            <MenuItem onClick={handleOpenConfirmation}>
-                                <ListItemIcon className={classes.itemIcon}>
-                                    <MdDelete fontSize="large" />
-                                </ListItemIcon>
-                                <ListItemText className={classes.itemText}>
-                                    Remove
-                                </ListItemText>
-                            </MenuItem>
-                            <Dialog
-                                open={openConfirmation}
-                                onClose={() => setOpenConfirmation(false)}
-                            >
-                                <DialogTitle>Confirm Remove</DialogTitle>
-                                <Divider />
-                                <DialogContent>
-                                    <DialogContentText
-                                        className={classes.dialogText}
-                                    >
-                                        <p>
-                                            Do you really want to remove school
-                                            <strong>
-                                                <em>
-                                                    {' '}
-                                                    {data.educationalLevel}{' '}
-                                                    {data.name}
-                                                </em>
-                                            </strong>
-                                            ?
-                                        </p>
-                                        <p>This process cannot be undone.</p>
-                                    </DialogContentText>
-                                </DialogContent>
-                                <Divider />
-                                <DialogActions>
-                                    <Button
-                                        variant="contained"
-                                        disableElevation
-                                        onClick={() =>
-                                            setOpenConfirmation(false)
-                                        }
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        disableElevation
-                                        className={classes.btnRemove}
-                                        onClick={handleRemove}
-                                        autoFocus
-                                    >
-                                        Remove
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                        </>
-                    </>
-                )
-
-            case roleNames.manager:
-                return (
-                    <MenuItem
-                        onClick={handleCloseMenus}
-                        component={Link}
-                        to={{
-                            pathname: `${url}/${data.id}`,
-                            state: { data: stateData },
-                        }}
-                    >
-                        <ListItemIcon className={classes.itemIcon}>
-                            <MdInfo fontSize="large" />
-                        </ListItemIcon>
-                        <ListItemText className={classes.itemText}>
-                            View details
-                        </ListItemText>
-                    </MenuItem>
-                )
-
-            case roleNames.supervisor:
-                return (
-                    <MenuItem
-                        onClick={handleCloseMenus}
-                        component={Link}
-                        to={{
-                            pathname: `${url}/${data.id}`,
-                            state: { data: stateData },
-                        }}
-                    >
-                        <ListItemIcon className={classes.itemIcon}>
-                            <MdInfo fontSize="large" />
-                        </ListItemIcon>
-                        <ListItemText className={classes.itemText}>
-                            View details
-                        </ListItemText>
-                    </MenuItem>
-                )
-
-            default:
-                break
-        }
-    }
-
     return (
         <div>
             <IconButton color="primary" onClick={handleOpen}>
@@ -190,7 +48,21 @@ function MenuOptions(props) {
                 open={!!anchorEl}
                 onClose={handleCloseMenus}
             >
-                {renderMenus(user.roles[0])}
+                <MenuItem
+                    onClick={handleCloseMenus}
+                    component={Link}
+                    to={{
+                        pathname: `${url}/${data.id}`,
+                        state: { data: stateData },
+                    }}
+                >
+                    <ListItemIcon className={classes.itemIcon}>
+                        <MdInfo fontSize="large" />
+                    </ListItemIcon>
+                    <ListItemText className={classes.itemText}>
+                        {menuItems.details.title}
+                    </ListItemText>
+                </MenuItem>
             </Menu>
         </div>
     )
@@ -198,6 +70,6 @@ function MenuOptions(props) {
 
 export default React.memo(MenuOptions)
 
-MenuOptions.propTypes = {
-    data: PropTypes.object.isRequired,
-}
+// MenuOptions.propTypes = {
+//     data: PropTypes.object.isRequired,
+// }

@@ -16,11 +16,12 @@ import {
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import Chips from './Chips/Chips'
-import CreateAccount from '../../dialogs/CreateAccount'
+import CreateAccount from '../../dialogs/CreateAccount/CreateAccount'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useAccount } from '../../hooks/AccountContext'
 import { ACTIVE_FILTER, ROLE_FILTER } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
+import { Consts } from '../../AccountsConfig'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -35,9 +36,9 @@ const MenuProps = {
 }
 //==============================================================
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     formControl: {
-        margin: theme.spacing(1),
+        margin: '0.3rem 0',
         minWidth: 160,
     },
     flexBox: {
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     },
     btn: {
         padding: '0.5rem',
-        margin: '0 0.3rem',
+        marginLeft: '0.5rem',
         borderRadius: '8px',
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
@@ -119,7 +120,7 @@ const MuiAccordionDetails = withStyles((theme) => ({
     root: {
         backgroundColor: 'rgb(255, 255, 255)',
         margin: '0.5rem 0',
-        padding: '0.5rem 0 1rem 1.5rem',
+        padding: '0.3rem 0 1rem 2rem',
         borderRadius: '8px',
     },
 }))(AccordionDetails)
@@ -130,6 +131,7 @@ function Filters() {
     //Use states which have been declared in the TargetSchoolContext
     const { params, dispatchParams, isActive, role, workingStatuses, setFilter } = useAccount()     // isActive,
     const { roles } = useApp()
+    const { operations, filters } = Consts
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
@@ -207,7 +209,7 @@ function Filters() {
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
                             <MdFilterList className={styles.iconFilter} />{' '}
                             &nbsp;
-                            <Typography>Filters</Typography>
+                            <Typography>{operations.filter}</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -219,7 +221,7 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields
-                            placeholder="Search..."
+                            placeholder={operations.search.placeholder}
                             onChange={handleSearch}
                         />
                     </Box>
@@ -231,7 +233,7 @@ function Filters() {
                             onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;Create
+                            &nbsp;{operations.create}
                         </Button>
                         <CreateAccount
                             open={openCreateDialog}
@@ -243,18 +245,26 @@ function Filters() {
                     <Grid container>
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Working Status</InputLabel>
-                                <Select value={isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                <InputLabel>{filters.workingStatus.title}</InputLabel>
+                                <Select value={isActive === null ? '' : isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
                                     {workingStatuses.map((workingStatus) => (
                                         <MenuItem
+                                            key={workingStatus}
                                             value={workingStatus}
+                                            // value={workingStatus || null}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
                                                 selected: classes.menuItemSelected,
                                             }}
                                         >
-                                            {workingStatus === null ? 'All' : (workingStatus ? 'Active' : 'Inactive')}
+                                            {workingStatus === null
+                                                ? `${filters.workingStatus.options.all}`
+                                                : (workingStatus
+                                                    ? `${filters.workingStatus.options.active}`
+                                                    : `${filters.workingStatus.options.inactive}`
+                                                )
+                                            }
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -263,9 +273,9 @@ function Filters() {
 
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Roles</InputLabel>
+                                <InputLabel>{filters.role.title}</InputLabel>
                                 <Select
-                                    value={role}
+                                    value={role || ''}
                                     onChange={handleRoleChange}
                                     MenuProps={MenuProps}
                                 >
@@ -283,6 +293,7 @@ function Filters() {
                                         <MenuItem
                                             key={role}
                                             value={role}
+                                            // value={role || ''}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,

@@ -1,0 +1,69 @@
+@import '../../../../styles/Variables.module.scss';
+
+// .dialog {
+//     // width: fit-content;
+//     max-width: 100%;
+// }
+
+.wrapper {
+    padding: 0.5rem 2rem 1rem !important; // top (right & left) bottom
+    height: 100%;
+    overflow-y: auto;
+}
+
+.container {
+//   height: 46vh; // 100%
+  height: fit-content;
+  max-height: 46vh;
+  overflow-y: auto;
+  border-radius: $default-radius;
+
+  .table {
+    padding: 0;
+
+    .tHeadCell {
+      background-color: $light-primary; // !important
+      color: $common-white;
+      font-weight: bold;
+      font-size: larger;
+      // text-align: center;
+    }
+    .tHeadCellNo {
+        @extend .tHeadCell;
+        width: 1rem;
+    }
+    // .tHeadCellName {
+    //     @extend .tHeadCell;
+    //     width: 14rem;
+    // }
+    // .tHeadCellPic {
+    //     @extend .tHeadCell;
+    //     width: 14rem;
+    // }
+    // .tHeadCellPurpose {
+    //     @extend .tHeadCell;
+    //     width: 11.5rem;
+    // }
+    // .tHeadCellNote {
+    //     @extend .tHeadCell;
+    //     width: 11rem;
+    // }
+
+    .tBody {
+      .tBodyCell {
+        padding: 0.1rem 1rem
+      }
+    }
+  }
+}
+
+.btnSave {    
+    color: $common-white !important;
+    background-color: $main-info !important;
+    &:hover {
+        background-color: $dark-info !important;
+    }
+    &:disabled {
+        background-color: $divider !important;
+    }
+}
