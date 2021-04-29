@@ -8,6 +8,7 @@
         "@material-ui/core": "^4.11.3",
         "@material-ui/data-grid": "^4.0.0-alpha.26",
         "@material-ui/lab": "^4.0.0-alpha.57",
+        "@material-ui/pickers": "^4.0.0-alpha.12",
         "@syncfusion/ej2-inputs": "^19.1.54",
         "@syncfusion/ej2-react-buttons": "^18.4.46",
         "@syncfusion/ej2-react-calendars": "^18.4.48",
