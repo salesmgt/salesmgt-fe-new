@@ -10,6 +10,7 @@ import { MdClose } from 'react-icons/md'
 import { Consts } from '../FormConfig'
 import AssignMultipleForm from './AssignMultipleForm'
 import classes from './AssignMultiple.module.scss'
+import { Snackbars } from '../../../../components'
 
 
 const stylesTitle = (theme) => ({
@@ -26,7 +27,8 @@ const stylesTitle = (theme) => ({
 });
 
 const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const { children, classes, onClose, ...other } = props
+   
     return (
         <DialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
@@ -40,16 +42,22 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function AssignMultiple(props) {
-    const { open, onClose, rows } = props
+    const { open, onClose, rows,setRows, refreshAPI } = props
     const { headers } = Consts
-
-    return (
+    const [notify, setNotify] = React.useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })   
+    return (<>
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.assignMultiple}
             </DialogTitleWithIconClose>
-            <AssignMultipleForm onClose={onClose} rows={rows} />
+            <AssignMultipleForm onClose={onClose} setNotify={setNotify} notify={notify} rows={rows} setRows={setRows} refreshAPI={refreshAPI} />
         </Dialog>
+        <Snackbars notify={notify} setNotify={setNotify}/>
+        </>
     )
 }
 

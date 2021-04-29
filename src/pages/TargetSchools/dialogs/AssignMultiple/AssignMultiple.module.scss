@@ -61,13 +61,12 @@
 }
 
 .btnSave {    
-    color: $common-white !important;
-    background-color: $main-info !important;
+    color: $main-info !important;
     &:hover {
-        background-color: $dark-info !important;
+        color: $dark-info !important;
     }
     &:disabled {
-        background-color: $divider !important;
+        color: $divider !important;
     }
 }
 .icon{

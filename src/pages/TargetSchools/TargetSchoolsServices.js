@@ -129,3 +129,14 @@ export async function getAllSchools() {
     const data = await response.data
     return data
 }
+
+export async function assignMulti(list) {
+    const response = await Api.put(`/targets/mutiple-assign`,list)
+    const data = await response.data
+    return data
+}
+export async function unassign(id) {
+    const response = await Api.put(`/targets/unassign/${id}`)
+    const data = await response.data
+    return data
+}

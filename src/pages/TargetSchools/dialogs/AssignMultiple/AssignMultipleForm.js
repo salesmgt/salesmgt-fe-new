@@ -24,20 +24,14 @@ import {
     Badge
 } from '@material-ui/core'
 import { MdAccountCircle, MdClose } from 'react-icons/md'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import { BiEdit } from "react-icons/bi";
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import { Consts, columns } from '../FormConfig'
-import { BiEdit } from "react-icons/bi";
+import { useAuth } from '../../../../hooks/AuthContext'
+import { assignMulti, getTargetSchools } from '../../TargetSchoolsServices'
 import classes from './AssignMultiple.module.scss'
 
-const clientSchema = yup.object().shape({
-    // title: yup.string().trim().max(30).required(),
-    // remark: yup.string().trim().max(50).required(),
-    PIC: yup.string().required(),
-})
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -82,22 +76,38 @@ const useStyles = makeStyles((theme) => ({
 
 function AssignMultipleForm(props) {
     const styles = useStyles();
-    const { onClose, rows } = props
-    const [rowsState,setRowsState] = React.useState(rows)
+    const { onClose, refreshAPI } = props
+    const [rowsState,setRowsState] = React.useState(props.rows)
     const { operations } = Consts
     const [object,setObject] = React.useState(null)
-    const { register, handleSubmit, errors } = useForm({  // getValues, , setError
-        resolver: yupResolver(clientSchema),
-    })
+    
+    const { PICs, getListPICs, params } = useTargetSchool()
+    const { listFilters, page, limit, column, direction, searchKey } = params
+    const { user } = useAuth()
 
-    const { PICs, getListPICs } = useTargetSchool()
     const [PIC, setPIC] = useState(null)
 
     const typingTimeoutRef = useRef({})
 
-    const onSubmit = (data) => {
-        console.log(data)
-        onClose()
+    const handleSubmit = () => {
+        let array = []
+        rowsState.map(item => {
+            item = {...item, username: PIC?.username}
+            array.push(item)
+        })
+        console.log(array)
+        assignMulti(array).then(res =>{
+            props.setNotify({
+                isOpen: true,
+                message: 'Assigned successfully',
+                type: 'success'
+            })
+            props.setRows([])
+            refreshAPI(page, limit, column, direction, searchKey, listFilters)
+
+            onClose();
+        }) 
+        
     }
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -143,24 +153,30 @@ function AssignMultipleForm(props) {
                 rowsState.slice(selectedIndex + 1)
             )
         }
-        console.log("mảng ",newSelected)
         setRowsState(newSelected)
+        if(newSelected.length === 0) {
+            onClose()
+        }
     }
-    const onBlur = (e,row) =>{
-        // console.log(rowsState)
-        // console.log(row)
+    const onBlur = (e,row) =>{   
+        if(e.target.value?.length >250){
+            props.setNotify({
+                isOpen: true,
+                message: 'Note length is shorter than 250 letters',
+                type: 'warning'
+            })
+            return
+        }
        const object = rowsState.findIndex(obj =>obj.id === row.id)
         //const item ={...rowsState[object],note: e.target.value}
         let array =[null]
         array =[...rowsState]
-        console.log("indedx ",rowsState[object])
-        array[object] =  {...array[object],note: e.target.value ? e.target.value : null}
-        console.log("text ",e.target.value)
+        array[object] =  {...array[object],note: e.target.value ? e.target.value : null, noteBy: e.target.value ? user.username : null}
         console.log(array)
         setRowsState(array)
     } 
     return (
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+       <>
             <DialogContent className={classes.wrapper}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -181,9 +197,6 @@ function AssignMultipleForm(props) {
                                             {...params}
                                             label="PICs"
                                             name="PIC"
-                                            inputRef={register}
-                                            error={!!errors.PIC}
-                                            helperText={errors?.PIC?.message}
                                             margin="normal"
                                             placeholder="PIC will be assigned"
                                             onChange={onSearchPICChange}
@@ -285,7 +298,7 @@ function AssignMultipleForm(props) {
                                                 <TextField 
                                                     onBlur={(e)=>onBlur(e,object)}
                                                     onChange={e => setObject({...object,note:e.target.value})}  
-                                                    value={object?.note && object?.note  } 
+                                                    value={object?.note ? object?.note : '' } 
                                                     multiline
                                                     autoFocus
                                                     rows={4}
@@ -307,14 +320,15 @@ function AssignMultipleForm(props) {
                 </Grid>
             </DialogContent>
             <DialogActions className="">
-                <Button type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
+                <Button type="submit" onClick={handleSubmit} disabled={!PIC} className={classes.btnSave}>
                     {operations.save}
                 </Button>
                 <Button onClick={onClose}>
                     {operations.cancel}
                 </Button>
             </DialogActions>
-        </form>
+           
+        </>
     )
 }
 

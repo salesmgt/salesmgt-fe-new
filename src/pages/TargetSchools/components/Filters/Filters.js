@@ -437,10 +437,12 @@ function Filters(props) {
     }
 
     const handleOpenAssignDialog = () => {
-        // if (selectedSchools.length > 0) {
+        if (props.selectedRows.length > 0) {
             // console.log('assign dialog')
             setOpenAssignDialog(true)
-        // } else {
+        } else {
+            setOpenAssignDialog(false)
+
             // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
         // }
@@ -509,6 +511,7 @@ function Filters(props) {
                             onClose={() => setOpenAssignDialog(false)}
                             rows={props.selectedRows}
                             setRows={props.setSelectedRows}
+                            refreshAPI={props.refreshAPI}
                         />
                         {/* Have not checked target schools */}
                         <NotifyAssign

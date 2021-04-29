@@ -65,9 +65,9 @@ function TargetSchools() {
     return (
         <div className={classes.panel}>
             <Filters 
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                className={classes.filter}
+                selectedRows={selectedRows} 
+                setSelectedRows={setSelectedRows} 
+                className={classes.filter} 
                 refreshAPI={onGetTargets}
             />
             <Tables

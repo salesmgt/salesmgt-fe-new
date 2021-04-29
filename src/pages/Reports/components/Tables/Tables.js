@@ -30,6 +30,7 @@ import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { parseDateToString } from '../../../../utils/DateTimes'
+import Highlighter from "react-highlight-words";
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -287,7 +288,14 @@ function Tables(props) {
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         <ListItemText
-                                            primary={`${row.level} ${row.schoolName}`}
+                                            primary={<>{row.level} 
+                                             <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={ ` ${row.schoolName}`} /> 
+                                        </>
+                                            }
                                             secondary={row.district}
                                             classes={{
                                                 primary: styles.itemTextLarge,
@@ -303,8 +311,18 @@ function Tables(props) {
                                             </ListItemAvatar>
                                             <ListItemText
                                                 className={classes.picName}
-                                                primary={row.fullName}
-                                                secondary={row.username}
+                                                primary={<Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.fullName} /> }
+                                                secondary={
+                                                    <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.username} />
+                                                }
                                                 classes={{
                                                     primary:
                                                         styles.itemTextMedium,
@@ -318,10 +336,18 @@ function Tables(props) {
                                         {setPurposeChipColor(row.purpose)}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {row.result}
+                                        {<Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.result} />}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {truncateString(row.description)}
+                                        {<Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={truncateString(row.description)} />}
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>{truncateString(row.comment?.content)}</TableCell> */}
                                     <TableCell
