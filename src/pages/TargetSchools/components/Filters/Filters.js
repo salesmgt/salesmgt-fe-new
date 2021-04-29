@@ -38,7 +38,8 @@ import {
     SCALE_FILTER,
     PIC_FILTER,
     PURPOSE_FILTER,
-    // STATUS_FILTER,
+    STATUS_FILTER,
+    ASSIGNED_FILTER
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
 import NotifyAssign from '../../dialogs/NotifyAssign/NotifyAssign'
@@ -187,7 +188,7 @@ function Filters() {
         schEduLvls,
         schScales,
         salesPurps,
-        // schStatus,
+        schStatus,
     } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
@@ -202,6 +203,9 @@ function Filters() {
         schoolScale,
         PIC,
         purpose,
+        schoolStatus,
+        isAssigned,
+        assignedStatuses,
         setFilter,
     } = useTargetSchool()
     const { operations, filters } = Consts
@@ -276,23 +280,6 @@ function Filters() {
     //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
         const selectedSchoolYear = event.target.value
-
-        // setSchoolYear(selectedSchoolYear)
-        // if (selectedSchoolYear) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
-        //         payload: {
-        //             filterType: 'schoolYear',
-        //             filterValue: selectedSchoolYear,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
-        //         payload: { filterType: 'schoolYear', filterValue: '' },
-        //     })
-        // }
         setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_YEAR,
@@ -305,23 +292,6 @@ function Filters() {
 
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-
-        // setDistrict(selectedDistrict)
-        // if (selectedDistrict) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: {
-        //             filterType: 'district',
-        //             filterValue: selectedDistrict,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: { filterType: 'district', filterValue: '' },
-        //     })
-        // }
         setFilter(DISTRICT_FILTER, selectedDistrict)
         dispatchParams({
             type: ReducerActions.FILTER_DISTRICT,
@@ -334,23 +304,6 @@ function Filters() {
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-
-        // setSchoolType(selectedSchoolType)
-        // if (selectedSchoolType) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
-        //         payload: {
-        //             filterType: 'type',
-        //             filterValue: selectedSchoolType,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
-        //         payload: { filterType: 'type', filterValue: '' },
-        //     })
-        // }
         setFilter(TYPE_FILTER, selectedSchoolType)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_TYPE,
@@ -363,23 +316,6 @@ function Filters() {
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-
-        // setSchoolLevel(selectedSchoolLevel)
-        // if (selectedSchoolLevel) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
-        //         payload: {
-        //             filterType: 'level',
-        //             filterValue: selectedSchoolLevel,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
-        //         payload: { filterType: 'level', filterValue: '' },
-        //     })
-        // }
         setFilter(LEVEL_FILTER, selectedSchoolLevel)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_LEVEL,
@@ -392,23 +328,6 @@ function Filters() {
 
     const handleSchoolScaleChange = (event) => {
         const selectedSchoolScale = event.target.value
-
-        // setSchoolScale(selectedSchoolScale)
-        // if (selectedSchoolScale) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
-        //         payload: {
-        //             filterType: 'scale',
-        //             filterValue: selectedSchoolScale,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
-        //         payload: { filterType: 'scale', filterValue: '' },
-        //     })
-        // }
         setFilter(SCALE_FILTER, selectedSchoolScale)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_SCALE,
@@ -420,20 +339,6 @@ function Filters() {
     }
 
     const handlePICChange = (event, newPIC) => {
-        // setPIC(newPIC)
-        // console.log('handle change, new PIC', newPIC)
-        // if (newPIC) {
-        //     //  !== null
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PIC,
-        //         payload: { filterType: 'PIC', filterValue: newPIC },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PIC,
-        //         payload: { filterType: 'PIC', filterValue: null },
-        //     })
-        // }
         setFilter(PIC_FILTER, newPIC)
         dispatchParams({
             type: ReducerActions.FILTER_PIC,
@@ -446,29 +351,36 @@ function Filters() {
 
     const handlePurposeChange = (event) => {
         const selectedPurpose = event.target.value
-
-        // setPurpose(selectedPurpose)
-        // if (selectedPurpose) {
-        //     // !== '' && selectedPurpose !== undefined
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PURPOSE,
-        //         payload: {
-        //             filterType: 'purpose',
-        //             filterValue: selectedPurpose,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PURPOSE,
-        //         payload: { filterType: 'purpose', filterValue: '' },
-        //     })
-        // }
         setFilter(PURPOSE_FILTER, selectedPurpose)
         dispatchParams({
             type: ReducerActions.FILTER_PURPOSE,
             payload: {
                 filterType: PURPOSE_FILTER,
                 filterValue: selectedPurpose ? selectedPurpose : '',
+            },
+        })
+    }
+
+    const handleStatusChange = (event) => {
+        const selectedStatus = event.target.value
+        setFilter(STATUS_FILTER, selectedStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: selectedStatus ? selectedStatus : '',
+            },
+        })
+    }
+
+    const handleIsAssignedChange = (event) => {
+        const selectedIsAssigned = event.target.value
+        setFilter(ASSIGNED_FILTER, selectedIsAssigned)
+        dispatchParams({
+            type: ReducerActions.FILTER_ASSIGNED,
+            payload: {
+                filterType: ASSIGNED_FILTER,
+                filterValue: selectedIsAssigned,
             },
         })
     }
@@ -529,9 +441,12 @@ function Filters() {
                 case PURPOSE_FILTER:
                     setFilter(PURPOSE_FILTER, '')
                     break
-                // case STATUS_FILTER:
-                //     setFilter(STATUS_FILTER, '')
-                //     break
+                case STATUS_FILTER:
+                    setFilter(STATUS_FILTER, '')
+                    break
+                case ASSIGNED_FILTER:
+                    setFilter(ASSIGNED_FILTER, null)
+                    break
                 default:
                     break
             }
@@ -543,6 +458,7 @@ function Filters() {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
+        // console.log('chips array: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -600,43 +516,47 @@ function Filters() {
                             onChange={handleSearch}
                         />
                     </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleOpenCreateDialog}
-                        >
-                            <MdAdd fontSize="large" />
-                            {/* &nbsp;{operations.create} */}
-                        </Button>
+                    {user.roles[0] !== roleNames.salesman && (
+                        <>
+                            <Box className={classes.flexItem}>
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleOpenCreateDialog}
+                                >
+                                    <MdAdd fontSize="large" />
+                                    {/* &nbsp;{operations.create} */}
+                                </Button>
 
-                        <CreateTargetSchools
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                        />
-                    </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleOpenAssignDialog}
-                        >
-                            <MdPersonAdd fontSize="large" />
-                        </Button>
-                        {/* Have checked target schools */}
-                        <AssignMultiple
-                            open={openAssignDialog}
-                            onClose={() => setOpenAssignDialog(false)}
-                            rows={selectedSchools}
-                        />
-                        {/* Have not checked target schools */}
-                        <NotifyAssign
-                            open={openNotifyDialog}
-                            onClose={() => setOpenNotifyDialog(false)}
-                        />
-                    </Box>
+                                <CreateTargetSchools
+                                    open={openCreateDialog}
+                                    onClose={() => setOpenCreateDialog(false)}
+                                />
+                            </Box>
+                            <Box className={classes.flexItem}>
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleOpenAssignDialog}
+                                >
+                                    <MdPersonAdd fontSize="large" />
+                                </Button>
+                                {/* Have checked target schools */}
+                                <AssignMultiple
+                                    open={openAssignDialog}
+                                    onClose={() => setOpenAssignDialog(false)}
+                                    rows={selectedSchools}
+                                />
+                                {/* Have not checked target schools */}
+                                <NotifyAssign
+                                    open={openNotifyDialog}
+                                    onClose={() => setOpenNotifyDialog(false)}
+                                />
+                            </Box>
+                        </>
+                    )}
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
@@ -713,12 +633,49 @@ function Filters() {
                             </Grid>
                         )}
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                            className={classes.paddingTop}
+                        >
+                            <FormControl className={classes.formControl}>
+                                <InputLabel>{filters.status.title}</InputLabel>
+                                <Select
+                                    value={schoolStatus || ''}
+                                    onChange={handleStatusChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem
+                                        value=""
+                                        className={classes.lastOption}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        {filters.status.options.all}
+                                    </MenuItem>
+                                    {schStatus?.map((status) => (
+                                        <MenuItem
+                                            key={status}
+                                            value={status}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {status}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -756,12 +713,9 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -801,12 +755,9 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -846,12 +797,9 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -891,12 +839,9 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -936,12 +881,9 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -980,28 +922,23 @@ function Filters() {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/* <Grid item xs={6} sm={6} md={4} lg={3}>
+                        
+                        <Grid item xs={12} sm={4} md={3} lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Statuses</InputLabel>
+                                <InputLabel>
+                                    {filters.isAssigned.title}
+                                </InputLabel>
                                 <Select
-                                    value={schoolStatus || ''}
-                                    onChange={handleSchoolStatusChange}
+                                    value={isAssigned === null ? '' : isAssigned}
+                                    onChange={handleIsAssignedChange}
                                     MenuProps={MenuProps}
                                 >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        All
-                                    </MenuItem>
-                                    {schStatus?.map((status) => (
+                                    {assignedStatuses?.map((isAssigned) => (
                                         <MenuItem
-                                            key={status}
-                                            value={status}
+                                            key={isAssigned}
+                                            value={isAssigned}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -1009,12 +946,12 @@ function Filters() {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {status}
+                                            {isAssigned === null ? `${filters.isAssigned.options.all}` : (isAssigned ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`)}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid> */}
+                        </Grid>
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

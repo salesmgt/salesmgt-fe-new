@@ -11,6 +11,14 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
+export const purposeNames = {
+    salesMoi: 'Sales mới',
+    theoDoi: 'Theo dõi',
+    chamSoc: 'Chăm sóc',
+    taiKy: 'Tái ký hợp đồng',
+    kyMoi: 'Ký mới hợp đồng'
+}
+
 export const cookieNames = {
     accessToken: 'accessToken',
 }

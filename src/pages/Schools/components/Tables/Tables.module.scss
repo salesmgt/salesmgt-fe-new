@@ -72,14 +72,30 @@
   flex-shrink: 0;
 }
 
+.chipInactive {
+  color: $grey-400;
+  font-style: italic;
+  text-decoration: line-through $grey-400;
+}
+
 .chipLead {
   background-color: $dark-info !important;
   color: $common-white !important;
+}
+.chipLeadInactive {
+  @extend .chipLead;
+  @extend .chipInactive;
+  opacity: 0.2 !important;
 }
 
 .chipCustomer {
   background-color: $main-success !important;
   color: $common-white !important;
+}
+.chipCustomerInactive {
+  @extend .chipCustomer;
+  @extend .chipInactive;
+  opacity: 0.2 !important;
 }
 
 .itemText {

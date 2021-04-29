@@ -25,7 +25,7 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'

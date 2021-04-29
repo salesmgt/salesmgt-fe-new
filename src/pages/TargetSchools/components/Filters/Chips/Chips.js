@@ -1,8 +1,20 @@
 import React, { useState } from 'react'
 import { Avatar, Button, Chip } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import PropTypes from 'prop-types'
 import * as ReducerActions from '../../../../../constants/ActionTypes'
+import {
+    SCHOOL_YEAR_FILTER,
+    DISTRICT_FILTER,
+    TYPE_FILTER,
+    LEVEL_FILTER,
+    SCALE_FILTER,
+    PIC_FILTER,
+    PURPOSE_FILTER,
+    STATUS_FILTER,
+    ASSIGNED_FILTER
+} from '../../../../../constants/Filters'
+import { Consts } from '../../../TargetSchoolsConfig'
+// import PropTypes from 'prop-types'
 // import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 function Chips(props) {
     const classes = useStyles()
     const { chips, dispatch, handleChipsRemoved } = props
+    const { filters } = Consts
 
     //================Generate chips according to filters================
     // const [chipData, setChipData] = useState(chips);
@@ -45,57 +58,70 @@ function Chips(props) {
         // setChipData((listChips) => listChips.filter((chip) => chip.filterType !== chipToDelete.filterType));
 
         switch (chipToDelete.filterType) {
-            case 'schoolYear':
+            case SCHOOL_YEAR_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_YEAR,
-                    payload: { filterType: 'schoolYear', filterValue: '' },
+                    payload: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
                 })
                 break
 
-            case 'district':
+            case DISTRICT_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_DISTRICT,
-                    payload: { filterType: 'district', filterValue: '' },
+                    payload: { filterType: DISTRICT_FILTER, filterValue: '' },
                 })
                 break
 
-            case 'type':
+            case TYPE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_TYPE,
-                    payload: { filterType: 'type', filterValue: '' },
+                    payload: { filterType: TYPE_FILTER, filterValue: '' },
                 })
                 break
 
-            case 'level':
+            case LEVEL_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_LEVEL,
-                    payload: { filterType: 'level', filterValue: '' },
+                    payload: { filterType: LEVEL_FILTER, filterValue: '' },
                 })
                 break
 
-            case 'scale':
+            case SCALE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_SCALE,
-                    payload: { filterType: 'scale', filterValue: '' },
+                    payload: { filterType: SCALE_FILTER, filterValue: '' },
                 })
                 break
 
-            case 'PIC':
+            case PIC_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_PIC,
-                    payload: { filterType: 'PIC', filterValue: null },
+                    payload: { filterType: PIC_FILTER, filterValue: null },
                 })
                 break
 
-            case 'purpose':
+            case PURPOSE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_PURPOSE,
-                    payload: { filterType: 'purpose', filterValue: '' },
+                    payload: { filterType: PURPOSE_FILTER, filterValue: '' },
+                })
+                break
+
+            case STATUS_FILTER:
+                dispatch({
+                    type: ReducerActions.FILTER_SCHOOL_STATUS,
+                    payload: { filterType: STATUS_FILTER, filterValue: '' },
+                })
+                break
+
+            case ASSIGNED_FILTER:
+                dispatch({
+                    type: ReducerActions.FILTER_ASSIGNED,
+                    payload: { filterType: ASSIGNED_FILTER, filterValue: null },
                 })
                 break
 
             default:
-                // break;
                 break
         }
 
@@ -123,41 +149,51 @@ function Chips(props) {
 
         dispatch({
             type: ReducerActions.FILTER_SCHOOL_YEAR,
-            payload: { filterType: 'schoolYear', filterValue: '' },
+            payload: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
         })
         dispatch({
             type: ReducerActions.FILTER_DISTRICT,
-            payload: { filterType: 'district', filterValue: '' },
+            payload: { filterType: DISTRICT_FILTER, filterValue: '' },
         })
         dispatch({
             type: ReducerActions.FILTER_SCHOOL_TYPE,
-            payload: { filterType: 'type', filterValue: '' },
+            payload: { filterType: TYPE_FILTER, filterValue: '' },
         })
         dispatch({
             type: ReducerActions.FILTER_SCHOOL_LEVEL,
-            payload: { filterType: 'level', filterValue: '' },
+            payload: { filterType: LEVEL_FILTER, filterValue: '' },
         })
         dispatch({
             type: ReducerActions.FILTER_SCHOOL_SCALE,
-            payload: { filterType: 'scale', filterValue: '' },
+            payload: { filterType: SCALE_FILTER, filterValue: '' },
         })
         dispatch({
             type: ReducerActions.FILTER_PIC,
-            payload: { filterType: 'PIC', filterValue: null },
+            payload: { filterType: PIC_FILTER, filterValue: null },
         })
         dispatch({
             type: ReducerActions.FILTER_PURPOSE,
-            payload: { filterType: 'purpose', filterValue: '' },
+            payload: { filterType: PURPOSE_FILTER, filterValue: '' },
+        })
+        dispatch({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: { filterType: STATUS_FILTER, filterValue: '' },
+        })
+        dispatch({
+            type: ReducerActions.FILTER_ASSIGNED,
+            payload: { filterType: ASSIGNED_FILTER, filterValue: null },
         })
 
         const removedFilters = [
-            'schoolYear',
-            'district',
-            'type',
-            'level',
-            'scale',
-            'PIC',
-            'purpose',
+            SCHOOL_YEAR_FILTER,
+            DISTRICT_FILTER,
+            TYPE_FILTER,
+            LEVEL_FILTER,
+            SCALE_FILTER,
+            PIC_FILTER,
+            PURPOSE_FILTER,
+            STATUS_FILTER,
+            ASSIGNED_FILTER,
         ]
 
         handleChipsRemoved(removedFilters)
@@ -179,7 +215,7 @@ function Chips(props) {
 
     return (
         <div>
-            {handleShowClearAllButton() !== 7 && (
+            {handleShowClearAllButton() !== 9 && (
                 <div className={classes.root}>
                     {' '}
                     {/* {(chips !== null && chips !== undefined) && */}
@@ -196,42 +232,35 @@ function Chips(props) {
                         {/* {generateChips(chips).map(chip => {})} */}
                         {chips.map((chip) => {
                             return (
-                                <div key={chip.filterType}>
-                                    {chip.filterValue && (
-                                        <li>
-                                            {chip.filterType === 'PIC' ? (
-                                                <Chip
-                                                    label={
-                                                        chip.filterValue
-                                                            .fullName
-                                                    }
-                                                    avatar={
-                                                        <Avatar
-                                                            src={
-                                                                chip.filterValue
-                                                                    .avatar
-                                                            }
-                                                        />
-                                                    }
-                                                    onDelete={handleChipDelete(
-                                                        chip
-                                                    )}
-                                                    className={classes.chip}
-                                                    color="secondary"
-                                                />
-                                            ) : (
-                                                <Chip
-                                                    label={chip.filterValue}
-                                                    onDelete={handleChipDelete(
-                                                        chip
-                                                    )}
-                                                    className={classes.chip}
-                                                    color="secondary"
-                                                />
-                                            )}
-                                        </li>
-                                    )}
-                                </div>
+                                <li key={chip.filterType}>
+                                    {chip.filterType === PIC_FILTER && chip.filterValue &&
+                                        <Chip
+                                            label={chip.filterValue.fullName}
+                                            avatar={
+                                                <Avatar src={chip.filterValue.avatar} />
+                                            }
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                    {chip.filterType === ASSIGNED_FILTER && chip.filterValue !== null &&
+                                        <Chip
+                                            label={chip.filterValue ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`}
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                    {chip.filterType !== PIC_FILTER && chip.filterType !== ASSIGNED_FILTER && chip.filterValue &&
+                                        <Chip
+                                            label={chip.filterValue}
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                </li>
                             )
                         })}
                     </ul>

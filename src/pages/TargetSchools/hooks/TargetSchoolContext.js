@@ -16,7 +16,8 @@ import {
     PURPOSE_FILTER,
     PIC_FILTER,
     SCHOOL_YEAR_FILTER,
-    // STATUS_FILTER,
+    STATUS_FILTER,
+    ASSIGNED_FILTER
 } from '../../../constants/Filters'
 
 const TargetSchoolContext = createContext()
@@ -33,7 +34,8 @@ let defaultFilters = {
     scale: { filterType: SCALE_FILTER, filterValue: '' },
     PIC: { filterType: PIC_FILTER, filterValue: null },
     purpose: { filterType: PURPOSE_FILTER, filterValue: '' },
-    // status: { filterType: STATUS_FILTER, filterValue: '' },
+    status: { filterType: STATUS_FILTER, filterValue: '' },
+    isAssigned: { filterType: ASSIGNED_FILTER, filterValue: null },
 }
 
 function useTargetSchoolProvider() {
@@ -102,11 +104,18 @@ function useTargetSchoolProvider() {
             ? defaultFilters.purpose.filterValue
             : ''
     )
-    // const [schoolStatus, setSchoolStatus] = useState(
-    //     defaultFilters.status.filterValue
-    //         ? defaultFilters.status.filterValue
-    //         : ''
-    // )
+    const [schoolStatus, setSchoolStatus] = useState(
+        defaultFilters.status.filterValue
+            ? defaultFilters.status.filterValue
+            : ''
+    )
+    const [isAssigned, setIsAssigned] = useState(
+        defaultFilters.isAssigned.filterValue
+            ? defaultFilters.isAssigned.filterValue
+            : null
+    )
+
+    const assignedStatuses = [null, true, false];
 
     // fix major BUG
     const setFilter = (key, value) => {
@@ -169,13 +178,20 @@ function useTargetSchoolProvider() {
                 }
                 setPurpose(value)
                 break
-            // case STATUS_FILTER:
-            //     defaultFilters = {
-            //         ...defaultFilters,
-            //         status: { filterType: STATUS_FILTER, filterValue: value },
-            //     }
-            //     setSchoolStatus(value)
-            //     break
+            case STATUS_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    status: { filterType: STATUS_FILTER, filterValue: value },
+                }
+                setSchoolStatus(value)
+                break
+            case ASSIGNED_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    status: { filterType: ASSIGNED_FILTER, filterValue: value },
+                }
+                setIsAssigned(value)
+                break
             default:
                 break
         }
@@ -251,6 +267,9 @@ function useTargetSchoolProvider() {
         // setPIC,
         purpose,
         // setPurpose,
+        schoolStatus,
+        isAssigned,
+        assignedStatuses,
         setFilter,
     }
 }
