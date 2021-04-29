@@ -5,6 +5,7 @@ export const Consts = {
         create: 'Create Target Schools',
         assignMultiple: 'Assign Salesmen to Target Schools',
         assignOne: 'Assign Salesman to Target School',
+        confirmUnassign: 'Confirm Unassign',
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
         // child1: 'Preview: '
@@ -14,6 +15,7 @@ export const Consts = {
         save: 'Save',
         remove: 'Remove',
         ok: 'OK, I understood',
+        yes: 'OK'
     },
     fields: {
         pic: {
@@ -38,6 +40,18 @@ export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
             Do you really want to remove
             <strong><em> {schoolLevel} {schoolName} </em></strong>
             from list of target schools in <strong>{schoolYear}</strong>?
+            <br />
+            This process cannot be undone.
+        </>
+    )
+}
+
+export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
+    return (
+        <>
+            Do you really want to unassign
+            <strong> {PIC} </strong> for
+            <strong><em> {schoolLevel} {schoolName} </em></strong>?
             <br />
             This process cannot be undone.
         </>

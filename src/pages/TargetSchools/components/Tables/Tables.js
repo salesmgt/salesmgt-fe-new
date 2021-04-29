@@ -30,9 +30,11 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { getColumns } from '../../TargetSchoolsConfig'
 import { roleNames,purposeNames } from '../../../../constants/Generals'
 import SortableTableHeaders from './SortableTableHeaders'
+import Highlighter from "react-highlight-words";
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
+import { Snackbars } from '../../../../components'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -122,9 +124,13 @@ const useStyles = makeStyles(() => ({
 function Tables(props) {
     const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
-    const { selectedRows, setSelectedRows,rows, totalRecord, totalPage } = props // , onGetTargets
+    const { selectedRows, setSelectedRows,rows, totalRecord, totalPage, refreshAPI } = props // , onGetTargets
     const { messages } = Consts
-
+    const [notify, setNotify] = React.useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })   
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
@@ -186,6 +192,7 @@ function Tables(props) {
 
     // ====================Paging====================
     const handleChangePage = (event, newPage) => {
+        setSelectedRows([])
         setPage(newPage)
         dispatchParams({
             type: ReducerActions.CHANGE_PAGE,
@@ -260,7 +267,7 @@ function Tables(props) {
                         onRequestSort={onSortBy}
                         onSelectAllClick={handleSelectAllClick}
                         rowCount={rows?.filter(item => !item.username)?.length}
-                        numSelected={selectedRows.length}
+                        numSelected={selectedRows?.length}
                     />
                     <TableBody className={classes.tBody}>
                         {rows?.length > 0 ? (
@@ -294,8 +301,23 @@ function Tables(props) {
                                             className={classes.tBodyCell}
                                         >
                                             <ListItemText
-                                                primary={`${row.level} ${row.schoolName}`}
-                                                secondary={row.district}
+                                                primary={ <> 
+                                                    {row.level} 
+                                                    <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={` ${row.schoolName}`}
+                                    
+                                        /> 
+                                        </>
+                                                    }
+                                                secondary={<Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.district}
+                                        /> }
                                                 classes={{
                                                     primary:
                                                         styles.itemTextLarge,
@@ -307,11 +329,17 @@ function Tables(props) {
                                         <TableCell
                                             className={classes.tBodyCell}
                                         >
-                                            {row?.reprName
+                                         <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row?.reprName
                                                 ? row.reprIsMale
                                                     ? `Mr. ${row.reprName}`
                                                     : `Ms. ${row.reprName}`
                                                 : ''}
+                                         /> 
+                                            
                                         </TableCell>
                                         {user.roles[0] !==
                                             roleNames.salesman && (
@@ -331,8 +359,20 @@ function Tables(props) {
                                                         className={
                                                             classes.picName
                                                         }
-                                                        primary={row.fullName}
-                                                        secondary={row.username}
+                                                        primary={
+                                                            <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.fullName ? row.fullName : ''
+                                        } /> 
+                                                        }
+                                                        secondary={ <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.username ? row.username : ''
+                                        } /> }
                                                         classes={{
                                                             primary:
                                                                 styles.itemTextMedium,
@@ -346,7 +386,12 @@ function Tables(props) {
                                         <TableCell
                                             className={classes.tBodyCell}
                                         >
-                                            {row.schoolYear}
+                                            { <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row?.schoolYear
+                                        } /> }
                                         </TableCell>
                                         <TableCell
                                             className={classes.tBodyCell}
@@ -357,7 +402,9 @@ function Tables(props) {
                                             className={classes.tBodyCell}
                                             align="right"
                                         >
-                                            <MenuOptions data={row} />
+                                            <MenuOptions data={row} notify={notify} setNotify={setNotify}
+                                                refreshAPI={refreshAPI}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 )
@@ -402,6 +449,7 @@ function Tables(props) {
                     />
                 )}
             />
+            <Snackbars notify={notify} setNotify={setNotify}/>
         </div>
     )
 }

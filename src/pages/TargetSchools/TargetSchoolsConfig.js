@@ -102,9 +102,12 @@ export const Consts = {
         remove: {
             title: 'Remove',
         },
-        // assign: {
-        //     title: 'Assign'
-        // },
+        assign: {
+            title: 'Assign'
+        },
+        unassign: {
+            title: 'Unassign'
+        },
     },
 }
 

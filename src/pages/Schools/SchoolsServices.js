@@ -74,13 +74,6 @@ export async function updateSchool(id, school) {
     return response
 }
 
-export async function importSchool(school) {
-    const response = await Api.post(`/schools/import`, school)
-    // const data = await response.data
-
-    return response
-}
-
 // export async function updateSchool(id, school) {
 //     const response = await Api.put(`/schools/${id}`, school)
 //     // const data = await response.data

@@ -218,67 +218,7 @@ function Filters(props) {
     const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
     const [openAssignDialog, setOpenAssignDialog] = useState(false)
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
-
-    const selectedSchools = [
-        {
-            id: 10,
-            schoolName: 'THCS Hiệp Thành',
-            district: 'Quận 4',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 12,
-            schoolName: 'Tiểu học Xuân Thu',
-            district: 'Quận Bình Tân',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 13,
-            schoolName: 'THCS Võ Trường Toản',
-            district: 'Quận 1',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 16,
-            schoolName: 'THPT Nguyễn Thượng Hiền',
-            district: 'Quận Phú Nhuận',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 20,
-            schoolName: 'THPT Marie Cuire',
-            district: 'Quận 10',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 21,
-            schoolName: 'Tiểu học Đặng Trần Côn',
-            district: 'Quận 12',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 30,
-            schoolName: 'THPT Nguyễn Trãi',
-            district: 'Quận 3',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 34,
-            schoolName: 'Tiểu học Nguyễn Văn Cừ',
-            district: 'Quận 5',
-            purpose: '',
-            note: '',
-        },
-    ] // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
-
-    //================Handle useState() of filters================
+ //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
         const selectedSchoolYear = event.target.value
         setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
@@ -478,10 +418,12 @@ function Filters(props) {
     }
 
     const handleOpenAssignDialog = () => {
-        if (selectedSchools.length > 0) {
+        if (props.selectedRows.length > 0) {
             // console.log('assign dialog')
             setOpenAssignDialog(true)
         } else {
+            setOpenAssignDialog(false)
+
             // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
         }
@@ -550,7 +492,7 @@ function Filters(props) {
                             onClose={() => setOpenAssignDialog(false)}
                             rows={props.selectedRows}
                             setRows={props.setSelectedRows}
-                            
+                            refreshAPI={props.refreshAPI}
                         />
                         {/* Have not checked target schools */}
                         <NotifyAssign

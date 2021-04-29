@@ -8,9 +8,11 @@ import {
     MenuItem,
 } from '@material-ui/core'
 import { MdDelete, MdDescription, MdInfo, MdMoreVert } from 'react-icons/md'
+import { IoPersonRemoveSharp } from "react-icons/io5"
 import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
+import ConfirmUnassign from '../../../dialogs/ConfirmUnassign/ConfirmUnassign'
 import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
 import { Consts } from '../../../TargetSchoolsConfig'
 import { roleNames } from '../../../../../constants/Generals'
@@ -18,11 +20,12 @@ import { roleNames } from '../../../../../constants/Generals'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data } = props
+    const { data, refreshAPI } = props
     const { menuItems } = Consts
 
     const [anchorEl, setAnchorEl] = useState(null)
     const [open, setOpen] = useState(false)
+    const [openAssign,setOpenAssign] = useState(false)
 
     const { user } = useAuth()
     const { params } = useTargetSchool()
@@ -47,6 +50,11 @@ function MenuOptions(props) {
         setOpen(true)
     }
 
+    const handleOpenConfirmUnassign = () => {
+        setOpenAssign(true)
+        setAnchorEl(null)
+    }
+
     const renderRemoveDialog = () => {
         if (data?.fullName) {
             return (
@@ -64,6 +72,22 @@ function MenuOptions(props) {
                     data={data}
                 />
             )
+        }
+    }
+
+    const renderAssignedDialog = () => {
+        if (data?.fullName) {
+            return (
+                <ConfirmUnassign 
+                    notify={props.notify} setNotify={props.setNotify}
+                    open={openAssign}
+                    onClose={() => setOpenAssign(false)}
+                    data={data}
+                    refreshAPI={refreshAPI}
+                />
+            )
+        } else {
+            // assign one dialog
         }
     }
 
@@ -129,6 +153,19 @@ function MenuOptions(props) {
                             </ListItemText>
                         </MenuItem>
                         {renderRemoveDialog()}
+                    </div>
+                )}
+                {user.roles[0] !== roleNames.salesman && data?.fullName && (
+                    <div>
+                        <MenuItem onClick={handleOpenConfirmUnassign}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <IoPersonRemoveSharp />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                {menuItems.unassign.title}
+                            </ListItemText>
+                        </MenuItem>
+                        {renderAssignedDialog()}
                     </div>
                 )}
             </Menu>
