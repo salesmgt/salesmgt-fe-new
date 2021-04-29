@@ -86,12 +86,12 @@ function RepInfo(props) {
             educationalLevel: school?.educationalLevel,
             type: school?.type,
             scale: school?.scale,
-            // phone: school?.phone,
+            phone: school?.phone,
 
             // description: school?.description,
             status: school?.status,
 
-            // active: school?.active,
+            active: school?.active,
         }
 
         SchoolsServices.updateSchool(data.id, model)

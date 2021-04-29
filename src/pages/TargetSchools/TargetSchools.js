@@ -9,7 +9,7 @@ import classes from './TargetSchools.module.scss'
 
 function TargetSchools() {
     const history = useHistory()
-
+    const [selectedRows, setSelectedRows] = React.useState([])
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
@@ -109,8 +109,10 @@ function TargetSchools() {
 
     return (
         <div className={classes.panel}>
-            <Filters className={classes.filter} />
+            <Filters selectedRows={selectedRows} setSelectedRows={setSelectedRows} className={classes.filter} />
             <Tables
+            selectedRows={selectedRows}
+            setSelectedRows={setSelectedRows}
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}

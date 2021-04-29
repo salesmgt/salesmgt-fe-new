@@ -29,7 +29,7 @@ export const Consts = {
 }
 
 export const columns = [
-    '#', 'School Name', 'PIC', 'Purpose', 'Note'
+    '#', 'School Name', 'PIC', 'Note', ''
 ]
 
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {

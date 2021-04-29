@@ -48,6 +48,7 @@ import { Consts } from '../../TargetSchoolsConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
 import styles from './Filters.module.scss'
+import { propTypes } from 'velocity-react/velocity-component'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -174,7 +175,7 @@ const MuiAccordionDetails = withStyles((theme) => ({
     },
 }))(AccordionDetails)
 
-function Filters() {
+function Filters(props) {
     //   const style = useStyles();
     const classes = useStyles()
     // const { onGetTargets } = props
@@ -629,7 +630,9 @@ function Filters() {
                         <AssignMultiple
                             open={openAssignDialog}
                             onClose={() => setOpenAssignDialog(false)}
-                            rows={selectedSchools}
+                            rows={props.selectedRows}
+                            setRows={props.setSelectedRows}
+                            
                         />
                         {/* Have not checked target schools */}
                         <NotifyAssign

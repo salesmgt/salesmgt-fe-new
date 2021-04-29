@@ -3,7 +3,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
     TableContainer,
     Table,
-    TableHead,
     TableBody,
     TableRow,
     TableCell,
@@ -15,8 +14,6 @@ import {
     ListItemAvatar,
     ListItemText,
     Chip,
-    TableSortLabel,
-    withStyles,
 } from '@material-ui/core'
 import {
     MdFirstPage,
@@ -32,6 +29,7 @@ import { Consts } from '../../TargetSchoolsConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { getColumns } from '../../TargetSchoolsConfig'
 import { roleNames } from '../../../../constants/Generals'
+import SortableTableHeaders from './SortableTableHeaders'
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
@@ -83,11 +81,6 @@ function TablePaginationActions(props) {
             <span>
                 {page + 1} / {totalPage}
             </span>
-            {/* <Pagination
-        count={totalPage} // siblingCount={0} boundaryCount={0}
-        showFirstButton showLastButton
-        onChange={onChangePage}
-      /> */}
             <IconButton
                 onClick={handleNextPageButtonClick}
                 disabled={page >= Math.ceil(count / rowsPerPage) - 1}
@@ -109,98 +102,6 @@ function TablePaginationActions(props) {
         </div>
     )
 }
-
-// Quy định kiểu dữ liệu cho props của TablePaginationActions
-// TablePaginationActions.propTypes = {
-//     count: PropTypes.number.isRequired,
-//     page: PropTypes.number.isRequired,
-//     rowsPerPage: PropTypes.number.isRequired,
-//     onChangePage: PropTypes.func.isRequired,
-//     totalPage: PropTypes.number.isRequired,
-// }
-
-function SortableTableHeaders(props) {
-    const {
-        user,
-        columns,
-        direction,
-        column,
-        onRequestSort,
-        numSelected,
-        rowCount,
-        onSelectAllClick,
-    } = props
-    const createSortHandler = (col, direction) => {
-        onRequestSort(col, direction)
-    }
-
-    const MuiTableSortLabel = withStyles({
-        root: {
-            color: 'white !important',
-            '&:hover': {
-                color: 'white !important',
-            },
-            '&$active': {
-                color: 'white !important',
-            },
-        },
-        active: {},
-        icon: {
-            color: 'white !important',
-        },
-    })(TableSortLabel)
-
-    return (
-        <TableHead>
-            <TableRow className={classes.tHead}>
-                {user.roles[0] !== roleNames.salesman && (
-                    <TableCell padding="checkbox" className={classes.tHeadCell}>
-                        <Checkbox
-                            indeterminate={
-                                numSelected > 0 && numSelected < rowCount
-                            }
-                            checked={rowCount > 0 && numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                        />
-                    </TableCell>
-                )}
-                {columns.map((col) => (
-                    <TableCell
-                        key={col.key}
-                        className={classes.tHeadCell}
-                        sortDirection={column === col.key ? direction : false}
-                        align={
-                            col.key === 'no'
-                                ? 'right'
-                                : col.key === 'user.fullName'
-                                ? 'center'
-                                : 'left'
-                        }
-                    >
-                        <MuiTableSortLabel
-                            active={column === col.key}
-                            direction={column === col.key ? direction : 'asc'}
-                            onClick={() => createSortHandler(col, direction)}
-                        >
-                            {col.name}
-                        </MuiTableSortLabel>
-                    </TableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    )
-}
-
-// SortableTableHeaders.propTypes = {
-//     columns: PropTypes.array.isRequired,
-//     direction: PropTypes.oneOf(['asc', 'desc']).isRequired,
-//     column: PropTypes.string.isRequired,
-//     onRequestSort: PropTypes.func.isRequired,
-//     numSelected: PropTypes.number.isRequired,
-//     rowCount: PropTypes.number.isRequired,
-//     onSelectAllClick: PropTypes.func.isRequired,
-// }
-
 const useStyles = makeStyles(() => ({
     itemPIC: {
         padding: 0,
@@ -221,7 +122,7 @@ const useStyles = makeStyles(() => ({
 function Tables(props) {
     const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
-    const { rows, totalRecord, totalPage } = props // , onGetTargets
+    const { selectedRows, setSelectedRows,rows, totalRecord, totalPage } = props // , onGetTargets
     const { messages } = Consts
 
     //Use states which have been declared in the TargetSchoolContext
@@ -241,23 +142,26 @@ function Tables(props) {
 
     const columns = getColumns(user.roles[0])
 
-    const [selectedRows, setSelectedRows] = React.useState([])
-
+ 
     const handleSelectAllClick = (event) => {
+        
         if (event.target.checked) {
-            const newSelecteds = rows.map((row) => row.id)
+          const  newSelecteds = rows.filter((row) => !row.username)
             setSelectedRows(newSelecteds)
-            return
-        }
-        setSelectedRows([])
+            return;
+          }
+          setSelectedRows([])  
     }
-
-    const handleClick = (event, id) => {
-        const selectedIndex = selectedRows.indexOf(id)
+    const handleClick = (event,row) => {
+        console.log(event.target.checked)
+        // if(!event.target.checked){
+        //     event.target.checked=false
+        // }
+        const selectedIndex = selectedRows.indexOf(row)
         let newSelected = []
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selectedRows, id)
+         if (selectedIndex === -1) {
+             newSelected = newSelected.concat(selectedRows, row)
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selectedRows.slice(1))
         } else if (selectedIndex === selectedRows.length - 1) {
@@ -267,12 +171,19 @@ function Tables(props) {
                 selectedRows.slice(0, selectedIndex),
                 selectedRows.slice(selectedIndex + 1)
             )
+      
         }
-
+        console.log("index ",selectedIndex)
+        console.log("mảng ",newSelected)
         setSelectedRows(newSelected)
     }
 
-    const isSelected = (id) => selectedRows.indexOf(id) !== -1
+    const isSelected = (row) => 
+    {   
+        if(selectedRows.indexOf(row) !== -1)
+        return true
+       else return false
+    }
 
     // ====================Paging====================
     const handleChangePage = (event, newPage) => {
@@ -284,19 +195,7 @@ function Tables(props) {
                 limit: params.limit,
             },
         })
-        // console.log('handleChangePage - event: ', event)
-        // console.log(`changePage - page=${newPage}, limit=${limit}, column=${column}, direction=${direction}`);
-        // onGetTargets(newPage, params.limit, params.column, params.direction, params.searchKey, params.listFilters);
-
-        // console.log('Tables.js - change page - params: ', params)
-        // console.log('============handleChangePage============');
-        // console.log('page = ', params.page);
-        // console.log('limit = ', params.limit);
-        // console.log('column = ', params.column);
-        // console.log('direction = ', params.direction);
-        // console.log('searchKey = ', params.searchKey);
     }
-
     const handleChangeLimit = (event) => {
         setLimit(parseInt(event.target.value, 10))
         setPage(0)
@@ -307,15 +206,6 @@ function Tables(props) {
                 limit: parseInt(event.target.value, 10),
             },
         })
-        // onGetTargets(0, parseInt(event.target.value, 10), params.column, params.direction, params.searchKey, params.listFilters);
-
-        // console.log('============handleChangeLimit============');
-        // console.log('page = ', params.page);
-        // console.log('limit = ', params.limit);
-        // console.log('column = ', params.column);
-        // console.log('direction = ', params.direction);
-        // console.log('searchKey = ', params.searchKey);
-        // console.log('Tables.js - change limit - params: ', params)
     }
 
     // ====================Sorting====================
@@ -349,29 +239,8 @@ function Tables(props) {
                 return <Chip label={purpose} /> // #5c21f3
         }
     }
-
-    //=========================Handle Hover Popover=========================
-    // const [anchorEl, setAnchorEl] = useState(null);
-
-    // const handlePopoverOpen = (event) => {
-    //   setAnchorEl(event.currentTarget);
-    //   console.log('handlePopoverOpen: ', event.currentTarget)
-    // };
-
-    // const handlePopoverClose = () => {
-    //   setAnchorEl(null);
-    // };
-
-    // const open = Boolean(anchorEl);
-
     //=================================================================================
-    // const [anchorEl, setAnchorEl] = useState(null)
-    // const handleOpenMenuOptions = (event) => {
-    //     setAnchorEl(event.currentTarget)
-    // }
-
-    //=================================================================================
-    let isItemSelected = false
+    
 
     return (
         <div className={classes.wrapper}>
@@ -389,48 +258,37 @@ function Tables(props) {
                         column={column}
                         onRequestSort={onSortBy}
                         onSelectAllClick={handleSelectAllClick}
-                        rowCount={totalRecord ? totalRecord : 0}
+                        rowCount={rows?.filter(item => !item.username)?.length}
                         numSelected={selectedRows.length}
                     />
                     <TableBody className={classes.tBody}>
                         {rows?.length > 0 ? (
                             rows.map((row) => {
-                                isItemSelected = isSelected(row.id)
-                                {
-                                    /* console.log('isItemSelected: ', isItemSelected) */
-                                }
                                 return (
                                     <TableRow
                                         key={row.id}
                                         className={classes.tBodyRow}
                                         // hover
                                         role="checkbox"
-                                        aria-checked={isItemSelected}
+                                        aria-checked={ isSelected(row)}
                                         tabIndex={-1}
-                                        selected={isItemSelected}
+                                        selected={ isSelected(row)}
                                     >
                                         {user.roles[0] !==
                                             roleNames.salesman && (
                                             <TableCell
                                                 padding="checkbox"
-                                                onClick={(event) =>
-                                                    handleClick(event, row.id)
-                                                }
+                                                onClick={(event) => {!row.username &&
+                                                    handleClick(event, row)
+                                                }}
                                             >
                                                 <Checkbox
-                                                    checked={isItemSelected}
+                                                    checked={row.username ? false : isSelected(row)}
+                                                    disabled={row.username ? true : false}
                                                 />
                                             </TableCell>
                                         )}
-                                        {/* <TableCell
-                                            className={classes.tBodyCell}
-                                            align="center"
-                                        >
-                                            {params.page * params.limit + index + 1}
-                                        </TableCell> */}
-                                        {/* <TableCell className={classes.tCellSchoolName}>
-                                        {/**row.type*./} {row.schoolName}
-                                    </TableCell> */}
+                                    
                                         <TableCell
                                             className={classes.tBodyCell}
                                         >
@@ -443,9 +301,6 @@ function Tables(props) {
                                                     secondary:
                                                         styles.itemTextMedium,
                                                 }}
-                                                // primaryTypographyProps={classes.tCellPrimaryText}
-                                                // primaryTypographyProps={{ style: { fontSize: '1rem' } }}
-                                                // secondaryTypographyProps={{ style: { fontSize: '0.875rem' } }}
                                             />
                                         </TableCell>
                                         <TableCell
@@ -502,10 +357,6 @@ function Tables(props) {
                                             align="right"
                                         >
                                             <MenuOptions data={row} />
-                                            {/* <IconButton color="primary" onClick={handleOpenMenuOptions}>
-                                            <MdMoreVert />
-                                        </IconButton>
-                                        {anchorEl && <MenuOptions data={row} />} */}
                                         </TableCell>
                                     </TableRow>
                                 )
@@ -555,12 +406,3 @@ function Tables(props) {
 }
 
 export default React.memo(Tables)
-
-// PropsTypes này dùng để sau này tách ra tái sử dụng cho dễ
-// Tables.propTypes = {
-//     rows: PropTypes.array,
-//     columns: PropTypes.array.isRequired,
-//     totalRecord: PropTypes.number.isRequired,
-//     totalPage: PropTypes.number.isRequired,
-//     // onGetTargets: PropTypes.func
-// }

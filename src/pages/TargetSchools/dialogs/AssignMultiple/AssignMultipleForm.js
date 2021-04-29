@@ -17,27 +17,30 @@ import {
     TableContainer,
     TableRow,
     TableBody,
-    InputLabel,
-    FormControl,
-    Select,
-    MenuItem,
     makeStyles,
     Paper,
+    Fade
 } from '@material-ui/core'
-import { MdAccountCircle } from 'react-icons/md'
+import { MdAccountCircle, MdClose } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import IconButton from '@material-ui/core/IconButton';
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import { Consts, columns } from '../FormConfig'
+import Popover from '@material-ui/core/Popover';
+import Badge from '@material-ui/core/Badge';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import { BiEdit } from "react-icons/bi";
+import CardContent from '@material-ui/core/CardContent';
 import classes from './AssignMultiple.module.scss'
 
 const clientSchema = yup.object().shape({
     // title: yup.string().trim().max(30).required(),
     // remark: yup.string().trim().max(50).required(),
     PIC: yup.string().required(),
-    // purpose: yup.string().required()
 })
 
 //===============Set max-height for dropdown list===============
@@ -95,8 +98,9 @@ const useStyles = makeStyles((theme) => ({
 function AssignMultipleForm(props) {
     const styles = useStyles();
     const { onClose, rows } = props
+    const [rowsState,setRowsState] = React.useState(rows)
     const { operations } = Consts
-
+    const [object,setObject] = React.useState(null)
     const { register, handleSubmit, errors } = useForm({  // getValues, , setError
         resolver: yupResolver(clientSchema),
     })
@@ -104,8 +108,7 @@ function AssignMultipleForm(props) {
     const { PICs } = useTargetSchool()
 
     const [PIC, setPIC] = useState(null)
-    const [purpose, setPurpose] = useState('')
-    // const [purpose, setPurpose] = useState({})    // Hiện tại chỉ lưu đc purpose của 1 trường
+    // Hiện tại chỉ lưu đc purpose của 1 trường
     // Tức là mỗi lần chọn nó sẽ đè gtri mới lên nhau. Sau này update lên là 1 [] các purpose hoặc
     // cứ để 1 obj cũng đc nhưng cần ghi lại cái trường này vao đâu đó luôn để gửi cho API còn Assign.
 
@@ -113,33 +116,51 @@ function AssignMultipleForm(props) {
         console.log(data)
         onClose()
     }
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event,row) => {
+      setAnchorEl(event.currentTarget);
+      setObject(row)
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
     const handlePICChange = (event, newPIC) => {
         setPIC(newPIC);
     };
-
-    const handlePurposeChange = (event) => {    // , target
-        setPurpose(event.target.value)
-        // target.purpose = event.target.value;
-        // // console.log('event.target.value = ', event.target.value);
-        // // console.log('target = ', target);
-        // setPurpose({
-        //     id: target.id,
-        //     value: target.purpose
-        // });
-
-        // const selectedPurpose = {
-        //     // schoolIndex: schoolIndex,
-        //     purpose: event.target.value
-        // };
-        // console.log('selectedPurpose: ', selectedPurpose)
-        // console.log('2nd: ', schoolIndex)
-        // console.log('3rd: ', schoolIndex)
-        // { index, purpose }
-    };
-    // console.log("Purpose: ", purpose);
-    // console.log('List targets: ', rows)
-
+    const open = Boolean(anchorEl);
+    
+    const handleOnRemove = (e,row)=>{
+        let newSelected = []
+        const selectedIndex = rowsState.indexOf(row)
+        if (selectedIndex === 0) {
+            newSelected = newSelected.concat(rowsState.slice(1))
+        } else if (selectedIndex ===rowsState.length - 1) {
+            newSelected = newSelected.concat(rowsState.slice(0, -1))
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                rowsState.slice(0, selectedIndex),
+                rowsState.slice(selectedIndex + 1)
+            )
+        }
+        console.log("mảng ",newSelected)
+        setRowsState(newSelected)
+    }
+    const onBlur = (e,row) =>{
+        // console.log(rowsState)
+        // console.log(row)
+       const object = rowsState.findIndex(obj =>obj.id === row.id)
+        //const item ={...rowsState[object],note: e.target.value}
+        let array =[null]
+        array =[...rowsState]
+        console.log("indedx ",rowsState[object])
+        array[object] =  {...array[object],note: e.target.value ? e.target.value : null}
+        console.log("text ",e.target.value)
+        console.log(array)
+        setRowsState(array)
+    } 
     return (
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <DialogContent className={classes.wrapper}>
@@ -195,82 +216,6 @@ function AssignMultipleForm(props) {
                                     onChange={(event, newPIC) => handlePICChange(event, newPIC)}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={5} md={6} lg={4}>
-                                <FormControl className={styles.formControl}>
-                                    <InputLabel>Purposes</InputLabel>
-                                    <Select
-                                        value={purpose}
-                                        onChange={handlePurposeChange}
-                                        MenuProps={MenuProps}
-                                    // name='purpose'
-                                    // inputRef={register}
-                                    // error={!!errors.purpose}
-                                    >
-                                        <MenuItem
-                                            value=""
-                                            className={styles.lastOption}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            None
-                                            </MenuItem>
-
-                                        <MenuItem
-                                            value="Sales mới"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Sales mới
-                                            </MenuItem>
-                                        <MenuItem
-                                            value="Theo dõi"
-                                            className={styles.lastOption}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Theo dõi
-                                            </MenuItem>
-
-                                        <MenuItem
-                                            value="Chăm sóc"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Chăm sóc
-                                            </MenuItem>
-                                        <MenuItem
-                                            value="Tái ký hợp đồng"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Tái ký hợp đồng
-                                            </MenuItem>
-                                        <MenuItem
-                                            value="Ký mới hợp đồng"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Ký mới hợp đồng
-                                            </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
                         </Grid>
                     </Grid>
 
@@ -292,10 +237,10 @@ function AssignMultipleForm(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody className={classes.tBody}>
-                                    {rows.map((row, index) => (
-                                        <TableRow key={row.id} className={classes.tBodyRow}>
-                                            <TableCell align="center">{index + 1}</TableCell>
-                                            <TableCell className={classes.tBodyCell}>
+                                    {rowsState.map((row, index) => (
+                                        <TableRow key={row.id}  >
+                                            <TableCell align="center" width='5%'>{index + 1}</TableCell>
+                                            <TableCell width='30%' className={classes.tBodyCell}>
                                                 <ListItemText
                                                     primary={row.schoolName}
                                                     secondary={row.district}
@@ -305,7 +250,7 @@ function AssignMultipleForm(props) {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
+                                            <TableCell align="center" width='30%' className={classes.tBodyCell}>
                                                 {PIC ? (
                                                     <ListItem className={classes.itemPIC}>
                                                         <ListItemAvatar><Avatar src={PIC.avatar} /></ListItemAvatar>
@@ -319,14 +264,42 @@ function AssignMultipleForm(props) {
                                                         />
                                                     </ListItem>
                                                 ) : ''}
-                                            </TableCell>   {/**Trần Thị Xuân Tuyền */}
-                                            <TableCell className={classes.tBodyCell}>
-                                                {purpose || ''}
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
-                                                {row.note || ''}
+                                            <TableCell align='center' width='40%' className={classes.tBodyCell}>
+                                              <IconButton onClick={(e)=>handleClick(e,row)} >
+                                                <Badge invisible={!row.note} color="secondary" variant="dot"><BiEdit/></Badge>
+                                              </IconButton>
+                                               <Popover
+                                                open={open}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left',
+                                                }}
+                                                >
+                                               
+                                                <TextField 
+                                                    onBlur={(e)=>onBlur(e,object)}
+                                                    onChange={e => setObject({...object,note:e.target.value})}  
+                                                    value={object?.note && object?.note  } 
+                                                    multiline
+                                                    autoFocus
+                                                    rows={4}
+                                                   placeholder='Type note here'
+                                                    variant="outlined"
+                                                />
+                                                    </Popover>
+                                            </TableCell>
+                                            <TableCell>
+                                                <IconButton onClick={e=>handleOnRemove(e,row)} ><MdClose/></IconButton>
                                             </TableCell>
                                         </TableRow>
+                                        
                                     ))}
                                 </TableBody>
                             </Table>
@@ -334,7 +307,6 @@ function AssignMultipleForm(props) {
                     </Grid>
                 </Grid>
             </DialogContent>
-            {/* <Divider /> */}
             <DialogActions className="">
                 <Button type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
                     {operations.save}

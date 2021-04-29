@@ -145,10 +145,10 @@ function GenInfo(props) {
             ...data,
             // description: school?.description,
             status: school?.status,
-            // reprName: school?.reprName,
-            // reprIsMale: school?.reprIsMale,
-            // reprPhone: school?.reprPhone,
-            // reprEmail: school?.reprEmail,
+            reprName: school?.reprName,
+            reprIsMale: school?.reprIsMale,
+            reprPhone: school?.reprPhone,
+            reprEmail: school?.reprEmail,
         }
 
         SchoolsServices.updateSchool(data.id, model)
