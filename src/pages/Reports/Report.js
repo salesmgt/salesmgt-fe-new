@@ -4,8 +4,11 @@ import { DetailLayouts } from '../../layouts'
 import { AssignInfo, ReportInfo } from './panels'
 import moment from 'moment'
 import * as ReportsServices from './ReportsServices'
+import { rpConsts } from './ReportsConfig'
+import { Loading } from '../../components'
 
 function Report() {
+    const { linkNames, tabNames } = rpConsts
     const [tabValue, setTabValue] = useState(0)
 
     const { id } = useParams()
@@ -43,16 +46,20 @@ function Report() {
         }
     }, [])
 
+    if (!report) {
+        return <Loading />
+    }
+
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
 
     return (
         <DetailLayouts
-            linkBack="Reports"
+            linkBack={linkNames.back}
             header={report?.schoolName}
             subHeader={moment(report?.date).format('DD/MM/YYYY')}
-            tabs={['Report Info', 'Assign Info']}
+            tabs={[tabNames.tab1, tabNames.tab2]}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >

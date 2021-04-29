@@ -9,13 +9,13 @@ const errors = [
         code: 401,
         message: 'Who are you now?',
         link: '/',
-        des: 'Go back to Logins',
+        des: 'Go back',
     },
     {
         code: 403,
         message: 'Sorry, this is THAT restricted area!',
         link: '/',
-        des: 'Go back to Logins',
+        des: 'Go back',
     },
     {
         code: 404,

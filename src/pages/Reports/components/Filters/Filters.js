@@ -13,7 +13,6 @@ import {
     FormControl,
     TextField,
     InputAdornment,
-    ListItem,
     ListItemAvatar,
     ListItemText,
     Avatar,
@@ -32,7 +31,7 @@ import Chips from './Chips/Chips'
 import { Autocomplete } from '@material-ui/lab'
 import DateRangePickers from './DateRangePickers/DateRangePickers'
 import moment from 'moment'
-import CreateReports from '../../dialogs/CreateReports'
+import CreateReports from '../../dialogs/CreateReports/CreateReports'
 import {
     PIC_FILTER,
     DISTRICT_FILTER,
@@ -41,7 +40,9 @@ import {
     // STATUS_FILTER,
     DATE_RANGE_FILTER,
 } from '../../../../constants/Filters'
+import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
+import { Consts } from '../../ReportsConfig'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -85,11 +86,17 @@ const useStyles = makeStyles((theme) => ({
         // minWidth: 3, // minHeight: 0, // lineHeight: 0,
     },
     itemPIC: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: 0,
         margin: 0,
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
+    },
+    paddingTop: {
+        paddingTop: '0.3rem',
     },
     root: {},
     menuItemRoot: {
@@ -154,17 +161,17 @@ const MuiAccordionDetails = withStyles(() => ({
     root: {
         backgroundColor: 'rgb(255, 255, 255)',
         margin: '0.2rem 0 0.5rem 0',
-        padding: '0.3rem 0 0.3rem 1.5rem',
+        padding: '0 0 0.3rem 1.5rem',
         borderRadius: '8px',
     },
 }))(AccordionDetails)
 
 function Filters() {
-
-    console.log('filter reports nè')
+    // console.log('filter reports nè')
 
     const classes = useStyles()
 
+    const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
@@ -188,6 +195,7 @@ function Filters() {
         // setDateRange,
         setFilter,
     } = useReport()
+    const { operations, filters } = Consts
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
@@ -446,7 +454,7 @@ function Filters() {
                         <MuiAccordionSummary expandIcon={<MdExpandMore />}>
                             <MdFilterList className={styles.iconFilter} />{' '}
                             &nbsp;
-                            <Typography>Filters</Typography>
+                            <Typography>{operations.filter}</Typography>
                         </MuiAccordionSummary>
                     </Box>
                     <Box flexGrow={1} className={classes.flexItem}>
@@ -458,7 +466,7 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields
-                            placeholder="Search..."
+                            placeholder={operations.search.placeholder}
                             onChange={handleSearch}
                         />
                     </Box>
@@ -470,7 +478,7 @@ function Filters() {
                             onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
-                            &nbsp;Create
+                            {/* &nbsp;{operations.create} */}
                         </Button>
                         <CreateReports
                             open={openCreateDialog}
@@ -486,15 +494,18 @@ function Filters() {
                                 autoSelect
                                 autoHighlight
                                 clearOnEscape
-                                options={PICs}
-                                getOptionLabel={(PIC) => PIC.fullName}
+                                options={PICs ? PICs : []}
+                                getOptionLabel={(pic) =>
+                                    pic.fullName ? pic.fullName : ''
+                                }
                                 value={PIC}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="PICs"
+                                        label={filters.pic.title}
                                         margin="normal"
-                                        placeholder="PIC's name"
+                                        placeholder={filters.pic.placeholder}
+                                        // ref={params.InputProps.ref}
                                         InputProps={{
                                             ...params.InputProps,
                                             startAdornment: (
@@ -513,18 +524,25 @@ function Filters() {
                                 )}
                                 renderOption={(option) => {
                                     return (
-                                        <ListItem className={classes.itemPIC}>
+                                        <div
+                                            className={classes.itemPIC}
+                                            key={option.username}
+                                        >
                                             <ListItemAvatar>
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
-                                                primary={option.fullName}
+                                                primary={
+                                                    option.fullName
+                                                        ? option.fullName
+                                                        : ''
+                                                }
                                                 classes={{
                                                     primary:
                                                         classes.itemTextPrimary,
                                                 }}
                                             />
-                                        </ListItem>
+                                        </div>
                                     )
                                 }}
                                 className={classes.autoComplete}
@@ -534,11 +552,63 @@ function Filters() {
                             />
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={3}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
                             <FormControl className={classes.formControl}>
-                                <InputLabel>Districts</InputLabel>
+                                <InputLabel>{filters.purpose.title}</InputLabel>
                                 <Select
-                                    value={district}
+                                    value={purpose || ''}
+                                    onChange={handlePurposeChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem
+                                        value=""
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        {filters.purpose.options.all}
+                                    </MenuItem>
+                                    {salesPurps?.map((purp) => (
+                                        <MenuItem
+                                            key={purp}
+                                            value={purp}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {purp}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={3}
+                            lg={3}
+                            className={classes.paddingTop}
+                        >
+                            <FormControl className={classes.formControl}>
+                                <InputLabel>
+                                    {filters.district.title}
+                                </InputLabel>
+                                <Select
+                                    value={district || ''}
                                     onChange={handleDistrictChange}
                                     MenuProps={MenuProps}
                                 >
@@ -550,9 +620,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.district.options.all}
                                     </MenuItem>
-                                    {dists.map((dist) => (
+                                    {dists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -570,11 +640,21 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={6} md={3} lg={3}>
+                        <Grid item xs={12} sm={7} md={5} lg={4}>
+                            <DateRangePickers
+                                handleDateRangeChange={handleDateRangeChange}
+                            />
+                            {/* <FormControl className={classes.formControl}>
+                            </FormControl> */}
+                        </Grid>
+
+                        <Grid item xs={12} sm={4} md={3} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>School Years</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolYear.title}
+                                </InputLabel>
                                 <Select
-                                    value={schoolYear}
+                                    value={schoolYear || ''}
                                     onChange={handleSchoolYearChange}
                                     MenuProps={MenuProps}
                                 >
@@ -586,9 +666,9 @@ function Filters() {
                                             selected: classes.menuItemSelected,
                                         }}
                                     >
-                                        All
+                                        {filters.schoolYear.options.all}
                                     </MenuItem>
-                                    {schYears.map((year) => (
+                                    {schYears?.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -606,19 +686,11 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={5} lg={4}>
-                            <DateRangePickers
-                                handleDateRangeChange={handleDateRangeChange}
-                            />
-                            {/* <FormControl className={classes.formControl}>
-                            </FormControl> */}
-                        </Grid>
-
                         {/* <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>
                                 <Select
-                                    value={schoolStatus}
+                                    value={schoolStatus || ''}
                                     onChange={handleSchoolStatusChange}
                                     MenuProps={MenuProps}
                                 >
@@ -632,7 +704,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schStatus.map((status) => (
+                                    {schStatus?.map((status) => (
                                         <MenuItem
                                             key={status}
                                             value={status}
@@ -649,42 +721,6 @@ function Filters() {
                                 </Select>
                             </FormControl>
                         </Grid> */}
-
-                        <Grid item xs={6} sm={4} md={3} lg={3}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>Purposes</InputLabel>
-                                <Select
-                                    value={purpose}
-                                    onChange={handlePurposeChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        All
-                                    </MenuItem>
-                                    {salesPurps.map((purp) => (
-                                        <MenuItem
-                                            key={purp}
-                                            value={purp}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
-                                            }}
-                                        >
-                                            {purp}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

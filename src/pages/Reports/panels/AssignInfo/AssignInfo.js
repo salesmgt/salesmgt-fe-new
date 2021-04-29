@@ -57,8 +57,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -72,13 +72,13 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
-                                    <Typography color="inherit">
+                                    {/* <Typography color="inherit"> */}
                                         <div className={classes.user}>
                                             {report?.avatar ? (
                                                 <Avatar
@@ -112,7 +112,7 @@ function AssignInfo(props) {
                                                 </Typography>
                                             </div>
                                         </div>
-                                    </Typography>
+                                    {/* </Typography> */}
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -132,8 +132,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -147,10 +147,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -175,8 +175,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -190,10 +190,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -248,8 +248,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -263,10 +263,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -291,8 +291,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -306,10 +306,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -334,8 +334,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -349,10 +349,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -377,8 +377,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -392,10 +392,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -420,8 +420,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -435,10 +435,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
@@ -463,8 +463,8 @@ function AssignInfo(props) {
                             >
                                 <Grid
                                     item
-                                    xs={5}
-                                    sm={4}
+                                    xs={12}
+                                    sm={12}
                                     md={4}
                                     lg={3}
                                     className={classes.rowx}
@@ -478,10 +478,10 @@ function AssignInfo(props) {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={7}
-                                    sm={8}
-                                    md={6}
-                                    lg={7}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
                                     className={classes.rowx}
                                 >
                                     <div className={classes.genderZone}>

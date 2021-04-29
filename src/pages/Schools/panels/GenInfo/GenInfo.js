@@ -25,11 +25,12 @@ const clientSchema = yup.object().shape({
         .string()
         .trim()
         .min(3, 'Name must be at least 3 characters')
+        .max(30, 'Name must be at most 30 characters')
         .required('Name is required'),
     address: yup.string().trim().required('Address is required'),
     phone: yup
         .string()
-        .max(11, 'Tel must be at most 11 digits')
+        .max(11, 'Tel must be at most 11 digits and has the correct format')
         .matches(/(02)+([0-9]{9})\b/g, 'Incorrect entry'),
 })
 
@@ -93,7 +94,7 @@ function GenInfo(props) {
         type: school?.type ? school?.type : schTypes[0],
         phone: school?.phone ? school?.phone : '',
 
-        active: school?.active ? school?.active : true,
+        active: school?.active,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -115,7 +116,7 @@ function GenInfo(props) {
             type: school?.type ? school?.type : schTypes[0],
             phone: school?.phone ? school?.phone : '',
 
-            active: school?.active ? school?.active : true,
+            active: school?.active,
         })
     }, [school])
 
@@ -142,12 +143,12 @@ function GenInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
-            description: school?.description,
+            // description: school?.description,
             status: school?.status,
-            reprName: school?.reprName,
-            reprIsMale: school?.reprIsMale,
-            reprPhone: school?.reprPhone,
-            reprEmail: school?.reprEmail,
+            // reprName: school?.reprName,
+            // reprIsMale: school?.reprIsMale,
+            // reprPhone: school?.reprPhone,
+            // reprEmail: school?.reprEmail,
         }
 
         SchoolsServices.updateSchool(data.id, model)
@@ -175,7 +176,7 @@ function GenInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (

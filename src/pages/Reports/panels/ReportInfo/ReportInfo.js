@@ -8,8 +8,8 @@ import {
     makeStyles,
 } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './ReportInfoConfig'
 import * as ReportsServices from '../../ReportsServices'
@@ -69,7 +69,7 @@ function RepInfo(props) {
 
     const cmtValues = {
         id: report?.id,
-        contextComments: report.contextComments ? report.contextComments : '',
+        contextComments: report?.contextComments ? report.contextComments : '',
     }
 
     const {
@@ -108,7 +108,7 @@ function RepInfo(props) {
     useEffect(() => {
         cmtReset({
             id: report?.id,
-            contextComments: report.contextComments
+            contextComments: report?.contextComments
                 ? report.contextComments
                 : '',
         })
@@ -162,7 +162,7 @@ function RepInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     const onCmtSubmit = (data) => {
@@ -195,7 +195,7 @@ function RepInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (
@@ -210,9 +210,9 @@ function RepInfo(props) {
                     lg={12}
                     className={classes.content}
                 >
-                    {user.username === report.username &&
-                    report.commentedPerson === null &&
-                    report.contextComments === null ? (
+                    {user.username === report?.username &&
+                    report?.commentedPerson === null &&
+                    report?.contextComments === null ? (
                         <form onSubmit={rpSubmit(onRpSubmit)} noValidate>
                             {/* Report Detail */}
                             <Grid
@@ -240,8 +240,8 @@ function RepInfo(props) {
                                     item
                                     xs={12}
                                     sm={12}
-                                    md={7}
-                                    lg={7}
+                                    md={8}
+                                    lg={6}
                                     className={classes.row}
                                 >
                                     <Grid container spacing={0}>
@@ -439,7 +439,7 @@ function RepInfo(props) {
                                         >
                                             <Button
                                                 className={classes.submit}
-                                                variant="contained"
+                                                // variant="contained"
                                                 disabled={!rpState.isDirty}
                                                 type="submit"
                                             >
@@ -485,8 +485,8 @@ function RepInfo(props) {
                                 >
                                     <Grid
                                         item
-                                        xs={5}
-                                        sm={4}
+                                        xs={12}
+                                        sm={12}
                                         md={3}
                                         lg={3}
                                         className={classes.rowx}
@@ -500,10 +500,10 @@ function RepInfo(props) {
                                     </Grid>
                                     <Grid
                                         item
-                                        xs={7}
-                                        sm={8}
-                                        md={7}
-                                        lg={7}
+                                        xs={12}
+                                        sm={12}
+                                        md={8}
+                                        lg={6}
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
@@ -528,8 +528,8 @@ function RepInfo(props) {
                                 >
                                     <Grid
                                         item
-                                        xs={5}
-                                        sm={4}
+                                        xs={12}
+                                        sm={12}
                                         md={3}
                                         lg={3}
                                         className={classes.rowx}
@@ -543,10 +543,10 @@ function RepInfo(props) {
                                     </Grid>
                                     <Grid
                                         item
-                                        xs={7}
-                                        sm={8}
-                                        md={7}
-                                        lg={7}
+                                        xs={12}
+                                        sm={12}
+                                        md={8}
+                                        lg={6}
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
@@ -571,8 +571,8 @@ function RepInfo(props) {
                                 >
                                     <Grid
                                         item
-                                        xs={5}
-                                        sm={4}
+                                        xs={12}
+                                        sm={12}
                                         md={3}
                                         lg={3}
                                         className={classes.rowx}
@@ -586,10 +586,10 @@ function RepInfo(props) {
                                     </Grid>
                                     <Grid
                                         item
-                                        xs={7}
-                                        sm={8}
-                                        md={7}
-                                        lg={7}
+                                        xs={12}
+                                        sm={12}
+                                        md={8}
+                                        lg={6}
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
@@ -614,8 +614,8 @@ function RepInfo(props) {
                                 >
                                     <Grid
                                         item
-                                        xs={5}
-                                        sm={4}
+                                        xs={12}
+                                        sm={12}
                                         md={3}
                                         lg={3}
                                         className={classes.rowx}
@@ -629,10 +629,10 @@ function RepInfo(props) {
                                     </Grid>
                                     <Grid
                                         item
-                                        xs={7}
-                                        sm={8}
-                                        md={7}
-                                        lg={7}
+                                        xs={12}
+                                        sm={12}
+                                        md={8}
+                                        lg={6}
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
@@ -657,8 +657,8 @@ function RepInfo(props) {
                                 >
                                     <Grid
                                         item
-                                        xs={5}
-                                        sm={4}
+                                        xs={12}
+                                        sm={12}
                                         md={3}
                                         lg={3}
                                         className={classes.rowx}
@@ -672,10 +672,10 @@ function RepInfo(props) {
                                     </Grid>
                                     <Grid
                                         item
-                                        xs={7}
-                                        sm={8}
-                                        md={7}
-                                        lg={7}
+                                        xs={12}
+                                        sm={12}
+                                        md={8}
+                                        lg={6}
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
@@ -698,7 +698,7 @@ function RepInfo(props) {
                 >
                     {user.roles[0] === roleNames.salesman ||
                     (user.roles[0] !== roleNames.salesman &&
-                        user.username === report.username) ? (
+                        user.username === report?.username) ? (
                         <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
                                 item
@@ -733,40 +733,39 @@ function RepInfo(props) {
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={7}
+                                        md={8}
                                         lg={6}
                                         className={classes.row}
                                     >
-                                        <Typography color="inherit">
-                                            <Controller
-                                                name="contextComments"
-                                                control={cmtControl}
-                                                render={({ value }) => (
-                                                    <TextField
-                                                        label={
-                                                            report?.commentedPerson
-                                                                ? `${fields.cmt.hasCmt} ${report?.commentedPerson}`
-                                                                : fields.cmt
-                                                                      .noCmt
-                                                        }
-                                                        variant="outlined"
-                                                        fullWidth
-                                                        multiline
-                                                        rows={5}
-                                                        disabled
-                                                        InputProps={{
-                                                            classes: {
-                                                                root:
-                                                                    styles.inputRoot,
-                                                                disabled:
-                                                                    styles.disabled,
-                                                            },
-                                                        }}
-                                                        value={value}
-                                                    />
-                                                )}
-                                            />
-                                        </Typography>
+                                        {/* <Typography color="inherit"> */}
+                                        <Controller
+                                            name="contextComments"
+                                            control={cmtControl}
+                                            render={({ value }) => (
+                                                <TextField
+                                                    label={
+                                                        report?.commentedPerson
+                                                            ? `${fields.cmt.hasCmt} ${report?.commentedPerson}`
+                                                            : fields.cmt.noCmt
+                                                    }
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    multiline
+                                                    rows={5}
+                                                    disabled
+                                                    InputProps={{
+                                                        classes: {
+                                                            root:
+                                                                styles.inputRoot,
+                                                            disabled:
+                                                                styles.disabled,
+                                                        },
+                                                    }}
+                                                    value={value}
+                                                />
+                                            )}
+                                        />
+                                        {/* </Typography> */}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -799,7 +798,7 @@ function RepInfo(props) {
                                     item
                                     xs={12}
                                     sm={12}
-                                    md={7}
+                                    md={8}
                                     lg={6}
                                     className={classes.row}
                                 >

@@ -1,3 +1,4 @@
+// import { pick } from 'query-string'
 import { ApiConfig as Api } from '../../services'
 
 export async function getTargetSchools(
@@ -6,13 +7,15 @@ export async function getTargetSchools(
     column = 'id',
     direction = 'asc',
     searchKey = undefined,
-    filters = undefined
+    filters = undefined,
+    pic
 ) {
     let url = `/targets?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
 
     url = searchKey ? url.concat(`&key=${searchKey}`) : url
+    url = pic ? url.concat(`&username=${pic}`) : url
 
-    // Tiền xử lý 7 filters
+    // Tiền xử lý 9 filters
     if (filters) {
         url = filters['schoolYear'].filterValue
             ? url.concat(`&schoolYear=${filters['schoolYear'].filterValue}`)
@@ -35,26 +38,61 @@ export async function getTargetSchools(
         url = filters['purpose'].filterValue
             ? url.concat(`&purpose=${filters['purpose'].filterValue}`)
             : url
+        url = filters['status'].filterValue
+            ? url.concat(`&status=${filters['status'].filterValue}`)
+            : url
+        url = filters['isAssigned'].filterValue !== null
+            ? url.concat(`&isAssigned=${filters['isAssigned'].filterValue}`)
+            : url
     }
 
     const response = await Api.get(url)
     const data = await response.data
+
     return data
 }
 
 export async function getTarget(targetId) {
-    const response = await Api.get(`/reports/${targetId}`)
+    const response = await Api.get(`/targets/${targetId}`)
     const data = await response.data
 
     return data
 }
 
-export async function updateTarget(targetId, target) {
-    const response = await Api.put(`/reports/${targetId}`, target)
+export async function updateStatus(schoolId, target) {
+    const response = await Api.patch(`/schools/${schoolId}`, target)
     // const data = await response.data
 
     return response
 }
+
+export async function updatePrinciple(schoolId, target) {
+    const response = await Api.patch(`/schools/principal/${schoolId}`, target)
+    // const data = await response.data
+
+    return response
+}
+
+export async function updateTarget(targetId, target) {
+    const response = await Api.patch(`/targets/${targetId}`, target)
+    // const data = await response.data
+
+    return response
+}
+
+export async function updateMOU(mouId, mou) {
+    const response = await Api.put(`/memorandums/${mouId}`, mou)
+    // const data = await response.data
+
+    return response
+}
+
+// export async function updateTarget(targetId, target) {
+//     const response = await Api.put(`/targets/${targetId}`, target)
+//     // const data = await response.data
+
+//     return response
+// }
 
 // export async function updateSchool(id, school) {
 //     const response = await Api.put(`/schools/${id}`, school)
@@ -64,9 +102,6 @@ export async function updateTarget(targetId, target) {
 // }
 
 //============================Chưa dùng tới============================
-// export async function getTargetSchools() {
-//     return await Api.get('/targets')
-// }
 
 // export async function addTargetSchools(newTargetSchools) {
 //     return await Api.post('/targets', { newTargetSchools })
@@ -80,7 +115,6 @@ export async function updateTarget(targetId, target) {
 //     return await Api.delete('/targets', { targetSchoolId })
 // }
 
-
 export async function getDashboardsByKeys(...keys) {
     const response = await Api.get('/dashbords', { ...keys })
     const data = await response.data
@@ -89,7 +123,7 @@ export async function getDashboardsByKeys(...keys) {
 }
 
 export async function getAllSchools() {
-    const response = await Api.get('/schools');
-    const data = await response.data;
-    return data;
+    const response = await Api.get('/schools')
+    const data = await response.data
+    return data
 }

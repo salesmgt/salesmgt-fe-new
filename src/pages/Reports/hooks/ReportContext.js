@@ -50,9 +50,9 @@ function useReportProvider() {
         listFilters: defaultFilters,
         searchKey: '',
         page: 0,
-        limit: 25,
-        column: 'id',
-        direction: 'asc',
+        limit: 10,
+        column: 'date',
+        direction: 'desc',
     })
 
     // Paging
@@ -138,7 +138,10 @@ function useReportProvider() {
             case PURPOSE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
-                    purpose: { filterType: PURPOSE_FILTER, filterValue: value },
+                    purpose: {
+                        filterType: PURPOSE_FILTER,
+                        filterValue: value,
+                    },
                 }
                 setPurpose(value)
                 break

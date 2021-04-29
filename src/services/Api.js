@@ -1,8 +1,10 @@
 import axios from 'axios'
 import * as Cookies from '../utils/Cookies'
+import { cookieNames } from '../constants/Generals'
 
 const instance = axios.create({
-    baseURL: 'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com',
+    baseURL:
+        'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com',
     headers: {
         'Content-type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -18,7 +20,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (req) => {
-        const accessToken = Cookies.getCookie('accessToken')
+        const accessToken = Cookies.getCookie(cookieNames.accessToken)
         if (accessToken) {
             if (!req.url.includes('access-tokens')) {
                 req.headers['Authorization'] = `Bearer ${accessToken}`
@@ -31,6 +33,5 @@ instance.interceptors.request.use(
     },
     { synchronous: true }
 )
-
 
 export default instance

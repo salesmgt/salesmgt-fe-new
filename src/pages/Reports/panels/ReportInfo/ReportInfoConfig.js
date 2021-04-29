@@ -1,7 +1,7 @@
 export const Consts = {
     headers: {
         child1: 'Report detail',
-        child2: 'Maneger comment',
+        child2: 'Manager comment',
         child3: 'Comment',
     },
     operations: {

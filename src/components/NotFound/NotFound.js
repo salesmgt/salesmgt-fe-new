@@ -12,7 +12,9 @@ function NotFound(props) {
             <div className={classes.imgContainer}>
                 <img src={Paw} alt="Not found" className={classes.img} />
             </div>
-            <Typography className={classes.title}>{title}</Typography>
+            <Typography className={classes.title} noWrap>
+                {title}
+            </Typography>
         </div>
     )
 }

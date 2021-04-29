@@ -1,41 +1,38 @@
 import React, { useState } from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
     IconButton,
     ListItemIcon,
     ListItemText,
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import {
-    MdDelete,
-    MdDescription,
-    MdInfo,
-    MdMoreVert,
-    MdPersonAdd,
-} from 'react-icons/md'
-import PropTypes from 'prop-types'
-// import { useAuth } from '../../../../../hooks/AuthContext'
-import ConfirmRemove from '../../../dialogs/ConfirmRemove'
-import CannotRemove from '../../../dialogs/CannotRemove'
+import { MdDelete, MdDescription, MdInfo, MdMoreVert } from 'react-icons/md'
+import { useAuth } from '../../../../../hooks/AuthContext'
+import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
+import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
+import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
+import { Consts } from '../../../TargetSchoolsConfig'
+import { roleNames } from '../../../../../constants/Generals'
+// import PropTypes from 'prop-types'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data } = props
+    const { menuItems } = Consts
+
     const [anchorEl, setAnchorEl] = useState(null)
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
-    // console.log('data từ MenuOptions: ', data)
-
-    // const { user } = useAuth()
+    const { user } = useAuth()
+    const { params } = useTargetSchool()
     const { url } = useRouteMatch()
+
+    const stateData = {
+        model: data,
+        params: params, // get from context
+        pathName: `${url}/${data.id}`,
+    }
 
     const handleOpen = (event) => {
         setAnchorEl(event.currentTarget)
@@ -50,21 +47,22 @@ function MenuOptions(props) {
         setOpen(true)
     }
 
-    // const handleRemove = () => {
-    //     setOpen(false)
-
-    //     // Gọi API DELETE --> load lại trang
-    // }
-
     const renderRemoveDialog = () => {
         if (data?.fullName) {
             return (
-                <CannotRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <CannotRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
             )
-        }
-        else {
+        } else {
             return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} />
+                <ConfirmRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
             )
         }
     }
@@ -85,43 +83,54 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: `${url}/${data.id}`,
-                        state: { data: data },
+                        state: { data: stateData },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>
                         <MdInfo fontSize="large" />
                     </ListItemIcon>
                     <ListItemText className={classes.itemText}>
-                        View details
+                        {menuItems.details.title}
                     </ListItemText>
                 </MenuItem>
-                {/* <MenuItem onClick={handleCloseMenus}>
+
+                <MenuItem
+                    onClick={handleCloseMenus}
+                    component={Link}
+                    to={{
+                        pathname: '/apps/reports',
+                        state: { targetId: data.id },
+                    }}
+                >
                     <ListItemIcon className={classes.itemIcon}>
                         <MdDescription fontSize="large" />
                     </ListItemIcon>
                     <ListItemText className={classes.itemText}>
-                        View reports
+                        {menuItems.reports.title}
                     </ListItemText>
-                </MenuItem> */}
-                <MenuItem onClick={handleCloseMenus}>
+                </MenuItem>
+
+                {/* <MenuItem onClick={handleCloseMenus}>
                     <ListItemIcon className={classes.itemIcon}>
                         <MdPersonAdd fontSize="large" />
                     </ListItemIcon>
                     <ListItemText className={classes.itemText}>
-                        Assign
+                        {menuItems.assign.title}
                     </ListItemText>
-                </MenuItem>
-                <>
-                    <MenuItem onClick={handleOpenConfirmation}>
-                        <ListItemIcon className={classes.itemIcon}>
-                            <MdDelete fontSize="large" />
-                        </ListItemIcon>
-                        <ListItemText className={classes.itemText}>
-                            Remove
-                        </ListItemText>
-                    </MenuItem>
-                    {renderRemoveDialog()}
-                </>
+                </MenuItem> */}
+                {user.roles[0] !== roleNames.salesman && (
+                    <div>
+                        <MenuItem onClick={handleOpenConfirmation}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdDelete fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                {menuItems.remove.title}
+                            </ListItemText>
+                        </MenuItem>
+                        {renderRemoveDialog()}
+                    </div>
+                )}
             </Menu>
         </div>
     )
@@ -129,6 +138,6 @@ function MenuOptions(props) {
 
 export default MenuOptions
 
-MenuOptions.propTypes = {
-    data: PropTypes.array.isRequired,
-}
+// MenuOptions.propTypes = {
+//     data: PropTypes.object.isRequired,
+// }

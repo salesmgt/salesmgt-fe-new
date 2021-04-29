@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
-import { GenInfo, RepInfo, AssignInfo } from './panels'
+import { SchoolInfo, MOUInfo, AssignInfo } from './panels'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleNames, statusNames } from '../../constants/Generals'
+import { roleNames } from '../../constants/Generals'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
+import { targetConsts } from './TargetSchoolsConfig'
+import { Loading } from '../../components'
 
 function TargetSchool() {
+    const { linkNames, tabNames } = targetConsts
     const [tabValue, setTabValue] = useState(0)
 
     const { user } = useAuth()
@@ -18,105 +21,183 @@ function TargetSchool() {
     const stateData = location.state?.data
     const [target, setTarget] = useState(stateData?.model)
 
-    console.log(target)
+    let isMounted = true
+    const refreshPage = (targetId) => {
+        TargetSchoolsServices.getTarget(targetId)
+            .then((data) => {
+                if (isMounted) {
+                    setTarget(data)
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
+    }
 
-    // let isMounted = true
-    // const refreshPage = (targetId) => {
-    //     TargetSchoolsServices.getTargetSchools(targetId)
-    //         .then((data) => {
-    //             if (isMounted) {
-    //                 setTarget(data)
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        refreshPage(id)
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            isMounted = false
+        }
+    }, [])
 
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // useEffect(() => {
-    //     refreshPage(id)
-    //     return () => {
-    //         // eslint-disable-next-line react-hooks/exhaustive-deps
-    //         isMounted = false
-    //     }
-    // }, [])
+    if (!target) {
+        return <Loading />
+    }
 
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
 
-    return (
-        <>
-            {(user.roles[0] === roleNames.manager ||
-                user.roles[0] === roleNames.supervisor) && (
-                    <DetailLayouts
-                        linkBack="Target Schools"
-                        header={target.schoolName}
-                        tabs={['Assign Info', 'School Info']}
-                        subHeader={target.schoolYear}
-                        // isStatus={false}
-                        tabValue={tabValue}
-                        handleChangeTab={handleChangeTab}
-                    >
-                        {tabValue === 0 && (
-                            <AssignInfo
-                                target={target}
-                            // refreshPage={refreshPage}
-                            />
-                        )}
+    const renderTargetDetail = (role) => {
+        switch (role) {
+            case roleNames.manager:
+                return (
+                    <>
+                        {/* {isContract === false ? ( */}
+                        {/* <DetailLayouts
+                                linkBack={linkNames.back}
+                                header={target?.schoolName}
+                                subHeader={target?.schoolStatus}
+                                tabs={[tabNames.tab1, tabNames.tab2]}
+                                tabValue={tabValue}
+                                handleChangeTab={handleChangeTab}
+                            >
+                                {tabValue === 0 && (
+                                    <SchoolInfo
+                                        target={target}
+                                        refreshPage={refreshPage}
+                                    />
+                                )}
+                                {tabValue === 1 && (
+                                    <AssignInfo
+                                        target={target}
+                                        refreshPage={refreshPage}
+                                    />
+                                )}
+                            </DetailLayouts>
+                        ) : ( */}
+                        <DetailLayouts
+                            linkBack={linkNames.back}
+                            header={target?.schoolName}
+                            subHeader={target?.schoolStatus}
+                            tabs={[tabNames.tab1, tabNames.tab2, tabNames.tab3]}
+                            tabValue={tabValue}
+                            handleChangeTab={handleChangeTab}
+                        >
+                            {tabValue === 0 && (
+                                <SchoolInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
+                            {tabValue === 1 && (
+                                <AssignInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
 
-                        {tabValue === 1 && <GenInfo target={target} />}
+                            {tabValue === 2 && (
+                                <MOUInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
+                        </DetailLayouts>
+                        {/* )} */}
+                    </>
+                )
+            case roleNames.supervisor:
+                return (
+                    <>
+                        <DetailLayouts
+                            linkBack={linkNames.back}
+                            header={target?.schoolName}
+                            subHeader={target?.schoolStatus}
+                            tabs={[tabNames.tab1, tabNames.tab2]}
+                            tabValue={tabValue}
+                            handleChangeTab={handleChangeTab}
+                        >
+                            {tabValue === 0 && (
+                                <SchoolInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
+                            {tabValue === 1 && (
+                                <AssignInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
+                        </DetailLayouts>
+                    </>
+                )
+            case roleNames.salesman:
+                return (
+                    <>
+                        {/* {isContract === false ? (
+                            <DetailLayouts
+                                linkBack={linkNames.back}
+                                header={target?.schoolName}
+                                subHeader={target?.schoolStatus}
+                                tabs={[tabNames.tab2, tabNames.tab1]}
+                                tabValue={tabValue}
+                                handleChangeTab={handleChangeTab}
+                            >
+                                {tabValue === 0 && (
+                                    <AssignInfo target={target} />
+                                )}
+                                {tabValue === 1 && (
+                                    <SchoolInfo
+                                        target={target}
+                                        refreshPage={refreshPage}
+                                    />
+                                )}
+                            </DetailLayouts>
+                        ) : ( */}
 
-                        {tabValue === 2 && (
-                            <RepInfo
-                                target={target}
-                            // refreshPage={refreshPage}
-                            />
-                        )}
-                    </DetailLayouts>
-                )}
+                        <DetailLayouts
+                            linkBack={linkNames.back}
+                            header={target?.schoolName}
+                            subHeader={target?.schoolStatus}
+                            tabs={[tabNames.tab2, tabNames.tab1, tabNames.tab3]}
+                            tabValue={tabValue}
+                            handleChangeTab={handleChangeTab}
+                        >
+                            {tabValue === 0 && <AssignInfo target={target} />}
+                            {tabValue === 1 && (
+                                <SchoolInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
+                            {tabValue === 2 && (
+                                <MOUInfo
+                                    target={target}
+                                    refreshPage={refreshPage}
+                                />
+                            )}
+                        </DetailLayouts>
 
-            {user.roles[0] === roleNames.salesman && (
-                <DetailLayouts
-                    linkBack="Target Schools"
-                    header={target.schoolName}
-                    tabs={[
-                        'School Info',
-                        'Assign Info',
-                        'Principal Info',
-                        // 'Contract Info',
-                    ]}
-                    subHeader={target.schoolYear}
-                    // isStatus={false}
-                    tabValue={tabValue}
-                    handleChangeTab={handleChangeTab}
-                >
-                    {tabValue === 0 && (
-                        <AssignInfo
-                            target={target}
-                        // refreshPage={refreshPage}
-                        />
-                    )}
+                        {/* )} */}
+                    </>
+                )
+            default:
+                break
+        }
+    }
 
-                    {tabValue === 1 && <GenInfo target={target} />}
-
-                    {tabValue === 2 && (
-                        <RepInfo
-                            target={target}
-                        // refreshPage={refreshPage}
-                        />
-                    )}
-                </DetailLayouts>
-            )}
-        </>
-    )
+    return renderTargetDetail(user.roles[0])
 }
 
 export default TargetSchool

@@ -23,11 +23,10 @@ const clientSchema = yup.object().shape({
         .string()
         .trim()
         .min(4, 'Name must be at least 4 characters')
-        .max(30, 'Name must be at most 30 characters')
-        .required('Name is required'),
+        .max(30, 'Name must be at most 30 characters'),
     reprPhone: yup
         .string()
-        .max(10, 'Phone must be at most 10 digits')
+        .max(10, 'Phone must be at most 10 digits and has the correct format')
         .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
@@ -87,12 +86,12 @@ function RepInfo(props) {
             educationalLevel: school?.educationalLevel,
             type: school?.type,
             scale: school?.scale,
-            phone: school?.phone,
+            // phone: school?.phone,
 
-            description: school?.description,
+            // description: school?.description,
             status: school?.status,
 
-            active: school?.active,
+            // active: school?.active,
         }
 
         SchoolsServices.updateSchool(data.id, model)
@@ -119,7 +118,7 @@ function RepInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (
@@ -190,7 +189,6 @@ function RepInfo(props) {
                                                         fields.fullName.title
                                                     }
                                                     variant="outlined"
-                                                    required
                                                     fullWidth
                                                     autoFocus
                                                     value={value}

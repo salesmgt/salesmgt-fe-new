@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { Filters, Tables } from './components'
 import { columns } from './ReportsConfig'
 import { useReport } from './hooks/ReportContext'
@@ -9,6 +9,9 @@ import classes from './Reports.module.scss'
 
 function Reports() {
     const history = useHistory()
+    const location = useLocation()
+
+    const targetId = location?.state?.targetId ? location?.state?.targetId : 0
 
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -18,10 +21,11 @@ function Reports() {
     function getAllReports(
         page = 0,
         limit = 10,
-        column = 'id',
-        direction = 'asc',
+        column = 'date',
+        direction = 'desc',
         searchKey,
-        listFilters
+        listFilters,
+        targetId
     ) {
         ReportsServices.getReports(
             page,
@@ -29,11 +33,11 @@ function Reports() {
             column,
             direction,
             searchKey,
-            listFilters
+            listFilters,
+            targetId
         )
             .then((res) => {
                 setData(res)
-                console.log('Reports: ', res.list[0]);
             })
             .catch((error) => {
                 if (error.response) {
@@ -47,7 +51,15 @@ function Reports() {
     }
 
     useEffect(() => {
-        getAllReports(page, limit, column, direction, searchKey, listFilters)
+        getAllReports(
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters,
+            targetId
+        )
     }, [params])
 
     if (!data) {

@@ -251,7 +251,7 @@ function Dashboards() {
                     xs={12}
                     sm={12}
                     md={12}
-                    lg={9}
+                    lg={12}
                     className={classes.leftSide}
                 >
                     <Grid container spacing={0}>
@@ -296,7 +296,7 @@ function Dashboards() {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid
+                {/* <Grid
                     item
                     xs={12}
                     sm={12}
@@ -322,7 +322,7 @@ function Dashboards() {
                             </Grid>
                         </Grid>
                     </AnimationGroup>
-                </Grid>
+                </Grid> */}
             </Grid>
         </div>
     )

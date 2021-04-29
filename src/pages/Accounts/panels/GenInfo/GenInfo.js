@@ -31,7 +31,7 @@ const clientSchema = yup.object().shape({
     phone: yup
         .string()
         .required('Phone is required')
-        .max(10, 'Phone must be at most 10 digits')
+        .max(10, 'Phone must be at most 10 digits and has the correct format')
         .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
     address: yup.string().trim(),
 })
@@ -99,7 +99,7 @@ function GenInfo(props) {
             : String(true),
         birthDate: account?.birthDate ? account?.birthDate : null,
         roleName: account?.roleName ? account?.roleName : roleNames.salesman,
-        active: account?.active ? account?.active : true,
+        active: account?.active,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -119,7 +119,7 @@ function GenInfo(props) {
             roleName: account?.roleName
                 ? account?.roleName
                 : roleNames.salesman,
-            active: account?.active ? account?.active : true,
+            active: account?.active,
         })
     }, [account])
 
@@ -165,7 +165,7 @@ function GenInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (

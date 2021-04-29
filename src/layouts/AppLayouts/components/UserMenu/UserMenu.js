@@ -14,6 +14,7 @@ import { IconContext } from 'react-icons'
 import * as Cookies from '../../../../utils/Cookies'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { userMenuItems as items } from '../../AppLayoutsConfig'
+import { cookieNames } from '../../../../constants/Generals'
 import classes from './UserMenu.module.scss'
 
 function UserMenu(props) {
@@ -33,7 +34,7 @@ function UserMenu(props) {
     }
 
     const handleLogout = () => {
-        Cookies.setCookie('accessToken', '', 0)
+        Cookies.setCookie(cookieNames.accessToken, '', 0)
         localStorage.clear()
         setUser()
     }
@@ -86,6 +87,7 @@ function UserMenu(props) {
                             to={`${url}/profiles/${user.username}`}
                             onClick={userMenuClose}
                             role="button"
+                            key={item}
                         >
                             <ListItemIcon className={classes.menuIcon}>
                                 <Icon>{item.icon}</Icon>
@@ -94,7 +96,7 @@ function UserMenu(props) {
                         </MenuItem>
                     ))}
                     {items[1].map((item) => (
-                        <MenuItem onClick={handleLogout}>
+                        <MenuItem onClick={handleLogout} key={item}>
                             <ListItemIcon className={classes.menuIcon}>
                                 <Icon>{item.icon}</Icon>
                             </ListItemIcon>

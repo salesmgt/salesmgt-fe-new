@@ -11,7 +11,19 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
-export const milkName = {
+export const purposeNames = {
+    salesMoi: 'Sales mới',
+    theoDoi: 'Theo dõi',
+    chamSoc: 'Chăm sóc',
+    taiKy: 'Tái ký hợp đồng',
+    kyMoi: 'Ký mới hợp đồng'
+}
+
+export const cookieNames = {
+    accessToken: 'accessToken',
+}
+
+export const milkNames = {
     token: 'notMe',
     dists: 'dists',
     eduLvls: 'eduLvls',
@@ -21,4 +33,11 @@ export const milkName = {
     roles: 'roles',
     schYears: 'schYears',
     salesPurps: 'salesPurps',
+}
+
+export const serviceNames = {
+    svc1: 'ESL',
+    svc2: 'SEL',
+    svc3: 'Toán khoa',
+    sv4: 'Stem',
 }

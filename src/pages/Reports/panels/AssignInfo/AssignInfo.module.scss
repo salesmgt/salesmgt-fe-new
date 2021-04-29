@@ -29,6 +29,9 @@
         }
         .rowx {
             padding: 0rem 0.5rem;
+            @media (max-width: $md) {
+                padding: 0.25rem 0.5rem;
+            }
         }
         .rowy {
             padding: 0.5rem 0rem;

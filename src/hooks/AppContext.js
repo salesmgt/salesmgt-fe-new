@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import * as FiltersServices from '../services/FiltersServices'
 import * as Milk from '../utils/Milk'
-import { milkName } from '../constants/Generals'
+import { milkNames } from '../constants/Generals'
 
 const AppContext = createContext()
 
@@ -9,143 +9,41 @@ export function useApp() {
     return useContext(AppContext)
 }
 
-// FiltersServices.getDistricts()
-//     .then((data) => {
-//         Milk.setMilk(milkName.dists, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getEducationalLevels()
-//     .then((data) => {
-//         Milk.setMilk(milkName.eduLvls, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getSchoolTypes()
-//     .then((data) => {
-//         Milk.setMilk(milkName.types, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getSchoolScales()
-//     .then((data) => {
-//         Milk.setMilk(milkName.scales, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getSchoolStatus()
-//     .then((data) => {
-//         Milk.setMilk(milkName.status, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getRoles()
-//     .then((data) => {
-//         Milk.setMilk(milkName.roles, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getPurposes()
-//     .then((data) => {
-//         Milk.setMilk(milkName.salesPurps, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
-// FiltersServices.getSchoolYears()
-//     .then((data) => {
-//         Milk.setMilk(milkName.schYears, data)
-//     })
-//     .catch((error) => {
-//         if (error.response) {
-//             console.log(error)
-//         }
-//     })
-
 function useAppProvider() {
-    const [
-        dists,
-        setDists
-    ] = useState(
-        Milk.getMilk(milkName.dists) ? Milk.getMilk(milkName.dists) : null
+    const [dists, setDists] = useState(
+        Milk.getMilk(milkNames.dists) ? Milk.getMilk(milkNames.dists) : null
     )
-    const [
-        schEduLvls,
-        setSchEduLvls
-    ] = useState(
-        Milk.getMilk(milkName.eduLvls) ? Milk.getMilk(milkName.eduLvls) : null
+    const [schEduLvls, setSchEduLvls] = useState(
+        Milk.getMilk(milkNames.eduLvls) ? Milk.getMilk(milkNames.eduLvls) : null
     )
-    const [
-        schScales,
-        setSchScales
-    ] = useState(
-        Milk.getMilk(milkName.types) ? Milk.getMilk(milkName.types) : null
+    const [schScales, setSchScales] = useState(
+        Milk.getMilk(milkNames.types) ? Milk.getMilk(milkNames.types) : null
     )
-    const [
-        schTypes,
-        setSchTypes
-    ] = useState(
-        Milk.getMilk(milkName.scales) ? Milk.getMilk(milkName.scales) : null
+    const [schTypes, setSchTypes] = useState(
+        Milk.getMilk(milkNames.scales) ? Milk.getMilk(milkNames.scales) : null
     )
-    const [
-        schStatus,
-        setSchStatus
-    ] = useState(
-        Milk.getMilk(milkName.status) ? Milk.getMilk(milkName.status) : null
+    const [schStatus, setSchStatus] = useState(
+        Milk.getMilk(milkNames.status) ? Milk.getMilk(milkNames.status) : null
     )
-    const [
-        roles,
-        setRoles
-    ] = useState(
-        Milk.getMilk(milkName.roles) ? Milk.getMilk(milkName.roles) : null
+    const [roles, setRoles] = useState(
+        Milk.getMilk(milkNames.roles) ? Milk.getMilk(milkNames.roles) : null
     )
-    const [
-        schYears,
-        setSchYears
-    ] = useState(
-        Milk.getMilk(milkName.schYears) ? Milk.getMilk(milkName.schYears) : null
+    const [schYears, setSchYears] = useState(
+        Milk.getMilk(milkNames.schYears)
+            ? Milk.getMilk(milkNames.schYears)
+            : null
     )
-    const [
-        salesPurps,
-        setSalesPurps
-    ] = useState(
-        Milk.getMilk(milkName.salesPurps)
-            ? Milk.getMilk(milkName.salesPurps)
+    const [salesPurps, setSalesPurps] = useState(
+        Milk.getMilk(milkNames.salesPurps)
+            ? Milk.getMilk(milkNames.salesPurps)
             : null
     )
 
     useEffect(() => {
         FiltersServices.getDistricts()
             .then((data) => {
-                Milk.setMilk(milkName.dists, data)
-                setDists(Milk.getMilk(milkName.dists))
+                Milk.setMilk(milkNames.dists, data)
+                setDists(Milk.getMilk(milkNames.dists))
             })
             .catch((error) => {
                 if (error.response) {
@@ -157,8 +55,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getEducationalLevels()
             .then((data) => {
-                Milk.setMilk(milkName.eduLvls, data)
-                setSchEduLvls(Milk.getMilk(milkName.eduLvls))
+                Milk.setMilk(milkNames.eduLvls, data)
+                setSchEduLvls(Milk.getMilk(milkNames.eduLvls))
             })
             .catch((error) => {
                 if (error.response) {
@@ -170,8 +68,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolTypes()
             .then((data) => {
-                Milk.setMilk(milkName.types, data)
-                setSchTypes(Milk.getMilk(milkName.types))
+                Milk.setMilk(milkNames.types, data)
+                setSchTypes(Milk.getMilk(milkNames.types))
             })
             .catch((error) => {
                 if (error.response) {
@@ -183,8 +81,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolScales()
             .then((data) => {
-                Milk.setMilk(milkName.scales, data)
-                setSchScales(Milk.getMilk(milkName.scales))
+                Milk.setMilk(milkNames.scales, data)
+                setSchScales(Milk.getMilk(milkNames.scales))
             })
             .catch((error) => {
                 if (error.response) {
@@ -196,8 +94,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolStatus()
             .then((data) => {
-                Milk.setMilk(milkName.status, data)
-                setSchStatus(Milk.getMilk(milkName.status))
+                Milk.setMilk(milkNames.status, data)
+                setSchStatus(Milk.getMilk(milkNames.status))
             })
             .catch((error) => {
                 if (error.response) {
@@ -209,8 +107,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getRoles()
             .then((data) => {
-                Milk.setMilk(milkName.roles, data)
-                setRoles(Milk.getMilk(milkName.roles))
+                Milk.setMilk(milkNames.roles, data)
+                setRoles(Milk.getMilk(milkNames.roles))
             })
             .catch((error) => {
                 if (error.response) {
@@ -222,8 +120,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getPurposes()
             .then((data) => {
-                Milk.setMilk(milkName.salesPurps, data)
-                setSalesPurps(Milk.getMilk(milkName.salesPurps))
+                Milk.setMilk(milkNames.salesPurps, data)
+                setSalesPurps(Milk.getMilk(milkNames.salesPurps))
             })
             .catch((error) => {
                 if (error.response) {
@@ -235,8 +133,8 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolYears()
             .then((data) => {
-                Milk.setMilk(milkName.schYears, data)
-                setSchYears(Milk.getMilk(milkName.schYears))
+                Milk.setMilk(milkNames.schYears, data)
+                setSchYears(Milk.getMilk(milkNames.schYears))
             })
             .catch((error) => {
                 if (error.response) {
@@ -247,13 +145,21 @@ function useAppProvider() {
 
     return {
         dists,
-        schYears,
         schEduLvls,
         schTypes,
         schScales,
         schStatus,
-        salesPurps,
         roles,
+        schYears,
+        salesPurps,
+        // setDists,
+        // setSchEduLvls,
+        // setSchTypes,
+        // setSchScales,
+        // setSchStatus,
+        // setRoles,
+        // setSchYears,
+        // setSalesPurps,
     }
 }
 

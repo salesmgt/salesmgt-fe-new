@@ -10,7 +10,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 12.5rem;
+        height: 11.5rem;
         position: absolute;
         background: linear-gradient(
             to left,
@@ -42,8 +42,8 @@
             .header {
                 display: flex;
                 flex-direction: column;
-                min-height: 9.5rem;
-                height: 9.5rem;
+                min-height: 8.5rem;
+                height: 8.5rem;
                 @media (max-width: $sm) {
                     min-height: 8.5rem;
                     height: 8.5rem;
@@ -80,22 +80,18 @@
                         min-width: 0;
                         margin: 0rem 0.8rem;
                         .basicMain {
-                            @media (max-width: $sm) {
-                                font-size: 1.5rem;
-                                line-height: 1.334;
-                                letter-spacing: 0em;
-                            }
+                            font-size: 1.5rem;
+                            line-height: 1.334;
+                            letter-spacing: 0em;
                         }
                         .basicSub {
-                            @media (max-width: $sm) {
-                                font-size: 1rem;
-                                line-height: 1.75;
-                                letter-spacing: 0.00938em;
-                            }
+                            font-size: 1rem;
+                            line-height: 1.75;
+                            letter-spacing: 0.00938em;
                         }
                         .activeSub {
                             color: $common-white;
-                            background-color: $heals;
+                            background-color: $trust;
                             width: fit-content;
                         }
                         .inactiveSub {
@@ -113,6 +109,7 @@
                 min-height: 0;
                 border-radius: $default-radius;
                 background-color: $common-white;
+                overflow: hidden;
                 .toolbar {
                     display: flex;
                     height: 3rem;

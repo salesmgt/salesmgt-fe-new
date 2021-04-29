@@ -9,8 +9,8 @@ import {
 } from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
-import ConfirmRemove from '../../../dialogs/ConfirmRemove'
-import CannotRemove from '../../../dialogs/CannotRemove'
+import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
+import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import { useReport } from '../../../hooks/ReportContext'
 import { roleNames } from '../../../../../constants/Generals'
@@ -26,10 +26,12 @@ function MenuOptions(props) {
 
     const { params } = useReport()
 
+    // console.log('Reports: data = ', data);
+
     const stateData = {
         model: data,
         params: params,
-        pathName: `${url}/${data.username}`,
+        pathName: `${url}/${data.id}`,
     }
 
     const handleOpen = (event) => {
@@ -53,55 +55,37 @@ function MenuOptions(props) {
         // comments.forEach(comment => {
         //     commentedBy.push(comment.fullName);
         // });
-        if (data?.contextComments) {
-            return (
-                <CannotRemove
-                    open={open}
-                    onClose={() => setOpen(false)}
-                    data={data}
-                />
-            )
-        }
-        // else if (data.comments.length === 0) {
-        else {
-            return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
-            )
-        }
+        // if (user.username === data?.username) {
+            if (data?.contextComments) {
+                return (
+                    <CannotRemove
+                        open={open}
+                        onClose={() => setOpen(false)}
+                        data={data}
+                    />
+                )
+            }
+            // else if (data.comments.length === 0) {
+            else {
+                return (
+                    <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
+                )
+            }
+        // } else {
+        //     const newData = {...data, msg: 'You cannot remove reports of the others.'}
+        //     return (
+        //         <CannotRemove open={open} onClose={() => setOpen(false)} data={newData} />
+        //     )
+        // }
     }
 
     // console.log('user = ', user);
     const renderMenus = (role) => {
         switch (role) {
             case roleNames.manager:
-                return (
-                    <>
-                        <MenuItem
-                            onClick={handleCloseMenus}
-                            component={Link}
-                            to={{
-                                pathname: `${url}/${data.id}`,
-                                state: { data: stateData },
-                            }}
-                        >
-                            <ListItemIcon className={classes.itemIcon}>
-                                <MdInfo fontSize="large" />
-                            </ListItemIcon>
-                            <ListItemText className={classes.itemText}>
-                                View details
-                            </ListItemText>
-                        </MenuItem>
-                        {/**For Salesman:
-                            - View details and update report inside that form.
-                            For Manager & Supervisor:
-                            - View details and give comment inside that form.
-                        */}
-                    </>
-                )
-
             case roleNames.supervisor:
                 return (
-                    <>
+                    <div>
                         <MenuItem
                             onClick={handleCloseMenus}
                             component={Link}
@@ -122,12 +106,12 @@ function MenuOptions(props) {
                             For Manager & Supervisor:
                             - View details and give comment inside that form.
                         */}
-                    </>
+                    </div>
                 )
 
             case roleNames.salesman:
                 return (
-                    <>
+                    <div>
                         <MenuItem
                             onClick={handleCloseMenus}
                             component={Link}
@@ -143,23 +127,25 @@ function MenuOptions(props) {
                                 View details
                             </ListItemText>
                         </MenuItem>
-                        <>
-                            <MenuItem onClick={handleOpenConfirmation}>
-                                <ListItemIcon className={classes.itemIcon}>
-                                    <MdDelete fontSize="large" />
-                                </ListItemIcon>
-                                <ListItemText className={classes.itemText}>
-                                    Remove
-                                </ListItemText>
-                            </MenuItem>
-                            {renderRemoveDialog()}
-                        </>
+                        {user.username === data?.username && (
+                            <div>
+                                <MenuItem onClick={handleOpenConfirmation}>
+                                    <ListItemIcon className={classes.itemIcon}>
+                                        <MdDelete fontSize="large" />
+                                    </ListItemIcon>
+                                    <ListItemText className={classes.itemText}>
+                                        Remove
+                                    </ListItemText>
+                                </MenuItem>
+                                {renderRemoveDialog()}
+                            </div>
+                        )}
                         {/**For Salesman:
                             - View details and update report inside that form.
                             For Manager & Supervisor:
                             - View details and give comment inside that form.
                         */}
-                    </>
+                    </div>
                 )
 
             default:
@@ -186,6 +172,6 @@ function MenuOptions(props) {
 
 export default React.memo(MenuOptions)
 
-MenuOptions.propTypes = {
-    data: PropTypes.object.isRequired,
-}
+// MenuOptions.propTypes = {
+//     data: PropTypes.object.isRequired,
+// }

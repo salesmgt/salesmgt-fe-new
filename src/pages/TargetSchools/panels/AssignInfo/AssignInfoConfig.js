@@ -6,6 +6,8 @@ export const Consts = {
     operations: {
         cancel: 'Cancel',
         save: 'Save',
+        empty: 'Not assigned yet!',
+        restriction: `Sorry, you can't view this!`
     },
     fields: {
         name: {
@@ -32,6 +34,9 @@ export const Consts = {
         tel: {
             title: 'Tel',
         },
+        des: {
+            title: 'Description',
+        },
         reprName: {
             title: 'Principal Name',
         },
@@ -46,6 +51,11 @@ export const Consts = {
         },
         schlYear: {
             title: 'Shool Year',
+        },
+        note: {
+            title: 'Manager Note',
+            hasNote: 'Last note by',
+            noNote: 'No notes yet',
         },
     },
 }

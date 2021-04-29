@@ -1,15 +1,66 @@
 export const columns = [
     // { key: "checkbox", name: '', sortable: false },
     // { key: "no", name: 'No', sortable: false },
-    { key: "date", name: 'Date', sortable: true },
-    { key: "schoolName", name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
-    { key: "fullName", name: 'PIC', sortable: true },
-    { key: "targetPurposeName", name: 'Purpose', sortable: true },  // Purpose - primary
-    { key: "result", name: 'Result', sortable: false },
-    { key: "description", name: 'Description', sortable: false }, // truncate 30 kí tự thôi
+    { key: 'date', name: 'Date', sortable: true },
+    { key: 'schoolName', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
+    { key: 'fullName', name: 'PIC', sortable: true },
+    { key: 'targetPurposeName', name: 'Purpose', sortable: true }, // Purpose - primary
+    { key: 'result', name: 'Result', sortable: false },
+    { key: 'description', name: 'Description', sortable: false }, // truncate 30 kí tự thôi
     // { key: "comment", name: 'Comment', sortable: false }, // truncate 30 kí tự thôi
     { key: '', name: '', sortable: false },
 ]
+
+export const rpConsts = {
+    linkNames: {
+        back: 'Reports',
+    },
+    tabNames: {
+        tab1: 'Report Info',
+        tab2: 'Assign Info',
+    },
+}
+
+export const Consts = {
+    operations: {
+        filter: 'Filters',
+        search: {
+            placeholder: 'Search...',
+        },
+        create: 'Create',
+    },
+    filters: {
+        pic: {
+            title: 'PICs',
+            placeholder: "PIC's name",
+        },
+        purpose: {
+            title: 'Purposes',
+            options: { all: 'All' },
+        },
+        district: {
+            title: 'Districts',
+            options: { all: 'All' },
+        },
+        schoolYear: {
+            title: 'School Years',
+            options: { all: 'All' },
+        },
+        dateRange: {
+            titleFrom: 'From date',
+            titleTo: 'From date',
+            format: 'dd/mm/yyyy',
+        },
+    },
+    messages: {
+        notFound: 'No records found.',
+    },
+    menuItems: {
+        details: {
+            title: 'View details',
+        },
+    },
+}
 
 export const data = {
     list: [
@@ -114,30 +165,3 @@ export const data = {
     totalPage: 1,
     totalElements: 3,
 }
-
-// {
-//   "schoolName": "string",
-//   "address": "string",
-//   "district": "string",
-//   "level": "string",
-//   "reprName": "string",
-//   "reprIsMale": true,
-
-//   "id": 0,
-//   "date": "2021-04-19T09:46:49.916Z",
-//   "result": "string",
-//   "description": "string",
-//   "positivity": "string",
-//   "difficulty": "string",
-//   "futurePlan": "string",
-//   "commentedPerson": "string",
-//   "contextComments": "string",
-
-//   "targetId": 0,
-//   "schoolYear": "string",
-//   "purpose": "string",
-
-//   "avatar": "string",
-//   "username": "string"
-//   "fullName": "string",
-// }
