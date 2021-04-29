@@ -6,6 +6,7 @@ export const DISTRICT_FILTER = 'district'
 export const SCHOOL_YEAR_FILTER = 'schoolYear'
 export const STATUS_FILTER = 'status'
 export const PURPOSE_FILTER = 'purpose'
+export const ASSIGNED_FILTER = 'isAssigned'
 export const DATE_RANGE_FILTER = 'dateRange'
 
 export const TYPE_FILTER = 'type'

@@ -28,7 +28,7 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { Consts } from '../../TargetSchoolsConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { getColumns } from '../../TargetSchoolsConfig'
-import { roleNames } from '../../../../constants/Generals'
+import { roleNames,purposeNames } from '../../../../constants/Generals'
 import SortableTableHeaders from './SortableTableHeaders'
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
@@ -129,7 +129,6 @@ function Tables(props) {
     const {
         params,
         dispatchParams,
-        page,
         limit,
         direction,
         column,
@@ -227,14 +226,16 @@ function Tables(props) {
 
     const setPurposeChipColor = (purpose) => {
         switch (purpose) {
-            case 'Sales mới':
+            case purposeNames.salesMoi:
                 return <Chip label={purpose} className={classes.chipSalesMoi} />
-            case 'Chăm sóc':
+            case purposeNames.chamSoc:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case 'Tái ký hợp đồng':
+            case purposeNames.taiKy:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case 'Ký mới hợp đồng':
+            case purposeNames.kyMoi:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
+            case purposeNames.theoDoi:
+                return <Chip label={purpose} /> // #5c21f3
             default:
                 return <Chip label={purpose} /> // #5c21f3
         }

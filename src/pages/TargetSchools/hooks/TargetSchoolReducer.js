@@ -50,6 +50,18 @@ export const TargetSchoolReducer = (params, action) => {
                 page: 0,
                 listFilters: { ...listFilters, purpose: payload },
             }
+        case Actions.FILTER_SCHOOL_STATUS:
+            return {
+                ...params,
+                page: 0,
+                listFilters: { ...listFilters, status: payload },
+            }
+        case Actions.FILTER_ASSIGNED:
+            return {
+                ...params,
+                page: 0,
+                listFilters: { ...listFilters, isAssigned: payload },
+            }
 
         case Actions.ENTER_SEARCH_KEYWORD:
             return { ...params, page: 0, searchKey: payload }

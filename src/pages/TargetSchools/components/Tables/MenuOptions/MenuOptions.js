@@ -8,11 +8,12 @@ import {
     MenuItem,
 } from '@material-ui/core'
 import { MdDelete, MdDescription, MdInfo, MdMoreVert } from 'react-icons/md'
-// import { useAuth } from '../../../../../hooks/AuthContext'
+import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
 import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
 import { Consts } from '../../../TargetSchoolsConfig'
+import { roleNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import classes from './MenuOptions.module.scss'
 
@@ -23,7 +24,7 @@ function MenuOptions(props) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [open, setOpen] = useState(false)
 
-    // const { user } = useAuth()
+    const { user } = useAuth()
     const { params } = useTargetSchool()
     const { url } = useRouteMatch()
 
@@ -117,17 +118,19 @@ function MenuOptions(props) {
                         {menuItems.assign.title}
                     </ListItemText>
                 </MenuItem> */}
-                <div>
-                    <MenuItem onClick={handleOpenConfirmation}>
-                        <ListItemIcon className={classes.itemIcon}>
-                            <MdDelete fontSize="large" />
-                        </ListItemIcon>
-                        <ListItemText className={classes.itemText}>
-                            {menuItems.remove.title}
-                        </ListItemText>
-                    </MenuItem>
-                    {renderRemoveDialog()}
-                </div>
+                {user.roles[0] !== roleNames.salesman && (
+                    <div>
+                        <MenuItem onClick={handleOpenConfirmation}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdDelete fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                {menuItems.remove.title}
+                            </ListItemText>
+                        </MenuItem>
+                        {renderRemoveDialog()}
+                    </div>
+                )}
             </Menu>
         </div>
     )

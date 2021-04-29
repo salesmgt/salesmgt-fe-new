@@ -23,6 +23,7 @@ import {
 import { useSchool } from '../../hooks/SchoolContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
+import { statusNames } from '../../../../constants/Generals'
 import { Consts } from '../../SchoolsConfig'
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
@@ -211,15 +212,22 @@ function Tables(props) {
         }
     }
 
-    const setStatusChipColor = (purpose) => {
-        switch (purpose) {
-            case 'Chưa hợp tác':
-                return <Chip label={purpose} className={classes.chipLead} />
-            case 'Đang hợp tác':
-                return <Chip label={purpose} className={classes.chipCustomer} />
-            default:
-                // #5c21f3
-                return <Chip label={purpose} />
+    const setStatusChipColor = (status, isActive) => {
+        if (isActive) {
+            switch (status) {
+                case statusNames.lead:
+                    return <Chip label={status} className={classes.chipLead} />
+                    // return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
+                case statusNames.customer:
+                    return <Chip label={status} className={classes.chipCustomer} />
+                    // return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
+                default:
+                    // #5c21f3
+                    return <Chip label={status} />
+                    // return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+            }
+        } else {
+            return <Chip label={statusNames.pending} />
         }
     }
 
@@ -285,7 +293,7 @@ function Tables(props) {
                                         }
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {setStatusChipColor(row.status)}
+                                        {setStatusChipColor(row.status, row.active)}
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}

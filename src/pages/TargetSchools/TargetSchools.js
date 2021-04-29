@@ -17,37 +17,6 @@ function TargetSchools() {
 
     const [data, setData] = useState({})
 
-    // function onGetTargets(
-    //     page = 0,
-    //     limit = 10,
-    //     column = 'id',
-    //     direction = 'asc',
-    //     searchKey,
-    //     listFilters
-    // ) {
-    //     TargetSchoolsServices.getTargetSchools(
-    //         page,
-    //         limit,
-    //         column,
-    //         direction,
-    //         searchKey,
-    //         listFilters
-    //     )
-    //         .then((res) => {
-    //             setData(res)
-    //             // console.log('targets: ', res);
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
     function onGetTargets(
         page = 0,
         limit = 10,
@@ -68,6 +37,7 @@ function TargetSchools() {
         )
             .then((res) => {
                 setData(res)
+                // console.log("target res = ", res);
             })
             .catch((error) => {
                 if (error.response) {

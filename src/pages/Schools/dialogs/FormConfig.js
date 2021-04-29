@@ -81,5 +81,5 @@ export const Consts = {
         success: 'Checked',
         error: 'Error',
     },
-    refFile: 'documents/Import_Sample.xlsx',
+    refFile: 'documents/Import_Sample.xlsx'
 }
