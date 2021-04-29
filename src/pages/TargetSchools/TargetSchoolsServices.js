@@ -111,12 +111,14 @@ export async function updateMOU(mouId, mou) {
 //     return await Api.put('/targets', { targetSchool })
 // }
 
-// export async function removeTargetSchool(targetSchoolId) {
-//     return await Api.delete('/targets', { targetSchoolId })
-// }
+export async function removeTargetSchool(targetId) {
+    const response = await Api.delete(`/targets/${targetId}`, {targetId})
+    const data = await response.data
+    return data
+}
 
 export async function getDashboardsByKeys(...keys) {
-    const response = await Api.get('/dashbords', { ...keys })
+    const response = await Api.get('/dashboards', { ...keys })
     const data = await response.data
 
     return data

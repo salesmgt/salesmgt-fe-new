@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
     Button,
     TextField,
@@ -19,22 +19,18 @@ import {
     TableBody,
     makeStyles,
     Paper,
-    Fade
+    IconButton,
+    Popover,
+    Badge
 } from '@material-ui/core'
 import { MdAccountCircle, MdClose } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import IconButton from '@material-ui/core/IconButton';
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import { Consts, columns } from '../FormConfig'
-import Popover from '@material-ui/core/Popover';
-import Badge from '@material-ui/core/Badge';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import { BiEdit } from "react-icons/bi";
-import CardContent from '@material-ui/core/CardContent';
 import classes from './AssignMultiple.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -42,17 +38,6 @@ const clientSchema = yup.object().shape({
     // remark: yup.string().trim().max(50).required(),
     PIC: yup.string().required(),
 })
-
-//===============Set max-height for dropdown list===============
-const ITEM_HEIGHT = 38;
-const ITEM_PADDING_TOP = 5;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-        }
-    }
-};
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -105,12 +90,10 @@ function AssignMultipleForm(props) {
         resolver: yupResolver(clientSchema),
     })
 
-    const { PICs } = useTargetSchool()
-
+    const { PICs, getListPICs } = useTargetSchool()
     const [PIC, setPIC] = useState(null)
-    // Hiện tại chỉ lưu đc purpose của 1 trường
-    // Tức là mỗi lần chọn nó sẽ đè gtri mới lên nhau. Sau này update lên là 1 [] các purpose hoặc
-    // cứ để 1 obj cũng đc nhưng cần ghi lại cái trường này vao đâu đó luôn để gửi cho API còn Assign.
+
+    const typingTimeoutRef = useRef({})
 
     const onSubmit = (data) => {
         console.log(data)
@@ -125,7 +108,22 @@ function AssignMultipleForm(props) {
   
     const handleClose = () => {
       setAnchorEl(null);
-    };
+    };    
+
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
+    }
 
     const handlePICChange = (event, newPIC) => {
         setPIC(newPIC);
@@ -188,6 +186,7 @@ function AssignMultipleForm(props) {
                                             helperText={errors?.PIC?.message}
                                             margin="normal"
                                             placeholder="PIC will be assigned"
+                                            onChange={onSearchPICChange}
                                             // ref={params.InputProps.ref}
                                             InputProps={{
                                                 ...params.InputProps,

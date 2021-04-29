@@ -10,9 +10,9 @@ import { Consts } from '../../../ReportsConfig'
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
-        width: 125,
+        width: 130,
         margin: theme.spacing(1),
-        paddingRight: '0.5rem',
+        // paddingRight: '0.5rem',
     },
 }))
 
@@ -30,6 +30,7 @@ function DateRangePickers(props) {
 
     const handleChangeDate = (newDate) => {
         // setDateRange(newDate)
+        // setFilter(DATE_RANGE_FILTER, [null, null])
         setFilter(DATE_RANGE_FILTER, newDate)
         handleDateRangeChange(newDate)
         // console.log('newDate: ', newDate);
@@ -45,9 +46,9 @@ function DateRangePickers(props) {
                 disableFuture
                 showToolbar
                 minDate={new Date('2010-01-01')}
-                inputFormat={filters.dateRange.format}
-                value={dateRange || ''}
-                onChange={handleChangeDate}
+                inputFormat='dd/MM/yyyy'
+                value={dateRange}
+                onChange={(newRange) => handleChangeDate(newRange)}
                 renderInput={(startProps, endProps) => (
                     <Grid container>
                         <Grid item xs={12} sm={5} md={5} lg={5}>

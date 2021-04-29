@@ -132,6 +132,8 @@ function CreateReportsForm(props) {
             if (searchKey) {
                 // setTarget(searchKey);
                 getListTargets(searchKey)
+            } else {
+                getListTargets()
             }
         }, 300)
     }

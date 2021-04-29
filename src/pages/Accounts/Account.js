@@ -5,6 +5,7 @@ import { GenInfo } from './panels'
 import * as AccountsServices from './AccountsServices'
 import { acctConsts } from './AccountsConfig'
 import { Loading } from '../../components'
+import { Avatar } from '@material-ui/core'
 
 function Account() {
     const { linkNames, tabNames } = acctConsts
@@ -56,7 +57,7 @@ function Account() {
     return (
         <DetailLayouts
             linkBack={linkNames.back}
-            avatar={account?.avatar}
+            avatar={account?.avatar ? account?.avatar : <Avatar />}
             header={account?.fullName}
             subHeader={account?.active}
             isStatus={true}

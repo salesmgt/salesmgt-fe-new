@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -170,8 +170,9 @@ function Filters() {
     // console.log('filter reports nè')
 
     const classes = useStyles()
+    const { operations, filters } = Consts
 
-    const { user } = useAuth()
+    // const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
@@ -194,26 +195,29 @@ function Filters() {
         // setSchoolStatus,
         // setDateRange,
         setFilter,
+        getListPICs,
     } = useReport()
-    const { operations, filters } = Consts
+
+    const typingTimeoutRef = useRef({})
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
+    }
+
     //================Handle useState() of filters================
     const handlePICChange = (event, newPIC) => {
-        // setPIC(newPIC)
-        // if (newPIC) {
-        //     //  !== null
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PIC,
-        //         payload: { filterType: 'PIC', filterValue: newPIC },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PIC,
-        //         payload: { filterType: 'PIC', filterValue: null },
-        //     })
-        // }
         setFilter(PIC_FILTER, newPIC)
         dispatchParams({
             type: ReducerActions.FILTER_PIC,
@@ -226,23 +230,6 @@ function Filters() {
 
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-
-        // setDistrict(selectedDistrict)
-        // if (selectedDistrict) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: {
-        //             filterType: 'district',
-        //             filterValue: selectedDistrict,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: { filterType: 'district', filterValue: '' },
-        //     })
-        // }
         setFilter(DISTRICT_FILTER, selectedDistrict)
         dispatchParams({
             type: ReducerActions.FILTER_DISTRICT,
@@ -255,22 +242,6 @@ function Filters() {
 
     const handleSchoolYearChange = (event) => {
         const selectedSchoolYear = event.target.value
-
-        // setSchoolYear(selectedSchoolYear)
-        // if (selectedSchoolYear) {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
-        //         payload: {
-        //             filterType: 'schoolYear',
-        //             filterValue: selectedSchoolYear,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
-        //         payload: { filterType: 'schoolYear', filterValue: '' },
-        //     })
-        // }
         setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_YEAR,
@@ -311,23 +282,6 @@ function Filters() {
 
     const handlePurposeChange = (event) => {
         const selectedPurpose = event.target.value
-
-        // setPurpose(selectedPurpose)
-        // if (selectedPurpose) {
-        //     // !== '' && selectedPurpose !== undefined
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PURPOSE,
-        //         payload: {
-        //             filterType: 'purpose',
-        //             filterValue: selectedPurpose,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PURPOSE,
-        //         payload: { filterType: 'purpose', filterValue: '' },
-        //     })
-        // }
         setFilter(PURPOSE_FILTER, selectedPurpose)
         dispatchParams({
             type: ReducerActions.FILTER_PURPOSE,
@@ -339,9 +293,9 @@ function Filters() {
     }
 
     const handleDateRangeChange = (selectedDate) => {
-        const fromDate = moment(selectedDate[0]).format('YYYY-MM-DD')
-        const toDate = moment(selectedDate[1]).format('YYYY-MM-DD')
-
+        const fromDate = selectedDate[0] ? moment(selectedDate[0]).format('YYYY-MM-DD') : null
+        const toDate = selectedDate[1] ? moment(selectedDate[1]).format('YYYY-MM-DD') : null
+        
         setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
         dispatchParams({
             type: ReducerActions.FILTER_DATE_RANGE,
@@ -430,6 +384,7 @@ function Filters() {
             }
             listChips.push(newListFilters[chip])
         }
+        // console.log('Reports - listChips: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -488,76 +443,7 @@ function Filters() {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid item xs={12} sm={6} md={5} lg={4}>
-                            <Autocomplete
-                                autoComplete
-                                autoSelect
-                                autoHighlight
-                                clearOnEscape
-                                options={PICs ? PICs : []}
-                                getOptionLabel={(pic) =>
-                                    pic.fullName ? pic.fullName : ''
-                                }
-                                value={PIC}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={filters.pic.title}
-                                        margin="normal"
-                                        placeholder={filters.pic.placeholder}
-                                        // ref={params.InputProps.ref}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            startAdornment: (
-                                                <>
-                                                    <InputAdornment position="start">
-                                                        <MdAccountCircle />
-                                                    </InputAdornment>
-                                                    {
-                                                        params.InputProps
-                                                            .startAdornment
-                                                    }
-                                                </>
-                                            ),
-                                        }}
-                                    />
-                                )}
-                                renderOption={(option) => {
-                                    return (
-                                        <div
-                                            className={classes.itemPIC}
-                                            key={option.username}
-                                        >
-                                            <ListItemAvatar>
-                                                <Avatar src={option.avatar} />
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                primary={
-                                                    option.fullName
-                                                        ? option.fullName
-                                                        : ''
-                                                }
-                                                classes={{
-                                                    primary:
-                                                        classes.itemTextPrimary,
-                                                }}
-                                            />
-                                        </div>
-                                    )
-                                }}
-                                className={classes.autoComplete}
-                                onChange={(event, newPIC) =>
-                                    handlePICChange(event, newPIC)
-                                }
-                            />
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={5} md={3} lg={3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -595,12 +481,7 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
+                        <Grid item xs={12} sm={5} md={3} lg={3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -686,6 +567,71 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
+                        <Grid item xs={12} sm={6} md={5} lg={4}>
+                            <Autocomplete
+                                autoComplete
+                                autoSelect
+                                autoHighlight
+                                clearOnEscape
+                                options={PICs ? PICs : []}
+                                getOptionLabel={(pic) =>
+                                    pic.fullName ? pic.fullName : ''
+                                }
+                                value={PIC}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label={filters.pic.title}
+                                        margin="normal"
+                                        placeholder={filters.pic.placeholder}
+                                        onChange={onSearchPICChange}
+                                        // ref={params.InputProps.ref}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            startAdornment: (
+                                                <>
+                                                    <InputAdornment position="start">
+                                                        <MdAccountCircle />
+                                                    </InputAdornment>
+                                                    {
+                                                        params.InputProps
+                                                            .startAdornment
+                                                    }
+                                                </>
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                renderOption={(option) => {
+                                    return (
+                                        <div
+                                            className={classes.itemPIC}
+                                            key={option.username}
+                                        >
+                                            <ListItemAvatar>
+                                                <Avatar src={option.avatar} />
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={
+                                                    option.fullName
+                                                        ? option.fullName
+                                                        : ''
+                                                }
+                                                classes={{
+                                                    primary:
+                                                        classes.itemTextPrimary,
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                }}
+                                className={classes.autoComplete}
+                                onChange={(event, newPIC) =>
+                                    handlePICChange(event, newPIC)
+                                }
+                            />
+                        </Grid>
+                        
                         {/* <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>

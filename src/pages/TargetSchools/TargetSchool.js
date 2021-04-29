@@ -87,7 +87,7 @@ function TargetSchool() {
                         ) : ( */}
                         <DetailLayouts
                             linkBack={linkNames.back}
-                            header={target?.schoolName}
+                            header={`${target?.level} ${target?.schoolName}`}
                             subHeader={target?.schoolStatus}
                             tabs={[tabNames.tab1, tabNames.tab2, tabNames.tab3]}
                             tabValue={tabValue}

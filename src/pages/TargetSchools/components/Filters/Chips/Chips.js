@@ -217,7 +217,6 @@ function Chips(props) {
         <div>
             {handleShowClearAllButton() !== 9 && (
                 <div className={classes.root}>
-                    {' '}
                     {/* {(chips !== null && chips !== undefined) && */}
                     {/* {showClearAllButton(chipData)} */}
                     <Button

@@ -21,7 +21,7 @@ import { columns } from './CreateTargetSchoolsConfig'
 import { useHistory } from "react-router"
 import { getAllSchools } from '../../TargetSchoolsServices'
 import classes from './CreateTargetSchools.module.scss'
-import FullFeaturedDemo from './FullFeaturedDemo.js';
+// import FullFeaturedDemo from './FullFeaturedDemo.js';
 
 const clientSchema = yup.object().shape({
     // title: yup.string().trim().max(30).required(),
@@ -112,7 +112,7 @@ function CreateTargetSchools(props) {
             {/* <Divider /> */}
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent className={classes.wrapper}>
-                <FullFeaturedDemo/>
+                {/* <FullFeaturedDemo/> */}
                     {/* <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Grid item xs>

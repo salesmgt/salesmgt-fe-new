@@ -122,7 +122,7 @@ const useStyles = makeStyles(() => ({
 function Tables(props) {
     const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
-    const { selectedRows, setSelectedRows,rows, totalRecord, totalPage } = props // , onGetTargets
+    const { selectedRows, setSelectedRows,rows, totalRecord, totalPage, refreshAPI } = props // , onGetTargets
     const { messages } = Consts
 
     //Use states which have been declared in the TargetSchoolContext
@@ -357,7 +357,7 @@ function Tables(props) {
                                             className={classes.tBodyCell}
                                             align="right"
                                         >
-                                            <MenuOptions data={row} />
+                                            <MenuOptions data={row} refreshAPI={refreshAPI} />
                                         </TableCell>
                                     </TableRow>
                                 )

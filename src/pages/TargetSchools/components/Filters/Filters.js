@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -179,9 +179,11 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters(props) {
     //   const style = useStyles();
     const classes = useStyles()
+    const { operations, filters } = Consts
     // const { onGetTargets } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
+    const { user } = useAuth()
     const {
         schYears,
         dists,
@@ -208,75 +210,16 @@ function Filters(props) {
         isAssigned,
         assignedStatuses,
         setFilter,
+        getListPICs,
     } = useTargetSchool()
-    const { operations, filters } = Consts
 
-    const { user } = useAuth()
+    const typingTimeoutRef = useRef({})
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
     const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
     const [openAssignDialog, setOpenAssignDialog] = useState(false)
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
-
-    const selectedSchools = [
-        {
-            id: 10,
-            schoolName: 'THCS Hiệp Thành',
-            district: 'Quận 4',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 12,
-            schoolName: 'Tiểu học Xuân Thu',
-            district: 'Quận Bình Tân',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 13,
-            schoolName: 'THCS Võ Trường Toản',
-            district: 'Quận 1',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 16,
-            schoolName: 'THPT Nguyễn Thượng Hiền',
-            district: 'Quận Phú Nhuận',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 20,
-            schoolName: 'THPT Marie Cuire',
-            district: 'Quận 10',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 21,
-            schoolName: 'Tiểu học Đặng Trần Côn',
-            district: 'Quận 12',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 30,
-            schoolName: 'THPT Nguyễn Trãi',
-            district: 'Quận 3',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 34,
-            schoolName: 'Tiểu học Nguyễn Văn Cừ',
-            district: 'Quận 5',
-            purpose: '',
-            note: '',
-        },
-    ] // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
 
     //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
@@ -337,6 +280,22 @@ function Filters(props) {
                 filterValue: selectedSchoolScale ? selectedSchoolScale : '',
             },
         })
+    }
+    
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            console.log('searchKey = ', searchPIC)
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
     }
 
     const handlePICChange = (event, newPIC) => {
@@ -478,13 +437,13 @@ function Filters(props) {
     }
 
     const handleOpenAssignDialog = () => {
-        if (selectedSchools.length > 0) {
+        // if (selectedSchools.length > 0) {
             // console.log('assign dialog')
             setOpenAssignDialog(true)
-        } else {
+        // } else {
             // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
-        }
+        // }
     }
 
     return (
@@ -550,7 +509,6 @@ function Filters(props) {
                             onClose={() => setOpenAssignDialog(false)}
                             rows={props.selectedRows}
                             setRows={props.setSelectedRows}
-                            
                         />
                         {/* Have not checked target schools */}
                         <NotifyAssign
@@ -560,83 +518,9 @@ function Filters(props) {
                     </Box>
                     </>)}
                 </Box>
-             
                 <MuiAccordionDetails>
                     <Grid container>
-                        {user.roles[0] !== roleNames.salesman && (
-                            <Grid item xs={12} sm={6} md={5} lg={4}>
-                                <Autocomplete
-                                    autoComplete
-                                    autoSelect
-                                    autoHighlight
-                                    clearOnEscape
-                                    options={PICs ? PICs : []}
-                                    getOptionLabel={(pic) =>
-                                        pic.fullName ? pic.fullName : ''
-                                    }
-                                    value={PIC}
-                                    renderInput={(params) => {
-                                        return (
-                                            <TextField
-                                                {...params}
-                                                label={filters.pic.title}
-                                                margin="normal"
-                                                placeholder={
-                                                    filters.pic.placeholder
-                                                }
-                                                ref={params.InputProps.ref}
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    startAdornment: (
-                                                        <>
-                                                            <InputAdornment position="start">
-                                                                <MdAccountCircle />
-                                                            </InputAdornment>
-                                                            {
-                                                                params
-                                                                    .InputProps
-                                                                    .startAdornment
-                                                            }
-                                                        </>
-                                                    ),
-                                                }}
-                                            />
-                                        )
-                                    }}
-                                    renderOption={(option) => {
-                                        return (
-                                            <div
-                                                className={classes.itemPIC}
-                                                key={option.username}
-                                            >
-                                                <ListItemAvatar>
-                                                    <Avatar
-                                                        src={option.avatar}
-                                                    />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={
-                                                        option.fullName
-                                                            ? option.fullName
-                                                            : ''
-                                                    }
-                                                    classes={{
-                                                        primary:
-                                                            classes.itemTextPrimary,
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    }}
-                                    className={classes.autoComplete}
-                                    onChange={(event, newPIC) =>
-                                        handlePICChange(event, newPIC)
-                                    }
-                                />
-                            </Grid>
-                        )}
-
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -676,7 +560,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -716,7 +600,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -758,7 +642,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -800,7 +684,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -842,7 +726,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -884,7 +768,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -926,35 +810,113 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
                         
-                        <Grid item xs={12} sm={4} md={3} lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.isAssigned.title}
-                                </InputLabel>
-                                <Select
-                                    value={isAssigned === null ? '' : isAssigned}
-                                    onChange={handleIsAssignedChange}
-                                    MenuProps={MenuProps}
+                        {user.roles[0] !== roleNames.salesman &&
+                            <>
+                                <Grid item xs={12} sm={6} md={4} lg={3}
+                                    className={classes.paddingTop}
                                 >
-                                    {assignedStatuses?.map((isAssigned) => (
-                                        <MenuItem
-                                            key={isAssigned}
-                                            value={isAssigned}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
-                                            }}
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel>
+                                            {filters.isAssigned.title}
+                                        </InputLabel>
+                                        <Select
+                                            value={isAssigned === null ? '' : isAssigned}
+                                            onChange={handleIsAssignedChange}
+                                            MenuProps={MenuProps}
                                         >
-                                            {isAssigned === null ? `${filters.isAssigned.options.all}` : (isAssigned ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`)}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                            {assignedStatuses?.map((isAssigned) => (
+                                                <MenuItem
+                                                    key={isAssigned}
+                                                    value={isAssigned}
+                                                    className={classes.option}
+                                                    classes={{
+                                                        root: classes.menuItemRoot,
+                                                        selected:
+                                                            classes.menuItemSelected,
+                                                    }}
+                                                >
+                                                    {isAssigned === null 
+                                                        ? `${filters.isAssigned.options.all}` 
+                                                        : (isAssigned ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`)
+                                                    }
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={5} lg={4}>
+                                    <Autocomplete
+                                        autoComplete
+                                        autoSelect
+                                        autoHighlight
+                                        clearOnEscape
+                                        options={PICs ? PICs : []}
+                                        getOptionLabel={(pic) =>
+                                            pic.fullName ? pic.fullName : ''
+                                        }
+                                        value={PIC}
+                                        renderInput={(params) => {
+                                            return (
+                                                <TextField
+                                                    {...params}
+                                                    label={filters.pic.title}
+                                                    margin="normal"
+                                                    placeholder={
+                                                        filters.pic.placeholder
+                                                    }
+                                                    ref={params.InputProps.ref}
+                                                    onChange={onSearchPICChange}
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        startAdornment: (
+                                                            <>
+                                                                <InputAdornment position="start">
+                                                                    <MdAccountCircle />
+                                                                </InputAdornment>
+                                                                {
+                                                                    params
+                                                                        .InputProps
+                                                                        .startAdornment
+                                                                }
+                                                            </>
+                                                        ),
+                                                    }}
+                                                />
+                                            )
+                                        }}
+                                        renderOption={(option) => {
+                                            return (
+                                                <div
+                                                    className={classes.itemPIC}
+                                                    key={option.username}
+                                                >
+                                                    <ListItemAvatar>
+                                                        <Avatar
+                                                            src={option.avatar}
+                                                        />
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        primary={
+                                                            option.fullName
+                                                                ? option.fullName
+                                                                : ''
+                                                        }
+                                                        classes={{
+                                                            primary:
+                                                                classes.itemTextPrimary,
+                                                        }}
+                                                    />
+                                                </div>
+                                            )
+                                        }}
+                                        className={classes.autoComplete}
+                                        onChange={(event, newPIC) =>
+                                            handlePICChange(event, newPIC)
+                                        }
+                                    />
+                                </Grid>
+                            </>
+                        }
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

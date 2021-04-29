@@ -52,24 +52,9 @@ function TargetSchools() {
 
     useEffect(() => {
         if (user.roles[0] === roleNames.salesman) {
-            onGetTargets(
-                page,
-                limit,
-                column,
-                direction,
-                searchKey,
-                listFilters,
-                user.username
-            )
+            onGetTargets(page, limit, column, direction, searchKey, listFilters, user.username)
         } else {
-            onGetTargets(
-                page,
-                limit,
-                column,
-                direction,
-                searchKey,
-                listFilters
-            )
+            onGetTargets(page, limit, column, direction, searchKey, listFilters)
         }
     }, [params])
 
@@ -79,13 +64,19 @@ function TargetSchools() {
 
     return (
         <div className={classes.panel}>
-            <Filters selectedRows={selectedRows} setSelectedRows={setSelectedRows} className={classes.filter} />
+            <Filters 
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                className={classes.filter}
+                refreshAPI={onGetTargets}
+            />
             <Tables
-            selectedRows={selectedRows}
-            setSelectedRows={setSelectedRows}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
+                refreshAPI={onGetTargets}
             />
         </div>
     )

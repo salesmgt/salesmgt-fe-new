@@ -18,7 +18,7 @@ import { roleNames } from '../../../../../constants/Generals'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data } = props
+    const { data, refreshAPI } = props
     const { menuItems } = Consts
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -62,6 +62,7 @@ function MenuOptions(props) {
                     open={open}
                     onClose={() => setOpen(false)}
                     data={data}
+                    refreshAPI={refreshAPI}
                 />
             )
         }
