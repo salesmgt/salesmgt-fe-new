@@ -18,7 +18,7 @@ function Reports() {
 
     const [data, setData] = useState(null)
 
-    function getAllReports(
+    const getAllReports = (
         page = 0,
         limit = 10,
         column = 'date',
@@ -26,7 +26,7 @@ function Reports() {
         searchKey,
         listFilters,
         targetId
-    ) {
+    ) => {
         ReportsServices.getReports(
             page,
             limit,
