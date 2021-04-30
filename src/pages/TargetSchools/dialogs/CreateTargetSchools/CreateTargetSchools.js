@@ -10,9 +10,12 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
+import { useForm, Controller } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { Autocomplete } from '@material-ui/lab'
 import { columns } from './CreateTargetSchoolsConfig'
-import { useHistory } from "react-router"
+import { useHistory } from 'react-router'
 import { getAllSchools } from '../../TargetSchoolsServices'
 import classes from './CreateTargetSchools.module.scss'
 
@@ -34,26 +37,31 @@ const stylesTitle = (theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
-});
+})
 
 const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const { children, classes, onClose, ...other } = props
     return (
         <DialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <IconButton
+                    aria-label="close"
+                    className={classes.closeButton}
+                    onClick={onClose}
+                >
                     <MdClose />
                 </IconButton>
             ) : null}
         </DialogTitle>
-    );
-});
+    )
+})
 
 function CreateTargetSchools(props) {
     const { open, onClose } = props
 
-    const { handleSubmit } = useForm({  // getValues, register, , errors, setError
+    const { handleSubmit } = useForm({
+        // getValues, register, , errors, setError
         resolver: yupResolver(clientSchema),
     })
     // const [open, setOpen] = useToggle()
@@ -61,10 +69,11 @@ function CreateTargetSchools(props) {
 
     const [rows, setRows] = useState([])
     const getListSchools = () => {
-        getAllSchools().then((data) => {
-            setRows(data.list)
-            // console.log('rows schools: ', data.list[0]);
-        })
+        getAllSchools()
+            .then((data) => {
+                setRows(data.list)
+                // console.log('rows schools: ', data.list[0]);
+            })
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
@@ -87,18 +96,24 @@ function CreateTargetSchools(props) {
     }
 
     const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear();
-        const thisMonth = new Date().getMonth();
+        const thisYear = new Date().getFullYear()
+        const thisMonth = new Date().getMonth()
         // console.log(`${thisMonth}/${thisYear}`);
         // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
 
-        if (thisMonth < 7)
-            return `${thisYear - 1}-${thisYear}`;
+        if (thisMonth < 7) return `${thisYear - 1}-${thisYear}`
         else return `${thisYear}-${thisYear + 1}`
     }
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="md"
+            fullWidth
+            component="form"
+            className={classes.dialog}
+        >
             <DialogTitleWithIconClose onClose={onClose}>
                 Create Target Schools
             </DialogTitleWithIconClose>
@@ -121,12 +136,14 @@ function CreateTargetSchools(props) {
                 </DialogContent>
                 {/* <Divider /> */}
                 <DialogActions className="">
-                    <Button type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
+                    <Button
+                        type="submit"
+                        onClick={handleSubmit(onSubmit)}
+                        className={classes.btnSave}
+                    >
                         Save
                     </Button>
-                    <Button onClick={onClose}>
-                        Cancel
-                    </Button>
+                    <Button onClick={onClose}>Cancel</Button>
                 </DialogActions>
             </form>
         </Dialog>
