@@ -97,6 +97,24 @@ export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     )
 }
 
+export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
+    return (
+        <>
+            Do you really want to unassign
+            <strong> {PIC} </strong> for
+            <strong>
+                <em>
+                    {' '}
+                    {schoolLevel} {schoolName}{' '}
+                </em>
+            </strong>
+            ?
+            <br />
+            This process cannot be undone.
+        </>
+    )
+}
+
 export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
     return (
         <>
