@@ -54,7 +54,7 @@ function UserMenu(props) {
                 {userInfo?.avatar ? (
                     <Avatar
                         className={classes.avatar}
-                        // alt="user avatar"
+                        alt="user avatar"
                         src={userInfo?.avatar}
                     />
                 ) : (

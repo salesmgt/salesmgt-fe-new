@@ -31,6 +31,8 @@ import {
     ACTIVE_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../SchoolsConfig'
 import styles from './Filters.module.scss'
 
@@ -138,6 +140,11 @@ function Filters() {
     const classes = useStyles()
 
     const { dists, schTypes, schEduLvls, schScales } = useApp()    //, schStatus
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
+    const bakSchEduLvls = schEduLvls ? schEduLvls : Milk.getMilk(milkNames.eduLvls)
+    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -374,7 +381,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {dists?.map((dist) => (
+                                    {bakDists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -410,7 +417,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schTypes?.map((type) => (
+                                    {bakSchTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -446,7 +453,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schEduLvls?.map((level) => (
+                                    {bakSchEduLvls?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
@@ -482,7 +489,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {schScales?.map((scale) => (
+                                    {bakSchScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}

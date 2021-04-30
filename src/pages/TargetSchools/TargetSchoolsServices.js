@@ -80,6 +80,13 @@ export async function updateTarget(targetId, target) {
     return response
 }
 
+export async function createMOU(mou) {
+    const response = await Api.post('/memorandums', mou)
+    // const data = await response.data
+
+    return response
+}
+
 export async function updateMOU(mouId, mou) {
     const response = await Api.put(`/memorandums/${mouId}`, mou)
     // const data = await response.data

@@ -32,21 +32,25 @@ const stylesTitle = (theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
-});
+})
 
 const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const { children, classes, onClose, ...other } = props
     return (
         <DialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <IconButton
+                    aria-label="close"
+                    className={classes.closeButton}
+                    onClick={onClose}
+                >
                     <MdClose />
                 </IconButton>
             ) : null}
         </DialogTitle>
-    );
-});
+    )
+})
 
 function CreateTargetSchools(props) {
     const { open, onClose } = props
@@ -99,7 +103,14 @@ function CreateTargetSchools(props) {
     // }
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="md"
+            fullWidth
+            component="form"
+            className={classes.dialog}
+        >
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.create}
             </DialogTitleWithIconClose>

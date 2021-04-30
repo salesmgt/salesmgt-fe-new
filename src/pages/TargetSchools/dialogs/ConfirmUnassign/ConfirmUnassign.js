@@ -11,7 +11,7 @@ import {
     IconButton,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md';
-import { Consts, confirmUnassignMsg } from '../FormConfig'
+import { Consts, confirmUnassignMsg } from '../DialogConfig'
 import { unassign } from '../../TargetSchoolsServices'
 import {useTargetSchool} from '../../hooks/TargetSchoolContext'
 import classes from './ConfirmUnassign.module.scss'

@@ -21,17 +21,16 @@ import {
     Paper,
     IconButton,
     Popover,
-    Badge
+    Badge,
 } from '@material-ui/core'
 import { MdAccountCircle, MdClose } from 'react-icons/md'
-import { BiEdit } from "react-icons/bi";
+import { BiEdit } from 'react-icons/bi'
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
-import { Consts, columns } from '../FormConfig'
+import { Consts, columns } from '../DialogConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { assignMulti, getTargetSchools } from '../../TargetSchoolsServices'
 import classes from './AssignMultiple.module.scss'
-
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -41,11 +40,11 @@ const useStyles = makeStyles((theme) => ({
         // maxWidth: 180
     },
     option: {
-        fontSize: '0.875rem'
+        fontSize: '0.875rem',
     },
     lastOption: {
         fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0'
+        borderBottom: '0.5px solid #e0e0e0',
     },
     root: {},
     menuItemRoot: {
@@ -60,11 +59,11 @@ const useStyles = makeStyles((theme) => ({
     menuItemSelected: {},
     autoComplete: {
         width: 250,
-        marginLeft: '0.5rem'
+        marginLeft: '0.5rem',
     },
     itemPIC: {
         padding: 0,
-        margin: 0
+        margin: 0,
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
@@ -72,15 +71,15 @@ const useStyles = makeStyles((theme) => ({
     itemTextSecondary: {
         fontSize: '0.8rem',
     },
-}));
+}))
 
 function AssignMultipleForm(props) {
-    const styles = useStyles();
+    const styles = useStyles()
     const { onClose, refreshAPI } = props
-    const [rowsState,setRowsState] = React.useState(props.rows)
+    const [rowsState, setRowsState] = React.useState(props.rows)
     const { operations } = Consts
-    const [object,setObject] = React.useState(null)
-    
+    const [object, setObject] = React.useState(null)
+
     const { PICs, getListPICs, params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
     const { user } = useAuth()
@@ -91,38 +90,37 @@ function AssignMultipleForm(props) {
 
     const handleSubmit = () => {
         let array = []
-        rowsState.map(item => {
-            item = {...item, username: PIC?.username}
+        rowsState.map((item) => {
+            item = { ...item, username: PIC?.username }
             array.push(item)
         })
         console.log(array)
-        assignMulti(array).then(res =>{
+        assignMulti(array).then((res) => {
             props.setNotify({
                 isOpen: true,
                 message: 'Assigned successfully',
-                type: 'success'
+                type: 'success',
             })
             props.setRows([])
             refreshAPI(page, limit, column, direction, searchKey, listFilters)
 
-            onClose();
-        }) 
-        
+            onClose()
+        })
     }
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(null)
 
-    const handleClick = (event,row) => {
-      setAnchorEl(event.currentTarget);
-      setObject(row)
-    };
-  
+    const handleClick = (event, row) => {
+        setAnchorEl(event.currentTarget)
+        setObject(row)
+    }
+
     const handleClose = () => {
-      setAnchorEl(null);
-    };    
+        setAnchorEl(null)
+    }
 
     const onSearchPICChange = (event) => {
         if (typingTimeoutRef.current) {
-            clearTimeout(typingTimeoutRef.current);
+            clearTimeout(typingTimeoutRef.current)
         }
 
         typingTimeoutRef.current = setTimeout(() => {
@@ -136,16 +134,16 @@ function AssignMultipleForm(props) {
     }
 
     const handlePICChange = (event, newPIC) => {
-        setPIC(newPIC);
-    };
-    const open = Boolean(anchorEl);
-    
-    const handleOnRemove = (e,row)=>{
+        setPIC(newPIC)
+    }
+    const open = Boolean(anchorEl)
+
+    const handleOnRemove = (e, row) => {
         let newSelected = []
         const selectedIndex = rowsState.indexOf(row)
         if (selectedIndex === 0) {
             newSelected = newSelected.concat(rowsState.slice(1))
-        } else if (selectedIndex ===rowsState.length - 1) {
+        } else if (selectedIndex === rowsState.length - 1) {
             newSelected = newSelected.concat(rowsState.slice(0, -1))
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
@@ -154,29 +152,33 @@ function AssignMultipleForm(props) {
             )
         }
         setRowsState(newSelected)
-        if(newSelected.length === 0) {
+        if (newSelected.length === 0) {
             onClose()
         }
     }
-    const onBlur = (e,row) =>{   
-        if(e.target.value?.length >250){
+    const onBlur = (e, row) => {
+        if (e.target.value?.length > 250) {
             props.setNotify({
                 isOpen: true,
                 message: 'Note length is shorter than 250 letters',
-                type: 'warning'
+                type: 'warning',
             })
             return
         }
-       const object = rowsState.findIndex(obj =>obj.id === row.id)
+        const object = rowsState.findIndex((obj) => obj.id === row.id)
         //const item ={...rowsState[object],note: e.target.value}
-        let array =[null]
-        array =[...rowsState]
-        array[object] =  {...array[object],note: e.target.value ? e.target.value : null, noteBy: e.target.value ? user.username : null}
+        let array = [null]
+        array = [...rowsState]
+        array[object] = {
+            ...array[object],
+            note: e.target.value ? e.target.value : null,
+            noteBy: e.target.value ? user.username : null,
+        }
         console.log(array)
         setRowsState(array)
-    } 
+    }
     return (
-       <>
+        <>
             <DialogContent className={classes.wrapper}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -192,7 +194,7 @@ function AssignMultipleForm(props) {
                                         pic.fullName ? pic.fullName : ''
                                     }
                                     value={PIC}
-                                    renderInput={(params) =>
+                                    renderInput={(params) => (
                                         <TextField
                                             {...params}
                                             label="PICs"
@@ -208,40 +210,69 @@ function AssignMultipleForm(props) {
                                                         <InputAdornment position="start">
                                                             <MdAccountCircle />
                                                         </InputAdornment>
-                                                        {params.InputProps.startAdornment}
+                                                        {
+                                                            params.InputProps
+                                                                .startAdornment
+                                                        }
                                                     </>
-                                                )
+                                                ),
                                             }}
                                         />
-                                    }
+                                    )}
                                     renderOption={(option) => {
                                         return (
-                                            <ListItem className={classes.itemPIC} key={option.username}>
+                                            <ListItem
+                                                className={classes.itemPIC}
+                                                key={option.username}
+                                            >
                                                 <ListItemAvatar>
-                                                    <Avatar src={option.avatar} />
+                                                    <Avatar
+                                                        src={option.avatar}
+                                                    />
                                                 </ListItemAvatar>
-                                                <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
+                                                <ListItemText
+                                                    primary={option.fullName}
+                                                    classes={{
+                                                        primary:
+                                                            classes.itemTextPrimary,
+                                                    }}
+                                                />
                                             </ListItem>
-                                        );
+                                        )
                                     }}
                                     className={styles.autoComplete}
-                                    onChange={(event, newPIC) => handlePICChange(event, newPIC)}
+                                    onChange={(event, newPIC) =>
+                                        handlePICChange(event, newPIC)
+                                    }
                                 />
                             </Grid>
                         </Grid>
                     </Grid>
 
                     <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Typography variant='subtitle1'>List of assigned schools:</Typography>
-                        <TableContainer className={classes.container} component={Paper}>
-                            <Table className={classes.table} stickyHeader size="small">
+                        <Typography variant="subtitle1">
+                            List of assigned schools:
+                        </Typography>
+                        <TableContainer
+                            className={classes.container}
+                            component={Paper}
+                        >
+                            <Table
+                                className={classes.table}
+                                stickyHeader
+                                size="small"
+                            >
                                 <TableHead>
                                     <TableRow className={classes.tHead}>
-                                        {columns.map(col => (
+                                        {columns.map((col) => (
                                             <TableCell
                                                 key={col}
                                                 className={classes.tHeadCell}
-                                                align={col === 'no' ? 'center' : 'left'}
+                                                align={
+                                                    col === 'no'
+                                                        ? 'center'
+                                                        : 'left'
+                                                }
                                             >
                                                 {col}
                                             </TableCell>
@@ -250,68 +281,129 @@ function AssignMultipleForm(props) {
                                 </TableHead>
                                 <TableBody className={classes.tBody}>
                                     {rowsState.map((row, index) => (
-                                        <TableRow key={row.id}  >
-                                            <TableCell align="center" width='5%'>{index + 1}</TableCell>
-                                            <TableCell width='30%' className={classes.tBodyCell}>
+                                        <TableRow key={row.id}>
+                                            <TableCell
+                                                align="center"
+                                                width="5%"
+                                            >
+                                                {index + 1}
+                                            </TableCell>
+                                            <TableCell
+                                                width="30%"
+                                                className={classes.tBodyCell}
+                                            >
                                                 <ListItemText
                                                     primary={row.schoolName}
                                                     secondary={row.district}
                                                     classes={{
-                                                        primary: classes.itemTextPrimary,
-                                                        secondary: classes.itemTextSecondary
+                                                        primary:
+                                                            classes.itemTextPrimary,
+                                                        secondary:
+                                                            classes.itemTextSecondary,
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell align="center" width='30%' className={classes.tBodyCell}>
+                                            <TableCell
+                                                align="center"
+                                                width="30%"
+                                                className={classes.tBodyCell}
+                                            >
                                                 {PIC ? (
-                                                    <ListItem className={classes.itemPIC}>
-                                                        <ListItemAvatar><Avatar src={PIC.avatar} /></ListItemAvatar>
+                                                    <ListItem
+                                                        className={
+                                                            classes.itemPIC
+                                                        }
+                                                    >
+                                                        <ListItemAvatar>
+                                                            <Avatar
+                                                                src={PIC.avatar}
+                                                            />
+                                                        </ListItemAvatar>
                                                         <ListItemText
-                                                            primary={PIC.fullName}
-                                                            secondary={PIC.username}
+                                                            primary={
+                                                                PIC.fullName
+                                                            }
+                                                            secondary={
+                                                                PIC.username
+                                                            }
                                                             classes={{
-                                                                primary: classes.itemTextPrimary,
-                                                                secondary: classes.itemTextSecondary
+                                                                primary:
+                                                                    classes.itemTextPrimary,
+                                                                secondary:
+                                                                    classes.itemTextSecondary,
                                                             }}
                                                         />
                                                     </ListItem>
-                                                ) : ''}
+                                                ) : (
+                                                    ''
+                                                )}
                                             </TableCell>
-                                            <TableCell align='center' width='40%' className={classes.tBodyCell}>
-                                              <IconButton onClick={(e)=>handleClick(e,row)} >
-                                                <Badge invisible={!row.note} color="secondary" variant="dot"><BiEdit/></Badge>
-                                              </IconButton>
-                                               <Popover
-                                                open={open}
-                                                onClose={handleClose}
-                                                anchorEl={anchorEl}
-                                                anchorOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'right',
-                                                }}
-                                                transformOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'left',
-                                                }}
+                                            <TableCell
+                                                align="center"
+                                                width="40%"
+                                                className={classes.tBodyCell}
+                                            >
+                                                <IconButton
+                                                    onClick={(e) =>
+                                                        handleClick(e, row)
+                                                    }
                                                 >
-                                               
-                                                <TextField 
-                                                    onBlur={(e)=>onBlur(e,object)}
-                                                    onChange={e => setObject({...object,note:e.target.value})}  
-                                                    value={object?.note ? object?.note : '' } 
-                                                    multiline
-                                                    autoFocus
-                                                    rows={4}
-                                                   placeholder='Type note here'
-                                                    variant="outlined"
-                                                />
-                                                    </Popover>
+                                                    <Badge
+                                                        invisible={!row.note}
+                                                        color="secondary"
+                                                        variant="dot"
+                                                    >
+                                                        <BiEdit />
+                                                    </Badge>
+                                                </IconButton>
+                                                <Popover
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    anchorEl={anchorEl}
+                                                    anchorOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'right',
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'left',
+                                                    }}
+                                                >
+                                                    <TextField
+                                                        onBlur={(e) =>
+                                                            onBlur(e, object)
+                                                        }
+                                                        onChange={(e) =>
+                                                            setObject({
+                                                                ...object,
+                                                                note:
+                                                                    e.target
+                                                                        .value,
+                                                            })
+                                                        }
+                                                        value={
+                                                            object?.note
+                                                                ? object?.note
+                                                                : ''
+                                                        }
+                                                        multiline
+                                                        autoFocus
+                                                        rows={4}
+                                                        placeholder="Type note here"
+                                                        variant="outlined"
+                                                    />
+                                                </Popover>
                                             </TableCell>
                                             <TableCell>
-                                                <IconButton onClick={e=>handleOnRemove(e,row)} ><MdClose/></IconButton>
+                                                <IconButton
+                                                    onClick={(e) =>
+                                                        handleOnRemove(e, row)
+                                                    }
+                                                >
+                                                    <MdClose />
+                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                        
                                     ))}
                                 </TableBody>
                             </Table>
@@ -320,14 +412,16 @@ function AssignMultipleForm(props) {
                 </Grid>
             </DialogContent>
             <DialogActions className="">
-                <Button type="submit" onClick={handleSubmit} disabled={!PIC} className={classes.btnSave}>
+                <Button
+                    type="submit"
+                    onClick={handleSubmit}
+                    disabled={!PIC}
+                    className={classes.btnSave}
+                >
                     {operations.save}
                 </Button>
-                <Button onClick={onClose}>
-                    {operations.cancel}
-                </Button>
+                <Button onClick={onClose}>{operations.cancel}</Button>
             </DialogActions>
-           
         </>
     )
 }

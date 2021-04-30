@@ -11,7 +11,7 @@ import {
     IconButton,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { Consts, cannotMessage } from '../FormConfig'
+import { Consts, cannotMessage } from '../DialogConfig'
 import classes from './CannotRemove.module.scss'
 
 const stylesTitle = (theme) => ({

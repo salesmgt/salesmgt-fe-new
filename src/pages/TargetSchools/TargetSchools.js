@@ -5,6 +5,7 @@ import { useTargetSchool } from './hooks/TargetSchoolContext'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
 import { useAuth } from '../../hooks/AuthContext'
 import { roleNames } from '../../constants/Generals'
+import { Loading } from '../../components'
 import classes from './TargetSchools.module.scss'
 
 function TargetSchools() {
@@ -15,7 +16,7 @@ function TargetSchools() {
 
     const { user } = useAuth()
 
-    const [data, setData] = useState({})
+    const [data, setData] = useState(null)
 
     function onGetTargets(
         page = 0,
@@ -59,7 +60,7 @@ function TargetSchools() {
     }, [params])
 
     if (!data) {
-        return null
+        return <Loading />
     }
 
     return (
