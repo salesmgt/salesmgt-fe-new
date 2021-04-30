@@ -26,10 +26,12 @@ function MenuOptions(props) {
 
     const { params } = useReport()
 
+    // console.log('Reports: data = ', data);
+
     const stateData = {
         model: data,
         params: params,
-        pathName: `${url}/${data.username}`,
+        pathName: `${url}/${data.id}`,
     }
 
     const handleOpen = (event) => {
@@ -53,21 +55,28 @@ function MenuOptions(props) {
         // comments.forEach(comment => {
         //     commentedBy.push(comment.fullName);
         // });
-        if (data?.contextComments) {
-            return (
-                <CannotRemove
-                    open={open}
-                    onClose={() => setOpen(false)}
-                    data={data}
-                />
-            )
-        }
-        // else if (data.comments.length === 0) {
-        else {
-            return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
-            )
-        }
+        // if (user.username === data?.username) {
+            if (data?.contextComments) {
+                return (
+                    <CannotRemove
+                        open={open}
+                        onClose={() => setOpen(false)}
+                        data={data}
+                    />
+                )
+            }
+            // else if (data.comments.length === 0) {
+            else {
+                return (
+                    <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
+                )
+            }
+        // } else {
+        //     const newData = {...data, msg: 'You cannot remove reports of the others.'}
+        //     return (
+        //         <CannotRemove open={open} onClose={() => setOpen(false)} data={newData} />
+        //     )
+        // }
     }
 
     // console.log('user = ', user);
@@ -118,17 +127,19 @@ function MenuOptions(props) {
                                 View details
                             </ListItemText>
                         </MenuItem>
-                        <div>
-                            <MenuItem onClick={handleOpenConfirmation}>
-                                <ListItemIcon className={classes.itemIcon}>
-                                    <MdDelete fontSize="large" />
-                                </ListItemIcon>
-                                <ListItemText className={classes.itemText}>
-                                    Remove
-                                </ListItemText>
-                            </MenuItem>
-                            {renderRemoveDialog()}
-                        </div>
+                        {user.username === data?.username && (
+                            <div>
+                                <MenuItem onClick={handleOpenConfirmation}>
+                                    <ListItemIcon className={classes.itemIcon}>
+                                        <MdDelete fontSize="large" />
+                                    </ListItemIcon>
+                                    <ListItemText className={classes.itemText}>
+                                        Remove
+                                    </ListItemText>
+                                </MenuItem>
+                                {renderRemoveDialog()}
+                            </div>
+                        )}
                         {/**For Salesman:
                             - View details and update report inside that form.
                             For Manager & Supervisor:

@@ -52,16 +52,20 @@ export const Consts = {
             title: 'PICs',
             placeholder: "PIC's name",
         },
-        purpose: {
-            title: 'Purposes',
-            options: { all: 'All' },
-        },
         district: {
             title: 'Districts',
             options: { all: 'All' },
         },
         schoolYear: {
             title: 'School Years',
+            options: { all: 'All' },
+        },
+        purpose: {
+            title: 'Purposes',
+            options: { all: 'All' },
+        },
+        status: {
+            title: 'School Statuses',
             options: { all: 'All' },
         },
         schoolType: {
@@ -75,6 +79,14 @@ export const Consts = {
         schoolScale: {
             title: 'School Scales',
             options: { all: 'All' },
+        },
+        isAssigned: {
+            title: 'Assigned status',            
+            options: {
+                all: 'All',
+                assigned: 'Assigned',
+                notAssigned: 'Not assigned',
+            },
         },
     },
     messages: {
@@ -90,9 +102,12 @@ export const Consts = {
         remove: {
             title: 'Remove',
         },
-        // assign: {
-        //     title: 'Assign'
-        // },
+        assign: {
+            title: 'Assign'
+        },
+        unassign: {
+            title: 'Unassign'
+        },
     },
 }
 

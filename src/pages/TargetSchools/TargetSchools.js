@@ -10,7 +10,7 @@ import classes from './TargetSchools.module.scss'
 
 function TargetSchools() {
     const history = useHistory()
-
+    const [selectedRows, setSelectedRows] = React.useState([])
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
@@ -38,6 +38,7 @@ function TargetSchools() {
         )
             .then((res) => {
                 setData(res)
+                // console.log("target res = ", res);
             })
             .catch((error) => {
                 if (error.response) {
@@ -52,15 +53,7 @@ function TargetSchools() {
 
     useEffect(() => {
         if (user.roles[0] === roleNames.salesman) {
-            onGetTargets(
-                page,
-                limit,
-                column,
-                direction,
-                searchKey,
-                listFilters,
-                user.username
-            )
+            onGetTargets(page, limit, column, direction, searchKey, listFilters, user.username)
         } else {
             onGetTargets(page, limit, column, direction, searchKey, listFilters)
         }
@@ -72,11 +65,19 @@ function TargetSchools() {
 
     return (
         <div className={classes.panel}>
-            <Filters className={classes.filter} />
+            <Filters 
+                selectedRows={selectedRows} 
+                setSelectedRows={setSelectedRows} 
+                className={classes.filter} 
+                refreshAPI={onGetTargets}
+            />
             <Tables
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
                 rows={data.list}
                 totalRecord={data.totalElements}
                 totalPage={data.totalPage}
+                refreshAPI={onGetTargets}
             />
         </div>
     )

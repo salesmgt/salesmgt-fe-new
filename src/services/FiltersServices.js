@@ -38,8 +38,8 @@ export async function getSchoolStatus() {
     return data
 }
 
-export async function getPICs(convert) {
-    const paramString = queryString.stringify(convert)
+export async function getPICs(params) {
+    const paramString = queryString.stringify(params)
     const response = await Api.get(`/users?${paramString}`)
     const data = await response.data
     return data.list

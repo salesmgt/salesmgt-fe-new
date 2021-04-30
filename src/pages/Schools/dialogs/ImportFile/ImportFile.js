@@ -246,7 +246,7 @@ function ImportFile(props) {
                             className={classes.uploadBtn}
                             component="span"
                         >
-                            <FaFileImport />
+                            <FaFileImport /> &nbsp;&nbsp;
                             <input
                                 id="icon-button-file"
                                 className={classes.inputAvatar}

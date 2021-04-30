@@ -2,11 +2,11 @@ export const columns = [
     // { key: "checkbox", name: '', sortable: false },
     // { key: "no", name: 'No', sortable: false },
     { key: 'date', name: 'Date', sortable: true },
-    { key: 'schoolName', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
-    { key: 'fullName', name: 'PIC', sortable: true },
-    { key: 'targetPurposeName', name: 'Purpose', sortable: true }, // Purpose - primary
-    { key: 'result', name: 'Result', sortable: false },
-    { key: 'description', name: 'Description', sortable: false }, // truncate 30 kí tự thôi
+    { key: 'targetSchool.school.name', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
+    { key: 'targetSchool.user.fullName', name: 'PIC', sortable: true },
+    { key: 'targetSchool.targetPurpose.name', name: 'Purpose', sortable: true }, // Purpose - primary
+    { key: 'result', name: 'Result', sortable: true },
+    { key: 'description', name: 'Description', sortable: true }, // truncate 30 kí tự thôi
     // { key: "comment", name: 'Comment', sortable: false }, // truncate 30 kí tự thôi
     { key: '', name: '', sortable: false },
 ]
@@ -48,8 +48,7 @@ export const Consts = {
         },
         dateRange: {
             titleFrom: 'From date',
-            titleTo: 'From date',
-            format: 'dd/mm/yyyy',
+            titleTo: 'To date',
         },
     },
     messages: {

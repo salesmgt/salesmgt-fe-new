@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
     Button,
     TextField,
@@ -17,39 +17,21 @@ import {
     TableContainer,
     TableRow,
     TableBody,
-    InputLabel,
-    FormControl,
-    Select,
-    MenuItem,
     makeStyles,
     Paper,
+    IconButton,
+    Popover,
+    Badge
 } from '@material-ui/core'
-import { MdAccountCircle } from 'react-icons/md'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import { MdAccountCircle, MdClose } from 'react-icons/md'
+import { BiEdit } from "react-icons/bi";
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import { Consts, columns } from '../DialogConfig'
+import { useAuth } from '../../../../hooks/AuthContext'
+import { assignMulti, getTargetSchools } from '../../TargetSchoolsServices'
 import classes from './AssignMultiple.module.scss'
 
-const clientSchema = yup.object().shape({
-    // title: yup.string().trim().max(30).required(),
-    // remark: yup.string().trim().max(50).required(),
-    PIC: yup.string().required(),
-    // purpose: yup.string().required()
-})
-
-//===============Set max-height for dropdown list===============
-const ITEM_HEIGHT = 38;
-const ITEM_PADDING_TOP = 5;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-        }
-    }
-};
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -94,54 +76,107 @@ const useStyles = makeStyles((theme) => ({
 
 function AssignMultipleForm(props) {
     const styles = useStyles();
-    const { onClose, rows } = props
+    const { onClose, refreshAPI } = props
+    const [rowsState,setRowsState] = React.useState(props.rows)
     const { operations } = Consts
-
-    const { register, handleSubmit, errors } = useForm({  // getValues, , setError
-        resolver: yupResolver(clientSchema),
-    })
-
-    const { PICs } = useTargetSchool()
+    const [object,setObject] = React.useState(null)
+    
+    const { PICs, getListPICs, params } = useTargetSchool()
+    const { listFilters, page, limit, column, direction, searchKey } = params
+    const { user } = useAuth()
 
     const [PIC, setPIC] = useState(null)
-    const [purpose, setPurpose] = useState('')
-    // const [purpose, setPurpose] = useState({})    // Hiện tại chỉ lưu đc purpose của 1 trường
-    // Tức là mỗi lần chọn nó sẽ đè gtri mới lên nhau. Sau này update lên là 1 [] các purpose hoặc
-    // cứ để 1 obj cũng đc nhưng cần ghi lại cái trường này vao đâu đó luôn để gửi cho API còn Assign.
 
-    const onSubmit = (data) => {
-        console.log(data)
-        onClose()
+    const typingTimeoutRef = useRef({})
+
+    const handleSubmit = () => {
+        let array = []
+        rowsState.map(item => {
+            item = {...item, username: PIC?.username}
+            array.push(item)
+        })
+        console.log(array)
+        assignMulti(array).then(res =>{
+            props.setNotify({
+                isOpen: true,
+                message: 'Assigned successfully',
+                type: 'success'
+            })
+            props.setRows([])
+            refreshAPI(page, limit, column, direction, searchKey, listFilters)
+
+            onClose();
+        }) 
+        
+    }
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event,row) => {
+      setAnchorEl(event.currentTarget);
+      setObject(row)
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };    
+
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
     }
 
     const handlePICChange = (event, newPIC) => {
         setPIC(newPIC);
     };
-
-    const handlePurposeChange = (event) => {    // , target
-        setPurpose(event.target.value)
-        // target.purpose = event.target.value;
-        // // console.log('event.target.value = ', event.target.value);
-        // // console.log('target = ', target);
-        // setPurpose({
-        //     id: target.id,
-        //     value: target.purpose
-        // });
-
-        // const selectedPurpose = {
-        //     // schoolIndex: schoolIndex,
-        //     purpose: event.target.value
-        // };
-        // console.log('selectedPurpose: ', selectedPurpose)
-        // console.log('2nd: ', schoolIndex)
-        // console.log('3rd: ', schoolIndex)
-        // { index, purpose }
-    };
-    // console.log("Purpose: ", purpose);
-    // console.log('List targets: ', rows)
-
+    const open = Boolean(anchorEl);
+    
+    const handleOnRemove = (e,row)=>{
+        let newSelected = []
+        const selectedIndex = rowsState.indexOf(row)
+        if (selectedIndex === 0) {
+            newSelected = newSelected.concat(rowsState.slice(1))
+        } else if (selectedIndex ===rowsState.length - 1) {
+            newSelected = newSelected.concat(rowsState.slice(0, -1))
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                rowsState.slice(0, selectedIndex),
+                rowsState.slice(selectedIndex + 1)
+            )
+        }
+        setRowsState(newSelected)
+        if(newSelected.length === 0) {
+            onClose()
+        }
+    }
+    const onBlur = (e,row) =>{   
+        if(e.target.value?.length >250){
+            props.setNotify({
+                isOpen: true,
+                message: 'Note length is shorter than 250 letters',
+                type: 'warning'
+            })
+            return
+        }
+       const object = rowsState.findIndex(obj =>obj.id === row.id)
+        //const item ={...rowsState[object],note: e.target.value}
+        let array =[null]
+        array =[...rowsState]
+        array[object] =  {...array[object],note: e.target.value ? e.target.value : null, noteBy: e.target.value ? user.username : null}
+        console.log(array)
+        setRowsState(array)
+    } 
     return (
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+       <>
             <DialogContent className={classes.wrapper}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -162,11 +197,9 @@ function AssignMultipleForm(props) {
                                             {...params}
                                             label="PICs"
                                             name="PIC"
-                                            inputRef={register}
-                                            error={!!errors.PIC}
-                                            helperText={errors?.PIC?.message}
                                             margin="normal"
                                             placeholder="PIC will be assigned"
+                                            onChange={onSearchPICChange}
                                             // ref={params.InputProps.ref}
                                             InputProps={{
                                                 ...params.InputProps,
@@ -195,82 +228,6 @@ function AssignMultipleForm(props) {
                                     onChange={(event, newPIC) => handlePICChange(event, newPIC)}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={5} md={6} lg={4}>
-                                <FormControl className={styles.formControl}>
-                                    <InputLabel>Purposes</InputLabel>
-                                    <Select
-                                        value={purpose}
-                                        onChange={handlePurposeChange}
-                                        MenuProps={MenuProps}
-                                    // name='purpose'
-                                    // inputRef={register}
-                                    // error={!!errors.purpose}
-                                    >
-                                        <MenuItem
-                                            value=""
-                                            className={styles.lastOption}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            None
-                                            </MenuItem>
-
-                                        <MenuItem
-                                            value="Sales mới"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Sales mới
-                                            </MenuItem>
-                                        <MenuItem
-                                            value="Theo dõi"
-                                            className={styles.lastOption}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Theo dõi
-                                            </MenuItem>
-
-                                        <MenuItem
-                                            value="Chăm sóc"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Chăm sóc
-                                            </MenuItem>
-                                        <MenuItem
-                                            value="Tái ký hợp đồng"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Tái ký hợp đồng
-                                            </MenuItem>
-                                        <MenuItem
-                                            value="Ký mới hợp đồng"
-                                            className={styles.option}
-                                            classes={{
-                                                root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
-                                            }}
-                                        >
-                                            Ký mới hợp đồng
-                                            </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
                         </Grid>
                     </Grid>
 
@@ -292,10 +249,10 @@ function AssignMultipleForm(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody className={classes.tBody}>
-                                    {rows.map((row, index) => (
-                                        <TableRow key={row.id} className={classes.tBodyRow}>
-                                            <TableCell align="center">{index + 1}</TableCell>
-                                            <TableCell className={classes.tBodyCell}>
+                                    {rowsState.map((row, index) => (
+                                        <TableRow key={row.id}  >
+                                            <TableCell align="center" width='5%'>{index + 1}</TableCell>
+                                            <TableCell width='30%' className={classes.tBodyCell}>
                                                 <ListItemText
                                                     primary={row.schoolName}
                                                     secondary={row.district}
@@ -305,7 +262,7 @@ function AssignMultipleForm(props) {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
+                                            <TableCell align="center" width='30%' className={classes.tBodyCell}>
                                                 {PIC ? (
                                                     <ListItem className={classes.itemPIC}>
                                                         <ListItemAvatar><Avatar src={PIC.avatar} /></ListItemAvatar>
@@ -319,14 +276,42 @@ function AssignMultipleForm(props) {
                                                         />
                                                     </ListItem>
                                                 ) : ''}
-                                            </TableCell>   {/**Trần Thị Xuân Tuyền */}
-                                            <TableCell className={classes.tBodyCell}>
-                                                {purpose || ''}
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
-                                                {row.note || ''}
+                                            <TableCell align='center' width='40%' className={classes.tBodyCell}>
+                                              <IconButton onClick={(e)=>handleClick(e,row)} >
+                                                <Badge invisible={!row.note} color="secondary" variant="dot"><BiEdit/></Badge>
+                                              </IconButton>
+                                               <Popover
+                                                open={open}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left',
+                                                }}
+                                                >
+                                               
+                                                <TextField 
+                                                    onBlur={(e)=>onBlur(e,object)}
+                                                    onChange={e => setObject({...object,note:e.target.value})}  
+                                                    value={object?.note ? object?.note : '' } 
+                                                    multiline
+                                                    autoFocus
+                                                    rows={4}
+                                                   placeholder='Type note here'
+                                                    variant="outlined"
+                                                />
+                                                    </Popover>
+                                            </TableCell>
+                                            <TableCell>
+                                                <IconButton onClick={e=>handleOnRemove(e,row)} ><MdClose/></IconButton>
                                             </TableCell>
                                         </TableRow>
+                                        
                                     ))}
                                 </TableBody>
                             </Table>
@@ -334,16 +319,16 @@ function AssignMultipleForm(props) {
                     </Grid>
                 </Grid>
             </DialogContent>
-            {/* <Divider /> */}
             <DialogActions className="">
-                <Button type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
+                <Button type="submit" onClick={handleSubmit} disabled={!PIC} className={classes.btnSave}>
                     {operations.save}
                 </Button>
                 <Button onClick={onClose}>
                     {operations.cancel}
                 </Button>
             </DialogActions>
-        </form>
+           
+        </>
     )
 }
 

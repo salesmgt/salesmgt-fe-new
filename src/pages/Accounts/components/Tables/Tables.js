@@ -25,6 +25,7 @@ import {
 } from 'react-icons/md'
 import { useAccount } from '../../hooks/AccountContext'
 import MenuOptions from './MenuOptions/MenuOptions'
+import Highlighter from "react-highlight-words";
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { roleNames } from '../../../../constants/Generals'
 import { Consts } from '../../AccountsConfig'
@@ -265,7 +266,12 @@ function Tables(props) {
                                         className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     // className={(row.isActive !== null && row.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
                                     >
-                                        {row.username}
+                                        <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.username}
+                                        />
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}
@@ -276,7 +282,12 @@ function Tables(props) {
                                             </ListItemAvatar>
                                             <ListItemText
                                                 className={(row.active === false) ? classes.picNameInactive : classes.picName}
-                                                primary={row.fullName}
+                                                primary={<Highlighter
+                                                highlightClassName="YourHighlightClass"
+                                                searchWords={[params.searchKey]}
+                                                autoEscape={true}   
+                                                textToHighlight={row.fullName}
+                                        />}
                                                 classes={{
                                                     primary:
                                                         classes.itemTextPrimary,
@@ -287,12 +298,22 @@ function Tables(props) {
                                     <TableCell
                                         className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     >
-                                        {row.phone}
+                                       <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.phone}
+                                        />
                                     </TableCell>
                                     <TableCell
                                         className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     >
-                                        {row.email}
+                                       <Highlighter
+                                    highlightClassName="YourHighlightClass"
+                                    searchWords={[params.searchKey]}
+                                    autoEscape={true}   
+                                    textToHighlight={row.email}
+                                        /> 
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {setRoleChipColor(row.roleName)}

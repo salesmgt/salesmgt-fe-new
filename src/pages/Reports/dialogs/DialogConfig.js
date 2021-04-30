@@ -78,7 +78,7 @@ export const cannotMessage = (schoolLevel, schoolName, date, commentedPerson) =>
             <strong><em> {schoolLevel} {schoolName} </em></strong>
             on <strong>{parseDateToString(date, 'DD/MM/YYYY')}</strong>.
             <br />
-            This report is already commented by {commentedPerson}.
+            This report is already commented by <strong>{commentedPerson}</strong>.
         </>
     )
 }

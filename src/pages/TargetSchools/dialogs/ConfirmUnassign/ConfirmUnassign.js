@@ -11,10 +11,10 @@ import {
     IconButton,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md';
-import { Consts, confirmMessage } from '../FormConfig'
-import { removeTargetSchool } from '../../TargetSchoolsServices'
-import { useTargetSchool } from '../../hooks/TargetSchoolContext';
-import classes from './ConfirmRemove.module.scss'
+import { Consts, confirmUnassignMsg } from '../FormConfig'
+import { unassign } from '../../TargetSchoolsServices'
+import {useTargetSchool} from '../../hooks/TargetSchoolContext'
+import classes from './ConfirmUnassign.module.scss'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -43,42 +43,38 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     );
 });
 
-function ConfirmRemove(props) {
+function ConfirmUnassign(props) {
     const { open, onClose, data, refreshAPI } = props
     const { headers, operations } = Consts
-
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
-    const handleRemove = (id) => {
-        // Gọi API xóa
-        console.log('Remove target ', id);
 
-        removeTargetSchool(id).then((res) => {
-            console.log('res: ', res);
-            refreshAPI(page, limit, column, direction, searchKey, listFilters);
-            console.log('xoa thanh cong target ', id);
-        }).catch(error => {
-            if (error.response) {
-                console.log(error)
-            }
-        })
+    const handleOK = () => {
+       unassign(data.id).then(res=>{
+        refreshAPI(page, limit, column, direction, searchKey, listFilters);
         onClose();
+        props.setNotify({
+            isOpen: true,
+            message: 'Unassigned successfully',
+            type: 'success'
+        })
+       })
     }
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitleWithIconClose onClose={onClose}>{headers.confirm}</DialogTitleWithIconClose>
+            <DialogTitleWithIconClose onClose={onClose}>{headers.confirmUnassign}</DialogTitleWithIconClose>
             {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
-                    {confirmMessage(data?.level, data?.schoolName, data?.schoolYear)}
+                    {confirmUnassignMsg(data?.fullName, data?.level, data?.schoolName)}
                 </DialogContentText>
             </DialogContent>
             {/* <Divider /> */}
             <DialogActions>
-                <Button className={classes.btnRemove} onClick={() => handleRemove(data?.id)} autoFocus>
-                    {operations.remove}
+                <Button className={classes.btnOK} onClick={handleOK} autoFocus>
+                    {operations.yes}
                 </Button>
                 <Button onClick={onClose}>
                     {operations.cancel}
@@ -88,4 +84,4 @@ function ConfirmRemove(props) {
     )
 }
 
-export default React.memo(ConfirmRemove)
+export default React.memo(ConfirmUnassign)

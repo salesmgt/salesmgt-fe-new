@@ -26,7 +26,7 @@
       color: $common-white;
       font-weight: bold;
       font-size: larger;
-      // text-align: center;
+       text-align: center !important;
     }
     .tHeadCellNo {
         @extend .tHeadCell;
@@ -50,20 +50,34 @@
     // }
 
     .tBody {
-      .tBodyCell {
-        padding: 0.1rem 1rem
-      }
+      
+        .tBodyCell {
+          
+        padding: 0.1rem 1rem;
+        justify-content: center !important;
+    }
     }
   }
 }
 
 .btnSave {    
-    color: $common-white !important;
-    background-color: $main-info !important;
+    color: $main-info !important;
     &:hover {
-        background-color: $dark-info !important;
+        color: $dark-info !important;
     }
     &:disabled {
-        background-color: $divider !important;
+        color: $divider !important;
     }
 }
+.icon{
+  float: right;
+  padding: 0.5% !important;
+}
+.popover{
+  padding: .3% !important;
+}
+.tBodyRow{
+    cursor: pointer;
+    text-decoration-line: line-through;
+    
+  }

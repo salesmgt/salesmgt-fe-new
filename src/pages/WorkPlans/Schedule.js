@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Avatar, InputAdornment, InputBase, ListItem, ListItemAvatar, ListItemText, TextField } from '@material-ui/core';
 import {
     Inject, ScheduleComponent, ViewsDirective, ViewDirective
@@ -11,6 +11,8 @@ import { Input } from '@syncfusion/ej2-inputs';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { MdAccountCircle, MdSearch } from 'react-icons/md';
 import { Autocomplete } from '@material-ui/lab';
+import { getAccount } from '../Accounts/AccountsServices';
+import { useAuth } from '../../hooks/AuthContext';
 import './WorkPlans.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -79,12 +81,15 @@ L10n.load({
 
 const Schedule = (props) => {
     const [username, setUsername] = React.useState('')
+    const [me, setMe] = useState(null)
     const classes = useStyles();
     const [key, setKey] = React.useState('')
     const [startTime, setStartTime] = React.useState(null)
+    const [PIC, setPIC] = React.useState(null)
     let schedule = React.useRef(null)
     let tree = React.useRef(null)
     const typingTimeoutRef = React.useRef(null)
+    const { user } = useAuth()
 
     const localDate = {
         dataSource: props.data,
@@ -217,7 +222,7 @@ const Schedule = (props) => {
     const onDrag = e => setStartTime(e.data?.startTime)
 
     const onActionBegin = (e) => {
-        console.log('action này là ', e)
+        // console.log('action này là ', e)
         if (e.requestType === 'eventCreate' || e.requestType === 'eventRemove' || e.requestType === 'eventChange') {
             props.handleRequestType(e, startTime)
             setStartTime(null)
@@ -298,13 +303,16 @@ const Schedule = (props) => {
 
     }
 
-    const [PIC, setPIC] = React.useState(null)
-
     // Search other's workplan
     const handleSearchNameChange = (e, newPIC) => {
         if (newPIC) {
             setPIC(newPIC);
             props.handleOnSearchFieldChange(newPIC.username)
+        } else {
+            getAccount(user.username).then(res => {
+                setPIC(res)
+            })
+            props.handleOnSearchFieldChange(user.username)
         }
     }
 
@@ -324,8 +332,6 @@ const Schedule = (props) => {
                         <div className="my-header">
                             {/* <h1 className="title-text">My Workplan</h1> */}
                             <Autocomplete
-                                autoComplete
-                                autoSelect
                                 autoHighlight
                                 clearOnEscape
                                 options={props.listPICs ? props.listPICs : []}
@@ -364,6 +370,7 @@ const Schedule = (props) => {
                                 }}
                                 className={classes.autoComplete}
                                 onChange={(event, newPIC) => handleSearchNameChange(event, newPIC)}
+                                onBlur={(event, pic) => handleSearchNameChange(event, pic)}
                             />
                         </div>
                         <ScheduleComponent currentView='Week'

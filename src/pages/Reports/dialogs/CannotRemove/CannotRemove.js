@@ -51,7 +51,7 @@ function CannotRemove(props) {
             {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
-                    {cannotMessage(data?.educationalLevel, data?.schoolName, data?.date, data?.comment?.fullName)}
+                    {cannotMessage(data?.educationalLevel, data?.schoolName, data?.date, data?.commentedPerson)}
                 </DialogContentText>
             </DialogContent>
             {/* <Divider /> */}

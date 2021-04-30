@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -38,7 +38,8 @@ import {
     SCALE_FILTER,
     PIC_FILTER,
     PURPOSE_FILTER,
-    // STATUS_FILTER,
+    STATUS_FILTER,
+    ASSIGNED_FILTER,
 } from '../../../../constants/Filters'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
@@ -50,6 +51,7 @@ import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetS
 import { Consts } from '../../TargetSchoolsConfig'
 import { roleNames } from '../../../../constants/Generals'
 import styles from './Filters.module.scss'
+import { propTypes } from 'velocity-react/velocity-component'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -176,14 +178,14 @@ const MuiAccordionDetails = withStyles((theme) => ({
     },
 }))(AccordionDetails)
 
-function Filters() {
+function Filters(props) {
     //   const style = useStyles();
     const classes = useStyles()
+    const { operations, filters } = Consts
     // const { onGetTargets } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
     const { user } = useAuth()
-
     const {
         schYears,
         dists,
@@ -191,7 +193,7 @@ function Filters() {
         schEduLvls,
         schScales,
         salesPurps,
-        // schStatus,
+        schStatus,
     } = useApp()
     const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
@@ -216,9 +218,14 @@ function Filters() {
         schoolScale,
         PIC,
         purpose,
+        schoolStatus,
+        isAssigned,
+        assignedStatuses,
         setFilter,
+        getListPICs,
     } = useTargetSchool()
-    const { operations, filters } = Consts
+
+    const typingTimeoutRef = useRef({})
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
@@ -226,85 +233,9 @@ function Filters() {
     const [openAssignDialog, setOpenAssignDialog] = useState(false)
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
-    const selectedSchools = [
-        {
-            id: 10,
-            schoolName: 'THCS Hiệp Thành',
-            district: 'Quận 4',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 12,
-            schoolName: 'Tiểu học Xuân Thu',
-            district: 'Quận Bình Tân',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 13,
-            schoolName: 'THCS Võ Trường Toản',
-            district: 'Quận 1',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 16,
-            schoolName: 'THPT Nguyễn Thượng Hiền',
-            district: 'Quận Phú Nhuận',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 20,
-            schoolName: 'THPT Marie Cuire',
-            district: 'Quận 10',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 21,
-            schoolName: 'Tiểu học Đặng Trần Côn',
-            district: 'Quận 12',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 30,
-            schoolName: 'THPT Nguyễn Trãi',
-            district: 'Quận 3',
-            purpose: '',
-            note: '',
-        },
-        {
-            id: 34,
-            schoolName: 'Tiểu học Nguyễn Văn Cừ',
-            district: 'Quận 5',
-            purpose: '',
-            note: '',
-        },
-    ] // Giờ để tạm ở đây để test trước chứ đúng ra là truyền bằng context
-
     //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
         const selectedSchoolYear = event.target.value
-
-        // setSchoolYear(selectedSchoolYear)
-        // if (selectedSchoolYear) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
-        //         payload: {
-        //             filterType: 'schoolYear',
-        //             filterValue: selectedSchoolYear,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_YEAR,
-        //         payload: { filterType: 'schoolYear', filterValue: '' },
-        //     })
-        // }
         setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_YEAR,
@@ -317,23 +248,6 @@ function Filters() {
 
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-
-        // setDistrict(selectedDistrict)
-        // if (selectedDistrict) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: {
-        //             filterType: 'district',
-        //             filterValue: selectedDistrict,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_DISTRICT,
-        //         payload: { filterType: 'district', filterValue: '' },
-        //     })
-        // }
         setFilter(DISTRICT_FILTER, selectedDistrict)
         dispatchParams({
             type: ReducerActions.FILTER_DISTRICT,
@@ -346,23 +260,6 @@ function Filters() {
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-
-        // setSchoolType(selectedSchoolType)
-        // if (selectedSchoolType) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
-        //         payload: {
-        //             filterType: 'type',
-        //             filterValue: selectedSchoolType,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_TYPE,
-        //         payload: { filterType: 'type', filterValue: '' },
-        //     })
-        // }
         setFilter(TYPE_FILTER, selectedSchoolType)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_TYPE,
@@ -375,23 +272,6 @@ function Filters() {
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-
-        // setSchoolLevel(selectedSchoolLevel)
-        // if (selectedSchoolLevel) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
-        //         payload: {
-        //             filterType: 'level',
-        //             filterValue: selectedSchoolLevel,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_LEVEL,
-        //         payload: { filterType: 'level', filterValue: '' },
-        //     })
-        // }
         setFilter(LEVEL_FILTER, selectedSchoolLevel)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_LEVEL,
@@ -404,23 +284,6 @@ function Filters() {
 
     const handleSchoolScaleChange = (event) => {
         const selectedSchoolScale = event.target.value
-
-        // setSchoolScale(selectedSchoolScale)
-        // if (selectedSchoolScale) {
-        //     // !== ''
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
-        //         payload: {
-        //             filterType: 'scale',
-        //             filterValue: selectedSchoolScale,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_SCHOOL_SCALE,
-        //         payload: { filterType: 'scale', filterValue: '' },
-        //     })
-        // }
         setFilter(SCALE_FILTER, selectedSchoolScale)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_SCALE,
@@ -431,21 +294,23 @@ function Filters() {
         })
     }
 
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current)
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            console.log('searchKey = ', searchPIC)
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
+    }
+
     const handlePICChange = (event, newPIC) => {
-        // setPIC(newPIC)
-        // console.log('handle change, new PIC', newPIC)
-        // if (newPIC) {
-        //     //  !== null
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PIC,
-        //         payload: { filterType: 'PIC', filterValue: newPIC },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PIC,
-        //         payload: { filterType: 'PIC', filterValue: null },
-        //     })
-        // }
         setFilter(PIC_FILTER, newPIC)
         dispatchParams({
             type: ReducerActions.FILTER_PIC,
@@ -458,29 +323,36 @@ function Filters() {
 
     const handlePurposeChange = (event) => {
         const selectedPurpose = event.target.value
-
-        // setPurpose(selectedPurpose)
-        // if (selectedPurpose) {
-        //     // !== '' && selectedPurpose !== undefined
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PURPOSE,
-        //         payload: {
-        //             filterType: 'purpose',
-        //             filterValue: selectedPurpose,
-        //         },
-        //     })
-        // } else {
-        //     dispatchParams({
-        //         type: ReducerActions.FILTER_PURPOSE,
-        //         payload: { filterType: 'purpose', filterValue: '' },
-        //     })
-        // }
         setFilter(PURPOSE_FILTER, selectedPurpose)
         dispatchParams({
             type: ReducerActions.FILTER_PURPOSE,
             payload: {
                 filterType: PURPOSE_FILTER,
                 filterValue: selectedPurpose ? selectedPurpose : '',
+            },
+        })
+    }
+
+    const handleStatusChange = (event) => {
+        const selectedStatus = event.target.value
+        setFilter(STATUS_FILTER, selectedStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: selectedStatus ? selectedStatus : '',
+            },
+        })
+    }
+
+    const handleIsAssignedChange = (event) => {
+        const selectedIsAssigned = event.target.value
+        setFilter(ASSIGNED_FILTER, selectedIsAssigned)
+        dispatchParams({
+            type: ReducerActions.FILTER_ASSIGNED,
+            payload: {
+                filterType: ASSIGNED_FILTER,
+                filterValue: selectedIsAssigned,
             },
         })
     }
@@ -541,9 +413,12 @@ function Filters() {
                 case PURPOSE_FILTER:
                     setFilter(PURPOSE_FILTER, '')
                     break
-                // case STATUS_FILTER:
-                //     setFilter(STATUS_FILTER, '')
-                //     break
+                case STATUS_FILTER:
+                    setFilter(STATUS_FILTER, '')
+                    break
+                case ASSIGNED_FILTER:
+                    setFilter(ASSIGNED_FILTER, null)
+                    break
                 default:
                     break
             }
@@ -555,6 +430,7 @@ function Filters() {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
+        // console.log('chips array: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -573,232 +449,218 @@ function Filters() {
     }
 
     const handleOpenAssignDialog = () => {
-        if (selectedSchools.length > 0) {
+        if (props.selectedRows.length > 0) {
             // console.log('assign dialog')
             setOpenAssignDialog(true)
         } else {
+            setOpenAssignDialog(false)
+
             // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
+            // }
         }
-    }
 
-    return (
-        <div className={styles.wrapper}>
-            <MuiAccordion>
-                <Box
-                    display="flex"
-                    flexWrap="nowrap"
-                    className={classes.flexBox}
-                >
-                    <Box className={classes.flexItem}>
-                        <MuiAccordionSummary expandIcon={<MdExpandMore />}>
-                            <MdFilterList className={styles.iconFilter} />{' '}
-                            &nbsp;
-                            <Typography>{operations.filter}</Typography>{' '}
-                            {/* { renderCount }  */}
-                        </MuiAccordionSummary>
-                    </Box>
-                    <Box flexGrow={1} className={classes.flexItem}>
-                        <Chips
-                            // chips={(params.listFilters !== undefined && params.listFilters !== null) ? params.listFilters : {}}
-                            chips={generateChipsArray(params.listFilters)}
-                            dispatch={dispatchParams}
-                            handleChipsRemoved={handleChipsRemoved}
-                        />
-                    </Box>
-                    <Box className={classes.flexItem}>
-                        <SearchFields
-                            placeholder={operations.search.placeholder}
-                            onChange={handleSearch}
-                        />
-                    </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleOpenCreateDialog}
-                        >
-                            <MdAdd fontSize="large" />
-                            {/* &nbsp;{operations.create} */}
-                        </Button>
-
-                        <CreateTargetSchools
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                        />
-                    </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleOpenAssignDialog}
-                        >
-                            <MdPersonAdd fontSize="large" />
-                        </Button>
-                        {/* Have checked target schools */}
-                        <AssignMultiple
-                            open={openAssignDialog}
-                            onClose={() => setOpenAssignDialog(false)}
-                            rows={selectedSchools}
-                        />
-                        {/* Have not checked target schools */}
-                        <NotifyAssign
-                            open={openNotifyDialog}
-                            onClose={() => setOpenNotifyDialog(false)}
-                        />
-                    </Box>
-                </Box>
-                <MuiAccordionDetails>
-                    <Grid container>
+        return (
+            <div className={styles.wrapper}>
+                <MuiAccordion>
+                    <Box
+                        display="flex"
+                        flexWrap="nowrap"
+                        className={classes.flexBox}
+                    >
+                        <Box className={classes.flexItem}>
+                            <MuiAccordionSummary expandIcon={<MdExpandMore />}>
+                                <MdFilterList className={styles.iconFilter} />{' '}
+                                &nbsp;
+                                <Typography>
+                                    {operations.filter}
+                                </Typography>{' '}
+                                {/* { renderCount }  */}
+                            </MuiAccordionSummary>
+                        </Box>
+                        <Box flexGrow={1} className={classes.flexItem}>
+                            <Chips
+                                // chips={(params.listFilters !== undefined && params.listFilters !== null) ? params.listFilters : {}}
+                                chips={generateChipsArray(params.listFilters)}
+                                dispatch={dispatchParams}
+                                handleChipsRemoved={handleChipsRemoved}
+                            />
+                        </Box>
+                        <Box className={classes.flexItem}>
+                            <SearchFields
+                                placeholder={operations.search.placeholder}
+                                onChange={handleSearch}
+                            />
+                        </Box>
                         {user.roles[0] !== roleNames.salesman && (
-                            <Grid item xs={12} sm={6} md={5} lg={4}>
-                                <Autocomplete
-                                    autoComplete
-                                    autoSelect
-                                    autoHighlight
-                                    clearOnEscape
-                                    options={PICs ? PICs : []}
-                                    getOptionLabel={(pic) =>
-                                        pic.fullName ? pic.fullName : ''
-                                    }
-                                    value={PIC}
-                                    renderInput={(params) => {
-                                        return (
-                                            <TextField
-                                                {...params}
-                                                label={filters.pic.title}
-                                                margin="normal"
-                                                placeholder={
-                                                    filters.pic.placeholder
-                                                }
-                                                ref={params.InputProps.ref}
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    startAdornment: (
-                                                        <>
-                                                            <InputAdornment position="start">
-                                                                <MdAccountCircle />
-                                                            </InputAdornment>
-                                                            {
-                                                                params
-                                                                    .InputProps
-                                                                    .startAdornment
-                                                            }
-                                                        </>
-                                                    ),
-                                                }}
-                                            />
-                                        )
-                                    }}
-                                    renderOption={(option) => {
-                                        return (
-                                            <div
-                                                className={classes.itemPIC}
-                                                key={option.username}
-                                            >
-                                                <ListItemAvatar>
-                                                    <Avatar
-                                                        src={option.avatar}
-                                                    />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={
-                                                        option.fullName
-                                                            ? option.fullName
-                                                            : ''
-                                                    }
-                                                    classes={{
-                                                        primary:
-                                                            classes.itemTextPrimary,
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    }}
-                                    className={classes.autoComplete}
-                                    onChange={(event, newPIC) =>
-                                        handlePICChange(event, newPIC)
-                                    }
-                                />
-                            </Grid>
+                            <>
+                                <Box className={classes.flexItem}>
+                                    <Button
+                                        className={classes.btn}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleOpenCreateDialog}
+                                    >
+                                        <MdAdd fontSize="large" />
+                                        {/* &nbsp;{operations.create} */}
+                                    </Button>
+
+                                    <CreateTargetSchools
+                                        open={openCreateDialog}
+                                        onClose={() =>
+                                            setOpenCreateDialog(false)
+                                        }
+                                    />
+                                </Box>
+                                <Box className={classes.flexItem}>
+                                    <Button
+                                        className={classes.btn}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleOpenAssignDialog}
+                                    >
+                                        <MdPersonAdd fontSize="large" />
+                                    </Button>
+                                    {/* Have checked target schools */}
+                                    <AssignMultiple
+                                        open={openAssignDialog}
+                                        onClose={() =>
+                                            setOpenAssignDialog(false)
+                                        }
+                                        rows={props.selectedRows}
+                                        setRows={props.setSelectedRows}
+                                        refreshAPI={props.refreshAPI}
+                                    />
+                                    {/* Have not checked target schools */}
+                                    <NotifyAssign
+                                        open={openNotifyDialog}
+                                        onClose={() =>
+                                            setOpenNotifyDialog(false)
+                                        }
+                                    />
+                                </Box>
+                            </>
                         )}
+                    </Box>
+                    <MuiAccordionDetails>
+                        <Grid container>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.status.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={schoolStatus || ''}
+                                        onChange={handleStatusChange}
+                                        MenuProps={MenuProps}
+                                    >
+                                        <MenuItem
+                                            value=""
+                                            className={classes.lastOption}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {filters.status.options.all}
+                                        </MenuItem>
+                                        {schStatus?.map((status) => (
+                                            <MenuItem
+                                                key={status}
+                                                value={status}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {status}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.purpose.title}</InputLabel>
-                                <Select
-                                    value={purpose || ''}
-                                    onChange={handlePurposeChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.lastOption}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.purpose.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={purpose || ''}
+                                        onChange={handlePurposeChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        {filters.purpose.options.all}
-                                    </MenuItem>
-                                    {bakSalesPurps?.map((purp) => (
                                         <MenuItem
-                                            key={purp}
-                                            value={purp}
-                                            className={classes.option}
+                                            value=""
+                                            className={classes.lastOption}
                                             classes={{
                                                 root: classes.menuItemRoot,
                                                 selected:
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {purp}
+                                            {filters.purpose.options.all}
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                        {bakSalesPurps?.map((purp) => (
+                                            <MenuItem
+                                                key={purp}
+                                                value={purp}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {purp}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.district.title}
-                                </InputLabel>
-                                <Select
-                                    value={district || ''}
-                                    onChange={handleDistrictChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.district.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={district || ''}
+                                        onChange={handleDistrictChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        {filters.district.options.all}
-                                    </MenuItem>
-                                    {bakDists?.map((dist) => (
                                         <MenuItem
-                                            key={dist}
-                                            value={dist}
+                                            value=""
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -806,44 +668,47 @@ function Filters() {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {dist}
+                                            {filters.district.options.all}
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                        {bakDists?.map((dist) => (
+                                            <MenuItem
+                                                key={dist}
+                                                value={dist}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {dist}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.schoolYear.title}
-                                </InputLabel>
-                                <Select
-                                    value={schoolYear || ''}
-                                    onChange={handleSchoolYearChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.schoolYear.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={schoolYear || ''}
+                                        onChange={handleSchoolYearChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        {filters.schoolYear.options.all}
-                                    </MenuItem>
-                                    {bakSchYears?.map((year) => (
                                         <MenuItem
-                                            key={year}
-                                            value={year}
+                                            value=""
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -851,44 +716,47 @@ function Filters() {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {year}
+                                            {filters.schoolYear.options.all}
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                        {bakSchYears?.map((year) => (
+                                            <MenuItem
+                                                key={year}
+                                                value={year}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {year}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.schoolType.title}
-                                </InputLabel>
-                                <Select
-                                    value={schoolType || ''}
-                                    onChange={handleSchoolTypeChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.schoolType.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={schoolType || ''}
+                                        onChange={handleSchoolTypeChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        {filters.schoolType.options.all}
-                                    </MenuItem>
-                                    {bakSchTypes?.map((type) => (
                                         <MenuItem
-                                            key={type}
-                                            value={type}
+                                            value=""
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -896,44 +764,47 @@ function Filters() {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {type}
+                                            {filters.schoolType.options.all}
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                        {bakSchTypes?.map((type) => (
+                                            <MenuItem
+                                                key={type}
+                                                value={type}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {type}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.schoolLevel.title}
-                                </InputLabel>
-                                <Select
-                                    value={schoolLevel || ''}
-                                    onChange={handleSchoolLevelChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.schoolLevel.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={schoolLevel || ''}
+                                        onChange={handleSchoolLevelChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        {filters.schoolLevel.options.all}
-                                    </MenuItem>
-                                    {bakSchEduLvls?.map((level) => (
                                         <MenuItem
-                                            key={level}
-                                            value={level}
+                                            value=""
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -941,44 +812,47 @@ function Filters() {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {level}
+                                            {filters.schoolLevel.options.all}
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                        {bakSchEduLvls?.map((level) => (
+                                            <MenuItem
+                                                key={level}
+                                                value={level}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {level}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.schoolScale.title}
-                                </InputLabel>
-                                <Select
-                                    value={schoolScale || ''}
-                                    onChange={handleSchoolScaleChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                                // lg={user.roles[0] === roleNames.salesman ? 4: 3}
+                                className={classes.paddingTop}
+                            >
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>
+                                        {filters.schoolScale.title}
+                                    </InputLabel>
+                                    <Select
+                                        value={schoolScale || ''}
+                                        onChange={handleSchoolScaleChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        {filters.schoolScale.options.all}
-                                    </MenuItem>
-                                    {bakSchScales?.map((scale) => (
                                         <MenuItem
-                                            key={scale}
-                                            value={scale}
+                                            value=""
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -986,54 +860,171 @@ function Filters() {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {scale}
+                                            {filters.schoolScale.options.all}
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                        {bakSchScales?.map((scale) => (
+                                            <MenuItem
+                                                key={scale}
+                                                value={scale}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {scale}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            {user.roles[0] !== roleNames.salesman && (
+                                <>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={4}
+                                        lg={3}
+                                        className={classes.paddingTop}
+                                    >
+                                        <FormControl
+                                            className={classes.formControl}
+                                        >
+                                            <InputLabel>
+                                                {filters.isAssigned.title}
+                                            </InputLabel>
+                                            <Select
+                                                value={
+                                                    isAssigned === null
+                                                        ? ''
+                                                        : isAssigned
+                                                }
+                                                onChange={
+                                                    handleIsAssignedChange
+                                                }
+                                                MenuProps={MenuProps}
+                                            >
+                                                {assignedStatuses?.map(
+                                                    (isAssigned) => (
+                                                        <MenuItem
+                                                            key={isAssigned}
+                                                            value={isAssigned}
+                                                            className={
+                                                                classes.option
+                                                            }
+                                                            classes={{
+                                                                root:
+                                                                    classes.menuItemRoot,
+                                                                selected:
+                                                                    classes.menuItemSelected,
+                                                            }}
+                                                        >
+                                                            {isAssigned === null
+                                                                ? `${filters.isAssigned.options.all}`
+                                                                : isAssigned
+                                                                ? `${filters.isAssigned.options.assigned}`
+                                                                : `${filters.isAssigned.options.notAssigned}`}
+                                                        </MenuItem>
+                                                    )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={5} lg={4}>
+                                        <Autocomplete
+                                            autoComplete
+                                            autoSelect
+                                            autoHighlight
+                                            clearOnEscape
+                                            options={PICs ? PICs : []}
+                                            getOptionLabel={(pic) =>
+                                                pic.fullName ? pic.fullName : ''
+                                            }
+                                            value={PIC}
+                                            renderInput={(params) => {
+                                                return (
+                                                    <TextField
+                                                        {...params}
+                                                        label={
+                                                            filters.pic.title
+                                                        }
+                                                        margin="normal"
+                                                        placeholder={
+                                                            filters.pic
+                                                                .placeholder
+                                                        }
+                                                        ref={
+                                                            params.InputProps
+                                                                .ref
+                                                        }
+                                                        onChange={
+                                                            onSearchPICChange
+                                                        }
+                                                        InputProps={{
+                                                            ...params.InputProps,
+                                                            startAdornment: (
+                                                                <>
+                                                                    <InputAdornment position="start">
+                                                                        <MdAccountCircle />
+                                                                    </InputAdornment>
+                                                                    {
+                                                                        params
+                                                                            .InputProps
+                                                                            .startAdornment
+                                                                    }
+                                                                </>
+                                                            ),
+                                                        }}
+                                                    />
+                                                )
+                                            }}
+                                            renderOption={(option) => {
+                                                return (
+                                                    <div
+                                                        className={
+                                                            classes.itemPIC
+                                                        }
+                                                        key={option.username}
+                                                    >
+                                                        <ListItemAvatar>
+                                                            <Avatar
+                                                                src={
+                                                                    option.avatar
+                                                                }
+                                                            />
+                                                        </ListItemAvatar>
+                                                        <ListItemText
+                                                            primary={
+                                                                option.fullName
+                                                                    ? option.fullName
+                                                                    : ''
+                                                            }
+                                                            classes={{
+                                                                primary:
+                                                                    classes.itemTextPrimary,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )
+                                            }}
+                                            className={classes.autoComplete}
+                                            onChange={(event, newPIC) =>
+                                                handlePICChange(event, newPIC)
+                                            }
+                                        />
+                                    </Grid>
+                                </>
+                            )}
                         </Grid>
-                        {/* <Grid item xs={6} sm={6} md={4} lg={3}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>School Statuses</InputLabel>
-                                <Select
-                                    value={schoolStatus || ''}
-                                    onChange={handleSchoolStatusChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        All
-                                    </MenuItem>
-                                    {schStatus?.map((status) => (
-                                        <MenuItem
-                                            key={status}
-                                            value={status}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
-                                            }}
-                                        >
-                                            {status}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid> */}
-                    </Grid>
-                </MuiAccordionDetails>
-            </MuiAccordion>
-        </div>
-    )
+                    </MuiAccordionDetails>
+                </MuiAccordion>
+            </div>
+        )
+    }
 }
-
 export default Filters
 
 // Filters.propTypes = {

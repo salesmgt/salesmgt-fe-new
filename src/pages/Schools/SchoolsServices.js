@@ -55,7 +55,13 @@ export async function getSchool(schoolId) {
 }
 
 export async function createSchool(school) {
-    const response = await Api.post('/schools', school)
+    const response = await Api.post('/schools/', school)
+    // const data = await response.data
+
+    return response
+}
+export async function importSchool(schools) {
+    const response = await Api.post('/schools/import', schools)
     // const data = await response.data
 
     return response
@@ -63,13 +69,6 @@ export async function createSchool(school) {
 
 export async function updateSchool(id, school) {
     const response = await Api.put(`/schools/${id}`, school)
-    // const data = await response.data
-
-    return response
-}
-
-export async function importSchool(school) {
-    const response = await Api.post(`/schools/import`, school)
     // const data = await response.data
 
     return response
