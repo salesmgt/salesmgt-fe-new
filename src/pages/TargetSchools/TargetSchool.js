@@ -18,7 +18,7 @@ function TargetSchool() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
+    const stateData = location.state?.data    
     const [target, setTarget] = useState(stateData?.model)
 
     let isMounted = true
@@ -121,7 +121,7 @@ function TargetSchool() {
                     <>
                         <DetailLayouts
                             linkBack={linkNames.back}
-                            header={target?.schoolName}
+                            header={`${target?.level} ${target?.schoolName}`}
                             subHeader={target?.schoolStatus}
                             tabs={[tabNames.tab1, tabNames.tab2]}
                             tabValue={tabValue}
@@ -168,7 +168,7 @@ function TargetSchool() {
 
                         <DetailLayouts
                             linkBack={linkNames.back}
-                            header={target?.schoolName}
+                            header={`${target?.level} ${target?.schoolName}`}
                             subHeader={target?.schoolStatus}
                             tabs={[tabNames.tab2, tabNames.tab1, tabNames.tab3]}
                             tabValue={tabValue}

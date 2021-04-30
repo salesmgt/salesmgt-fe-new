@@ -8,20 +8,18 @@ import {
     DialogTitle,
     Typography,
     withStyles,
+    Grid
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { Autocomplete } from '@material-ui/lab'
-import { columns } from './CreateTargetSchoolsConfig'
 import { useHistory } from "react-router"
-import { getAllSchools } from '../../TargetSchoolsServices'
+import { useTargetForm } from './TargetFormContext'
+import { columns } from './CreateTargetSchoolsConfig'
+import { getSchoolsForTargets } from '../../TargetSchoolsServices'
+import Filters from './Filters'
+import Tables from './Tables'
+import { Loading } from '../../../../components'
+import { Consts } from '../FormConfig'
 import classes from './CreateTargetSchools.module.scss'
-
-const clientSchema = yup.object().shape({
-    // title: yup.string().trim().max(30).required(),
-    // remark: yup.string().trim().max(50).required(),
-    PIC: yup.string().required(),
-    // purpose: yup.string().required()
-})
 
 const stylesTitle = (theme) => ({
     root: {
@@ -52,19 +50,32 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 
 function CreateTargetSchools(props) {
     const { open, onClose } = props
-
-    const { handleSubmit } = useForm({  // getValues, register, , errors, setError
-        resolver: yupResolver(clientSchema),
-    })
-    // const [open, setOpen] = useToggle()
+    const { headers, operations } = Consts
     const history = useHistory()
+    const { params } = useTargetForm()
+    const { listFilters, page, limit, column, direction, searchKey } = params
 
-    const [rows, setRows] = useState([])
-    const getListSchools = () => {
-        getAllSchools().then((data) => {
-            setRows(data.list)
-            // console.log('rows schools: ', data.list[0]);
-        })
+    const [data, setData] = useState(null)
+
+    const calculateSchoolYear = () => {
+        const thisYear = new Date().getFullYear();
+        const thisMonth = new Date().getMonth();
+
+        if (thisMonth < 7)
+            return `${thisYear - 1}-${thisYear}`;
+        else return `${thisYear}-${thisYear + 1}`
+    }
+    const schoolYear = calculateSchoolYear()
+
+    let isMounted = true
+    const getListSchools = (schoolYear,page = 0, limit = 10, column = 'id',direction = 'asc',searchKey,listFilters) => {
+        getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,listFilters)
+            .then((res) => {
+                if (isMounted) {
+                    console.log('CreateTarget form - data: ', res);
+                    setData(res.data)
+                }
+            })
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
@@ -76,59 +87,48 @@ function CreateTargetSchools(props) {
             })
     }
 
-    useEffect(getListSchools, [])
+    useEffect(() => {
+        getListSchools(schoolYear,page, limit, column, direction, searchKey, listFilters)
+        return () => {
+            isMounted = false
+        }
+    }, [params])
 
-    // if (!rows) {
-    //     return null
+    // if (!data) {
+    //     return <Loading />
     // }
-
-    const onSubmit = (data) => {
-        console.log(data)
-    }
-
-    const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear();
-        const thisMonth = new Date().getMonth();
-        // console.log(`${thisMonth}/${thisYear}`);
-        // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
-
-        if (thisMonth < 7)
-            return `${thisYear - 1}-${thisYear}`;
-        else return `${thisYear}-${thisYear + 1}`
-    }
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
-                Create Target Schools
+                {headers.create}
             </DialogTitleWithIconClose>
-            {/* <Divider /> */}
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                <DialogContent className={classes.wrapper}>
-                    {/* <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Grid item xs>
-                                <Typography variant="subtitle1">Choose target schools from the list below:</Typography>
-                                <Typography variant="subtitle2" className={classes.schoolYear}>School year: {calculateSchoolYear()}</Typography>
-                            </Grid>
-                            <Grid item xs>
-                                <div style={{ height: 400, width: '100%' }}>
-                                    <DataGrid rows={rows} columns={columns} pageSize={10} checkboxSelection />
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Grid> */}
-                </DialogContent>
-                {/* <Divider /> */}
-                <DialogActions className="">
-                    <Button type="submit" onClick={handleSubmit(onSubmit)} className={classes.btnSave}>
-                        Save
-                    </Button>
-                    <Button onClick={onClose}>
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </form>
+
+            <DialogContent className={classes.wrapper}>
+                <Grid container>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Filters className={classes.filter} />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                        {/* <Tables
+                            className={classes.table}
+                            columns={columns}
+                            rows={data.list}
+                            totalRecord={data.totalElements}
+                            totalPage={data.totalPage}
+                        /> */}
+                    </Grid>
+                </Grid>
+            </DialogContent>
+
+            <DialogActions className="">
+                <Button onClick={() => {}} className={classes.btnSave}>
+                    {operations.save}
+                </Button>
+                <Button onClick={onClose}>
+                    {operations.cancel}
+                </Button>
+            </DialogActions>
         </Dialog>
     )
 }

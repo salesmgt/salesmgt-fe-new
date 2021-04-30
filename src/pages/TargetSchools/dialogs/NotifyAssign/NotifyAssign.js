@@ -50,6 +50,7 @@ function ConfirmRemove(props) {
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
                     In the Target School table, please choose target schools you want to assign.
+                    <br/><br/>
                     <i>
                         <b>Tips:</b> Filters and search box may help you find schools faster.
                     </i>

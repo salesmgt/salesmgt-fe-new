@@ -1,6 +1,7 @@
 export const columns = [
-    { field: 'name', headerName: 'School Name', width: 255 },
-    { field: 'address', headerName: 'Address', width: 260 },
-    { field: 'reprName', headerName: 'Principal', width: 180 },
-    { field: 'schoolStatus.name', headerName: 'Status', width: 140 }
+    { key: 'no', name: 'No', sortable: false, width: '' },
+    { key: 'schoolName', name: 'School Name', sortable: true, width: '' },
+    { key: 'reprName', name: 'Principal', sortable: true, width: '' },
+    { key: '', name: 'Status', sortable: true, width: '' },
+    { key: 'purpose', name: 'Purpose', sortable: true, width: '' },
 ]

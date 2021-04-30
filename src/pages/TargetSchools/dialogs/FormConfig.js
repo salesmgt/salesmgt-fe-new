@@ -8,7 +8,7 @@ export const Consts = {
         confirmUnassign: 'Confirm Unassign',
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
-        // child1: 'Preview: '
+        child1: 'Preview: '
     },
     operations: {
         cancel: 'Cancel',

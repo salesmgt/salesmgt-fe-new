@@ -20,13 +20,11 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import { useSchool } from '../../hooks/SchoolContext'
-import MenuOptions from './MenuOptions/MenuOptions'
+import { useTargetForm } from './TargetFormContext'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { statusNames } from '../../../../constants/Generals'
-import { Consts } from '../../SchoolsConfig'
-import Highlighter from "react-highlight-words";
-// import PropTypes from 'prop-types'
+import { Consts } from '../FormConfig'
+import Highlighter from "react-highlight-words"
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -173,8 +171,7 @@ function Tables(props) {
         setLimit,
         setPage,
         setDirection,
-
-    } = useSchool()
+    } = useTargetForm()
 
     // ====================Paging====================
     const handleChangePage = (event, newPage) => {
@@ -216,22 +213,14 @@ function Tables(props) {
     }
 
     const setStatusChipColor = (status, isActive) => {
-        // if (isActive) {
-            switch (status) {
-                case statusNames.lead:
-                    // return <Chip label={status} className={classes.chipLead} />
-                    return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
-                case statusNames.customer:
-                    // return <Chip label={status} className={classes.chipCustomer} />
-                    return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
-                default:
-                    // #5c21f3
-                    // return <Chip label={status} />
-                    return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
-            }
-        // } else {
-        //     return <Chip label={statusNames.pending} />
-        // }
+        switch (status) {
+            case statusNames.lead:
+                return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
+            case statusNames.customer:
+                return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
+            default:
+                return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+        }
     }
 
     return (
@@ -249,9 +238,7 @@ function Tables(props) {
                         column={column}
                         onRequestSort={onSortBy}
                     />
-                   
                     <TableBody className={classes.tBody}>
-                    
                         {rows?.length > 0 ? (
                             rows.map((row, index) => (
                                 <TableRow
@@ -308,12 +295,6 @@ function Tables(props) {
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {setStatusChipColor(row.status, row.active)}
-                                    </TableCell>
-                                    <TableCell
-                                        className={classes.tBodyCell}
-                                        align="right"
-                                    >
-                                        <MenuOptions data={row} />
                                     </TableCell>
                                 </TableRow>
                             ))

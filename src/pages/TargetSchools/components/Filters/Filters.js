@@ -49,7 +49,7 @@ import { Consts } from '../../TargetSchoolsConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
 import styles from './Filters.module.scss'
-import { propTypes } from 'velocity-react/velocity-component'
+import TargetFormProvider from '../../dialogs/CreateTargetSchools/TargetFormContext'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -445,7 +445,41 @@ function Filters(props) {
 
             // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
-        // }
+        }
+    }
+
+    const renderCreateTargetDialog = () => {
+        if (openCreateDialog) {
+            return (
+                <TargetFormProvider>
+                    <CreateTargetSchools
+                        open={openCreateDialog}
+                        onClose={() => setOpenCreateDialog(false)}
+                    />
+                </TargetFormProvider>
+            )
+        } else return null;
+    }
+
+    const renderAssignDialog = () => {
+        console.log('props.selectedRows = ', props.selectedRows);
+        
+        if (props.selectedRows.length > 0) {
+            // Checked target schools
+            return (
+                <AssignMultiple
+                    open={openAssignDialog}
+                    onClose={() => setOpenAssignDialog(false)}
+                    rows={props.selectedRows}
+                    setRows={props.setSelectedRows}
+                    refreshAPI={props.refreshAPI}
+                />
+            )
+        } else {    // Have not checked target schools
+            return (
+                <NotifyAssign open={openNotifyDialog} onClose={() => setOpenNotifyDialog(false)} />
+            )
+        }
     }
 
     return (
@@ -490,36 +524,21 @@ function Filters(props) {
                                     <MdAdd fontSize="large" />
                                     {/* &nbsp;{operations.create} */}
                                 </Button>
-
-                        <CreateTargetSchools
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                        />
-                    </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleOpenAssignDialog}
-                        >
-                            <MdPersonAdd fontSize="large" />
-                        </Button>
-                        {/* Have checked target schools */}
-                        <AssignMultiple
-                            open={openAssignDialog}
-                            onClose={() => setOpenAssignDialog(false)}
-                            rows={props.selectedRows}
-                            setRows={props.setSelectedRows}
-                            refreshAPI={props.refreshAPI}
-                        />
-                        {/* Have not checked target schools */}
-                        <NotifyAssign
-                            open={openNotifyDialog}
-                            onClose={() => setOpenNotifyDialog(false)}
-                        />
-                    </Box>
-                    </>)}
+                                {renderCreateTargetDialog()}
+                            </Box>
+                            <Box className={classes.flexItem}>
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleOpenAssignDialog}
+                                >
+                                    <MdPersonAdd fontSize="large" />
+                                </Button>
+                                {renderAssignDialog()}
+                            </Box>
+                        </>
+                    )}
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
@@ -877,9 +896,7 @@ function Filters(props) {
                                                                     <MdAccountCircle />
                                                                 </InputAdornment>
                                                                 {
-                                                                    params
-                                                                        .InputProps
-                                                                        .startAdornment
+                                                                    params.InputProps.startAdornment
                                                                 }
                                                             </>
                                                         ),
@@ -927,7 +944,7 @@ function Filters(props) {
     )
 }
 
-export default Filters
+export default React.memo(Filters)
 
 // Filters.propTypes = {
 //     onGetTargets: PropTypes.func

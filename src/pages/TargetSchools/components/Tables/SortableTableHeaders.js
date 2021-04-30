@@ -32,7 +32,7 @@ export default function SortableTableHeaders(props) {
             color: 'white !important',
         },
     })(TableSortLabel)
-    console.log('row count', rowCount)
+    // console.log('row count', rowCount)
     return (
         <TableHead>
             <TableRow className={classes.tHead}>
@@ -54,8 +54,8 @@ export default function SortableTableHeaders(props) {
                         sortDirection={column === col.key ? direction : false}
                         align={
                             col.key === 'no'
-                                ? 'right'
-                                : col.key === 'user.fullName'
+                                ? 'center' :
+                                col.key === 'user.fullName'
                                 ? 'center'
                                 : 'left'
                         }

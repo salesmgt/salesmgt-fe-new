@@ -145,7 +145,7 @@ function Tables(props) {
     } = useTargetSchool()
     const { user } = useAuth()
 
-    const columns = getColumns(user.roles[0])
+    const columns = getColumns(user?.roles[0])
 
  
     const handleSelectAllClick = (event) => {
@@ -271,7 +271,7 @@ function Tables(props) {
                     />
                     <TableBody className={classes.tBody}>
                         {rows?.length > 0 ? (
-                            rows.map((row) => {
+                            rows.map((row, index) => {
                                 return (
                                     <TableRow
                                         key={row.id}
@@ -285,7 +285,7 @@ function Tables(props) {
                                         {user.roles[0] !==
                                             roleNames.salesman && (
                                             <TableCell
-                                                padding="checkbox"
+                                                padding="checkbox" width="1%"
                                                 onClick={(event) => {!row.username &&
                                                     handleClick(event, row)
                                                 }}
@@ -296,56 +296,52 @@ function Tables(props) {
                                                 />
                                             </TableCell>
                                         )}
-                                    
+                                        <TableCell 
+                                            className={classes.tBodyCell} align="center"
+                                            width={user.roles[0] !== roleNames.salesman ? "0.5%" : "1%"}
+                                        >
+                                            {params.page * params.limit + index + 1}
+                                        </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell}
+                                            className={classes.tBodyCell} 
+                                            width={user.roles[0] !== roleNames.salesman ? "30%" : "35%"}
                                         >
                                             <ListItemText
-                                                primary={ <> 
-                                                    {row.level} 
-                                                    <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={` ${row.schoolName}`}
-                                    
-                                        /> 
-                                        </>
-                                                    }
-                                                secondary={<Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.district}
-                                        /> }
+                                                primary={
+                                                    <> 
+                                                        {row.level} 
+                                                        <Highlighter
+                                                            highlightClassName="YourHighlightClass"
+                                                            searchWords={[params.searchKey]}
+                                                            autoEscape={true}   
+                                                            textToHighlight={` ${row.schoolName}`}
+                                                        /> 
+                                                    </>
+                                                }
+                                                secondary={row.district}
                                                 classes={{
-                                                    primary:
-                                                        styles.itemTextLarge,
-                                                    secondary:
-                                                        styles.itemTextMedium,
+                                                    primary: styles.itemTextLarge,
+                                                    secondary: styles.itemTextMedium,
                                                 }}
                                             />
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell}
+                                            className={classes.tBodyCell} 
+                                            width={user.roles[0] !== roleNames.salesman ? "14%" : "22%"}
                                         >
-                                         <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row?.reprName
-                                                ? row.reprIsMale
-                                                    ? `Mr. ${row.reprName}`
-                                                    : `Ms. ${row.reprName}`
-                                                : ''}
-                                         /> 
-                                            
+                                            <Highlighter
+                                                highlightClassName="YourHighlightClass"
+                                                searchWords={[params.searchKey]}
+                                                autoEscape={true}   
+                                                textToHighlight={row?.reprName
+                                                            ? row.reprIsMale
+                                                                ? `Mr. ${row.reprName}` : `Ms. ${row.reprName}`
+                                                            : ''}
+                                            />                                            
                                         </TableCell>
                                         {user.roles[0] !==
                                             roleNames.salesman && (
-                                            <TableCell
-                                                className={classes.tBodyCell}
-                                            >
+                                            <TableCell className={classes.tBodyCell} width="20%">
                                                 <ListItem
                                                     className={classes.itemPIC}
                                                 >
@@ -356,55 +352,54 @@ function Tables(props) {
                                                         />
                                                     </ListItemAvatar>
                                                     <ListItemText
-                                                        className={
-                                                            classes.picName
-                                                        }
+                                                        className={classes.picName}
                                                         primary={
                                                             <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.fullName ? row.fullName : ''
-                                        } /> 
+                                                                highlightClassName="YourHighlightClass"
+                                                                searchWords={[params.searchKey]}
+                                                                autoEscape={true}   
+                                                                textToHighlight={row.fullName ? row.fullName : ''}
+                                                            /> 
                                                         }
-                                                        secondary={ <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.username ? row.username : ''
-                                        } /> }
+                                                        secondary={
+                                                            <Highlighter
+                                                                highlightClassName="YourHighlightClass"
+                                                                searchWords={[params.searchKey]}
+                                                                autoEscape={true}   
+                                                                textToHighlight={row.username ? row.username : ''} 
+                                                            /> 
+                                                        }
                                                         classes={{
-                                                            primary:
-                                                                styles.itemTextMedium,
-                                                            secondary:
-                                                                styles.itemTextSmall,
+                                                            primary:styles.itemTextMedium,
+                                                            secondary:styles.itemTextSmall,
                                                         }}
                                                     />
                                                 </ListItem>
                                             </TableCell>
                                         )}
                                         <TableCell
-                                            className={classes.tBodyCell}
+                                            className={classes.tBodyCell} 
+                                            width={user.roles[0] !== roleNames.salesman ? "17%" : "20%"}
                                         >
-                                            { <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row?.schoolYear
-                                        } /> }
+                                            <Highlighter
+                                                highlightClassName="YourHighlightClass"
+                                                searchWords={[params.searchKey]}
+                                                autoEscape={true}   
+                                                textToHighlight={row?.schoolYear}
+                                            />
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell}
+                                            className={classes.tBodyCell} 
+                                            width={user.roles[0] !== roleNames.salesman ? "17%" : "20%"}
                                         >
                                             {setPurposeChipColor(row.purpose)}
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell}
+                                            className={classes.tBodyCell} 
                                             align="right"
+                                            width={user.roles[0] !== roleNames.salesman ? "0.5%" : "2%"}
                                         >
-                                            <MenuOptions data={row} notify={notify} setNotify={setNotify}
-                                                refreshAPI={refreshAPI}
-                                            />
+                                            <MenuOptions data={row} notify={notify} setNotify={setNotify} refreshAPI={refreshAPI} />
                                         </TableCell>
                                     </TableRow>
                                 )

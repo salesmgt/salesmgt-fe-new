@@ -124,8 +124,33 @@ export async function getDashboardsByKeys(...keys) {
     return data
 }
 
-export async function getAllSchools() {
-    const response = await Api.get('/schools')
+export async function getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,filters)
+{    
+    // Đây là url đúng nhưng chưa có. Để đây sau này dùng, DO NOT REMOVE!!!
+    // let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+    
+    let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+    url = searchKey ? url.concat(`&key=${searchKey}`) : url
+
+    if (filters) {
+        url = filters['district'].filterValue
+            ? url.concat(`&district=${filters['district'].filterValue}`)
+            : url
+        url = filters['type'].filterValue
+            ? url.concat(`&type=${filters['type'].filterValue}`)
+            : url
+        url = filters['level'].filterValue
+            ? url.concat(`&level=${filters['level'].filterValue}`)
+            : url
+        url = filters['scale'].filterValue
+            ? url.concat(`&scale=${filters['scale'].filterValue}`)
+            : url
+        url = filters['status'].filterValue
+            ? url.concat(`&status=${filters['status'].filterValue}`)
+            : url
+    }
+
+    const response = await Api.get(url)
     const data = await response.data
     return data
 }
@@ -135,6 +160,7 @@ export async function assignMulti(list) {
     const data = await response.data
     return data
 }
+
 export async function unassign(id) {
     const response = await Api.put(`/targets/unassign/${id}`)
     const data = await response.data

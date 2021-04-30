@@ -44,6 +44,7 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { Consts } from '../../ReportsConfig'
 import styles from './Filters.module.scss'
+import { roleNames } from '../../../../constants/Generals'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -172,7 +173,7 @@ function Filters() {
     const classes = useStyles()
     const { operations, filters } = Consts
 
-    // const { user } = useAuth()
+    const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
 
     //Use states which have been declared in the TargetSchoolContext
@@ -425,21 +426,23 @@ function Filters() {
                             onChange={handleSearch}
                         />
                     </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => setOpenCreateDialog(true)}
-                        >
-                            <MdAdd fontSize="large" />
-                            {/* &nbsp;{operations.create} */}
-                        </Button>
-                        <CreateReports
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                        />
-                    </Box>
+                    {user?.roles[0] === roleNames.salesman &&
+                        <Box className={classes.flexItem}>
+                            <Button
+                                className={classes.btn}
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => setOpenCreateDialog(true)}
+                            >
+                                <MdAdd fontSize="large" />
+                                {/* &nbsp;{operations.create} */}
+                            </Button>
+                            <CreateReports
+                                open={openCreateDialog}
+                                onClose={() => setOpenCreateDialog(false)}
+                            />
+                        </Box>
+                    }
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>

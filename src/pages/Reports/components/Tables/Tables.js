@@ -274,8 +274,8 @@ function Tables(props) {
                                     key={row.id}
                                     className={classes.tBodyRow}
                                 >
-                                    {/* <TableCell className={classes.tableCell} width="5" align="center">{params.page * params.limit + index + 1}</TableCell> */}
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell className={classes.tableCell} width="0.5%" align="center">{params.page * params.limit + index + 1}</TableCell>
+                                    <TableCell className={classes.tBodyCell} width="10%">
                                         {parseDateToString(row.date, 'DD/MM/YYYY')} &nbsp;
                                         {row.contextComments && (
                                             <Badge
@@ -286,15 +286,18 @@ function Tables(props) {
                                             </Badge>
                                         )}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell className={classes.tBodyCell} width="28%">
                                         <ListItemText
-                                            primary={<>{row.level} 
-                                             <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={ ` ${row.schoolName}`} /> 
-                                        </>
+                                            primary={
+                                                <>
+                                                    {row.level} 
+                                                    <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}   
+                                                        textToHighlight={ ` ${row.schoolName}`}
+                                                    />
+                                                </>
                                             }
                                             secondary={row.district}
                                             classes={{
@@ -304,24 +307,28 @@ function Tables(props) {
                                             }}
                                         />
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell className={classes.tBodyCell} width="16%">
                                         <ListItem className={styles.itemPIC}>
                                             <ListItemAvatar>
                                                 <Avatar src={row.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
                                                 className={classes.picName}
-                                                primary={<Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.fullName} /> }
+                                                primary={
+                                                    <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}   
+                                                        textToHighlight={row.fullName} 
+                                                    />
+                                                }
                                                 secondary={
                                                     <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.username} />
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}   
+                                                        textToHighlight={row.username}
+                                                    />
                                                 }
                                                 classes={{
                                                     primary:
@@ -332,27 +339,29 @@ function Tables(props) {
                                             />
                                         </ListItem>
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell className={classes.tBodyCell} width="11%">
                                         {setPurposeChipColor(row.purpose)}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        {<Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.result} />}
+                                    <TableCell className={classes.tBodyCell} width="15%">
+                                        <Highlighter
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight={row.result}
+                                        />
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        {<Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={truncateString(row.description)} />}
+                                    <TableCell className={classes.tBodyCell} width="19%">
+                                        <Highlighter
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight={truncateString(row.description)}
+                                        />
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>{truncateString(row.comment?.content)}</TableCell> */}
                                     <TableCell
                                         className={classes.tBodyCell}
-                                        align="right"
+                                        align="right" width="0.5%"
                                     >
                                         <MenuOptions data={row} refreshAPI={refreshAPI} />
                                     </TableCell>

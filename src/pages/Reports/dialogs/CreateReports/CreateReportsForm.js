@@ -409,6 +409,8 @@ function CreateReportsForm(props) {
         onClose()
     }
 
+    console.log('formvalue: ', formValue);
+
     return (
         <>
             <form onSubmit={addReports}>
@@ -580,6 +582,7 @@ function CreateReportsForm(props) {
                                                 variant="contained"
                                                 color="secondary"
                                                 type="submit"
+                                                disabled={formValue === defaultFormValue}
                                             // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />
@@ -685,6 +688,7 @@ function CreateReportsForm(props) {
                         // onSubmit={handleCreateReport}
                         // disabled={!formState.isDirty}
                         // onClick={handleSubmit(onSubmit)}
+                        disabled={formValue === defaultFormValue}
                         onClick={handleCreateReport}
                     >
                         {operations.save}

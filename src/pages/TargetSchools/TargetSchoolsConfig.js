@@ -2,16 +2,28 @@
 import { roleNames } from '../../constants/Generals'
 
 const columns = [
-    // { key: "ckb", name: '', sortable: false },
-    // { key: 'no', name: 'No', sortable: false },
+    { key: 'no', name: 'No', sortable: false },
     { key: 'schoolName', name: 'School Name', sortable: true },
-    // { key: "school.district.name", name: 'District', sortable: true },
     { key: 'school.reprName', name: 'Principal', sortable: true },
     { key: 'user.fullName', name: 'PIC', sortable: true },
     { key: 'schoolYear', name: 'School Year', sortable: true },
     { key: 'targetPurposeName', name: 'Purpose', sortable: true },
     { key: '', name: '', sortable: false },
 ]
+
+export function getColumns(role) {
+    const [no, schoolName, principal, pic, schoolYear, purposes, actions] = columns
+
+    switch (role) {
+        case roleNames.manager:
+        case roleNames.supervisor:
+            return [no, schoolName, principal, pic, schoolYear, purposes, actions]
+        case roleNames.salesman:
+            return [no, schoolName, principal, schoolYear, purposes, actions]
+        default:
+            break
+    }
+}
 
 export const targetConsts = {
     linkNames: {
@@ -22,20 +34,6 @@ export const targetConsts = {
         tab2: 'Assign Info',
         tab3: 'Memorandum of Contract',
     },
-}
-
-export function getColumns(role) {
-    const [schoolName, principal, pic, schoolYear, purposes, actions] = columns
-
-    switch (role) {
-        case roleNames.manager:
-        case roleNames.supervisor:
-            return [schoolName, principal, pic, schoolYear, purposes, actions]
-        case roleNames.salesman:
-            return [schoolName, principal, schoolYear, purposes, actions]
-        default:
-            break
-    }
 }
 
 export const Consts = {
