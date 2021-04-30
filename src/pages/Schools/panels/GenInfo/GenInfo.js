@@ -15,9 +15,12 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import * as SchoolsServices from '../../SchoolsServices'
+import { SCHOOL_NAME_RGX, TEL_RGX } from '../../../../utils/Regex'
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -26,12 +29,13 @@ const clientSchema = yup.object().shape({
         .trim()
         .min(3, 'Name must be at least 3 characters')
         .max(30, 'Name must be at most 30 characters')
-        .required('Name is required'),
+        .required('Name is required')
+        .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
     address: yup.string().trim().required('Address is required'),
     phone: yup
         .string()
         .max(11, 'Tel must be at most 11 digits and has the correct format')
-        .matches(/(02)+([0-9]{9})\b/g, 'Incorrect entry'),
+        .matches(TEL_RGX, 'Incorrect entry'),
 })
 
 const ITEM_HEIGHT = 120
@@ -80,18 +84,24 @@ function GenInfo(props) {
     })
 
     const { dists, schEduLvls, schTypes, schScales } = useApp()
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchEduLvls = schEduLvls
+        ? schEduLvls
+        : Milk.getMilk(milkNames.eduLvls)
+    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
+    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
 
     const defaultValues = {
         id: school?.id,
         name: school?.name ? school?.name : '',
         address: school?.address ? school?.address : '',
-        district: school?.district ? school?.district : dists[0],
+        district: school?.district ? school?.district : bakDists[0],
 
         educationalLevel: school?.educationalLevel
             ? school?.educationalLevel
-            : schEduLvls[0],
-        scale: school?.scale ? school?.scale : schScales[0],
-        type: school?.type ? school?.type : schTypes[0],
+            : bakSchEduLvls[0],
+        scale: school?.scale ? school?.scale : bakSchScales[0],
+        type: school?.type ? school?.type : bakSchTypes[0],
         phone: school?.phone ? school?.phone : '',
 
         active: school?.active,
@@ -107,13 +117,13 @@ function GenInfo(props) {
             id: school?.id,
             name: school?.name ? school?.name : '',
             address: school?.address ? school?.address : '',
-            district: school?.district ? school?.district : dists[0],
+            district: school?.district ? school?.district : bakDists[0],
 
             educationalLevel: school?.educationalLevel
                 ? school?.educationalLevel
-                : schEduLvls[0],
-            scale: school?.scale ? school?.scale : schScales[0],
-            type: school?.type ? school?.type : schTypes[0],
+                : bakSchEduLvls[0],
+            scale: school?.scale ? school?.scale : bakSchScales[0],
+            type: school?.type ? school?.type : bakSchTypes[0],
             phone: school?.phone ? school?.phone : '',
 
             active: school?.active,
@@ -145,10 +155,10 @@ function GenInfo(props) {
             ...data,
             // description: school?.description,
             status: school?.status,
-            // reprName: school?.reprName,
-            // reprIsMale: school?.reprIsMale,
-            // reprPhone: school?.reprPhone,
-            // reprEmail: school?.reprEmail,
+            reprName: school?.reprName,
+            reprIsMale: school?.reprIsMale,
+            reprPhone: school?.reprPhone,
+            reprEmail: school?.reprEmail,
         }
 
         SchoolsServices.updateSchool(data.id, model)
@@ -309,7 +319,7 @@ function GenInfo(props) {
                                                     MenuProps={MenuProps}
                                                     disableUnderline
                                                 >
-                                                    {dists.map((data) => (
+                                                    {bakDists.map((data) => (
                                                         <MenuItem
                                                             key={data}
                                                             value={data}
@@ -349,20 +359,22 @@ function GenInfo(props) {
                                                     MenuProps={MenuProps}
                                                     disableUnderline
                                                 >
-                                                    {schEduLvls.map((data) => (
-                                                        <MenuItem
-                                                            key={data}
-                                                            value={data}
-                                                            classes={{
-                                                                root:
-                                                                    styles.menuItemRoot,
-                                                                selected:
-                                                                    styles.menuItemSelected,
-                                                            }}
-                                                        >
-                                                            {data}
-                                                        </MenuItem>
-                                                    ))}
+                                                    {bakSchEduLvls.map(
+                                                        (data) => (
+                                                            <MenuItem
+                                                                key={data}
+                                                                value={data}
+                                                                classes={{
+                                                                    root:
+                                                                        styles.menuItemRoot,
+                                                                    selected:
+                                                                        styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                {data}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
                                                 </Select>
                                             )}
                                         />
@@ -389,7 +401,7 @@ function GenInfo(props) {
                                                     MenuProps={MenuProps}
                                                     disableUnderline
                                                 >
-                                                    {schTypes.map((data) => (
+                                                    {bakSchTypes.map((data) => (
                                                         <MenuItem
                                                             key={data}
                                                             value={data}
@@ -429,20 +441,22 @@ function GenInfo(props) {
                                                     MenuProps={MenuProps}
                                                     disableUnderline
                                                 >
-                                                    {schScales.map((data) => (
-                                                        <MenuItem
-                                                            key={data}
-                                                            value={data}
-                                                            classes={{
-                                                                root:
-                                                                    styles.menuItemRoot,
-                                                                selected:
-                                                                    styles.menuItemSelected,
-                                                            }}
-                                                        >
-                                                            {data}
-                                                        </MenuItem>
-                                                    ))}
+                                                    {bakSchScales.map(
+                                                        (data) => (
+                                                            <MenuItem
+                                                                key={data}
+                                                                value={data}
+                                                                classes={{
+                                                                    root:
+                                                                        styles.menuItemRoot,
+                                                                    selected:
+                                                                        styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                {data}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
                                                 </Select>
                                             )}
                                         />

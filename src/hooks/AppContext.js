@@ -152,14 +152,6 @@ function useAppProvider() {
         roles,
         schYears,
         salesPurps,
-        // setDists,
-        // setSchEduLvls,
-        // setSchTypes,
-        // setSchScales,
-        // setSchStatus,
-        // setRoles,
-        // setSchYears,
-        // setSalesPurps,
     }
 }
 

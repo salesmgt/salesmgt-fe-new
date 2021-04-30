@@ -5,6 +5,7 @@ import { useTargetSchool } from './hooks/TargetSchoolContext'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
 import { useAuth } from '../../hooks/AuthContext'
 import { roleNames } from '../../constants/Generals'
+import { Loading } from '../../components'
 import classes from './TargetSchools.module.scss'
 
 function TargetSchools() {
@@ -15,38 +16,7 @@ function TargetSchools() {
 
     const { user } = useAuth()
 
-    const [data, setData] = useState({})
-
-    // function onGetTargets(
-    //     page = 0,
-    //     limit = 10,
-    //     column = 'id',
-    //     direction = 'asc',
-    //     searchKey,
-    //     listFilters
-    // ) {
-    //     TargetSchoolsServices.getTargetSchools(
-    //         page,
-    //         limit,
-    //         column,
-    //         direction,
-    //         searchKey,
-    //         listFilters
-    //     )
-    //         .then((res) => {
-    //             setData(res)
-    //             // console.log('targets: ', res);
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
+    const [data, setData] = useState(null)
 
     function onGetTargets(
         page = 0,
@@ -92,19 +62,12 @@ function TargetSchools() {
                 user.username
             )
         } else {
-            onGetTargets(
-                page,
-                limit,
-                column,
-                direction,
-                searchKey,
-                listFilters
-            )
+            onGetTargets(page, limit, column, direction, searchKey, listFilters)
         }
     }, [params])
 
     if (!data) {
-        return null
+        return <Loading />
     }
 
     return (

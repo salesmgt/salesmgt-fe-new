@@ -79,39 +79,37 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     {/* <Typography color="inherit"> */}
-                                        <div className={classes.user}>
-                                            {report?.avatar ? (
-                                                <Avatar
-                                                    className={classes.avatar}
-                                                    alt="user avatar"
-                                                    src={report?.avatar}
-                                                />
-                                            ) : (
-                                                <Avatar
-                                                    className={classes.avatar}
-                                                >
-                                                    {
-                                                        report?.fullName
-                                                            .split(' ')
-                                                            .pop()[0]
-                                                    }
-                                                </Avatar>
-                                            )}
+                                    <div className={classes.user}>
+                                        {report?.avatar ? (
+                                            <Avatar
+                                                className={classes.avatar}
+                                                alt="user avatar"
+                                                src={report?.avatar}
+                                            />
+                                        ) : (
+                                            <Avatar className={classes.avatar}>
+                                                {
+                                                    report?.fullName
+                                                        .split(' ')
+                                                        .pop()[0]
+                                                }
+                                            </Avatar>
+                                        )}
 
-                                            <div className={classes.info}>
-                                                <Typography
-                                                    component="span"
-                                                    className={classes.fullName}
-                                                >
-                                                    {report?.fullName}
-                                                </Typography>
-                                                <Typography
-                                                    className={classes.username}
-                                                >
-                                                    {report?.username}
-                                                </Typography>
-                                            </div>
+                                        <div className={classes.info}>
+                                            <Typography
+                                                component="span"
+                                                className={classes.fullName}
+                                            >
+                                                {report?.fullName}
+                                            </Typography>
+                                            <Typography
+                                                className={classes.username}
+                                            >
+                                                {report?.username}
+                                            </Typography>
                                         </div>
+                                    </div>
                                     {/* </Typography> */}
                                 </Grid>
                             </Grid>
@@ -490,8 +488,8 @@ function AssignInfo(props) {
                                             className={classes.gender}
                                         >
                                             {report?.reprIsMale
-                                                ? 'Male'
-                                                : 'Female'}
+                                                ? fields.reprIsMale.male.lb
+                                                : fields.reprIsMale.female.lb}
                                         </Typography>
                                         <Icon>
                                             {report?.reprIsMale ? (

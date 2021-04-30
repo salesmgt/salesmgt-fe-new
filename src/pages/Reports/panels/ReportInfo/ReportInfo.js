@@ -69,7 +69,7 @@ function RepInfo(props) {
 
     const cmtValues = {
         id: report?.id,
-        contextComments: report?.contextComments ? report.contextComments : '',
+        contextComments: report?.contextComments ? report?.contextComments : '',
     }
 
     const {

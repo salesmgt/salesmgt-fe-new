@@ -30,7 +30,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
-import { Consts, columns } from '../FormConfig'
+import { Consts, columns } from '../DialogConfig'
 import classes from './AssignMultiple.module.scss'
 
 const clientSchema = yup.object().shape({

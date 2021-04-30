@@ -11,6 +11,13 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
+export const serviceNames = {
+    svc1: 'ESL',
+    svc2: 'SEL',
+    svc3: 'Toán khoa',
+    svc4: 'Stem',
+}
+
 export const cookieNames = {
     accessToken: 'accessToken',
 }
@@ -25,11 +32,4 @@ export const milkNames = {
     roles: 'roles',
     schYears: 'schYears',
     salesPurps: 'salesPurps',
-}
-
-export const serviceNames = {
-    svc1: 'ESL',
-    svc2: 'SEL',
-    svc3: 'Toán khoa',
-    sv4: 'Stem',
 }

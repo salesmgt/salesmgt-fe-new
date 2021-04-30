@@ -19,10 +19,13 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Snackbars } from '../../../../components'
+// import { Snackbars } from '../../../../components'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import * as SchoolsServices from '../../SchoolsServices'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
+import { SCHOOL_NAME_RGX, PHONE_RGX, TEL_RGX } from '../../../../utils/Regex'
 import classes from './CreateSchool.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -31,12 +34,13 @@ const clientSchema = yup.object().shape({
         .trim()
         .min(3, 'Name must be at least 3 characters')
         .max(30, 'Name must be at most 30 characters')
-        .required('Name is required'),
+        .required('Name is required')
+        .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
     address: yup.string().trim().required('Address is required'),
     phone: yup
         .string()
         .max(11, 'Tel must be at most 11 digits and has the correct format')
-        .matches(/(02)+([0-9]{9})\b/g, 'Incorrect entry'),
+        .matches(TEL_RGX, 'Incorrect entry'),
     reprName: yup
         .string()
         .trim()
@@ -45,7 +49,7 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits')
-        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Incorrect entry'),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
@@ -93,28 +97,35 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CreateSchoolForm(props) {
-    const { onClose } = props
+    const { onClose, setNotify } = props
     const { operations, fields } = Consts
     const styles = useStyles()
 
     const { dists, schEduLvls, schTypes, schScales, schStatus } = useApp()
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchEduLvls = schEduLvls
+        ? schEduLvls
+        : Milk.getMilk(milkNames.eduLvls)
+    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
+    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    const bakSchStatus = schStatus ? schStatus : Milk.getMilk(milkNames.status)
 
     const history = useHistory()
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
+    // const [notify, setNotify] = useState({
+    //     isOpen: false,
+    //     message: '',
+    //     type: '',
+    // })
 
     const defaultValues = {
         name: '',
         address: '',
-        district: dists[0],
+        district: bakDists[0],
         phone: '',
-        educationalLevel: schEduLvls[0],
-        type: schTypes[0],
-        scale: schScales[0],
+        educationalLevel: bakSchEduLvls[0],
+        type: bakSchTypes[0],
+        scale: bakSchScales[0],
 
         showRep: false,
     }
@@ -135,7 +146,7 @@ function CreateSchoolForm(props) {
     const repWatch = watch('showRep')
 
     const onSubmit = (data) => {
-        const model = { ...data, status: schStatus[0] }
+        const model = { ...data, status: bakSchStatus[0] }
         delete model.showRep
 
         SchoolsServices.createSchool(model)
@@ -145,17 +156,18 @@ function CreateSchoolForm(props) {
                     message: 'Created Successfully',
                     type: 'success',
                 })
-                reset({
-                    name: '',
-                    address: '',
-                    district: dists[0],
-                    phone: '',
-                    educationalLevel: schEduLvls[0],
-                    type: schTypes[0],
-                    scale: schScales[0],
+                // reset({
+                //     name: '',
+                //     address: '',
+                //     district: bakDists[0],
+                //     phone: '',
+                //     educationalLevel: bakSchEduLvls[0],
+                //     type: bakSchTypes[0],
+                //     scale: bakSchScales[0],
 
-                    showRep: false,
-                })
+                //     showRep: false,
+                // })
+                onClose()
             })
             .catch((error) => {
                 if (error.response) {
@@ -184,9 +196,12 @@ function CreateSchoolForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                <form
+                    noValidate
+                    // onSubmit={handleSubmit(onSubmit)}
+                >
                     <Grid container spacing={2} className={classes.wrapper}>
-                        <Grid item xs={12} sm={12} md={10} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="name"
                                 control={control}
@@ -223,7 +238,7 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={5} md={5} lg={5}>
                             <InputLabel>{fields.dist.title}</InputLabel>
                             <Controller
                                 name="district"
@@ -235,7 +250,7 @@ function CreateSchoolForm(props) {
                                         MenuProps={MenuProps}
                                         disableUnderline
                                     >
-                                        {dists.map((data) => (
+                                        {bakDists.map((data) => (
                                             <MenuItem
                                                 key={data}
                                                 value={data}
@@ -252,7 +267,7 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={10} lg={10}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="phone"
                                 control={control}
@@ -281,7 +296,7 @@ function CreateSchoolForm(props) {
                                         MenuProps={MenuProps}
                                         disableUnderline
                                     >
-                                        {schEduLvls.map((data) => (
+                                        {bakSchEduLvls.map((data) => (
                                             <MenuItem
                                                 key={data}
                                                 value={data}
@@ -310,7 +325,7 @@ function CreateSchoolForm(props) {
                                         MenuProps={MenuProps}
                                         disableUnderline
                                     >
-                                        {schTypes.map((data) => (
+                                        {bakSchTypes.map((data) => (
                                             <MenuItem
                                                 key={data}
                                                 value={data}
@@ -339,7 +354,7 @@ function CreateSchoolForm(props) {
                                         MenuProps={MenuProps}
                                         disableUnderline
                                     >
-                                        {schScales.map((data) => (
+                                        {bakSchScales.map((data) => (
                                             <MenuItem
                                                 key={data}
                                                 value={data}
@@ -410,13 +425,24 @@ function CreateSchoolForm(props) {
                                                 row
                                             >
                                                 <FormControlLabel
-                                                    label="Male"
-                                                    value="true"
+                                                    label={
+                                                        fields.repGender.male.lb
+                                                    }
+                                                    value={
+                                                        fields.repGender.male
+                                                            .value
+                                                    }
                                                     control={<Radio />}
                                                 />
                                                 <FormControlLabel
-                                                    label="Female"
-                                                    value="false"
+                                                    label={
+                                                        fields.repGender.female
+                                                            .lb
+                                                    }
+                                                    value={
+                                                        fields.repGender.female
+                                                            .value
+                                                    }
                                                     control={<Radio />}
                                                 />
                                             </RadioGroup>
@@ -471,7 +497,7 @@ function CreateSchoolForm(props) {
             <DialogActions className={classes.dialogAct}>
                 <Button
                     className={classes.btnSave}
-                    type="submit"
+                    // type="submit"
                     disabled={!formState.isDirty}
                     onClick={handleSubmit(onSubmit)}
                 >
@@ -483,11 +509,11 @@ function CreateSchoolForm(props) {
                             errors: false,
                             name: '',
                             address: '',
-                            district: dists[0],
+                            district: bakDists[0],
                             phone: '',
-                            educationalLevel: schEduLvls[0],
-                            type: schTypes[0],
-                            scale: schScales[0],
+                            educationalLevel: bakSchEduLvls[0],
+                            type: bakSchTypes[0],
+                            scale: bakSchScales[0],
 
                             showRep: false,
                         })
@@ -497,7 +523,8 @@ function CreateSchoolForm(props) {
                     {operations.cancel}
                 </Button>
             </DialogActions>
-            <Snackbars notify={notify} setNotify={setNotify} />
+
+            {/* <Snackbars notify={notify} setNotify={setNotify} /> */}
         </>
     )
 }

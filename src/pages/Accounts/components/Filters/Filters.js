@@ -21,6 +21,8 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useAccount } from '../../hooks/AccountContext'
 import { ACTIVE_FILTER, ROLE_FILTER } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../AccountsConfig'
 import styles from './Filters.module.scss'
 
@@ -129,8 +131,18 @@ function Filters() {
     const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
-    const { params, dispatchParams, isActive, role, workingStatuses, setFilter } = useAccount()     // isActive,
+    const {
+        params,
+        dispatchParams,
+        isActive,
+        role,
+        workingStatuses,
+        setFilter,
+    } = useAccount() // isActive,
+
     const { roles } = useApp()
+    const bakRoles = roles ? roles : Milk.getMilk(milkNames.roles)
+
     const { operations, filters } = Consts
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
@@ -245,8 +257,14 @@ function Filters() {
                     <Grid container>
                         <Grid item xs={6} sm={4} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.workingStatus.title}</InputLabel>
-                                <Select value={isActive === null ? '' : isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                <InputLabel>
+                                    {filters.workingStatus.title}
+                                </InputLabel>
+                                <Select
+                                    value={isActive === null ? '' : isActive}
+                                    onChange={handleIsActiveChange}
+                                    MenuProps={MenuProps}
+                                >
                                     {workingStatuses.map((workingStatus) => (
                                         <MenuItem
                                             key={workingStatus}
@@ -255,16 +273,15 @@ function Filters() {
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected: classes.menuItemSelected,
+                                                selected:
+                                                    classes.menuItemSelected,
                                             }}
                                         >
                                             {workingStatus === null
                                                 ? `${filters.workingStatus.options.all}`
-                                                : (workingStatus
-                                                    ? `${filters.workingStatus.options.active}`
-                                                    : `${filters.workingStatus.options.inactive}`
-                                                )
-                                            }
+                                                : workingStatus
+                                                ? `${filters.workingStatus.options.active}`
+                                                : `${filters.workingStatus.options.inactive}`}
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -289,7 +306,7 @@ function Filters() {
                                     >
                                         All
                                     </MenuItem>
-                                    {roles?.map((role) => (
+                                    {bakRoles?.map((role) => (
                                         <MenuItem
                                             key={role}
                                             value={role}

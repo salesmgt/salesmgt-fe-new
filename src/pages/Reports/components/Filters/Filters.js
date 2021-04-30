@@ -40,8 +40,9 @@ import {
     // STATUS_FILTER,
     DATE_RANGE_FILTER,
 } from '../../../../constants/Filters'
-import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../ReportsConfig'
 import styles from './Filters.module.scss'
 
@@ -171,8 +172,12 @@ function Filters() {
 
     const classes = useStyles()
 
-    const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
+    const bakSalesPurps = salesPurps
+        ? salesPurps
+        : Milk.getMilk(milkNames.salesPurps)
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -577,7 +582,7 @@ function Filters() {
                                     >
                                         {filters.purpose.options.all}
                                     </MenuItem>
-                                    {salesPurps?.map((purp) => (
+                                    {bakSalesPurps?.map((purp) => (
                                         <MenuItem
                                             key={purp}
                                             value={purp}
@@ -622,7 +627,7 @@ function Filters() {
                                     >
                                         {filters.district.options.all}
                                     </MenuItem>
-                                    {dists?.map((dist) => (
+                                    {bakDists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -668,7 +673,7 @@ function Filters() {
                                     >
                                         {filters.schoolYear.options.all}
                                     </MenuItem>
-                                    {schYears?.map((year) => (
+                                    {bakSchYears?.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}

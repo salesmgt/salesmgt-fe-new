@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Dialog,
     IconButton,
@@ -7,15 +7,12 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import CreateAccountForm from './CreateAccountForm'
+import { Snackbars } from '../../../../components'
 
 const stylesTitle = (theme) => ({
     root: {
-        // position: 'sticky',
-        // top: 0,
-
-        // backgroundColor: 'red',
         margin: 0,
         padding: theme.spacing(2),
     },
@@ -46,13 +43,23 @@ function CreateAccount(props) {
 
     const { headers } = Consts
 
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
+
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xs">
-            <DialogTitleWithIconClose onClose={onClose}>
-                {headers.child1}
-            </DialogTitleWithIconClose>
-            <CreateAccountForm onClose={onClose} />
-        </Dialog>
+        <>
+            <Dialog open={open} onClose={onClose} maxWidth="xs">
+                <DialogTitleWithIconClose onClose={onClose}>
+                    {headers.child1}
+                </DialogTitleWithIconClose>
+                <CreateAccountForm onClose={onClose} setNotify={setNotify} />
+            </Dialog>
+            
+            <Snackbars notify={notify} setNotify={setNotify} />
+        </>
     )
 }
 

@@ -40,12 +40,14 @@ import {
     PURPOSE_FILTER,
     // STATUS_FILTER,
 } from '../../../../constants/Filters'
+import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import NotifyAssign from '../../dialogs/NotifyAssign/NotifyAssign'
 import AssignMultiple from '../../dialogs/AssignMultiple/AssignMultiple'
 import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetSchools'
 import { Consts } from '../../TargetSchoolsConfig'
-import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
 import styles from './Filters.module.scss'
 
@@ -180,6 +182,8 @@ function Filters() {
     // const { onGetTargets } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
+    const { user } = useAuth()
+
     const {
         schYears,
         dists,
@@ -189,6 +193,16 @@ function Filters() {
         salesPurps,
         // schStatus,
     } = useApp()
+    const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
+    const bakSchEduLvls = schEduLvls
+        ? schEduLvls
+        : Milk.getMilk(milkNames.eduLvls)
+    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    const bakSalesPurps = salesPurps
+        ? salesPurps
+        : Milk.getMilk(milkNames.salesPurps)
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -205,8 +219,6 @@ function Filters() {
         setFilter,
     } = useTargetSchool()
     const { operations, filters } = Consts
-
-    const { user } = useAuth()
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
@@ -738,7 +750,7 @@ function Filters() {
                                     >
                                         {filters.purpose.options.all}
                                     </MenuItem>
-                                    {salesPurps?.map((purp) => (
+                                    {bakSalesPurps?.map((purp) => (
                                         <MenuItem
                                             key={purp}
                                             value={purp}
@@ -783,7 +795,7 @@ function Filters() {
                                     >
                                         {filters.district.options.all}
                                     </MenuItem>
-                                    {dists?.map((dist) => (
+                                    {bakDists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -828,7 +840,7 @@ function Filters() {
                                     >
                                         {filters.schoolYear.options.all}
                                     </MenuItem>
-                                    {schYears?.map((year) => (
+                                    {bakSchYears?.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -873,7 +885,7 @@ function Filters() {
                                     >
                                         {filters.schoolType.options.all}
                                     </MenuItem>
-                                    {schTypes?.map((type) => (
+                                    {bakSchTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -918,7 +930,7 @@ function Filters() {
                                     >
                                         {filters.schoolLevel.options.all}
                                     </MenuItem>
-                                    {schEduLvls?.map((level) => (
+                                    {bakSchEduLvls?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
@@ -963,7 +975,7 @@ function Filters() {
                                     >
                                         {filters.schoolScale.options.all}
                                     </MenuItem>
-                                    {schScales?.map((scale) => (
+                                    {bakSchScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}

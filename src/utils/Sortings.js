@@ -30,3 +30,9 @@ export function getPurpsByStatus(schStatus, salesPurps) {
             break
     }
 }
+
+export function handleMatchPurps(currPurp, purps) {
+    const matchValues = purps.find((purp) => purp === currPurp)
+
+    return !!matchValues
+}

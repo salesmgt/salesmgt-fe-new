@@ -1,13 +1,13 @@
 export const Consts = {
     headers: {
-        child1: 'Assign detail',
-        child2: 'School detail',
+        child1: 'Assign Detail',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
         empty: 'Not assigned yet!',
-        restriction: `Sorry, you can't view this!`
+        restriction: `Sorry, you can't view this!`,
+        purpWarning: 'New school status has been applied',
     },
     fields: {
         name: {

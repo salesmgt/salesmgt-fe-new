@@ -44,6 +44,14 @@ export const Consts = {
         },
         repGender: {
             title: 'Gender',
+            male: {
+                lb: 'Male',
+                value: 'true',
+            },
+            female: {
+                lb: 'Female',
+                value: 'false',
+            },
         },
         repEmail: {
             title: 'Email',

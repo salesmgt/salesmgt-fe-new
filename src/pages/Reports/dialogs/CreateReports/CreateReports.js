@@ -7,7 +7,7 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import classes from './CreateReports.module.scss'
 import CreateReportsForm from './CreateReportsForm'
 
