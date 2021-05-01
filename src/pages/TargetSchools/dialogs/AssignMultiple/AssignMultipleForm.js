@@ -29,7 +29,7 @@ import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import { Consts, columns } from '../DialogConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { assignMulti, getTargetSchools } from '../../TargetSchoolsServices'
+import { assignMulti } from '../../TargetSchoolsServices'
 import classes from './AssignMultiple.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -58,10 +58,17 @@ const useStyles = makeStyles((theme) => ({
     },
     menuItemSelected: {},
     autoComplete: {
-        width: 250,
-        marginLeft: '0.5rem',
+        width: 260,
+        marginLeft: '0.5rem'
     },
     itemPIC: {
+        padding: 0,
+        margin: 0,
+    },
+    divItemPIC: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: 0,
         margin: 0,
     },
@@ -221,24 +228,15 @@ function AssignMultipleForm(props) {
                                     )}
                                     renderOption={(option) => {
                                         return (
-                                            <ListItem
-                                                className={classes.itemPIC}
-                                                key={option.username}
-                                            >
+                                            <div className={styles.divItemPIC} key={option.username}>
                                                 <ListItemAvatar>
                                                     <Avatar
                                                         src={option.avatar}
                                                     />
                                                 </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={option.fullName}
-                                                    classes={{
-                                                        primary:
-                                                            classes.itemTextPrimary,
-                                                    }}
-                                                />
-                                            </ListItem>
-                                        )
+                                                <ListItemText primary={option.fullName ? option.fullName : ''} classes={{ primary: classes.itemTextPrimary }} />
+                                            </div>
+                                        );
                                     }}
                                     className={styles.autoComplete}
                                     onChange={(event, newPIC) =>

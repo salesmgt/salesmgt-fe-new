@@ -1,5 +1,3 @@
-import { parseDateToString } from '../../../utils/DateTimes'
-
 export const Consts = {
     headers: {
         create: 'Create Target Schools',
@@ -7,7 +5,7 @@ export const Consts = {
         confirmUnassign: 'Confirm Unassign',
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
-        // child1: 'Preview: '
+        // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
         createMOU: 'Create MOU',
     },
@@ -16,6 +14,7 @@ export const Consts = {
         save: 'Save',
         remove: 'Remove',
         ok: 'OK, I understood',
+        yes: 'OK',
         showCreate: 'Memorandum of Contract',
     },
     fields: {
@@ -78,7 +77,7 @@ export const Consts = {
     },
 }
 
-export const columns = ['#', 'School Name', 'PIC', 'Purpose', 'Note']
+export const columns = ['#', 'School Name', 'PIC', 'Note', '']
 
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     return (
@@ -109,7 +108,7 @@ export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
                 </em>
             </strong>
             ?
-            <br />
+            <br /><br />
             This process cannot be undone.
         </>
     )

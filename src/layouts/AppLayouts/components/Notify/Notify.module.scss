@@ -1,0 +1,24 @@
+.notiCard {
+    padding: 0;
+    margin: 0;
+}
+
+.notiItem {
+    width: 100%  !important;
+    height: auto;
+    // word-wrap: break-word !important;
+    padding: 0.4rem;
+}   
+.content{
+    width: 100%;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.notiContent {
+    padding: 0.2rem 1rem 0;
+    margin: 0;
+    .typo {
+        width: 90%;
+    }
+}

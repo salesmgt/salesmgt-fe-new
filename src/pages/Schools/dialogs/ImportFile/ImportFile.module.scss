@@ -28,3 +28,13 @@ input[type="file"] {
 .alert {
     margin-top: 5%;
 }
+
+.btnSave {
+    color: $main-info !important;
+    &:hover {
+        color: $dark-info !important;
+    }
+    &:disabled {
+        color: $divider !important;
+    }
+}
