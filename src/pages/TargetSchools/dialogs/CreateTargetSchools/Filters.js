@@ -24,7 +24,7 @@ import {
     SCALE_FILTER,
     STATUS_FILTER,
 } from '../../../../constants/Filters'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import styles from './CreateTargetSchools.module.scss'
 
 //===============Set max-height for dropdown list===============

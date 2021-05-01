@@ -450,7 +450,20 @@ function Profiles() {
                 </div> */}
                 <div className={classes.infoAvatar}>
                     <Animation animation="transition.expandIn" delay={300}>
-                        <Avatar className={classes.avatar} src={avatar} />
+                        {/* <Avatar className={classes.avatar} src={avatar} /> */}
+                        {avatar ? (
+                            <Avatar
+                                className={classes.avatar}
+                                alt="user avatar"
+                                src={avatar}
+                            />
+                        ) : (
+                            <Avatar className={classes.avatar}>
+                                <Typography className={classes.avatarTxt}>
+                                    {fullName.split(' ').pop()[0]}
+                                </Typography>
+                            </Avatar>
+                        )}
                     </Animation>
                     <input
                         id="icon-button-file"

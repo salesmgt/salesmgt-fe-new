@@ -23,7 +23,7 @@ import {
 import { useTargetForm } from './TargetFormContext'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { statusNames } from '../../../../constants/Generals'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import Highlighter from "react-highlight-words"
 import classes from './Tables.module.scss'
 

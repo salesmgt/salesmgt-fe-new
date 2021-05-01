@@ -44,8 +44,9 @@ import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../ReportsConfig'
-import styles from './Filters.module.scss'
 import { roleNames } from '../../../../constants/Generals'
+import { useAuth } from '../../../../hooks/AuthContext'
+import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -211,7 +212,7 @@ function Filters() {
 
     const onSearchPICChange = (event) => {
         if (typingTimeoutRef.current) {
-            clearTimeout(typingTimeoutRef.current);
+            clearTimeout(typingTimeoutRef.current)
         }
         typingTimeoutRef.current = setTimeout(() => {
             const searchPIC = event.target.value
@@ -300,9 +301,13 @@ function Filters() {
     }
 
     const handleDateRangeChange = (selectedDate) => {
-        const fromDate = selectedDate[0] ? moment(selectedDate[0]).format('YYYY-MM-DD') : null
-        const toDate = selectedDate[1] ? moment(selectedDate[1]).format('YYYY-MM-DD') : null
-        
+        const fromDate = selectedDate[0]
+            ? moment(selectedDate[0]).format('YYYY-MM-DD')
+            : null
+        const toDate = selectedDate[1]
+            ? moment(selectedDate[1]).format('YYYY-MM-DD')
+            : null
+
         setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
         dispatchParams({
             type: ReducerActions.FILTER_DATE_RANGE,
@@ -432,7 +437,7 @@ function Filters() {
                             onChange={handleSearch}
                         />
                     </Box>
-                    {user?.roles[0] === roleNames.salesman &&
+                    {user?.roles[0] === roleNames.salesman && (
                         <Box className={classes.flexItem}>
                             <Button
                                 className={classes.btn}
@@ -448,11 +453,16 @@ function Filters() {
                                 onClose={() => setOpenCreateDialog(false)}
                             />
                         </Box>
-                    }
+                    )}
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid item xs={12} sm={5} md={3} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={5}
+                            md={3}
+                            lg={3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -490,7 +500,12 @@ function Filters() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={5} md={3} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={5}
+                            md={3}
+                            lg={3}
                             className={classes.paddingTop}
                         >
                             <FormControl className={classes.formControl}>
@@ -640,7 +655,7 @@ function Filters() {
                                 }
                             />
                         </Grid>
-                        
+
                         {/* <Grid item xs={6} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>School Statuses</InputLabel>

@@ -6,7 +6,12 @@ import { CardNow, CardRanks, CardJack, MixedCharts } from './components'
 import { Animation, AnimationGroup, Loading } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import * as DashboardsServices from './DashboardsServices'
-import { rankData, chartData as ChartData, cardData } from './DashboardsConfig'
+import {
+    rankData,
+    chartData as ChartData,
+    cardData,
+    Consts,
+} from './DashboardsConfig'
 import { roleNames } from '../../constants/Generals'
 import classes from './Dashboards.module.scss'
 
@@ -22,6 +27,8 @@ function Dashboards() {
     const [chartData, setChartData] = useState([])
 
     const [chartView, setChartView] = useState([])
+
+    const { cardsConsts, chartsConsts } = Consts
 
     let isMounted = true
     const refreshPage = () => {
@@ -63,12 +70,12 @@ function Dashboards() {
         return <Loading />
     }
 
-    const { fullName, birthDate } = userData
+    // const { fullName, birthDate } = userData
 
     const generateGreetings = () => {
         const currHour = moment().format('kk')
         const currDay = moment().format('DD/MM')
-        const specialDay = moment(birthDate).format('DD/MM')
+        const specialDay = moment(userData?.birthDate).format('DD/MM')
 
         if (currDay === specialDay) {
             return 'Happy birthday'
@@ -108,39 +115,39 @@ function Dashboards() {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total Lead"
-                                color="rgba(33, 150, 243, 1)"
+                                title={cardsConsts.card1.title}
+                                color={cardsConsts.card1.color}
                                 isOpts={true}
                                 ranges={cardData.manager.targetLeadSum.ranges}
                                 datasets={
                                     cardData.manager.targetLeadSum.datasets
                                 }
-                                des="Targets"
+                                des={cardsConsts.card1.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total Potential Lead"
-                                color="rgba(255, 152, 0, 1)"
+                                title={cardsConsts.card2.title}
+                                color={cardsConsts.card2.color}
                                 isOpts={true}
                                 ranges={cardData.manager.potLeadsum.ranges}
                                 datasets={cardData.manager.potLeadsum.datasets}
-                                des="Targets"
+                                des={cardsConsts.card2.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total New Lead"
-                                color="rgba(76, 175, 80, 1)"
+                                title={cardsConsts.card3.title}
+                                color={cardsConsts.card3.color}
                                 isOpts={true}
                                 ranges={cardData.manager.newLeadSum.ranges}
                                 datasets={cardData.manager.newLeadSum.datasets}
-                                des="Targets"
+                                des={cardsConsts.card3.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <MixedCharts
-                                title="Sales Targets Result"
+                                title={chartsConsts.chart1.title}
                                 labels={chartData.labels}
                                 chartView={chartView}
                                 handleChartView={handleChartView}
@@ -153,39 +160,39 @@ function Dashboards() {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total Lead"
-                                color="rgba(33, 150, 243, 1)"
+                                title={cardsConsts.card1.title}
+                                color={cardsConsts.card1.color}
                                 isOpts={true}
                                 ranges={cardData.manager.targetLeadSum.ranges}
                                 datasets={
                                     cardData.manager.targetLeadSum.datasets
                                 }
-                                des="Targets"
+                                des={cardsConsts.card1.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total Potential Lead"
-                                color="rgba(255, 152, 0, 1)"
+                                title={cardsConsts.card2.title}
+                                color={cardsConsts.card2.color}
                                 isOpts={true}
                                 ranges={cardData.manager.potLeadsum.ranges}
                                 datasets={cardData.manager.potLeadsum.datasets}
-                                des="Targets"
+                                des={cardsConsts.card2.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total New Lead"
-                                color="rgba(76, 175, 80, 1)"
+                                title={cardsConsts.card3.title}
+                                color={cardsConsts.card3.color}
                                 isOpts={true}
                                 ranges={cardData.manager.newLeadSum.ranges}
                                 datasets={cardData.manager.newLeadSum.datasets}
-                                des="Targets"
+                                des={cardsConsts.card3.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <MixedCharts
-                                title="Sales Targets Result"
+                                title={chartsConsts.chart1.title}
                                 labels={chartData.labels}
                                 chartView={chartView}
                                 handleChartView={handleChartView}
@@ -198,39 +205,39 @@ function Dashboards() {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total Potential Lead"
-                                color="rgba(33, 150, 243, 1)"
+                                title={cardsConsts.card1.title}
+                                color={cardsConsts.card1.color}
                                 isOpts={false}
                                 ranges={cardData.salesman.targetLeadSum.ranges}
                                 datasets={
                                     cardData.salesman.targetLeadSum.datasets
                                 }
-                                des="Targets"
+                                des={cardsConsts.card1.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total Potential Lead"
-                                color="rgba(255, 152, 0, 1)"
+                                title={cardsConsts.card2.title}
+                                color={cardsConsts.card2.color}
                                 isOpts={false}
                                 ranges={cardData.salesman.potLeadsum.ranges}
                                 datasets={cardData.salesman.potLeadsum.datasets}
-                                des="Targets"
+                                des={cardsConsts.card2.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <CardJack
-                                title="Total New Lead"
-                                color="rgba(76, 175, 80, 1)"
+                                title={cardsConsts.card3.title}
+                                color={cardsConsts.card3.color}
                                 isOpts={false}
                                 ranges={cardData.salesman.newLeadSum.ranges}
                                 datasets={cardData.salesman.newLeadSum.datasets}
-                                des="Targets"
+                                des={cardsConsts.card3.des}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <MixedCharts
-                                title="Sales Targets Result"
+                                title={chartsConsts.chart1.title}
                                 labels={chartData.labels}
                                 chartView={chartView}
                                 handleChartView={handleChartView}
@@ -272,7 +279,7 @@ function Dashboards() {
                                     variant="h4"
                                     color="inherit"
                                 >
-                                    {`${generateGreetings()}, ${fullName
+                                    {`${generateGreetings()}, ${userData?.fullName
                                         .split(' ')
                                         .pop()}!`}
                                 </Typography>

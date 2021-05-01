@@ -99,3 +99,61 @@ export const chartData = {
         },
     ],
 }
+
+export const Consts = {
+    cardsConsts: {
+        // gray
+        card1: {
+            title: 'Chưa hợp tác',
+            color: 'rgba(33, 150, 243, 1)',
+            des: 'Trường',
+        },
+        // 
+        card2: {
+            title: 'Sales mới',
+            color: 'rgba(255, 152, 0, 1)',
+            des: 'Trường',
+        },
+        // yellow
+        card3: {
+            title: 'Theo dõi',
+            color: 'rgba(76, 175, 80, 1)',
+            des: 'Trường',
+        },
+        // green
+        card4: {
+            title: 'Tiềm năng',
+            color: '',
+            des: 'Trường',
+        },
+        // 
+        card5: {
+            title: 'Đang hợp tác',
+            color: '',
+            des: 'Trường',
+        },
+        // 
+        card6: {
+            title: 'Tái ký hợp đồng',
+            color: '',
+            des: 'Trường',
+        },
+        // 
+        card7: {
+            title: 'Ký mới hợp đồng',
+            color: '',
+            des: 'Trường',
+        },
+        // 
+        card8: {
+            title: 'Chăm sóc',
+            color: '',
+            des: 'Trường',
+        },
+    },
+    chartsConsts: {
+        chart1: {
+            title: 'Kết quả đi trường',
+        },
+    },
+}

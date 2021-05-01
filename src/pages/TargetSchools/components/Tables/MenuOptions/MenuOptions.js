@@ -8,7 +8,7 @@ import {
     MenuItem,
 } from '@material-ui/core'
 import { MdDelete, MdDescription, MdInfo, MdMoreVert } from 'react-icons/md'
-import { IoPersonRemoveSharp } from "react-icons/io5"
+import { IoPersonRemoveSharp } from 'react-icons/io5'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
@@ -25,7 +25,7 @@ function MenuOptions(props) {
 
     const [anchorEl, setAnchorEl] = useState(null)
     const [open, setOpen] = useState(false)
-    const [openAssign,setOpenAssign] = useState(false)
+    const [openAssign, setOpenAssign] = useState(false)
 
     const { user } = useAuth()
     const { params } = useTargetSchool()
@@ -79,8 +79,9 @@ function MenuOptions(props) {
     const renderAssignedDialog = () => {
         if (data?.fullName) {
             return (
-                <ConfirmUnassign 
-                    notify={props.notify} setNotify={props.setNotify}
+                <ConfirmUnassign
+                    notify={props.notify}
+                    setNotify={props.setNotify}
                     open={openAssign}
                     onClose={() => setOpenAssign(false)}
                     data={data}
@@ -124,7 +125,7 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: '/apps/reports',
-                        state: { targetId: data.id },
+                        state: { targetId: data.id, schoolName: data.schoolName },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>
