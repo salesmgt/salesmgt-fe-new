@@ -1,10 +1,8 @@
-import { parseDateToString } from '../../../utils/DateTimes'
-
 export const Consts = {
     headers: {
         create: 'Create Target Schools',
         assignMultiple: 'Assign Salesmen to Target Schools',
-        assignOne: 'Assign Salesman to Target School',
+        confirmUnassign: 'Confirm Unassign',
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
         // child1: 'Preview: '
@@ -109,7 +107,7 @@ export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
                 </em>
             </strong>
             ?
-            <br />
+            <br /><br />
             This process cannot be undone.
         </>
     )

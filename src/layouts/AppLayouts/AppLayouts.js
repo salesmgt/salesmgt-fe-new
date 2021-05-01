@@ -215,7 +215,7 @@ function AppLayouts() {
 
                         {/* Remember to set badge content */}
                         <IconButton onClick={handleNotifMenuOpen}>
-                            <StyledBadge badgeContent={badge} max={''}>
+                            <StyledBadge badgeContent={badge} max={5}>
                                 <MdNotifications />
                             </StyledBadge>
                         </IconButton>
