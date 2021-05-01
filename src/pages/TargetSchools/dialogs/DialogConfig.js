@@ -5,7 +5,7 @@ export const Consts = {
         confirmUnassign: 'Confirm Unassign',
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
-        // child1: 'Preview: '
+        // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
         createMOU: 'Create MOU',
     },
@@ -14,6 +14,7 @@ export const Consts = {
         save: 'Save',
         remove: 'Remove',
         ok: 'OK, I understood',
+        yes: 'OK',
         showCreate: 'Memorandum of Contract',
     },
     fields: {
@@ -76,7 +77,7 @@ export const Consts = {
     },
 }
 
-export const columns = ['#', 'School Name', 'PIC', 'Purpose', 'Note']
+export const columns = ['#', 'School Name', 'PIC', 'Note', '']
 
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     return (

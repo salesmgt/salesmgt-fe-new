@@ -74,7 +74,7 @@ function ConfirmUnassign(props) {
             {/* <Divider /> */}
             <DialogActions>
                 <Button className={classes.btnOK} onClick={handleOK} autoFocus>
-                    {operations.save}
+                    {operations.yes}
                 </Button>
                 <Button onClick={onClose}>
                     {operations.cancel}

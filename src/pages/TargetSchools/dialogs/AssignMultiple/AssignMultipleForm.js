@@ -29,7 +29,7 @@ import { Autocomplete } from '@material-ui/lab'
 import { useTargetSchool } from '../../hooks/TargetSchoolContext'
 import { Consts, columns } from '../DialogConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { assignMulti, getTargetSchools } from '../../TargetSchoolsServices'
+import { assignMulti } from '../../TargetSchoolsServices'
 import classes from './AssignMultiple.module.scss'
 
 const useStyles = makeStyles((theme) => ({
