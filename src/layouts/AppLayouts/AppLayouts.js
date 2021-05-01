@@ -254,7 +254,7 @@ function AppLayouts() {
                     <div className={classes.drawerHeader}>
                         <img
                             className={classes.majorImg}
-                            alt="major-logos"
+                            alt="major-logo"
                             onClick={() => {
                                 history.push(defaultRoutes[user.roles[0]].route)
                             }}

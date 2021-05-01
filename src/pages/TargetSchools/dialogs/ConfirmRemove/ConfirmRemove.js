@@ -11,7 +11,9 @@ import {
     IconButton,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md';
-import { Consts, confirmMessage } from '../FormConfig'
+import { Consts, confirmMessage } from '../DialogConfig'
+import { removeTargetSchool } from '../../TargetSchoolsServices'
+import { useTargetSchool } from '../../hooks/TargetSchoolContext';
 import classes from './ConfirmRemove.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -42,13 +44,25 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmRemove(props) {
-    const { open, onClose, data } = props
+    const { open, onClose, data, refreshAPI } = props
     const { headers, operations } = Consts
 
-    const handleRemove = () => {
-        // Gọi API xóa
-        console.log('Remove nha');
+    const { params } = useTargetSchool()
+    const { listFilters, page, limit, column, direction, searchKey } = params
 
+    const handleRemove = (id) => {
+        // Gọi API xóa
+        console.log('Remove target ', id);
+
+        removeTargetSchool(id).then((res) => {
+            console.log('res: ', res);
+            refreshAPI(page, limit, column, direction, searchKey, listFilters);
+            console.log('xoa thanh cong target ', id);
+        }).catch(error => {
+            if (error.response) {
+                console.log(error)
+            }
+        })
         onClose();
     }
 
@@ -63,7 +77,7 @@ function ConfirmRemove(props) {
             </DialogContent>
             {/* <Divider /> */}
             <DialogActions>
-                <Button className={classes.btnRemove} onClick={handleRemove} autoFocus>
+                <Button className={classes.btnRemove} onClick={() => handleRemove(data?.id)} autoFocus>
                     {operations.remove}
                 </Button>
                 <Button onClick={onClose}>

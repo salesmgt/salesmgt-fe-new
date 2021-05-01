@@ -1,0 +1,21 @@
+@import '../../../../styles/Variables.module.scss';
+
+.dialogCont {
+    padding: 0.5rem 1rem !important;
+    .showCreate {
+        padding: 1rem 0rem 0.5rem 0rem;
+    }
+}
+
+.dialogAct {
+    padding: 0.5rem 1rem 1rem 1rem !important;
+    .btnSave {
+        color: $trust;
+        &:hover {
+            color: $light-info;
+        }
+        &:disabled {
+            color: $disabled;
+        }
+    }
+}

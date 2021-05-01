@@ -28,10 +28,10 @@ import { useHistory } from 'react-router'
 import * as ArrayUtils from '../../../../utils/Arrays'
 import { } from '../../../../utils/DateTimes'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { Consts, columns, RESULT, DESCRIPTION, POSITIVITY, DIFFICULTY, FUTURE_PLAN } from '../FormConfig'
+import { Consts, columns, RESULT, DESCRIPTION, POSITIVITY, DIFFICULTY, FUTURE_PLAN } from '../DialogConfig'
 import { Snackbars } from '../../../../components'
-import classes from './CreateReports.module.scss'
 import { useReport } from '../../hooks/ReportContext'
+import classes from './CreateReports.module.scss'
 
 const clientSchema = yup.object().shape({
     // username: yup.string().trim().min(8).max(30).required(),
@@ -132,6 +132,8 @@ function CreateReportsForm(props) {
             if (searchKey) {
                 // setTarget(searchKey);
                 getListTargets(searchKey)
+            } else {
+                getListTargets()
             }
         }, 300)
     }
@@ -407,6 +409,8 @@ function CreateReportsForm(props) {
         onClose()
     }
 
+    console.log('formvalue: ', formValue);
+
     return (
         <>
             <form onSubmit={addReports}>
@@ -578,6 +582,7 @@ function CreateReportsForm(props) {
                                                 variant="contained"
                                                 color="secondary"
                                                 type="submit"
+                                                disabled={formValue === defaultFormValue}
                                             // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />
@@ -683,6 +688,7 @@ function CreateReportsForm(props) {
                         // onSubmit={handleCreateReport}
                         // disabled={!formState.isDirty}
                         // onClick={handleSubmit(onSubmit)}
+                        disabled={formValue === defaultFormValue}
                         onClick={handleCreateReport}
                     >
                         {operations.save}

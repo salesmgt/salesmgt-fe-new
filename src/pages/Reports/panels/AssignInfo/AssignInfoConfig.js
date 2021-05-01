@@ -37,6 +37,14 @@ export const Consts = {
         },
         reprIsMale: {
             title: 'Principal Gender',
+            male: {
+                lb: 'Male',
+                value: 'true',
+            },
+            female: {
+                lb: 'Female',
+                value: 'false',
+            },
         },
         pic: {
             title: 'PIC',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import formatISO9075 from 'date-fns/formatISO9075'
 import { useAuth } from '../../hooks/AuthContext'
 import { getPICs } from '../../services/FiltersServices'
@@ -23,14 +23,12 @@ function WorkPlans() {
         name: 'navigating',
         username: user.username
     })
+    const typingTimeoutRef = useRef({})
 
     // Get list PICs for autocomplete search
     const [listPICs, setListPICs] = useState([])
     const getListPICs = (e) => {
-        getPICs({
-            active: true,
-            fullName: e
-        }).then((data) => {
+        getPICs({active: true, fullName: e}).then((data) => {
             // console.log('data: ', data)
             setListPICs(data)
         }).catch((error) => {
@@ -305,7 +303,13 @@ function WorkPlans() {
         }
     }
     const onInputChange = e => {
-        getListPICs(e)
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            getListPICs(e)
+        }, 300)
     }
     return (
         <Schedule

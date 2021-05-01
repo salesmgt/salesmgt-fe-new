@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { MajorBanner } from '../../assets/images'
+import React from 'react'
+import { MajorLogo } from '../../assets/images'
 import {
-    Container,
     Button,
     TextField,
     Paper,
     Typography,
+    Link,
+    Avatar,
 } from '@material-ui/core'
+import { MdLockOutline } from 'react-icons/md'
 import { useHistory } from 'react-router-dom'
 import { Consts } from './LoginsConfig'
 import * as LoginsServices from './LoginsServices'
@@ -16,9 +18,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
-// import { useApp } from '../../hooks/AppContext'
 import { milkNames, cookieNames } from '../../constants/Generals'
-// import * as FiltersServices from '../../services/FiltersServices'
 import classes from './Logins.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -46,112 +46,12 @@ const serverSchema = [
 
 function Logins() {
     const { setUser } = useAuth()
-    // const {
-    //     setDists,
-    //     setSchEduLvls,
-    //     setSchTypes,
-    //     setSchScales,
-    //     setSchStatus,
-    //     setRoles,
-    //     setSchYears,
-    //     setSalesPurps,
-    // } = useApp()
 
     const history = useHistory()
 
     const { register, handleSubmit, errors, setError, clearErrors } = useForm({
         resolver: yupResolver(clientSchema),
     })
-
-    // const getFiltersData = () => {
-    //     FiltersServices.getDistricts()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.dists, data)
-    //             setDists(Milk.getMilk(milkNames.dists))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getEducationalLevels()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.eduLvls, data)
-    //             setSchEduLvls(Milk.getMilk(milkNames.eduLvls))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getSchoolTypes()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.types, data)
-    //             setSchTypes(Milk.getMilk(milkNames.types))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getSchoolScales()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.scales, data)
-    //             setSchScales(Milk.getMilk(milkNames.scales))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getSchoolStatus()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.status, data)
-    //             setSchStatus(Milk.getMilk(milkNames.status))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getRoles()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.roles, data)
-    //             setRoles(Milk.getMilk(milkNames.roles))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getPurposes()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.salesPurps, data)
-    //             setSalesPurps(Milk.getMilk(milkNames.salesPurps))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     FiltersServices.getSchoolYears()
-    //         .then((data) => {
-    //             Milk.setMilk(milkNames.schYears, data)
-    //             setSchYears(Milk.getMilk(milkNames.schYears))
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //             }
-    //         })
-    // }
 
     const onSubmit = (data) => {
         const userObj = (username, roles) => {
@@ -193,65 +93,87 @@ function Logins() {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <div className={classes.bg}>
             <div className={classes.wrapper}>
-                <Paper className={classes.logo} variant="outlined">
-                    <img src={MajorBanner} alt="major logo" />
-                </Paper>
-
-                <form
-                    className={classes.form}
-                    onSubmit={handleSubmit(onSubmit)}
-                    noValidate
-                >
-                    {errors.credential && (
-                        <Typography color="error">
-                            {errors.credential.message}
+                <div className={classes.leftSection}>
+                    <Paper className={classes.logo} variant="outlined">
+                        <img
+                            src={MajorLogo}
+                            alt="major logo"
+                            className={classes.majorImg}
+                        />
+                    </Paper>
+                </div>
+                <div className={classes.rightSection}>
+                    <div className={classes.header}>
+                        <Avatar className={classes.avatar}>
+                            <MdLockOutline />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            {Consts.header}
                         </Typography>
-                    )}
-                    <TextField
-                        id="username"
-                        name="username"
-                        label={Consts.username}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        autoFocus
-                        autoComplete="username"
-                        inputRef={register}
-                        error={!!errors.username}
-                        helperText={errors?.username?.message}
-                        onClick={() => clearErrors(['username', 'credential'])}
-                    />
-                    <TextField
-                        id="password"
-                        name="password"
-                        label={Consts.password}
-                        type="password"
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        autoComplete="current-password"
-                        inputRef={register}
-                        error={!!errors.password}
-                        helperText={errors?.password?.message}
-                        onClick={() => clearErrors(['password', 'credential'])}
-                    />
-
-                    <Button
-                        className={classes.submit}
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
+                    </div>
+                    <form
+                        className={classes.form}
+                        onSubmit={handleSubmit(onSubmit)}
+                        noValidate
                     >
-                        {Consts.login}
-                    </Button>
-                </form>
+                        {errors.credential && (
+                            <Typography color="error">
+                                {errors.credential.message}
+                            </Typography>
+                        )}
+                        <TextField
+                            id="username"
+                            name="username"
+                            label={Consts.username}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            autoFocus
+                            autoComplete="username"
+                            inputRef={register}
+                            error={!!errors.username}
+                            helperText={errors?.username?.message}
+                            onClick={() =>
+                                clearErrors(['username', 'credential'])
+                            }
+                        />
+                        <TextField
+                            id="password"
+                            name="password"
+                            label={Consts.password}
+                            type="password"
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            autoComplete="current-password"
+                            inputRef={register}
+                            error={!!errors.password}
+                            helperText={errors?.password?.message}
+                            onClick={() =>
+                                clearErrors(['password', 'credential'])
+                            }
+                        />
+
+                        <Button
+                            className={classes.submit}
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                        >
+                            {Consts.login}
+                        </Button>
+                    </form>
+                    <Link className={classes.forgetPwd} to="" variant="body2">
+                        {Consts.forgetPwd}
+                    </Link>
+                </div>
             </div>
-        </Container>
+        </div>
     )
 }
 

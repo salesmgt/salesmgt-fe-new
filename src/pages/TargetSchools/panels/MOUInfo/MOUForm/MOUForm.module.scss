@@ -1,0 +1,36 @@
+@import '../../../../../styles/Variables.module.scss';
+
+.dialogCont {
+    padding: 1rem !important;
+    .row {
+        padding: 0rem 0.5rem 0.75rem 0rem;
+    }
+    .title {
+        font-weight: 600;
+        color: $secondary-text;
+    }
+}
+
+.dialogAct {
+    padding: 1rem !important;
+    .btnSave {
+        color: $trust;
+        &:hover {
+            color: $light-info;
+        }
+        &:disabled {
+            color: $disabled;
+        }
+    }
+
+    // .submit {
+    //     color: $common-white;
+    //     background-color: $main-info;
+    //     &:hover {
+    //         background-color: $dark-info;
+    //     }
+    //     &:disabled {
+    //         background-color: $divider;
+    //     }
+    // }
+}

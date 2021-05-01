@@ -45,6 +45,12 @@ export function getMilk(key) {
     return item.value
 }
 
-export function makeSour(key) {
-    localStorage.removeItem(key)
+// export function makeSour(key) {
+//     localStorage.removeItem(key)
+// }
+
+export function makeSour(keys) {
+    keys.forEach((key) => {
+        localStorage.removeItem(key)
+    })
 }

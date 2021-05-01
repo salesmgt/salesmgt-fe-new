@@ -5,6 +5,7 @@ import { useTargetSchool } from './hooks/TargetSchoolContext'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
 import { useAuth } from '../../hooks/AuthContext'
 import { roleNames } from '../../constants/Generals'
+import { Loading } from '../../components'
 import classes from './TargetSchools.module.scss'
 
 function TargetSchools() {
@@ -15,7 +16,7 @@ function TargetSchools() {
 
     const { user } = useAuth()
 
-    const [data, setData] = useState({})
+    const [data, setData] = useState(null)
 
     function onGetTargets(
         page = 0,
@@ -52,29 +53,14 @@ function TargetSchools() {
 
     useEffect(() => {
         if (user.roles[0] === roleNames.salesman) {
-            onGetTargets(
-                page,
-                limit,
-                column,
-                direction,
-                searchKey,
-                listFilters,
-                user.username
-            )
+            onGetTargets(page, limit, column, direction, searchKey, listFilters, user.username)
         } else {
-            onGetTargets(
-                page,
-                limit,
-                column,
-                direction,
-                searchKey,
-                listFilters
-            )
+            onGetTargets(page, limit, column, direction, searchKey, listFilters)
         }
     }, [params])
 
     if (!data) {
-        return null
+        return <Loading />
     }
 
     return (

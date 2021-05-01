@@ -16,14 +16,25 @@ function useAuthProvider() {
     )
 
     if (!user) {
-        Milk.makeSour(milkNames.dists)
-        Milk.makeSour(milkNames.eduLvls)
-        Milk.makeSour(milkNames.types)
-        Milk.makeSour(milkNames.scales)
-        Milk.makeSour(milkNames.status)
-        Milk.makeSour(milkNames.roles)
-        Milk.makeSour(milkNames.schYears)
-        Milk.makeSour(milkNames.salesPurps)
+        // Milk.makeSour(milkNames.dists)
+        // Milk.makeSour(milkNames.eduLvls)
+        // Milk.makeSour(milkNames.types)
+        // Milk.makeSour(milkNames.scales)
+        // Milk.makeSour(milkNames.status)
+        // Milk.makeSour(milkNames.roles)
+        // Milk.makeSour(milkNames.schYears)
+        // Milk.makeSour(milkNames.salesPurps)
+
+        Milk.makeSour([
+            milkNames.dists,
+            milkNames.eduLvls,
+            milkNames.types,
+            milkNames.scales,
+            milkNames.status,
+            milkNames.roles,
+            milkNames.schYears,
+            milkNames.salesPurps,
+        ])
     }
 
     return {

@@ -3,6 +3,7 @@ export const Consts = {
         child1: 'School Detail',
         child2: 'Target School Status',
         child3: 'Principal Detail',
+        child4: 'Salesman Note',
     },
     operations: {
         cancel: 'Cancel',
@@ -44,6 +45,14 @@ export const Consts = {
         },
         reprIsMale: {
             title: 'Gender',
+            male: {
+                lb: 'Male',
+                value: 'true',
+            },
+            female: {
+                lb: 'Female',
+                value: 'false',
+            },
         },
         reprEmail: {
             title: 'Email',

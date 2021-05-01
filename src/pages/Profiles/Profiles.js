@@ -31,6 +31,7 @@ import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
 import { Snackbars, Loading } from '../../components'
+import { PWD_RGX, PHONE_RGX } from '../../utils/Regex'
 import classes from './Profiles.module.scss'
 
 const pwdSchema = yup.object().shape({
@@ -42,8 +43,8 @@ const pwdSchema = yup.object().shape({
             'The new password you entered is the same as your old password. Please enter a different password'
         )
         .matches(
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            'Password must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
+            PWD_RGX,
+            'Password must contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
         ),
     confirmPassword: yup
         .string()
@@ -67,7 +68,7 @@ const phoneSchema = yup.object().shape({
             10,
             'Phone number must be at most 10 digits and has the correct format'
         )
-        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Incorrect entry'),
 })
 
 const addrSchema = yup.object().shape({
@@ -730,6 +731,14 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!pwdState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="large"
                                             onClick={() =>
@@ -742,14 +751,6 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="large"
-                                            type="submit"
-                                            disabled={!pwdState.isDirty}
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -821,7 +822,9 @@ function Profiles() {
                                             <Typography
                                                 className={classes.details}
                                             >
-                                                {isMale ? 'Male' : 'Female'}
+                                                {isMale
+                                                    ? fields.isMale.male.lb
+                                                    : fields.isMale.female.lb}
                                             </Typography>
                                             <Icon>
                                                 {isMale ? (
@@ -923,6 +926,14 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!emailState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="large"
                                             onClick={() =>
@@ -933,14 +944,6 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="large"
-                                            type="submit"
-                                            disabled={!emailState.isDirty}
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -1034,6 +1037,14 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!phoneState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="large"
                                             onClick={() =>
@@ -1044,14 +1055,6 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="large"
-                                            type="submit"
-                                            disabled={!phoneState.isDirty}
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>
@@ -1144,6 +1147,14 @@ function Profiles() {
                                         className={classes.accorActions}
                                     >
                                         <Button
+                                            className={classes.saveBtn}
+                                            size="large"
+                                            type="submit"
+                                            disabled={!addrState.isDirty}
+                                        >
+                                            {operations.save}
+                                        </Button>
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="large"
                                             onClick={() =>
@@ -1154,14 +1165,6 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
-                                        <Button
-                                            className={classes.saveBtn}
-                                            size="large"
-                                            type="submit"
-                                            disabled={!addrState.isDirty}
-                                        >
-                                            {operations.save}
                                         </Button>
                                     </AccordionActions>
                                 </Accordion>

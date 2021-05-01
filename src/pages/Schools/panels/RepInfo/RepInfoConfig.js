@@ -12,6 +12,14 @@ export const Consts = {
         },
         reprIsMale: {
             title: 'Gender',
+            male: {
+                lb: 'Male',
+                value: 'true',
+            },
+            female: {
+                lb: 'Female',
+                value: 'false',
+            },
         },
         email: {
             title: 'Email',

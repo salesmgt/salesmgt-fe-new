@@ -78,7 +78,7 @@ function School() {
             {/* {user.roles[0] === roleNames.admin && ( */}
             <DetailLayouts
                 linkBack={linkNames.back}
-                header={school?.name}
+                header={`${school?.educationalLevel} ${school?.name}`}
                 subHeader={school?.active}
                 isStatus={true}
                 tabs={[tabNames.tab1, tabNames.tab2]}

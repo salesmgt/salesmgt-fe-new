@@ -12,6 +12,14 @@ export const Consts = {
         },
         isMale: {
             title: 'Gender',
+            male: {
+                lb: 'Male',
+                value: 'true',
+            },
+            female: {
+                lb: 'Female',
+                value: 'false',
+            },
         },
         birthDate: {
             title: 'Birthday',

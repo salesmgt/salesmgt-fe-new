@@ -16,6 +16,7 @@ import * as yup from 'yup'
 import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './RepInfoConfig'
 import * as SchoolsServices from '../../SchoolsServices'
+import { PHONE_RGX } from '../../../../utils/Regex'
 import classes from './RepInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -27,7 +28,7 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Incorrect entry'),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
@@ -224,13 +225,25 @@ function RepInfo(props) {
                                                     row
                                                 >
                                                     <FormControlLabel
-                                                        label="Male"
-                                                        value="true"
+                                                        label={
+                                                            fields.reprIsMale
+                                                                .male.lb
+                                                        }
+                                                        value={
+                                                            fields.reprIsMale
+                                                                .male.value
+                                                        }
                                                         control={<Radio />}
                                                     />
                                                     <FormControlLabel
-                                                        label="Female"
-                                                        value="false"
+                                                        label={
+                                                            fields.reprIsMale
+                                                                .female.lb
+                                                        }
+                                                        value={
+                                                            fields.reprIsMale
+                                                                .female.value
+                                                        }
                                                         control={<Radio />}
                                                     />
                                                 </RadioGroup>

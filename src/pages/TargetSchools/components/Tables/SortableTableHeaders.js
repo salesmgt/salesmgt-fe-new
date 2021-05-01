@@ -1,4 +1,11 @@
-import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, withStyles } from "@material-ui/core"
+import {
+    Checkbox,
+    TableCell,
+    TableHead,
+    TableRow,
+    TableSortLabel,
+    withStyles,
+} from '@material-ui/core'
 import { roleNames } from '../../../../constants/Generals'
 import classes from './Tables.module.scss'
 
@@ -32,7 +39,7 @@ export default function SortableTableHeaders(props) {
             color: 'white !important',
         },
     })(TableSortLabel)
-    console.log('row count', rowCount)
+    
     return (
         <TableHead>
             <TableRow className={classes.tHead}>
@@ -42,7 +49,7 @@ export default function SortableTableHeaders(props) {
                             indeterminate={
                                 numSelected > 0 && numSelected < rowCount
                             }
-                             checked={rowCount > 0 && numSelected === rowCount}
+                            checked={rowCount > 0 && numSelected === rowCount}
                             onChange={onSelectAllClick}
                         />
                     </TableCell>
@@ -54,8 +61,8 @@ export default function SortableTableHeaders(props) {
                         sortDirection={column === col.key ? direction : false}
                         align={
                             col.key === 'no'
-                                ? 'right'
-                                : col.key === 'user.fullName'
+                                ? 'center' :
+                                col.key === 'user.fullName'
                                 ? 'center'
                                 : 'left'
                         }

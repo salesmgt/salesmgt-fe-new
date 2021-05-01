@@ -12,5 +12,3 @@ export const DATE_RANGE_FILTER = 'dateRange'
 export const TYPE_FILTER = 'type'
 export const LEVEL_FILTER = 'level'
 export const SCALE_FILTER = 'scale'
-
-

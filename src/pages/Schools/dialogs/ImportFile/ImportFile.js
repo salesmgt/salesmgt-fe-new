@@ -14,7 +14,7 @@ import {
 import { Alert, AlertTitle } from '@material-ui/lab'
 import { MdClose } from 'react-icons/md'
 import { FaFileImport } from 'react-icons/fa'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import * as XLSX from 'xlsx'
 import { storage } from '../../../../services/firebase'
 import { Snackbars } from '../../../../components'

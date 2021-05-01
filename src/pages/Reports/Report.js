@@ -57,7 +57,7 @@ function Report() {
     return (
         <DetailLayouts
             linkBack={linkNames.back}
-            header={report?.schoolName}
+            header={`${report?.level} ${report?.schoolName}`}
             subHeader={moment(report?.date).format('DD/MM/YYYY')}
             tabs={[tabNames.tab1, tabNames.tab2]}
             tabValue={tabValue}

@@ -54,7 +54,7 @@ function Chips(props) {
     const [btnClearAll, setBtnClearAll] = useState(false)
 
     const handleChipDelete = (chipToDelete) => () => {
-        // console.log('chipToDelete = ', chipToDelete);
+        console.log('chipToDelete = ', chipToDelete);
         // setChipData((listChips) => listChips.filter((chip) => chip.filterType !== chipToDelete.filterType));
 
         switch (chipToDelete.filterType) {
@@ -125,7 +125,6 @@ function Chips(props) {
                 break
         }
 
-        // console.log('chipData.length = ', chipData.length)
         // if (chipData.length === 0) {
         //     setBtnClearAll(false);
         // }
@@ -217,7 +216,6 @@ function Chips(props) {
         <div>
             {handleShowClearAllButton() !== 9 && (
                 <div className={classes.root}>
-                    {' '}
                     {/* {(chips !== null && chips !== undefined) && */}
                     {/* {showClearAllButton(chipData)} */}
                     <Button

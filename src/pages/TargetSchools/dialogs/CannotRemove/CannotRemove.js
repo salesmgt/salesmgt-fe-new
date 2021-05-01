@@ -11,7 +11,7 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md';
-import { Consts, cannotMessage } from '../FormConfig'
+import { Consts, cannotMessage } from '../DialogConfig'
 import classes from './CannotRemove.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -51,7 +51,7 @@ function CannotRemove(props) {
             {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
-                    {cannotMessage(data?.educationalLevel, data?.schoolName, data?.schoolYear, data?.fullName)}
+                    {cannotMessage(data?.level, data?.schoolName, data?.schoolYear, data?.fullName)}
                 </DialogContentText>
             </DialogContent>
             {/* <Divider /> */}

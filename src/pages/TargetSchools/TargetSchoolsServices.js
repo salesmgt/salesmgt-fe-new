@@ -80,6 +80,13 @@ export async function updateTarget(targetId, target) {
     return response
 }
 
+export async function createMOU(mou) {
+    const response = await Api.post('/memorandums', mou)
+    // const data = await response.data
+
+    return response
+}
+
 export async function updateMOU(mouId, mou) {
     const response = await Api.put(`/memorandums/${mouId}`, mou)
     // const data = await response.data
@@ -111,19 +118,46 @@ export async function updateMOU(mouId, mou) {
 //     return await Api.put('/targets', { targetSchool })
 // }
 
-// export async function removeTargetSchool(targetSchoolId) {
-//     return await Api.delete('/targets', { targetSchoolId })
-// }
+export async function removeTargetSchool(targetId) {
+    const response = await Api.delete(`/targets/${targetId}`, {targetId})
+    const data = await response.data
+    return data
+}
 
 export async function getDashboardsByKeys(...keys) {
-    const response = await Api.get('/dashbords', { ...keys })
+    const response = await Api.get('/dashboards', { ...keys })
     const data = await response.data
 
     return data
 }
 
-export async function getAllSchools() {
-    const response = await Api.get('/schools')
+export async function getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,filters)
+{    
+    // Đây là url đúng nhưng chưa có. Để đây sau này dùng, DO NOT REMOVE!!!
+    // let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+    
+    let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+    url = searchKey ? url.concat(`&key=${searchKey}`) : url
+
+    if (filters) {
+        url = filters['district'].filterValue
+            ? url.concat(`&district=${filters['district'].filterValue}`)
+            : url
+        url = filters['type'].filterValue
+            ? url.concat(`&type=${filters['type'].filterValue}`)
+            : url
+        url = filters['level'].filterValue
+            ? url.concat(`&level=${filters['level'].filterValue}`)
+            : url
+        url = filters['scale'].filterValue
+            ? url.concat(`&scale=${filters['scale'].filterValue}`)
+            : url
+        url = filters['status'].filterValue
+            ? url.concat(`&status=${filters['status'].filterValue}`)
+            : url
+    }
+
+    const response = await Api.get(url)
     const data = await response.data
     return data
 }
@@ -133,6 +167,7 @@ export async function assignMulti(list) {
     const data = await response.data
     return data
 }
+
 export async function unassign(id) {
     const response = await Api.put(`/targets/unassign/${id}`)
     const data = await response.data

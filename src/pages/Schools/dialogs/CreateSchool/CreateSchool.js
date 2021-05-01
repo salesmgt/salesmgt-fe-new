@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Dialog,
     IconButton,
@@ -8,7 +8,8 @@ import {
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import CreateSchoolForm from './CreateSchoolForm'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
+import { Snackbars } from '../../../../components'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -46,13 +47,23 @@ function CreateSchool(props) {
 
     const { headers } = Consts
 
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
+
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitleWithIconClose onClose={onClose}>
-                {headers.child1}
-            </DialogTitleWithIconClose>
-            <CreateSchoolForm onClose={onClose} />
-        </Dialog>
+        <>
+            <Dialog open={open} onClose={onClose} maxWidth="xs">
+                <DialogTitleWithIconClose onClose={onClose}>
+                    {headers.child1}
+                </DialogTitleWithIconClose>
+                <CreateSchoolForm onClose={onClose} setNotify={setNotify} />
+            </Dialog>
+
+            <Snackbars notify={notify} setNotify={setNotify} />
+        </>
     )
 }
 

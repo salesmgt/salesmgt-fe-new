@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import { TargetSchoolReducer } from './TargetSchoolReducer'
-import * as FiltersServices from '../../../services/FiltersServices'
+import { getPICs } from '../../../services/FiltersServices'
 import {
     DISTRICT_FILTER,
     TYPE_FILTER,
@@ -83,9 +83,7 @@ function useTargetSchoolProvider() {
             : ''
     )
     const [district, setDistrict] = useState(
-        defaultFilters.district.filterValue
-            ? defaultFilters.district.filterValue
-            : ''
+        defaultFilters.district.filterValue ? defaultFilters.district.filterValue : ''
     )
     const [schoolType, setSchoolType] = useState(
         defaultFilters.type.filterValue ? defaultFilters.type.filterValue : ''
@@ -179,6 +177,7 @@ function useTargetSchoolProvider() {
                 setPurpose(value)
                 break
             case STATUS_FILTER:
+                console.log('setFilter - STATUS_FILTER: ', value);
                 defaultFilters = {
                     ...defaultFilters,
                     status: { filterType: STATUS_FILTER, filterValue: value },
@@ -186,6 +185,7 @@ function useTargetSchoolProvider() {
                 setSchoolStatus(value)
                 break
             case ASSIGNED_FILTER:
+                console.log('setFilter - ASSIGNED_FILTER: ', value);
                 defaultFilters = {
                     ...defaultFilters,
                     status: { filterType: ASSIGNED_FILTER, filterValue: value },
@@ -207,31 +207,22 @@ function useTargetSchoolProvider() {
 
     // Search field (do not have)
 
-    const getPICsFilter = () => {
-        FiltersServices.getPICs()
-            .then((data) => {
-                setPICs(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+    const getListPICs = (fullName) => {
+        getPICs({active: true, fullName: fullName}).then((data) => {
+            // console.log('list PICs: ', data)
+            setPICs(data)
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
     }
-
-    useEffect(() => {
-        // Ko đc gọi hết API 1 lượt trong cùng 1 useEffect
-        // getSchoolYearsFilter() // vì như vậy sẽ rất khó quản lý lỗi từ thằng nào
-        // getDistrictsFilter()
-        // getSchoolTypesFilter()
-        // getSchoolLevelsFilter()
-        // getSchoolScalesFilter()
-        getPICsFilter()
-    }, [])
+    
+    useEffect(getListPICs, [])
 
     //================Parse object "params" --> query-string================
     //........
@@ -271,6 +262,7 @@ function useTargetSchoolProvider() {
         isAssigned,
         assignedStatuses,
         setFilter,
+        getListPICs,
     }
 }
 

@@ -5,7 +5,7 @@ import React, {
     useEffect,
     useReducer,
 } from 'react'
-import * as FiltersServices from '../../../services/FiltersServices'
+import { getPICs } from '../../../services/FiltersServices'
 import { useHistory } from 'react-router-dom'
 import { ReportReducer } from './ReportReducer'
 import {
@@ -97,7 +97,7 @@ function useReportProvider() {
     //         : ''
     // )
     const [dateRange, setDateRange] = useState(
-        defaultFilters.dateRange.filterValue
+        defaultFilters.dateRange.filterValue[0]
             ? defaultFilters.dateRange.filterValue
             : [null, null]
     )
@@ -153,6 +153,7 @@ function useReportProvider() {
             //     setSchoolStatus(value)
             //     break
             case DATE_RANGE_FILTER:
+                // console.log('DATE_RANGE_FILTER - value = ', value);
                 defaultFilters = {
                     ...defaultFilters,
                     dateRange: {
@@ -176,21 +177,22 @@ function useReportProvider() {
     // Search field (do not have)
 
     // Get filters' data
-    const getPICsFilter = () => {
-        FiltersServices.getPICs()
-            .then((data) => {
-                setPICs(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+    
+    const getListPICs = (fullName) => {
+        getPICs({active: true, fullName: fullName}).then((data) => {
+            // console.log('list PICs: ', data)
+            setPICs(data)
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
     }
+    useEffect(getListPICs, [])
 
     // const getDistrictsFilter = () => {
     //     FiltersServices.getDistricts()
@@ -240,12 +242,12 @@ function useReportProvider() {
     //         })
     // }
 
-    useEffect(() => {
-        getPICsFilter()
+    // useEffect(() => {
+    //     getPICsFilter()
         // getDistrictsFilter()
         // getSchoolYearsFilter()
         // getSchoolStatusesFilter()
-    }, [])
+    // }, [])
 
     return {
         params,
@@ -275,6 +277,7 @@ function useReportProvider() {
         dateRange,
         // setDateRange,
         setFilter,
+        getListPICs,
         // fromDate, setFromDate, toDate, setToDate
     }
 }

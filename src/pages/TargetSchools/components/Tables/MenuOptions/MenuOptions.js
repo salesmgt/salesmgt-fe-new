@@ -7,18 +7,19 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import { MdDelete, MdDescription, MdInfo, MdMoreVert, MdPersonAdd } from 'react-icons/md'
+import { MdDelete, MdDescription, MdInfo, MdMoreVert, MdPersonAdd, MdNoteAdd } from 'react-icons/md'
 import { IoPersonRemoveSharp } from "react-icons/io5"
 import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
 import ConfirmUnassign from '../../../dialogs/ConfirmUnassign/ConfirmUnassign'
+import CreateMOU from '../../../dialogs/CreateMOU/CreateMOU'
 import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
 import { Consts } from '../../../TargetSchoolsConfig'
 import { roleNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
-import classes from './MenuOptions.module.scss'
 import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
+import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
     const { data, refreshAPI } = props
@@ -26,8 +27,10 @@ function MenuOptions(props) {
 
     const [anchorEl, setAnchorEl] = useState(null)
     const [open, setOpen] = useState(false)
-    const [openAssign,setOpenAssign] = useState(false)
-    const [openUnassign,setOpenUnassign] = useState(false)
+    const [openAssign, setOpenAssign] = useState(false)
+    const [openUnassign, setOpenUnassign] = useState(false)
+    const [openMOU, setOpenMOU] = useState(false)
+    
     const [rows, setRows] = useState([data])
 
     const { user } = useAuth()
@@ -40,7 +43,7 @@ function MenuOptions(props) {
         pathName: `${url}/${data.id}`,
     }
 
-    const handleOpen = (event) => {
+    const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget)
     }
 
@@ -48,7 +51,7 @@ function MenuOptions(props) {
         setAnchorEl(null)
     }
 
-    const handleOpenConfirmation = () => {
+    const handleOpenConfirmRemove = () => {
         setAnchorEl(null)
         setOpen(true)
     }
@@ -60,6 +63,11 @@ function MenuOptions(props) {
 
     const handleOpenAssignOne = () => {
         setOpenAssign(true)
+        setAnchorEl(null)
+    }
+
+    const handleOpenMOU = () => {
+        setOpenMOU(true)
         setAnchorEl(null)
     }
 
@@ -78,6 +86,7 @@ function MenuOptions(props) {
                     open={open}
                     onClose={() => setOpen(false)}
                     data={data}
+                    refreshAPI={refreshAPI}
                 />
             )
         }
@@ -109,9 +118,20 @@ function MenuOptions(props) {
         }
     }
 
+    const renderMOUDialog = () => {
+        return (
+            <CreateMOU
+                open={openMOU}
+                onClose={() => setOpenMOU(false)}
+                refreshPage={refreshAPI}
+                // data={data}
+            />
+        )
+    }
+
     return (
         <div>
-            <IconButton color="primary" onClick={handleOpen}>
+            <IconButton color="primary" onClick={handleOpenMenu}>
                 <MdMoreVert />
             </IconButton>
             <Menu
@@ -152,6 +172,20 @@ function MenuOptions(props) {
                     </ListItemText>
                 </MenuItem>
 
+                {user.roles[0] === roleNames.salesman && (
+                    <div>
+                        <MenuItem onClick={handleOpenMOU}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdNoteAdd fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                {menuItems.mou.title}
+                            </ListItemText>
+                        </MenuItem>
+                        {renderMOUDialog()}
+                    </div>
+                )}
+
                 {/* <MenuItem onClick={handleCloseMenus}>
                     <ListItemIcon className={classes.itemIcon}>
                         <MdPersonAdd fontSize="large" />
@@ -162,7 +196,7 @@ function MenuOptions(props) {
                 </MenuItem> */}
                 {user.roles[0] !== roleNames.salesman && (
                     <div>
-                        <MenuItem onClick={handleOpenConfirmation}>
+                        <MenuItem onClick={handleOpenConfirmRemove}>
                             <ListItemIcon className={classes.itemIcon}>
                                 <MdDelete fontSize="large" />
                             </ListItemIcon>

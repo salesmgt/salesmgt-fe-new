@@ -135,6 +135,7 @@ function SortableTableHeaders(props) {
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
                         align={col.key === 'no' ? 'center' : 'left'}
+                        width={col.width}
                     >
                         <MuiTableSortLabel
                             active={column === col.key}
@@ -215,22 +216,22 @@ function Tables(props) {
     }
 
     const setStatusChipColor = (status, isActive) => {
-        if (isActive) {
+        // if (isActive) {
             switch (status) {
                 case statusNames.lead:
-                    return <Chip label={status} className={classes.chipLead} />
-                    // return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
+                    // return <Chip label={status} className={classes.chipLead} />
+                    return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
                 case statusNames.customer:
-                    return <Chip label={status} className={classes.chipCustomer} />
-                    // return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
+                    // return <Chip label={status} className={classes.chipCustomer} />
+                    return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
                 default:
                     // #5c21f3
-                    return <Chip label={status} />
-                    // return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+                    // return <Chip label={status} />
+                    return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
             }
-        } else {
-            return <Chip label={statusNames.pending} />
-        }
+        // } else {
+        //     return <Chip label={statusNames.pending} />
+        // }
     }
 
     return (
@@ -266,21 +267,25 @@ function Tables(props) {
                                     <TableCell
                                         className={row.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
                                     >
-                                     <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight= {`${row.educationalLevel} ${row.name}`}/> 
+                                        <Highlighter
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight= {`${row.educationalLevel} ${row.name}`}
+                                        /> 
                                     </TableCell>
                                     <TableCell
                                         className={row.active ? classes.tBodyCell : classes.tCellInactive}
                                     >
                                         <ListItemText
-                                            primary={<Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.address} /> }
+                                            primary={
+                                                <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[params.searchKey]}
+                                                    autoEscape={true}   
+                                                    textToHighlight={row.address}
+                                                />
+                                            }
                                             secondary={row.district}
                                             classes={{
                                                 primary: classes.itemText,
@@ -291,17 +296,15 @@ function Tables(props) {
                                     <TableCell
                                         className={row.active ? classes.tBodyCell : classes.tCellInactive}
                                     >
-                                    <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row?.reprName
-                                            ? (row.reprIsMale
-                                                ? `Mr. ${row.reprName}`
-                                                : `Ms. ${row.reprName}`)
-                                            : ''
-                                        } /> 
-                                        
+                                        <Highlighter
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight={row?.reprName
+                                                    ? (row.reprIsMale
+                                                        ? `Mr. ${row.reprName}` : `Ms. ${row.reprName}`)
+                                                    : ''}
+                                        />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {setStatusChipColor(row.status, row.active)}

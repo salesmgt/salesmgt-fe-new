@@ -25,6 +25,9 @@ import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import * as AccountsServices from '../../AccountsServices'
 import { roleNames } from '../../../../constants/Generals'
+import { PHONE_RGX } from '../../../../utils/Regex'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -32,7 +35,7 @@ const clientSchema = yup.object().shape({
         .string()
         .required('Phone is required')
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Incorrect entry'),
     address: yup.string().trim(),
 })
 
@@ -89,6 +92,7 @@ function GenInfo(props) {
     })
 
     const { roles } = useApp()
+    const bakRoles = roles ? roles : Milk.getMilk(milkNames.roles)
 
     const defaultValues = {
         username: account?.username,
@@ -139,6 +143,9 @@ function GenInfo(props) {
             birthDate: data?.birthDate
                 ? moment(data?.birthDate).format('YYYY-MM-DD')
                 : null,
+            address: account?.address,
+            avatar: account?.avatar,
+            passwordHash: account?.passwordHash,
         }
 
         AccountsServices.updateAccount(data?.username, model)
@@ -322,13 +329,25 @@ function GenInfo(props) {
                                                     row
                                                 >
                                                     <FormControlLabel
-                                                        label="Male"
-                                                        value="true"
+                                                        label={
+                                                            fields.isMale.male
+                                                                .lb
+                                                        }
+                                                        value={
+                                                            fields.isMale.male
+                                                                .value
+                                                        }
                                                         control={<Radio />}
                                                     />
                                                     <FormControlLabel
-                                                        label="Female"
-                                                        value="false"
+                                                        label={
+                                                            fields.isMale.female
+                                                                .lb
+                                                        }
+                                                        value={
+                                                            fields.isMale.female
+                                                                .value
+                                                        }
                                                         control={<Radio />}
                                                     />
                                                 </RadioGroup>
@@ -390,7 +409,7 @@ function GenInfo(props) {
                                                     MenuProps={MenuProps}
                                                     disableUnderline
                                                 >
-                                                    {roles.map((role) => (
+                                                    {bakRoles.map((role) => (
                                                         <MenuItem
                                                             key={role}
                                                             value={role}

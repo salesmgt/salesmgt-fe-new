@@ -7,7 +7,7 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import AssignMultipleForm from './AssignMultipleForm'
 import classes from './AssignMultiple.module.scss'
 import { Snackbars } from '../../../../components'

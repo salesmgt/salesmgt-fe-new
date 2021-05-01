@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -41,15 +41,17 @@ import {
     STATUS_FILTER,
     ASSIGNED_FILTER
 } from '../../../../constants/Filters'
+import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import NotifyAssign from '../../dialogs/NotifyAssign/NotifyAssign'
 import AssignMultiple from '../../dialogs/AssignMultiple/AssignMultiple'
 import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetSchools'
 import { Consts } from '../../TargetSchoolsConfig'
-import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
 import styles from './Filters.module.scss'
-import { propTypes } from 'velocity-react/velocity-component'
+import TargetFormProvider from '../../dialogs/CreateTargetSchools/TargetFormContext'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -179,9 +181,11 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters(props) {
     //   const style = useStyles();
     const classes = useStyles()
+    const { operations, filters } = Consts
     // const { onGetTargets } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
+    const { user } = useAuth()
     const {
         schYears,
         dists,
@@ -191,6 +195,16 @@ function Filters(props) {
         salesPurps,
         schStatus,
     } = useApp()
+    const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
+    const bakSchEduLvls = schEduLvls
+        ? schEduLvls
+        : Milk.getMilk(milkNames.eduLvls)
+    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    const bakSalesPurps = salesPurps
+        ? salesPurps
+        : Milk.getMilk(milkNames.salesPurps)
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -208,17 +222,18 @@ function Filters(props) {
         isAssigned,
         assignedStatuses,
         setFilter,
+        getListPICs,
     } = useTargetSchool()
-    const { operations, filters } = Consts
 
-    const { user } = useAuth()
+    const typingTimeoutRef = useRef({})
 
     // const { listFilters } = params  //, searchKey, sorting, paging
 
     const [openNotifyDialog, setOpenNotifyDialog] = useState(false)
     const [openAssignDialog, setOpenAssignDialog] = useState(false)
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
- //================Handle useState() of filters================
+
+    //================Handle useState() of filters================
     const handleSchoolYearChange = (event) => {
         const selectedSchoolYear = event.target.value
         setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
@@ -278,6 +293,22 @@ function Filters(props) {
             },
         })
     }
+    
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            console.log('searchKey = ', searchPIC)
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
+    }
 
     const handlePICChange = (event, newPIC) => {
         setFilter(PIC_FILTER, newPIC)
@@ -316,6 +347,9 @@ function Filters(props) {
 
     const handleIsAssignedChange = (event) => {
         const selectedIsAssigned = event.target.value
+
+        console.log('isAssigned? ', selectedIsAssigned);
+        
         setFilter(ASSIGNED_FILTER, selectedIsAssigned)
         dispatchParams({
             type: ReducerActions.FILTER_ASSIGNED,
@@ -399,7 +433,7 @@ function Filters(props) {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
-        // console.log('chips array: ', listChips);
+        console.log('chips array: ', listChips);
         return listChips
     }
     //===============================================================================
@@ -426,6 +460,40 @@ function Filters(props) {
 
             // console.log('noti dialog: ')
             setOpenNotifyDialog(true)
+        }
+    }
+
+    const renderCreateTargetDialog = () => {
+        if (openCreateDialog) {
+            return (
+                <TargetFormProvider>
+                    <CreateTargetSchools
+                        open={openCreateDialog}
+                        onClose={() => setOpenCreateDialog(false)}
+                    />
+                </TargetFormProvider>
+            )
+        } else return null;
+    }
+
+    const renderAssignDialog = () => {
+        console.log('props.selectedRows = ', props.selectedRows);
+        
+        if (props.selectedRows.length > 0) {
+            // Checked target schools
+            return (
+                <AssignMultiple
+                    open={openAssignDialog}
+                    onClose={() => setOpenAssignDialog(false)}
+                    rows={props.selectedRows}
+                    setRows={props.setSelectedRows}
+                    refreshAPI={props.refreshAPI}
+                />
+            )
+        } else {    // Have not checked target schools
+            return (
+                <NotifyAssign open={openNotifyDialog} onClose={() => setOpenNotifyDialog(false)} />
+            )
         }
     }
 
@@ -471,114 +539,25 @@ function Filters(props) {
                                     <MdAdd fontSize="large" />
                                     {/* &nbsp;{operations.create} */}
                                 </Button>
-
-                        <CreateTargetSchools
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                        />
-                    </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleOpenAssignDialog}
-                        >
-                            <MdPersonAdd fontSize="large" />
-                        </Button>
-                        {/* Have checked target schools */}
-                        <AssignMultiple
-                            open={openAssignDialog}
-                            onClose={() => setOpenAssignDialog(false)}
-                            rows={props.selectedRows}
-                            setRows={props.setSelectedRows}
-                            refreshAPI={props.refreshAPI}
-                        />
-                        {/* Have not checked target schools */}
-                        <NotifyAssign
-                            open={openNotifyDialog}
-                            onClose={() => setOpenNotifyDialog(false)}
-                        />
-                    </Box>
-                    </>)}
+                                {renderCreateTargetDialog()}
+                            </Box>
+                            <Box className={classes.flexItem}>
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleOpenAssignDialog}
+                                >
+                                    <MdPersonAdd fontSize="large" />
+                                </Button>
+                                {renderAssignDialog()}
+                            </Box>
+                        </>
+                    )}
                 </Box>
-             
                 <MuiAccordionDetails>
                     <Grid container>
-                        {user.roles[0] !== roleNames.salesman && (
-                            <Grid item xs={12} sm={6} md={5} lg={4}>
-                                <Autocomplete
-                                    autoComplete
-                                    autoSelect
-                                    autoHighlight
-                                    clearOnEscape
-                                    options={PICs ? PICs : []}
-                                    getOptionLabel={(pic) =>
-                                        pic.fullName ? pic.fullName : ''
-                                    }
-                                    value={PIC}
-                                    renderInput={(params) => {
-                                        return (
-                                            <TextField
-                                                {...params}
-                                                label={filters.pic.title}
-                                                margin="normal"
-                                                placeholder={
-                                                    filters.pic.placeholder
-                                                }
-                                                ref={params.InputProps.ref}
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    startAdornment: (
-                                                        <>
-                                                            <InputAdornment position="start">
-                                                                <MdAccountCircle />
-                                                            </InputAdornment>
-                                                            {
-                                                                params
-                                                                    .InputProps
-                                                                    .startAdornment
-                                                            }
-                                                        </>
-                                                    ),
-                                                }}
-                                            />
-                                        )
-                                    }}
-                                    renderOption={(option) => {
-                                        return (
-                                            <div
-                                                className={classes.itemPIC}
-                                                key={option.username}
-                                            >
-                                                <ListItemAvatar>
-                                                    <Avatar
-                                                        src={option.avatar}
-                                                    />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={
-                                                        option.fullName
-                                                            ? option.fullName
-                                                            : ''
-                                                    }
-                                                    classes={{
-                                                        primary:
-                                                            classes.itemTextPrimary,
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    }}
-                                    className={classes.autoComplete}
-                                    onChange={(event, newPIC) =>
-                                        handlePICChange(event, newPIC)
-                                    }
-                                />
-                            </Grid>
-                        )}
-
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -618,7 +597,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -640,7 +619,7 @@ function Filters(props) {
                                     >
                                         {filters.purpose.options.all}
                                     </MenuItem>
-                                    {salesPurps?.map((purp) => (
+                                    {bakSalesPurps?.map((purp) => (
                                         <MenuItem
                                             key={purp}
                                             value={purp}
@@ -658,7 +637,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -682,7 +661,7 @@ function Filters(props) {
                                     >
                                         {filters.district.options.all}
                                     </MenuItem>
-                                    {dists?.map((dist) => (
+                                    {bakDists?.map((dist) => (
                                         <MenuItem
                                             key={dist}
                                             value={dist}
@@ -700,7 +679,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -724,7 +703,7 @@ function Filters(props) {
                                     >
                                         {filters.schoolYear.options.all}
                                     </MenuItem>
-                                    {schYears?.map((year) => (
+                                    {bakSchYears?.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -742,7 +721,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -766,7 +745,7 @@ function Filters(props) {
                                     >
                                         {filters.schoolType.options.all}
                                     </MenuItem>
-                                    {schTypes?.map((type) => (
+                                    {bakSchTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -784,7 +763,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -808,7 +787,7 @@ function Filters(props) {
                                     >
                                         {filters.schoolLevel.options.all}
                                     </MenuItem>
-                                    {schEduLvls?.map((level) => (
+                                    {bakSchEduLvls?.map((level) => (
                                         <MenuItem
                                             key={level}
                                             value={level}
@@ -826,7 +805,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={4} md={3} lg={3}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -850,7 +829,7 @@ function Filters(props) {
                                     >
                                         {filters.schoolScale.options.all}
                                     </MenuItem>
-                                    {schScales?.map((scale) => (
+                                    {bakSchScales?.map((scale) => (
                                         <MenuItem
                                             key={scale}
                                             value={scale}
@@ -868,35 +847,111 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
                         
-                        <Grid item xs={12} sm={4} md={3} lg={3}
-                            className={classes.paddingTop}
-                        >
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>
-                                    {filters.isAssigned.title}
-                                </InputLabel>
-                                <Select
-                                    value={isAssigned === null ? '' : isAssigned}
-                                    onChange={handleIsAssignedChange}
-                                    MenuProps={MenuProps}
+                        {user.roles[0] !== roleNames.salesman &&
+                            <>
+                                <Grid item xs={12} sm={6} md={4} lg={3}
+                                    className={classes.paddingTop}
                                 >
-                                    {assignedStatuses?.map((isAssigned) => (
-                                        <MenuItem
-                                            key={isAssigned}
-                                            value={isAssigned}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
-                                            }}
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel>
+                                            {filters.isAssigned.title}
+                                        </InputLabel>
+                                        <Select
+                                            value={isAssigned === null ? '' : isAssigned}
+                                            onChange={handleIsAssignedChange}
+                                            MenuProps={MenuProps}
                                         >
-                                            {isAssigned === null ? `${filters.isAssigned.options.all}` : (isAssigned ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`)}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                            {assignedStatuses?.map((isAssigned) => (
+                                                <MenuItem
+                                                    key={isAssigned}
+                                                    value={isAssigned}
+                                                    className={classes.option}
+                                                    classes={{
+                                                        root: classes.menuItemRoot,
+                                                        selected:
+                                                            classes.menuItemSelected,
+                                                    }}
+                                                >
+                                                    {isAssigned === null 
+                                                        ? `${filters.isAssigned.options.all}` 
+                                                        : (isAssigned ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`)
+                                                    }
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={5} lg={4}>
+                                    <Autocomplete
+                                        autoComplete
+                                        autoSelect
+                                        autoHighlight
+                                        clearOnEscape
+                                        options={PICs ? PICs : []}
+                                        getOptionLabel={(pic) =>
+                                            pic.fullName ? pic.fullName : ''
+                                        }
+                                        value={PIC}
+                                        renderInput={(params) => {
+                                            return (
+                                                <TextField
+                                                    {...params}
+                                                    label={filters.pic.title}
+                                                    margin="normal"
+                                                    placeholder={
+                                                        filters.pic.placeholder
+                                                    }
+                                                    ref={params.InputProps.ref}
+                                                    onChange={onSearchPICChange}
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        startAdornment: (
+                                                            <>
+                                                                <InputAdornment position="start">
+                                                                    <MdAccountCircle />
+                                                                </InputAdornment>
+                                                                {
+                                                                    params.InputProps.startAdornment
+                                                                }
+                                                            </>
+                                                        ),
+                                                    }}
+                                                />
+                                            )
+                                        }}
+                                        renderOption={(option) => {
+                                            return (
+                                                <div
+                                                    className={classes.itemPIC}
+                                                    key={option.username}
+                                                >
+                                                    <ListItemAvatar>
+                                                        <Avatar
+                                                            src={option.avatar}
+                                                        />
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        primary={
+                                                            option.fullName
+                                                                ? option.fullName
+                                                                : ''
+                                                        }
+                                                        classes={{
+                                                            primary:
+                                                                classes.itemTextPrimary,
+                                                        }}
+                                                    />
+                                                </div>
+                                            )
+                                        }}
+                                        className={classes.autoComplete}
+                                        onChange={(event, newPIC) =>
+                                            handlePICChange(event, newPIC)
+                                        }
+                                    />
+                                </Grid>
+                            </>
+                        }
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>
@@ -904,7 +959,7 @@ function Filters(props) {
     )
 }
 
-export default Filters
+export default React.memo(Filters)
 
 // Filters.propTypes = {
 //     onGetTargets: PropTypes.func

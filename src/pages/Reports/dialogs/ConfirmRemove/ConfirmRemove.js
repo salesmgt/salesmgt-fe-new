@@ -13,7 +13,7 @@ import {
 import { removeReport } from '../../ReportsServices'
 import { useReport } from '../../hooks/ReportContext'
 import { MdClose } from 'react-icons/md'
-import { Consts, confirmMessage } from '../FormConfig'
+import { Consts, confirmMessage } from '../DialogConfig'
 import classes from './ConfirmRemove.module.scss'
 
 const stylesTitle = (theme) => ({

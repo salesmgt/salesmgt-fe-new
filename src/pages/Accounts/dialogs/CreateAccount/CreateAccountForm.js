@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     Button,
@@ -21,10 +21,13 @@ import moment from 'moment'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Snackbars } from '../../../../components'
+// import { Snackbars } from '../../../../components'
 import * as AccountsServices from '../../AccountsServices'
-import { Consts } from '../../dialogs/FormConfig'
+import { Consts } from '../../dialogs/DialogConfig'
 import { useApp } from '../../../../hooks/AppContext'
+import { USERNAME_RGX, PHONE_RGX } from '../../../../utils/Regex'
+import * as Milk from '../../../../utils/Milk'
+import { milkNames } from '../../../../constants/Generals'
 import classes from './CreateAccount.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -33,18 +36,19 @@ const clientSchema = yup.object().shape({
         .trim()
         .min(8, 'Username must be at least 8 characters')
         .max(30, 'Username must be at most 30 characters')
-        .required('Username is required'),
+        .required('Username is required')
+        .matches(USERNAME_RGX, 'Incorrect entry'),
     fullName: yup
         .string()
         .trim()
         .min(4, 'Full Name must be at least 4 characters')
-        .max(30, 'Full name must be at most 30 characters')
+        .max(30, 'Full Name must be at most 30 characters')
         .required('Full Name is required'),
     phone: yup
         .string()
         .required('Phone is required')
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(/(0[3|5|7|8|9])+([0-9]{8})\b/g, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Incorrect entry'),
     email: yup
         .string()
         .trim()
@@ -97,24 +101,25 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CreateAccountForm(props) {
-    const { onClose } = props
+    const { onClose, setNotify } = props
     const { operations, fields } = Consts
     const styles = useStyles()
 
     const { roles } = useApp()
+    const bakRoles = roles ? roles : Milk.getMilk(milkNames.roles)
 
     const history = useHistory()
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
+    // const [notify, setNotify] = useState({
+    //     isOpen: false,
+    //     message: '',
+    //     type: '',
+    // })
 
     const defaultValues = {
         username: '',
         fullName: '',
-        roleName: roles[3],
+        roleName: bakRoles[3],
         phone: '',
         email: '',
         address: '',
@@ -150,16 +155,17 @@ function CreateAccountForm(props) {
                     message: 'Created Successfully',
                     type: 'success',
                 })
-                reset({
-                    username: '',
-                    fullName: '',
-                    roleName: roles[3],
-                    phone: '',
-                    email: '',
-                    address: '',
-                    isMale: String(true),
-                    birthDate: null,
-                })
+                // reset({
+                //     username: '',
+                //     fullName: '',
+                //     roleName: bakRoles[3],
+                //     phone: '',
+                //     email: '',
+                //     address: '',
+                //     isMale: String(true),
+                //     birthDate: null,
+                // })
+                onClose()
             })
             .catch((error) => {
                 if (error.response) {
@@ -191,7 +197,10 @@ function CreateAccountForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                <form
+                    noValidate
+                    // onSubmit={handleSubmit(onSubmit)}
+                >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
@@ -298,13 +307,13 @@ function CreateAccountForm(props) {
                                         row
                                     >
                                         <FormControlLabel
-                                            label="Male"
-                                            value="true"
+                                            label={fields.isMale.male.lb}
+                                            value={fields.isMale.male.value}
                                             control={<Radio />}
                                         />
                                         <FormControlLabel
-                                            label="Female"
-                                            value="false"
+                                            label={fields.isMale.female.lb}
+                                            value={fields.isMale.female.value}
                                             control={<Radio />}
                                         />
                                     </RadioGroup>
@@ -344,7 +353,7 @@ function CreateAccountForm(props) {
                                             MenuProps={MenuProps}
                                             disableUnderline
                                         >
-                                            {roles.map((data) => (
+                                            {bakRoles.map((data) => (
                                                 <MenuItem
                                                     key={data}
                                                     value={data}
@@ -369,7 +378,7 @@ function CreateAccountForm(props) {
             <DialogActions className={classes.dialogAct}>
                 <Button
                     className={classes.btnSave}
-                    type="submit"
+                    // type="submit"
                     disabled={!formState.isDirty}
                     onClick={handleSubmit(onSubmit)}
                 >
@@ -381,7 +390,7 @@ function CreateAccountForm(props) {
                             errors: false,
                             username: '',
                             fullName: '',
-                            roleName: roles[3],
+                            roleName: bakRoles[3],
                             phone: '',
                             email: '',
                             address: '',
@@ -395,7 +404,7 @@ function CreateAccountForm(props) {
                 </Button>
             </DialogActions>
 
-            <Snackbars notify={notify} setNotify={setNotify} />
+            {/* <Snackbars notify={notify} setNotify={setNotify} /> */}
         </>
     )
 }

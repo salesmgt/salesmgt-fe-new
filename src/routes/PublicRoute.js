@@ -16,7 +16,6 @@ function PublicRoute(props) {
             {...rest}
             render={(props) => {
                 return isAuthenticated && restricted ? (
-                    // <Redirect to="/apps/accounts" />
                     <Redirect
                         to={
                             user.roles[0] !== roleNames.admin
