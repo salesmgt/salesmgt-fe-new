@@ -22,11 +22,11 @@ import { MdClose } from 'react-icons/md'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Snackbars } from '../../../../../components'
+import { Snackbars } from '../../../../components'
 import { Consts } from '../DialogConfig'
-import * as TargetSchoolsServices from '../../../TargetSchoolsServices'
+import * as TargetSchoolsServices from '../../TargetSchoolsServices'
 import { DURATION_RGX } from '../../../../utils/Regex'
-import classes from '../MOUInfo.module.scss'
+import classes from './CreateMOU.module.scss'
 
 const clientSchema = yup.object().shape({
     duration: yup

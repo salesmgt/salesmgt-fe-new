@@ -18,7 +18,7 @@ import { getSchoolsForTargets } from '../../TargetSchoolsServices'
 import Filters from './Filters'
 import Tables from './Tables'
 import { Loading } from '../../../../components'
-import { Consts } from '../FormConfig'
+import { Consts } from '../DialogConfig'
 import classes from './CreateTargetSchools.module.scss'
 
 const stylesTitle = (theme) => ({
