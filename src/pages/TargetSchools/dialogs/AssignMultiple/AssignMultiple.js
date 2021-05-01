@@ -42,13 +42,13 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function AssignMultiple(props) {
-    const { open, onClose, rows,setRows, refreshAPI } = props
+    const { open, onClose, rows, setRows, refreshAPI } = props
     const { headers } = Consts
     const [notify, setNotify] = React.useState({
         isOpen: false,
         message: '',
         type: '',
-    })   
+    })
     return (<>
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>

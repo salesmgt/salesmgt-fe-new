@@ -807,7 +807,7 @@ function CreateReportsForm(props) {
                         // onSubmit={handleCreateReport}
                         // disabled={!formState.isDirty}
                         // onClick={handleSubmit(onSubmit)}
-                        disabled={formValue === defaultFormValue}
+                        disabled={listReports.length < 1}
                         onClick={handleCreateReport}
                     >
                         {operations.save}

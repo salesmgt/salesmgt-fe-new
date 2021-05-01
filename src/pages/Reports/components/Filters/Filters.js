@@ -41,11 +41,11 @@ import {
     DATE_RANGE_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
+import { useAuth } from '../../../../hooks/AuthContext'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../ReportsConfig'
 import { roleNames } from '../../../../constants/Generals'
-import { useAuth } from '../../../../hooks/AuthContext'
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============

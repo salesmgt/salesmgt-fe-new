@@ -9,6 +9,7 @@ import {
     useRouteMatch,
     useHistory,
 } from 'react-router-dom'
+import {app} from '../../services/firebase'
 import { IconContext } from 'react-icons'
 import { MdMenu, MdNotifications, MdChevronLeft } from 'react-icons/md'
 import {
@@ -34,17 +35,18 @@ import { defaultRoutes, roleRoutes } from '../../routes/routes'
 import * as UserServices from '../../services/UserServices'
 import { UserMenu } from './components'
 import classes from './AppLayouts.module.scss'
+import Notify from '../AppLayouts/components/Notify/Notify'
 
 function AppLayouts() {
     const { url } = useRouteMatch()
     const location = useLocation()
     const history = useHistory()
-
+    const [todoList,setTodoList] = React.useState([])
     const { user } = useAuth()
     const menuItems = getMenuItems(user.roles[0])
-
+    const [limit, setLimit] = React.useState('')
     const [userInfo, setUserInfo] = useState(null)
-
+    const [badge,setBadge] = useState(0)
     const [open, setOpen] = useToggle(
         window.matchMedia('(max-width: 960px)').matches ? false : true
     )
@@ -63,6 +65,67 @@ function AppLayouts() {
         location.pathname,
     ])
 
+    const sort = (a, b) => {
+        var nameA = a.timestamp
+        var nameB = b.timestamp
+        if (nameA > nameB) {
+          return -1;
+        }
+        if (nameA < nameB) {
+          return 1;
+        }
+        return 0;
+      }
+      useEffect(()=>{
+        setBadge(todoList?.filter(item => item.isSeen == false).length)
+      },[todoList])
+
+       useEffect(()=>{
+        const promise = new Promise((resolve, reject) => {
+            const todoRef = app.database().ref("notify").child('Gia').orderByChild('timestamp').limitToLast(6)
+            todoRef.on("value",(snapshot)=>{
+                const todos = snapshot.val()
+                const todoList = []
+                for (const id in todos){
+                    todoList.push({id,...todos[id]})
+                }
+                todoList.sort(sort)
+                setTodoList(todoList)
+                setLimit(todoList[todoList.length-1]?.timestamp)
+            }) 
+           }).catch((e) => {
+            alert(e);
+            
+        })},[])
+            
+        const next = (e) =>{
+            const promise = new Promise((resolve, reject) => {
+              const todoRef = app.database().ref("notify").child('Gia').orderByChild('timestamp').endBefore(limit).limitToLast(5)
+              todoRef.on("value",(snapshot)=>{
+                  const todos = snapshot.val()
+                  const todoss = []
+                  for (const id in todos){
+                      todoss.push({id,...todos[id]})
+                  }
+                  todoss.sort(function(a, b) {
+                      var nameA = a.timestamp
+                      var nameB = b.timestamp
+                      if (nameA > nameB) {
+                        return -1;
+                      }
+                      if (nameA < nameB) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                  setTodoList(todoList.concat(todoss))
+                  setLimit(todoss[todoss.length-1]?.timestamp)
+                  console.log(limit)
+              })
+             }).catch((e) => {
+              alert(e);
+              
+          })}
     const getTitle = React.useMemo(() => {
         let title = ''
         const path = location.pathname
@@ -82,55 +145,27 @@ function AppLayouts() {
             backgroundColor: '#ffb74b',
         },
     })(Badge)
-
+    const onUpdate = (e,item) => {
+        console.log(item)
+        // new Promise((resolve, reject) => {
+            app.database().ref(`notify/${user.username}`).child(item.id).update({
+           isSeen: true
+       })
+}
+        
+        // }).catch((error)=>{
+          
+        // })}
     //---------------------------------------Notifications---------------------------------------
+    const [notifAnchorEl, setNotifAnchorEl] = React.useState(null)
+    const handleNotifMenuOpen = React.useCallback((event) => {
+        setNotifAnchorEl(event.currentTarget)
 
-    // const notifData = 'notif-'.repeat(4).split('-')
-
-    // const ITEM_HEIGHT = 48
-    // const [notifAnchorEl, setNotifAnchorEl] = useState(null)
-    // const isNotifMenuOpen = Boolean(notifAnchorEl)
-
-    // const handleNotifMenuOpen = useCallback((event) => {
-    //     setNotifAnchorEl(event.currentTarget)
-    // }, [])
-
-    // const handleNotifMenuClose = useCallback(() => {
-    //     setNotifAnchorEl(null)
-    // }, [])
-
-    // const notifMenuId = 'notif-menu'
-    // const renderNotifMenu = (
-    //     <Menu
-    //         id={notifMenuId}
-    //         anchorEl={notifAnchorEl}
-    //         getContentAnchorEl={null}
-    //         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-    //         transformOrigin={{ vertical: 'center', horizontal: 'right' }}
-    //         keepMounted
-    //         open={isNotifMenuOpen}
-    //         onClose={handleNotifMenuClose}
-    //         PaperProps={{
-    //             style: {
-    //                 maxHeight: ITEM_HEIGHT * 4.5,
-    //                 width: '20ch',
-    //             },
-    //         }}
-    //     >
-    //         {notifData.map((item, index) => {
-    //             return (
-    //                 <MenuItem
-    //                     key={index}
-    //                     onClick={handleNotifMenuClose}
-    //                     className={classes.notif}
-    //                 >
-    //                     <span>{item}</span>
-    //                 </MenuItem>
-    //             )
-    //         })}
-    //     </Menu>
-    // )
-
+    }, [])
+//---------------------------------------
+    const renderNotifMenu = (
+        <Notify onUpdate = {onUpdate} todoList={todoList} limit={limit} next = {next} setNotifAnchorEl={setNotifAnchorEl} notifAnchorEl={notifAnchorEl}/>
+        )
     //----------------------------------------------------------------------------------------------
 
     useEffect(() => {
@@ -152,10 +187,6 @@ function AppLayouts() {
     if (!userInfo) {
         return null
     }
-
-    // React.useEffect(() => {
-    //     console.log('has changed')
-    // }, [notifAnchorEl])
 
     return (
         <div className={classes.root}>
@@ -183,11 +214,11 @@ function AppLayouts() {
                         </Typography>
 
                         {/* Remember to set badge content */}
-                        {/* <IconButton onClick={handleNotifMenuOpen}>
-                            <StyledBadge badgeContent={4}>
+                        <IconButton onClick={handleNotifMenuOpen}>
+                            <StyledBadge badgeContent={badge} max={5}>
                                 <MdNotifications />
                             </StyledBadge>
-                        </IconButton> */}
+                        </IconButton>
 
                         {/* <IconButton
                             edge="end"
@@ -199,7 +230,7 @@ function AppLayouts() {
                         <UserMenu userInfo={userInfo} />
                     </Toolbar>
                 </AppBar>
-                {/* {renderNotifMenu} */}
+                {renderNotifMenu}
             </IconContext.Provider>
 
             {/* Side menu area */}

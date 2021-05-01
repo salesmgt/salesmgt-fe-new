@@ -42,8 +42,8 @@ export const Consts = {
         search: {
             placeholder: 'Search...',
         },
-        create: 'Create',
-        assign: 'Assign',
+        // create: 'Create',
+        // assign: 'Assign',
     },
     filters: {
         pic: {
@@ -99,6 +99,9 @@ export const Consts = {
         },
         remove: {
             title: 'Remove',
+        },
+        mou: {
+            title: 'Create MOU'
         },
         assign: {
             title: 'Assign'
