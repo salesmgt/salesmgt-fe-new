@@ -7,7 +7,7 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import { MdDelete, MdDescription, MdInfo, MdMoreVert } from 'react-icons/md'
+import { MdDelete, MdDescription, MdInfo, MdMoreVert, MdPersonAdd } from 'react-icons/md'
 import { IoPersonRemoveSharp } from "react-icons/io5"
 import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
@@ -18,6 +18,7 @@ import { Consts } from '../../../TargetSchoolsConfig'
 import { roleNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import classes from './MenuOptions.module.scss'
+import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
 
 function MenuOptions(props) {
     const { data, refreshAPI } = props
@@ -26,6 +27,8 @@ function MenuOptions(props) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [open, setOpen] = useState(false)
     const [openAssign,setOpenAssign] = useState(false)
+    const [openUnassign,setOpenUnassign] = useState(false)
+    const [rows, setRows] = useState([data])
 
     const { user } = useAuth()
     const { params } = useTargetSchool()
@@ -51,6 +54,11 @@ function MenuOptions(props) {
     }
 
     const handleOpenConfirmUnassign = () => {
+        setOpenUnassign(true)
+        setAnchorEl(null)
+    }
+
+    const handleOpenAssignOne = () => {
         setOpenAssign(true)
         setAnchorEl(null)
     }
@@ -80,14 +88,24 @@ function MenuOptions(props) {
             return (
                 <ConfirmUnassign 
                     notify={props.notify} setNotify={props.setNotify}
-                    open={openAssign}
-                    onClose={() => setOpenAssign(false)}
+                    open={openUnassign}
+                    onClose={() => setOpenUnassign(false)}
                     data={data}
                     refreshAPI={refreshAPI}
                 />
             )
-        } else {
+        } else if (!data?.fullName){
             // assign one dialog
+            return(
+                <AssignMultiple                
+                    notify={props.notify} setNotify={props.setNotify}
+                    open={openAssign}
+                    onClose={() => setOpenAssign(false)}
+                    rows={rows}
+                    setRows={setRows}
+                    refreshAPI={refreshAPI}
+                />
+            )
         }
     }
 
@@ -163,6 +181,19 @@ function MenuOptions(props) {
                             </ListItemIcon>
                             <ListItemText className={classes.itemText}>
                                 {menuItems.unassign.title}
+                            </ListItemText>
+                        </MenuItem>
+                        {renderAssignedDialog()}
+                    </div>
+                )}
+                {user.roles[0] !== roleNames.salesman && !data?.fullName && (
+                    <div>
+                        <MenuItem onClick={handleOpenAssignOne}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdPersonAdd />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                {menuItems.assign.title}
                             </ListItemText>
                         </MenuItem>
                         {renderAssignedDialog()}

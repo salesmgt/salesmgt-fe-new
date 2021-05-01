@@ -30,18 +30,8 @@ import Popover from '@material-ui/core/Popover';
 import Badge from '@material-ui/core/Badge';
 import { BiEdit } from "react-icons/bi";
 import { useAuth } from '../../../../hooks/AuthContext'
+import { assignMulti } from '../../TargetSchoolsServices'
 import classes from './AssignMultiple.module.scss'
-import { assignMulti, getTargetSchools } from '../../TargetSchoolsServices'
-//===============Set max-height for dropdown list===============
-const ITEM_HEIGHT = 38;
-const ITEM_PADDING_TOP = 5;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
-        }
-    }
-};
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -69,12 +59,19 @@ const useStyles = makeStyles((theme) => ({
     },
     menuItemSelected: {},
     autoComplete: {
-        width: 250,
+        width: 260,
         marginLeft: '0.5rem'
     },
     itemPIC: {
         padding: 0,
-        margin: 0
+        margin: 0,
+    },
+    divItemPIC: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 0,
+        margin: 0,
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
@@ -211,12 +208,12 @@ function AssignMultipleForm(props) {
                                     }
                                     renderOption={(option) => {
                                         return (
-                                            <ListItem className={classes.itemPIC} key={option.username}>
+                                            <div className={styles.divItemPIC} key={option.username}>
                                                 <ListItemAvatar>
                                                     <Avatar src={option.avatar} />
                                                 </ListItemAvatar>
-                                                <ListItemText primary={option.fullName} classes={{ primary: classes.itemTextPrimary }} />
-                                            </ListItem>
+                                                <ListItemText primary={option.fullName ? option.fullName : ''} classes={{ primary: classes.itemTextPrimary }} />
+                                            </div>
                                         );
                                     }}
                                     className={styles.autoComplete}

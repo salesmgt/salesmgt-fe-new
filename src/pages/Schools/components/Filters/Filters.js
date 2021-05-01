@@ -134,7 +134,7 @@ const MuiAccordionDetails = withStyles((theme) => ({
     },
 }))(AccordionDetails)
 
-function Filters() {
+function Filters(props) {
     const classes = useStyles()
 
     const { dists, schTypes, schEduLvls, schScales } = useApp()    //, schStatus
@@ -351,6 +351,7 @@ function Filters() {
                         <ImportFile
                             open={openImportDialog}
                             onClose={() => setOpenImportDialog(false)}
+                            refreshAPI={props.refreshAPI}
                         />
                     </Box>
                 </Box>

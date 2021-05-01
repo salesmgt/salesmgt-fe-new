@@ -19,6 +19,7 @@ import * as XLSX from 'xlsx'
 import { storage } from '../../../../services/firebase'
 import { Snackbars } from '../../../../components'
 import * as SchoolsServices from '../../SchoolsServices'
+import { useSchool } from '../../hooks/SchoolContext'
 import classes from './ImportFile.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -59,7 +60,7 @@ function ImportFile(props) {
         message: '',
         type: '',
     })
-    const { open, onClose } = props
+    const { open, onClose, refreshAPI } = props
     const {
         headers,
         excel,
@@ -72,6 +73,8 @@ function ImportFile(props) {
         refFile,
         alertText,
     } = Consts
+    const { params } = useSchool()
+    const { listFilters, page, limit, column, direction, searchKey } = params 
     const [fileName, setFileName] = React.useState('')
     const [text, setText] = React.useState(0)
     const [link, setLink] = React.useState('')
@@ -144,8 +147,7 @@ function ImportFile(props) {
                         !item[excel.educationalLevel] ||
                         !item[excel.scale] ||
                         !item[excel.type] ||
-                        !item[excel.district] ||
-                        !item[excel.status]
+                        !item[excel.district]
                     ) {
                         setNotify({
                             isOpen: true,
@@ -172,7 +174,6 @@ function ImportFile(props) {
                         reprEmail: item[excel.reprEmail],
                         type: item[excel.type],
                         scale: item[excel.scale],
-                        status: item[excel.status],
                     })
                 })
                 console.log(array)
@@ -188,6 +189,7 @@ function ImportFile(props) {
     const handleSubmit = (e) => {
         SchoolsServices.importSchool(data)
             .then((res) => {
+                refreshAPI(page, limit, column, direction, searchKey, listFilters)
                 setNotify({
                     isOpen: true,
                     message: 'Created Successfully',
@@ -274,9 +276,12 @@ function ImportFile(props) {
                         onClick={handleSubmit}
                         color="primary"
                         disabled={isDisableButton}
-                        variant="contained"
+                        className={classes.btnSave}
                     >
                         Save
+                    </Button>
+                    <Button onClick={handleClose}>
+                        Cancel
                     </Button>
                 </DialogActions>
             </Dialog>
