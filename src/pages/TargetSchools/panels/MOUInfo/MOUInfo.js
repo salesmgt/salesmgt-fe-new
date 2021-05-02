@@ -15,6 +15,7 @@ import { Loading, NotFound } from '../../../../components'
 import { Consts } from './MOUInfoConfig'
 import { serviceNames } from '../../../../constants/Generals'
 import MOUForm from './MOUForm/MOUForm'
+import { useAuth } from '../../../../hooks/AuthContext'
 import classes from './MOUInfo.module.scss'
 
 function MOUInfo(props) {
@@ -25,6 +26,8 @@ function MOUInfo(props) {
     const [open, setOpen] = useState(false)
 
     const { headers, operations, fields } = Consts
+
+    const { user } = useAuth()
 
     const [memoDets, setMemoDets] = useState(null)
 
@@ -73,562 +76,725 @@ function MOUInfo(props) {
     return (
         <div className={classes.panel}>
             <Grid container spacing={0} className={classes.body}>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    className={classes.wrapper}
-                >
-                    <Typography color="inherit" className={classes.header}>
-                        {headers.child1}
-                    </Typography>
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    className={classes.wrapper}
-                >
-                    <Grid container spacing={0}>
+                {user.username === target?.username ? (
+                    <>
                         <Grid
                             item
-                            xs={3}
-                            sm={3}
-                            md={3}
-                            lg={3}
-                            className={classes.leftSector}
+                            xs={12}
+                            sm={12}
+                            md={12}
+                            lg={12}
+                            className={classes.wrapper}
                         >
-                            <Tabs
-                                orientation="vertical"
-                                variant="scrollable"
-                                value={tabValue}
-                                onChange={handleChangeTab}
-                                className={classes.tabs}
+                            <Typography
+                                color="inherit"
+                                className={classes.header}
                             >
-                                {services.map((service, index) => (
-                                    <Tab key={index} label={service} />
-                                ))}
-                            </Tabs>
+                                {headers.child1}
+                            </Typography>
                         </Grid>
                         <Grid
                             item
-                            xs={9}
-                            sm={8}
-                            md={7}
-                            lg={5}
-                            className={classes.rightSector}
+                            xs={12}
+                            sm={12}
+                            md={12}
+                            lg={12}
+                            className={classes.wrapper}
                         >
-                            {tabValue === 0 && (
-                                <>
-                                    {filteredMemos(serviceNames.svc1).length !==
-                                    0 ? (
+                            <Grid container spacing={0}>
+                                <Grid
+                                    item
+                                    xs={3}
+                                    sm={3}
+                                    md={3}
+                                    lg={3}
+                                    className={classes.leftSector}
+                                >
+                                    <Tabs
+                                        orientation="vertical"
+                                        variant="scrollable"
+                                        value={tabValue}
+                                        onChange={handleChangeTab}
+                                        className={classes.tabs}
+                                    >
+                                        {services.map((service, index) => (
+                                            <Tab key={index} label={service} />
+                                        ))}
+                                    </Tabs>
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={9}
+                                    sm={8}
+                                    md={7}
+                                    lg={5}
+                                    className={classes.rightSector}
+                                >
+                                    {tabValue === 0 && (
                                         <>
-                                            {filteredMemos(
-                                                serviceNames.svc1
-                                            ).map((memo, index) => (
-                                                <Card
-                                                    className={classes.card}
-                                                    key={index}
-                                                >
-                                                    <CardContent
-                                                        className={
-                                                            classes.cardCnt
-                                                        }
-                                                    >
-                                                        <div
+                                            {filteredMemos(serviceNames.svc1)
+                                                .length !== 0 ? (
+                                                <>
+                                                    {filteredMemos(
+                                                        serviceNames.svc1
+                                                    ).map((memo, index) => (
+                                                        <Card
                                                             className={
-                                                                classes.cardCntHeader
+                                                                classes.card
                                                             }
+                                                            key={index}
                                                         >
-                                                            <Grid
-                                                                container
-                                                                spacing={0}
+                                                            <CardContent
+                                                                className={
+                                                                    classes.cardCnt
+                                                                }
                                                             >
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntHeader
+                                                                    }
+                                                                >
+                                                                    <Grid
+                                                                        container
+                                                                        spacing={
+                                                                            0
+                                                                        }
+                                                                    >
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle1"
+                                                                                className={
+                                                                                    classes.cardSubtitle1
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    memo?.service
+                                                                                }
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle2"
+                                                                                className={
+                                                                                    classes.cardSubtitle2
+                                                                                }
+                                                                            >
+                                                                                {`${
+                                                                                    fields
+                                                                                        .date
+                                                                                        .tittle
+                                                                                } ${moment(
+                                                                                    memo?.date
+                                                                                ).format(
+                                                                                    'DD/MM/YYYY'
+                                                                                )}`}
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntBody
+                                                                    }
                                                                 >
                                                                     <Typography
                                                                         color="inherit"
-                                                                        variant="subtitle1"
-                                                                        className={
-                                                                            classes.cardSubtitle1
-                                                                        }
+                                                                        noWrap
+                                                                        variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.service
+                                                                            memo?.note
                                                                         }
                                                                     </Typography>
-                                                                </Grid>
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                </div>
+                                                            </CardContent>
+
+                                                            <CardActions
+                                                                className={
+                                                                    classes.cardAct
+                                                                }
+                                                            >
+                                                                <Button
+                                                                    size="small"
+                                                                    onClick={() => {
+                                                                        setOpen(
+                                                                            true
+                                                                        )
+                                                                        setMemoDets(
+                                                                            memo
+                                                                        )
+                                                                    }}
                                                                 >
-                                                                    <Typography
-                                                                        color="inherit"
-                                                                        variant="subtitle2"
-                                                                        className={
-                                                                            classes.cardSubtitle2
+                                                                    {
+                                                                        operations.view
+                                                                    }
+                                                                </Button>
+                                                            </CardActions>
+                                                        </Card>
+                                                    ))}
+                                                    <MOUForm
+                                                        open={open}
+                                                        onClose={() =>
+                                                            setOpen(false)
+                                                        }
+                                                        memoDets={memoDets}
+                                                        refreshPage={
+                                                            refreshPage
+                                                        }
+                                                        setMemoDets={
+                                                            setMemoDets
+                                                        }
+                                                    />
+                                                </>
+                                            ) : (
+                                                <div
+                                                    className={
+                                                        classes.noMOUZone
+                                                    }
+                                                >
+                                                    <Typography
+                                                        color="inherit"
+                                                        className={
+                                                            classes.noMOU
+                                                        }
+                                                    >
+                                                        {operations.noMOU}
+                                                    </Typography>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    {tabValue === 1 && (
+                                        <>
+                                            {filteredMemos(serviceNames.svc2)
+                                                .length !== 0 ? (
+                                                <>
+                                                    {filteredMemos(
+                                                        serviceNames.svc2
+                                                    ).map((memo, index) => (
+                                                        <Card
+                                                            className={
+                                                                classes.card
+                                                            }
+                                                            key={index}
+                                                        >
+                                                            <CardContent
+                                                                className={
+                                                                    classes.cardCnt
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntHeader
+                                                                    }
+                                                                >
+                                                                    <Grid
+                                                                        container
+                                                                        spacing={
+                                                                            0
                                                                         }
                                                                     >
-                                                                        {`${
-                                                                            fields
-                                                                                .date
-                                                                                .tittle
-                                                                        } ${moment(
-                                                                            memo?.date
-                                                                        ).format(
-                                                                            'DD/MM/YYYY'
-                                                                        )}`}
-                                                                    </Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                classes.cardCntBody
-                                                            }
-                                                        >
-                                                            <Typography
-                                                                color="inherit"
-                                                                noWrap
-                                                                variant="body1"
-                                                            >
-                                                                {memo?.note}
-                                                            </Typography>
-                                                        </div>
-                                                    </CardContent>
-
-                                                    <CardActions
-                                                        className={
-                                                            classes.cardAct
-                                                        }
-                                                    >
-                                                        <Button
-                                                            size="small"
-                                                            onClick={() => {
-                                                                setOpen(true)
-                                                                setMemoDets(
-                                                                    memo
-                                                                )
-                                                            }}
-                                                        >
-                                                            {operations.view}
-                                                        </Button>
-                                                    </CardActions>
-                                                </Card>
-                                            ))}
-                                            <MOUForm
-                                                open={open}
-                                                onClose={() => setOpen(false)}
-                                                memoDets={memoDets}
-                                                refreshPage={refreshPage}
-                                                setMemoDets={setMemoDets}
-                                            />
-                                        </>
-                                    ) : (
-                                        <div className={classes.noMOUZone}>
-                                            <Typography
-                                                color="inherit"
-                                                className={classes.noMOU}
-                                            >
-                                                {operations.noMOU}
-                                            </Typography>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                            {tabValue === 1 && (
-                                <>
-                                    {filteredMemos(serviceNames.svc2).length !==
-                                    0 ? (
-                                        <>
-                                            {filteredMemos(
-                                                serviceNames.svc2
-                                            ).map((memo, index) => (
-                                                <Card
-                                                    className={classes.card}
-                                                    key={index}
-                                                >
-                                                    <CardContent
-                                                        className={
-                                                            classes.cardCnt
-                                                        }
-                                                    >
-                                                        <div
-                                                            className={
-                                                                classes.cardCntHeader
-                                                            }
-                                                        >
-                                                            <Grid
-                                                                container
-                                                                spacing={0}
-                                                            >
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle1"
+                                                                                className={
+                                                                                    classes.cardSubtitle1
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    memo?.service
+                                                                                }
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle2"
+                                                                                className={
+                                                                                    classes.cardSubtitle2
+                                                                                }
+                                                                            >
+                                                                                {`${
+                                                                                    fields
+                                                                                        .date
+                                                                                        .tittle
+                                                                                } ${moment(
+                                                                                    memo?.date
+                                                                                ).format(
+                                                                                    'DD/MM/YYYY'
+                                                                                )}`}
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntBody
+                                                                    }
                                                                 >
                                                                     <Typography
                                                                         color="inherit"
-                                                                        variant="subtitle1"
-                                                                        className={
-                                                                            classes.cardSubtitle1
-                                                                        }
+                                                                        noWrap
+                                                                        variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.service
+                                                                            memo?.note
                                                                         }
                                                                     </Typography>
-                                                                </Grid>
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                </div>
+                                                            </CardContent>
+
+                                                            <CardActions
+                                                                className={
+                                                                    classes.cardAct
+                                                                }
+                                                            >
+                                                                <Button
+                                                                    size="small"
+                                                                    onClick={() => {
+                                                                        setOpen(
+                                                                            true
+                                                                        )
+                                                                        setMemoDets(
+                                                                            memo
+                                                                        )
+                                                                    }}
                                                                 >
-                                                                    <Typography
-                                                                        color="inherit"
-                                                                        variant="subtitle2"
-                                                                        className={
-                                                                            classes.cardSubtitle2
+                                                                    {
+                                                                        operations.view
+                                                                    }
+                                                                </Button>
+                                                            </CardActions>
+                                                        </Card>
+                                                    ))}
+                                                    <MOUForm
+                                                        open={open}
+                                                        onClose={() =>
+                                                            setOpen(false)
+                                                        }
+                                                        memoDets={memoDets}
+                                                        refreshPage={
+                                                            refreshPage
+                                                        }
+                                                        setMemoDets={
+                                                            setMemoDets
+                                                        }
+                                                    />
+                                                </>
+                                            ) : (
+                                                <div
+                                                    className={
+                                                        classes.noMOUZone
+                                                    }
+                                                >
+                                                    <Typography
+                                                        color="inherit"
+                                                        className={
+                                                            classes.noMOU
+                                                        }
+                                                    >
+                                                        {operations.noMOU}
+                                                    </Typography>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    {tabValue === 2 && (
+                                        <>
+                                            {filteredMemos(serviceNames.svc3)
+                                                .length !== 0 ? (
+                                                <>
+                                                    {filteredMemos(
+                                                        serviceNames.svc3
+                                                    ).map((memo, index) => (
+                                                        <Card
+                                                            className={
+                                                                classes.card
+                                                            }
+                                                            key={index}
+                                                        >
+                                                            <CardContent
+                                                                className={
+                                                                    classes.cardCnt
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntHeader
+                                                                    }
+                                                                >
+                                                                    <Grid
+                                                                        container
+                                                                        spacing={
+                                                                            0
                                                                         }
                                                                     >
-                                                                        {`${
-                                                                            fields
-                                                                                .date
-                                                                                .tittle
-                                                                        } ${moment(
-                                                                            memo?.date
-                                                                        ).format(
-                                                                            'DD/MM/YYYY'
-                                                                        )}`}
-                                                                    </Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                classes.cardCntBody
-                                                            }
-                                                        >
-                                                            <Typography
-                                                                color="inherit"
-                                                                noWrap
-                                                                variant="body1"
-                                                            >
-                                                                {memo?.note}
-                                                            </Typography>
-                                                        </div>
-                                                    </CardContent>
-
-                                                    <CardActions
-                                                        className={
-                                                            classes.cardAct
-                                                        }
-                                                    >
-                                                        <Button
-                                                            size="small"
-                                                            onClick={() => {
-                                                                setOpen(true)
-                                                                setMemoDets(
-                                                                    memo
-                                                                )
-                                                            }}
-                                                        >
-                                                            {operations.view}
-                                                        </Button>
-                                                    </CardActions>
-                                                </Card>
-                                            ))}
-                                            <MOUForm
-                                                open={open}
-                                                onClose={() => setOpen(false)}
-                                                memoDets={memoDets}
-                                                refreshPage={refreshPage}
-                                                setMemoDets={setMemoDets}
-                                            />
-                                        </>
-                                    ) : (
-                                        <div className={classes.noMOUZone}>
-                                            <Typography
-                                                color="inherit"
-                                                className={classes.noMOU}
-                                            >
-                                                {operations.noMOU}
-                                            </Typography>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                            {tabValue === 2 && (
-                                <>
-                                    {filteredMemos(serviceNames.svc3).length !==
-                                    0 ? (
-                                        <>
-                                            {filteredMemos(
-                                                serviceNames.svc3
-                                            ).map((memo, index) => (
-                                                <Card
-                                                    className={classes.card}
-                                                    key={index}
-                                                >
-                                                    <CardContent
-                                                        className={
-                                                            classes.cardCnt
-                                                        }
-                                                    >
-                                                        <div
-                                                            className={
-                                                                classes.cardCntHeader
-                                                            }
-                                                        >
-                                                            <Grid
-                                                                container
-                                                                spacing={0}
-                                                            >
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle1"
+                                                                                className={
+                                                                                    classes.cardSubtitle1
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    memo?.service
+                                                                                }
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle2"
+                                                                                className={
+                                                                                    classes.cardSubtitle2
+                                                                                }
+                                                                            >
+                                                                                {`${
+                                                                                    fields
+                                                                                        .date
+                                                                                        .tittle
+                                                                                } ${moment(
+                                                                                    memo?.date
+                                                                                ).format(
+                                                                                    'DD/MM/YYYY'
+                                                                                )}`}
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntBody
+                                                                    }
                                                                 >
                                                                     <Typography
                                                                         color="inherit"
-                                                                        variant="subtitle1"
-                                                                        className={
-                                                                            classes.cardSubtitle1
-                                                                        }
+                                                                        noWrap
+                                                                        variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.service
+                                                                            memo?.note
                                                                         }
                                                                     </Typography>
-                                                                </Grid>
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                </div>
+                                                            </CardContent>
+
+                                                            <CardActions
+                                                                className={
+                                                                    classes.cardAct
+                                                                }
+                                                            >
+                                                                <Button
+                                                                    size="small"
+                                                                    onClick={() => {
+                                                                        setOpen(
+                                                                            true
+                                                                        )
+                                                                        setMemoDets(
+                                                                            memo
+                                                                        )
+                                                                    }}
                                                                 >
-                                                                    <Typography
-                                                                        color="inherit"
-                                                                        variant="subtitle2"
-                                                                        className={
-                                                                            classes.cardSubtitle2
+                                                                    {
+                                                                        operations.view
+                                                                    }
+                                                                </Button>
+                                                            </CardActions>
+                                                        </Card>
+                                                    ))}
+                                                    <MOUForm
+                                                        open={open}
+                                                        onClose={() =>
+                                                            setOpen(false)
+                                                        }
+                                                        memoDets={memoDets}
+                                                        refreshPage={
+                                                            refreshPage
+                                                        }
+                                                        setMemoDets={
+                                                            setMemoDets
+                                                        }
+                                                    />
+                                                </>
+                                            ) : (
+                                                <div
+                                                    className={
+                                                        classes.noMOUZone
+                                                    }
+                                                >
+                                                    <Typography
+                                                        color="inherit"
+                                                        className={
+                                                            classes.noMOU
+                                                        }
+                                                    >
+                                                        {operations.noMOU}
+                                                    </Typography>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    {tabValue === 3 && (
+                                        <>
+                                            {filteredMemos(serviceNames.svc4)
+                                                .length !== 0 ? (
+                                                <>
+                                                    {filteredMemos(
+                                                        serviceNames.svc4
+                                                    ).map((memo, index) => (
+                                                        <Card
+                                                            className={
+                                                                classes.card
+                                                            }
+                                                            key={index}
+                                                        >
+                                                            <CardContent
+                                                                className={
+                                                                    classes.cardCnt
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntHeader
+                                                                    }
+                                                                >
+                                                                    <Grid
+                                                                        container
+                                                                        spacing={
+                                                                            0
                                                                         }
                                                                     >
-                                                                        {`${
-                                                                            fields
-                                                                                .date
-                                                                                .tittle
-                                                                        } ${moment(
-                                                                            memo?.date
-                                                                        ).format(
-                                                                            'DD/MM/YYYY'
-                                                                        )}`}
-                                                                    </Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                classes.cardCntBody
-                                                            }
-                                                        >
-                                                            <Typography
-                                                                color="inherit"
-                                                                noWrap
-                                                                variant="body1"
-                                                            >
-                                                                {memo?.note}
-                                                            </Typography>
-                                                        </div>
-                                                    </CardContent>
-
-                                                    <CardActions
-                                                        className={
-                                                            classes.cardAct
-                                                        }
-                                                    >
-                                                        <Button
-                                                            size="small"
-                                                            onClick={() => {
-                                                                setOpen(true)
-                                                                setMemoDets(
-                                                                    memo
-                                                                )
-                                                            }}
-                                                        >
-                                                            {operations.view}
-                                                        </Button>
-                                                    </CardActions>
-                                                </Card>
-                                            ))}
-                                            <MOUForm
-                                                open={open}
-                                                onClose={() => setOpen(false)}
-                                                memoDets={memoDets}
-                                                refreshPage={refreshPage}
-                                                setMemoDets={setMemoDets}
-                                            />
-                                        </>
-                                    ) : (
-                                        <div className={classes.noMOUZone}>
-                                            <Typography
-                                                color="inherit"
-                                                className={classes.noMOU}
-                                            >
-                                                {operations.noMOU}
-                                            </Typography>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                            {tabValue === 3 && (
-                                <>
-                                    {filteredMemos(serviceNames.svc4).length !==
-                                    0 ? (
-                                        <>
-                                            {filteredMemos(
-                                                serviceNames.svc4
-                                            ).map((memo, index) => (
-                                                <Card
-                                                    className={classes.card}
-                                                    key={index}
-                                                >
-                                                    <CardContent
-                                                        className={
-                                                            classes.cardCnt
-                                                        }
-                                                    >
-                                                        <div
-                                                            className={
-                                                                classes.cardCntHeader
-                                                            }
-                                                        >
-                                                            <Grid
-                                                                container
-                                                                spacing={0}
-                                                            >
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle1"
+                                                                                className={
+                                                                                    classes.cardSubtitle1
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    memo?.service
+                                                                                }
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid
+                                                                            item
+                                                                            xs={
+                                                                                6
+                                                                            }
+                                                                            sm={
+                                                                                6
+                                                                            }
+                                                                            md={
+                                                                                6
+                                                                            }
+                                                                            lg={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <Typography
+                                                                                color="inherit"
+                                                                                variant="subtitle2"
+                                                                                className={
+                                                                                    classes.cardSubtitle2
+                                                                                }
+                                                                            >
+                                                                                {`${
+                                                                                    fields
+                                                                                        .date
+                                                                                        .tittle
+                                                                                } ${moment(
+                                                                                    memo?.date
+                                                                                ).format(
+                                                                                    'DD/MM/YYYY'
+                                                                                )}`}
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        classes.cardCntBody
+                                                                    }
                                                                 >
                                                                     <Typography
                                                                         color="inherit"
-                                                                        variant="subtitle1"
-                                                                        className={
-                                                                            classes.cardSubtitle1
-                                                                        }
+                                                                        noWrap
+                                                                        variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.service
+                                                                            memo?.note
                                                                         }
                                                                     </Typography>
-                                                                </Grid>
-                                                                <Grid
-                                                                    item
-                                                                    xs={6}
-                                                                    sm={6}
-                                                                    md={6}
-                                                                    lg={6}
-                                                                >
-                                                                    <Typography
-                                                                        color="inherit"
-                                                                        variant="subtitle2"
-                                                                        className={
-                                                                            classes.cardSubtitle2
-                                                                        }
-                                                                    >
-                                                                        {`${
-                                                                            fields
-                                                                                .date
-                                                                                .tittle
-                                                                        } ${moment(
-                                                                            memo?.date
-                                                                        ).format(
-                                                                            'DD/MM/YYYY'
-                                                                        )}`}
-                                                                    </Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                classes.cardCntBody
-                                                            }
-                                                        >
-                                                            <Typography
-                                                                color="inherit"
-                                                                noWrap
-                                                                variant="body1"
-                                                            >
-                                                                {memo?.note}
-                                                            </Typography>
-                                                        </div>
-                                                    </CardContent>
+                                                                </div>
+                                                            </CardContent>
 
-                                                    <CardActions
+                                                            <CardActions
+                                                                className={
+                                                                    classes.cardAct
+                                                                }
+                                                            >
+                                                                <Button
+                                                                    size="small"
+                                                                    onClick={() => {
+                                                                        setOpen(
+                                                                            true
+                                                                        )
+                                                                        setMemoDets(
+                                                                            memo
+                                                                        )
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        operations.view
+                                                                    }
+                                                                </Button>
+                                                            </CardActions>
+                                                        </Card>
+                                                    ))}
+                                                    <MOUForm
+                                                        open={open}
+                                                        onClose={() =>
+                                                            setOpen(false)
+                                                        }
+                                                        memoDets={memoDets}
+                                                        refreshPage={
+                                                            refreshPage
+                                                        }
+                                                        setMemoDets={
+                                                            setMemoDets
+                                                        }
+                                                    />
+                                                </>
+                                            ) : (
+                                                <div
+                                                    className={
+                                                        classes.noMOUZone
+                                                    }
+                                                >
+                                                    <Typography
+                                                        color="inherit"
                                                         className={
-                                                            classes.cardAct
+                                                            classes.noMOU
                                                         }
                                                     >
-                                                        <Button
-                                                            size="small"
-                                                            onClick={() => {
-                                                                setOpen(true)
-                                                                setMemoDets(
-                                                                    memo
-                                                                )
-                                                            }}
-                                                        >
-                                                            {operations.view}
-                                                        </Button>
-                                                    </CardActions>
-                                                </Card>
-                                            ))}
-                                            <MOUForm
-                                                open={open}
-                                                onClose={() => setOpen(false)}
-                                                memoDets={memoDets}
-                                                refreshPage={refreshPage}
-                                                setMemoDets={setMemoDets}
-                                            />
+                                                        {operations.noMOU}
+                                                    </Typography>
+                                                </div>
+                                            )}
                                         </>
-                                    ) : (
-                                        <div className={classes.noMOUZone}>
-                                            <Typography
-                                                color="inherit"
-                                                className={classes.noMOU}
-                                            >
-                                                {operations.noMOU}
-                                            </Typography>
-                                        </div>
                                     )}
-                                </>
-                            )}
+                                </Grid>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
+                    </>
+                ) : (
+                    <div className={classes.notFound}>
+                        <NotFound title={operations.restriction} />
+                    </div>
+                )}
             </Grid>
         </div>
     )
