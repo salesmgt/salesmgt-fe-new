@@ -16,6 +16,7 @@ import { Consts } from './MOUInfoConfig'
 import { serviceNames } from '../../../../constants/Generals'
 import MOUForm from './MOUForm/MOUForm'
 import { useAuth } from '../../../../hooks/AuthContext'
+import { roleNames } from '../../../../constants/Generals'
 import classes from './MOUInfo.module.scss'
 
 function MOUInfo(props) {
@@ -76,7 +77,9 @@ function MOUInfo(props) {
     return (
         <div className={classes.panel}>
             <Grid container spacing={0} className={classes.body}>
-                {user.username === target?.username ? (
+                {user.roles[0] !== roleNames.salesman ||
+                (user.roles[0] === roleNames.salesman &&
+                    user.username === target?.username) ? (
                     <>
                         <Grid
                             item
