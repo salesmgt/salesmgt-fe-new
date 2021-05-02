@@ -39,7 +39,7 @@ const clientSchema = yup.object().shape({
 })
 
 function CreateReportsForm(props) {
-    const { onClose, refreshAPI } = props
+    const { onClose, refreshAPI, setNotify } = props
     const { headers, operations, fields } = Consts
 
     const { user } = useAuth()
@@ -47,12 +47,6 @@ function CreateReportsForm(props) {
 
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
-
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
 
     const typingTimeoutRef = useRef({})
 
@@ -347,6 +341,7 @@ function CreateReportsForm(props) {
                 // console.log('data: ', data);
                 refreshAPI(page, limit, column, direction, searchKey, listFilters)
                 console.log(data)
+                // Xử lý cắt chuỗi msg của a Gia trả về để lấy số reports đã đc nộp
                 if (!String(data).includes('already submitted') && !String(data).includes('Created 0 records')) {
                     setNotify({
                         isOpen: true,
@@ -409,7 +404,7 @@ function CreateReportsForm(props) {
         onClose()
     }
 
-    console.log('formvalue: ', formValue);
+    // console.log('formvalue: ', formValue);
 
     return (
         <>
@@ -698,7 +693,6 @@ function CreateReportsForm(props) {
                     </Button>
                 </DialogActions>
             </form>
-            <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )
 }

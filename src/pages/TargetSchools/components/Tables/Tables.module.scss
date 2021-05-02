@@ -88,21 +88,26 @@
 }
 
 .chipSalesMoi {
-  background-color: $dark-warning !important;
+  background-color: $energy !important;
+  // color: $common-white !important;
+}
+.chipTheoDoi {
+  background-color: $compassion !important;
   color: $common-white !important;
 }
-
+.chipTiemNang {
+  background-color: $creative !important;
+  color: $common-white !important;
+}
 .chipChamSoc {
-  background-color: $main-success !important;
+  background-color: $heals !important;
   color: $common-white !important;
 }
-
 .chipTaiKy {
-  background-color: $dark-info !important;
+  background-color: $trust !important;
   color: $common-white !important;
 }
-
 .chipKyMoi {
-  background-color: #6d33ff !important;
+  background-color: $memory !important;
   color: $common-white !important;
 }

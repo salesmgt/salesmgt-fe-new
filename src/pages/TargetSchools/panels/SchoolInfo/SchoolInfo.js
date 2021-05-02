@@ -405,12 +405,12 @@ function SchoolInfo(props) {
                 // console.log(target?.memorandums)
 
                 if (data.schoolStatus === statusNames.lead) {
-                    console.log('lead to lead')
+                    // console.log('lead to lead')
                     // return console.log('yes')
                     allowUpdate()
                 }
                 if (data.schoolStatus === statusNames.customer) {
-                    console.log('lead to cust')
+                    // console.log('lead to cust')
                     //   need config
                     // if (target?.memorandums) {
                     //     // return console.log('yes')
@@ -422,7 +422,7 @@ function SchoolInfo(props) {
                     confirmUpdate()
                 }
                 if (data.schoolStatus === statusNames.pending) {
-                    console.log('lead to pending')
+                    // console.log('lead to pending')
                     // return console.log('yes')
                     allowUpdate()
                 }
@@ -432,17 +432,17 @@ function SchoolInfo(props) {
                 // console.log(target?.memorandums)
 
                 if (data.schoolStatus === statusNames.lead) {
-                    console.log('cust to lead')
+                    // console.log('cust to lead')
                     // return console.log('no')
                     preventUpdate()
                 }
                 if (data.schoolStatus === statusNames.customer) {
-                    console.log('cust to cust')
+                    // console.log('cust to cust')
                     // return console.log('yes')
                     allowUpdate()
                 }
                 if (data.schoolStatus === statusNames.pending) {
-                    console.log('cust to pending')
+                    // console.log('cust to pending')
                     // return console.log('yes')
                     allowUpdate()
                 }
@@ -453,7 +453,7 @@ function SchoolInfo(props) {
 
                 if (user.roles[0] !== roleNames.salesman) {
                     if (data.schoolStatus === statusNames.lead) {
-                        console.log('pending to lead')
+                        // console.log('pending to lead')
                         if (target?.memorandums) {
                             // return console.log('no')
                             preventUpdate()
@@ -463,7 +463,7 @@ function SchoolInfo(props) {
                         }
                     }
                     if (data.schoolStatus === statusNames.customer) {
-                        console.log('pending to cust')
+                        // console.log('pending to cust')
                         if (target?.memorandums) {
                             // return console.log('yes')
                             allowUpdate()
@@ -473,23 +473,23 @@ function SchoolInfo(props) {
                         }
                     }
                     if (data.schoolStatus === statusNames.pending) {
-                        console.log('pending to pending')
+                        // console.log('pending to pending')
                         // return console.log('yes')
                         allowUpdate()
                     }
                 } else {
                     if (data.schoolStatus === statusNames.lead) {
-                        console.log('pending to lead')
+                        // console.log('pending to lead')
                         // return console.log('no')
                         preventUpdate()
                     }
                     if (data.schoolStatus === statusNames.customer) {
-                        console.log('pending to cust')
+                        // console.log('pending to cust')
                         // return console.log('no')
                         preventUpdate()
                     }
                     if (data.schoolStatus === statusNames.pending) {
-                        console.log('pending to pending')
+                        // console.log('pending to pending')
                         // return console.log('no')
                         preventUpdate()
                     }

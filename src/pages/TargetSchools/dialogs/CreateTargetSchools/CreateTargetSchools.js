@@ -76,7 +76,7 @@ function CreateTargetSchools(props) {
         getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,listFilters)
             .then((res) => {
                 if (isMounted) {
-                    console.log('CreateTarget form - data: ', res);
+                    // console.log('CreateTarget form - data: ', res);
                     setData(res.data)
                 }
             })

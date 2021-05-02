@@ -16,7 +16,7 @@ import ConfirmUnassign from '../../../dialogs/ConfirmUnassign/ConfirmUnassign'
 import CreateMOU from '../../../dialogs/CreateMOU/CreateMOU'
 import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
 import { Consts } from '../../../TargetSchoolsConfig'
-import { roleNames } from '../../../../../constants/Generals'
+import { roleNames, statusNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
 import classes from './MenuOptions.module.scss'
@@ -42,6 +42,8 @@ function MenuOptions(props) {
         params: params, // get from context
         pathName: `${url}/${data.id}`,
     }
+
+    // console.log('target data: ', data);
 
     const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget)
@@ -161,7 +163,7 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: '/apps/reports',
-                        state: { targetId: data.id },
+                        state: { targetId: data.id, schoolName: data.schoolName, PIC: data.username },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>
@@ -172,7 +174,7 @@ function MenuOptions(props) {
                     </ListItemText>
                 </MenuItem>
 
-                {user.roles[0] === roleNames.salesman && (
+                {user.roles[0] === roleNames.salesman && data.schoolStatus !== statusNames.pending && (
                     <div>
                         <MenuItem onClick={handleOpenMOU}>
                             <ListItemIcon className={classes.itemIcon}>
@@ -185,15 +187,6 @@ function MenuOptions(props) {
                         {renderMOUDialog()}
                     </div>
                 )}
-
-                {/* <MenuItem onClick={handleCloseMenus}>
-                    <ListItemIcon className={classes.itemIcon}>
-                        <MdPersonAdd fontSize="large" />
-                    </ListItemIcon>
-                    <ListItemText className={classes.itemText}>
-                        {menuItems.assign.title}
-                    </ListItemText>
-                </MenuItem> */}
                 {user.roles[0] !== roleNames.salesman && (
                     <div>
                         <MenuItem onClick={handleOpenConfirmRemove}>
@@ -220,7 +213,7 @@ function MenuOptions(props) {
                         {renderAssignedDialog()}
                     </div>
                 )}
-                {user.roles[0] !== roleNames.salesman && !data?.fullName && (
+                {user.roles[0] !== roleNames.salesman && data.schoolStatus !== statusNames.pending && !data?.fullName && (
                     <div>
                         <MenuItem onClick={handleOpenAssignOne}>
                             <ListItemIcon className={classes.itemIcon}>

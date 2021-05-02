@@ -42,6 +42,8 @@ export function getMilk(key) {
     }
     const item = JSON.parse(itemStr)
 
+    // console.log('Filters from storages: ', item);
+
     return item.value
 }
 

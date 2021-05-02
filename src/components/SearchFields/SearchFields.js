@@ -60,32 +60,37 @@ SearchFields.defaultProps = {
 function SearchFields(props) {
   const classes = useStyles()
   const typingTimeOutRef = useRef('')
-  const { onChange, placeholder } = props
-  const [searchSchool, setSearchSchool] = useState('')
+  const { onChange, placeholder, searchValue } = props
+  const [searchKey, setSearchKey] = useState(searchValue ? searchValue : '')
 
   const handleChange = (e) => {
     e.preventDefault(true);
-    const searchValue = e.target.value
+    const keyword = e?.target?.value
 
-    setSearchSchool(searchValue)
+    console.log('keyword: ', keyword);
+
+    setSearchKey(keyword)
     if (!onChange) {
       return;
     }
     if (typingTimeOutRef.current) {
       clearTimeout(typingTimeOutRef.current)
     }
-
+    
     typingTimeOutRef.current = setTimeout(() => {
-      onChange(searchValue)
+      onChange(keyword)
     }, 300)
   }
+
+  console.log('SearchFields: searchKey = ', searchKey);
+  
   return (
     <div className={classes.search}>
       <div className={classes.searchIcon}>
         <MdSearch fontSize='20' />
       </div>
       <InputBase
-        value={searchSchool}
+        value={searchKey}
         placeholder={placeholder}
         classes={{
           root: classes.inputRoot,

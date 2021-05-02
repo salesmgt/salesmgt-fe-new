@@ -218,17 +218,15 @@ function Tables(props) {
 
     const setRoleChipColor = (purpose) => {
         switch (purpose) {
-            case roleNames.salesman:
-                return <Chip label={purpose} className={classes.chipSalesman} />
+            case roleNames.admin:
+                return <Chip label={purpose} className={classes.chipAdmin} />
             case roleNames.manager:
                 return <Chip label={purpose} className={classes.chipManager} />
             case roleNames.supervisor:
-                return (
-                    <Chip label={purpose} className={classes.chipSupervisor} />
-                )
+                return <Chip label={purpose} className={classes.chipSupervisor} />
+            case roleNames.salesman:
+                return <Chip label={purpose} className={classes.chipSalesman} />
             default:
-                // Admin
-                // #5c21f3
                 return <Chip label={purpose} />
         }
     }

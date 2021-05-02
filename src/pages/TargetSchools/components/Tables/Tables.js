@@ -146,10 +146,8 @@ function Tables(props) {
     const { user } = useAuth()
 
     const columns = getColumns(user?.roles[0])
-
  
     const handleSelectAllClick = (event) => {
-        
         if (event.target.checked) {
           const  newSelecteds = rows.filter((row) => !row.username)
             setSelectedRows(newSelecteds)
@@ -159,9 +157,6 @@ function Tables(props) {
     }
     const handleClick = (event,row) => {
         console.log(event.target.checked)
-        // if(!event.target.checked){
-        //     event.target.checked=false
-        // }
         const selectedIndex = selectedRows.indexOf(row)
         let newSelected = []
 
@@ -233,22 +228,23 @@ function Tables(props) {
 
     const setPurposeChipColor = (purpose) => {
         switch (purpose) {
-            case purposeNames.salesMoi:
+            case purposeNames.purp1:
                 return <Chip label={purpose} className={classes.chipSalesMoi} />
-            case purposeNames.chamSoc:
+            case purposeNames.purp2:
+                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            case purposeNames.purp3:
+                return <Chip label={purpose} className={classes.chipTiemNang} />
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case purposeNames.taiKy:
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case purposeNames.kyMoi:
+            case purposeNames.purp6:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
-            case purposeNames.theoDoi:
-                return <Chip label={purpose} /> // #5c21f3
             default:
                 return <Chip label={purpose} /> // #5c21f3
         }
     }
     //=================================================================================
-    
 
     return (
         <div className={classes.wrapper}>
@@ -342,39 +338,37 @@ function Tables(props) {
                                         {user.roles[0] !==
                                             roleNames.salesman && (
                                             <TableCell className={classes.tBodyCell} width="20%">
-                                                <ListItem
-                                                    className={classes.itemPIC}
-                                                >
-                                                    <ListItemAvatar>
-                                                        {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
-                                                        <Avatar
-                                                            src={row.avatar}
+                                                {row.fullName && (
+                                                    <ListItem className={classes.itemPIC}>
+                                                        <ListItemAvatar>
+                                                            {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
+                                                            <Avatar src={row.avatar} />
+                                                        </ListItemAvatar>
+                                                        <ListItemText
+                                                            className={classes.picName}
+                                                            primary={
+                                                                <Highlighter
+                                                                    highlightClassName="YourHighlightClass"
+                                                                    searchWords={[params.searchKey]}
+                                                                    autoEscape={true}   
+                                                                    textToHighlight={row?.fullName}
+                                                                /> 
+                                                            }
+                                                            secondary={
+                                                                <Highlighter
+                                                                    highlightClassName="YourHighlightClass"
+                                                                    searchWords={[params.searchKey]}
+                                                                    autoEscape={true}   
+                                                                    textToHighlight={row?.username} 
+                                                                /> 
+                                                            }
+                                                            classes={{
+                                                                primary:styles.itemTextMedium,
+                                                                secondary:styles.itemTextSmall,
+                                                            }}
                                                         />
-                                                    </ListItemAvatar>
-                                                    <ListItemText
-                                                        className={classes.picName}
-                                                        primary={
-                                                            <Highlighter
-                                                                highlightClassName="YourHighlightClass"
-                                                                searchWords={[params.searchKey]}
-                                                                autoEscape={true}   
-                                                                textToHighlight={row.fullName ? row.fullName : ''}
-                                                            /> 
-                                                        }
-                                                        secondary={
-                                                            <Highlighter
-                                                                highlightClassName="YourHighlightClass"
-                                                                searchWords={[params.searchKey]}
-                                                                autoEscape={true}   
-                                                                textToHighlight={row.username ? row.username : ''} 
-                                                            /> 
-                                                        }
-                                                        classes={{
-                                                            primary:styles.itemTextMedium,
-                                                            secondary:styles.itemTextSmall,
-                                                        }}
-                                                    />
-                                                </ListItem>
+                                                    </ListItem>
+                                                )}
                                             </TableCell>
                                         )}
                                         <TableCell
