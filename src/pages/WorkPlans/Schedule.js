@@ -31,7 +31,7 @@ import { MdAccountCircle, MdSearch } from 'react-icons/md'
 import { Autocomplete } from '@material-ui/lab'
 import { getAccount } from '../Accounts/AccountsServices'
 import { useAuth } from '../../hooks/AuthContext'
-import { Consts } from './WorkPlansConfig'
+import { Consts } from './WorkplansConfig'
 import './WorkPlans.scss'
 import styles from './WorkPlans.module.scss'
 
@@ -499,7 +499,7 @@ const Schedule = (props) => {
                         </div>
                         <div className={styles.treeviewContainer}>
                             <TreeViewComponent
-                                allowDragAndDrop={props.isEdit}
+                                allowDragAndDrop={!props.isEdit}
                                 ref={(e) => (tree = e)}
                                 cssClass="treeview-external-drag"
                                 // allowDragAndDrop
