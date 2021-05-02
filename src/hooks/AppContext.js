@@ -10,6 +10,8 @@ export function useApp() {
 }
 
 function useAppProvider() {
+    const [userInfo, setUserInfo] = useState(null)
+
     const [dists, setDists] = useState(
         Milk.getMilk(milkNames.dists) ? Milk.getMilk(milkNames.dists) : null
     )
@@ -38,7 +40,7 @@ function useAppProvider() {
             ? Milk.getMilk(milkNames.salesPurps)
             : null
     )
-
+    
     useEffect(() => {
         FiltersServices.getDistricts()
             .then((data) => {
@@ -144,6 +146,8 @@ function useAppProvider() {
     }, [])
 
     return {
+        userInfo,
+        setUserInfo,
         dists,
         schEduLvls,
         schTypes,

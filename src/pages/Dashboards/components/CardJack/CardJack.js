@@ -7,6 +7,8 @@ import {
     Select,
     Typography,
 } from '@material-ui/core'
+import { Loading } from '../../../../components'
+
 import classes from './CardJack.module.scss'
 
 const ITEM_HEIGHT = 120
@@ -40,14 +42,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CardJack(props) {
-    const { title, color, isOpts, ranges, datasets, des } = props
+    const { title, color, icon, isOpts, ranges, datasets, des } = props
+    const styles = useStyles()
 
     const [currentRange, setCurrentRange] = useState(ranges[0])
 
     const handleChangeRange = (event) => {
         setCurrentRange(event.target.value)
     }
-    const styles = useStyles()
 
     return (
         <Paper className={classes.paper}>
@@ -56,40 +58,55 @@ function CardJack(props) {
                     {title}
                 </Typography>
 
-                <Select
-                    className={classes.action}
-                    value={currentRange}
-                    onChange={handleChangeRange}
-                    disableUnderline
-                    MenuProps={MenuProps}
-                    style={{ display: isOpts ? 'inline-flex' : 'none' }}
-                >
-                    {ranges.map((key) => {
-                        return (
-                            <MenuItem
-                                key={key}
-                                value={key}
-                                classes={{
-                                    root: styles.menuItemRoot,
-                                    selected: styles.menuItemSelected,
-                                }}
-                            >
-                                {key}
-                            </MenuItem>
-                        )
-                    })}
-                </Select>
+                {isOpts && (
+                    <Select
+                        className={classes.action}
+                        value={currentRange}
+                        onChange={handleChangeRange}
+                        disableUnderline
+                        MenuProps={MenuProps}
+                        // style={{ display: isOpts ? 'inline-flex' : 'none' }}
+                    >
+                        {ranges.map((key) => {
+                            return (
+                                <MenuItem
+                                    key={key}
+                                    value={key}
+                                    classes={{
+                                        root: styles.menuItemRoot,
+                                        selected: styles.menuItemSelected,
+                                    }}
+                                >
+                                    {key}
+                                </MenuItem>
+                            )
+                        })}
+                    </Select>
+                )}
             </div>
             <Divider />
+
             {datasets[currentRange].map((obj, index) => (
                 <div className={classes.body} key={index}>
-                    <Typography
-                        className={classes.detail}
-                        style={{ color: color }}
+                    <div
+                        className={classes.icon}
+                        style={{ backgroundColor: color }}
                     >
-                        {obj.leads}
-                    </Typography>
-                    <Typography className={classes.subDetail}>{des}</Typography>
+                        {icon}
+                    </div>
+
+                    <div className={classes.info}>
+                        <Typography
+                            className={classes.detail}
+                            // style={{ color: color }}
+                        >
+                            {obj.schools}
+                            {/* {`${obj.leads} ${des}`} */}
+                        </Typography>
+                        <Typography className={classes.subDetail}>
+                            {des}
+                        </Typography>
+                    </div>
                 </div>
             ))}
         </Paper>

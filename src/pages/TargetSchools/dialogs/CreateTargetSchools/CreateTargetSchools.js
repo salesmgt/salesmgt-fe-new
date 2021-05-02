@@ -4,12 +4,13 @@ import {
     Dialog,
     IconButton,
     Typography,
-    Grid
+    withStyles,
+    Grid,
 } from '@material-ui/core'
 import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 import { MdClose } from 'react-icons/md'
-import { useHistory } from "react-router"
+import { useHistory } from 'react-router'
 import { useTargetForm } from './TargetFormContext'
 import { getSchoolsForTargets } from '../../TargetSchoolsServices'
 // import { Loading } from '../../../../components'

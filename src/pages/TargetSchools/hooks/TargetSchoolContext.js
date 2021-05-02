@@ -177,7 +177,6 @@ function useTargetSchoolProvider() {
                 setPurpose(value)
                 break
             case STATUS_FILTER:
-                console.log('setFilter - STATUS_FILTER: ', value);
                 defaultFilters = {
                     ...defaultFilters,
                     status: { filterType: STATUS_FILTER, filterValue: value },
@@ -185,10 +184,9 @@ function useTargetSchoolProvider() {
                 setSchoolStatus(value)
                 break
             case ASSIGNED_FILTER:
-                console.log('setFilter - ASSIGNED_FILTER: ', value);
                 defaultFilters = {
                     ...defaultFilters,
-                    status: { filterType: ASSIGNED_FILTER, filterValue: value },
+                    isAssigned: { filterType: ASSIGNED_FILTER, filterValue: value },
                 }
                 setIsAssigned(value)
                 break

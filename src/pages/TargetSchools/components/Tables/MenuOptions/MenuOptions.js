@@ -7,8 +7,15 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import { MdDelete, MdDescription, MdInfo, MdMoreVert, MdPersonAdd, MdNoteAdd } from 'react-icons/md'
-import { IoPersonRemoveSharp } from "react-icons/io5"
+import {
+    MdDelete,
+    MdDescription,
+    MdInfo,
+    MdMoreVert,
+    MdPersonAdd,
+    MdNoteAdd,
+} from 'react-icons/md'
+import { IoPersonRemoveSharp } from 'react-icons/io5'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
@@ -16,13 +23,14 @@ import ConfirmUnassign from '../../../dialogs/ConfirmUnassign/ConfirmUnassign'
 import CreateMOU from '../../../dialogs/CreateMOU/CreateMOU'
 import { useTargetSchool } from '../../../hooks/TargetSchoolContext'
 import { Consts } from '../../../TargetSchoolsConfig'
-import { roleNames } from '../../../../../constants/Generals'
+import { roleNames, statusNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
+import { Snackbars } from '../../../../../components'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data, refreshAPI } = props
+    const { data, refreshAPI, setNotify } = props
     const { menuItems } = Consts
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -30,7 +38,7 @@ function MenuOptions(props) {
     const [openAssign, setOpenAssign] = useState(false)
     const [openUnassign, setOpenUnassign] = useState(false)
     const [openMOU, setOpenMOU] = useState(false)
-    
+
     const [rows, setRows] = useState([data])
 
     const { user } = useAuth()
@@ -42,6 +50,8 @@ function MenuOptions(props) {
         params: params, // get from context
         pathName: `${url}/${data.id}`,
     }
+
+    // console.log('target data: ', data);
 
     const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget)
@@ -95,19 +105,21 @@ function MenuOptions(props) {
     const renderAssignedDialog = () => {
         if (data?.fullName) {
             return (
-                <ConfirmUnassign 
-                    notify={props.notify} setNotify={props.setNotify}
-                    open={openUnassign}
-                    onClose={() => setOpenUnassign(false)}
+                <ConfirmUnassign
+                    notify={props.notify}
+                    setNotify={props.setNotify}
+                    open={openAssign}
+                    onClose={() => setOpenAssign(false)}
                     data={data}
                     refreshAPI={refreshAPI}
                 />
             )
-        } else if (!data?.fullName){
+        } else if (!data?.fullName) {
             // assign one dialog
-            return(
-                <AssignMultiple                
-                    notify={props.notify} setNotify={props.setNotify}
+            return (
+                <AssignMultiple
+                    notify={props.notify}
+                    setNotify={props.setNotify}
                     open={openAssign}
                     onClose={() => setOpenAssign(false)}
                     rows={rows}
@@ -120,12 +132,18 @@ function MenuOptions(props) {
 
     const renderMOUDialog = () => {
         return (
-            <CreateMOU
-                open={openMOU}
-                onClose={() => setOpenMOU(false)}
-                refreshPage={refreshAPI}
-                // data={data}
-            />
+            <>
+                <CreateMOU
+                    open={openMOU}
+                    onClose={() => setOpenMOU(false)}
+                    // refreshPage={refreshAPI}
+                    targetSchoolId={data?.id}
+                    schoolId={data?.schoolId}
+                    schoolName={data?.schoolName}
+                    schoolStatus={data?.schoolStatus}
+                    setNotify={setNotify}
+                />
+            </>
         )
     }
 
@@ -161,7 +179,7 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: '/apps/reports',
-                        state: { targetId: data.id },
+                        state: { targetId: data.id, schoolName: data.schoolName, PIC: data.username },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>
@@ -172,7 +190,7 @@ function MenuOptions(props) {
                     </ListItemText>
                 </MenuItem>
 
-                {user.roles[0] === roleNames.salesman && (
+                {user.roles[0] === roleNames.salesman && data.schoolStatus !== statusNames.pending && (
                     <div>
                         <MenuItem onClick={handleOpenMOU}>
                             <ListItemIcon className={classes.itemIcon}>
@@ -185,15 +203,6 @@ function MenuOptions(props) {
                         {renderMOUDialog()}
                     </div>
                 )}
-
-                {/* <MenuItem onClick={handleCloseMenus}>
-                    <ListItemIcon className={classes.itemIcon}>
-                        <MdPersonAdd fontSize="large" />
-                    </ListItemIcon>
-                    <ListItemText className={classes.itemText}>
-                        {menuItems.assign.title}
-                    </ListItemText>
-                </MenuItem> */}
                 {user.roles[0] !== roleNames.salesman && (
                     <div>
                         <MenuItem onClick={handleOpenConfirmRemove}>
@@ -220,7 +229,7 @@ function MenuOptions(props) {
                         {renderAssignedDialog()}
                     </div>
                 )}
-                {user.roles[0] !== roleNames.salesman && !data?.fullName && (
+                {user.roles[0] !== roleNames.salesman && data.schoolStatus !== statusNames.pending && !data?.fullName && (
                     <div>
                         <MenuItem onClick={handleOpenAssignOne}>
                             <ListItemIcon className={classes.itemIcon}>

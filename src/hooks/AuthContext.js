@@ -15,16 +15,8 @@ function useAuthProvider() {
             : null
     )
 
-    if (!user) {
-        // Milk.makeSour(milkNames.dists)
-        // Milk.makeSour(milkNames.eduLvls)
-        // Milk.makeSour(milkNames.types)
-        // Milk.makeSour(milkNames.scales)
-        // Milk.makeSour(milkNames.status)
-        // Milk.makeSour(milkNames.roles)
-        // Milk.makeSour(milkNames.schYears)
-        // Milk.makeSour(milkNames.salesPurps)
 
+    if (!user) {
         Milk.makeSour([
             milkNames.dists,
             milkNames.eduLvls,

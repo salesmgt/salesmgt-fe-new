@@ -92,17 +92,19 @@
   flex-shrink: 0;
 }
 
-.chipSalesman {
-  background-color: $dark-warning !important;
+.chipAdmin{
+  background-color: $old-navy !important;
   color: $common-white !important;
 }
-
 .chipManager {
-  background-color: $main-success !important;
+  background-color: $creative !important;
   color: $common-white !important;
 }
-
 .chipSupervisor {
-  background-color: $dark-info !important;
+  background-color: $trust !important;
   color: $common-white !important;
+}
+.chipSalesman {
+  background-color: $energy !important;
+  // color: $common-white !important;
 }

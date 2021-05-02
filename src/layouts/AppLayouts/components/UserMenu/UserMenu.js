@@ -13,13 +13,24 @@ import {
 import { IconContext } from 'react-icons'
 import * as Cookies from '../../../../utils/Cookies'
 import { useAuth } from '../../../../hooks/AuthContext'
+import { useAccount } from '../../../../pages/Accounts/hooks/AccountContext'
+import { useReport } from '../../../../pages/Reports/hooks/ReportContext'
+import { useSchool } from '../../../../pages/Schools/hooks/SchoolContext'
+import { useTargetSchool } from '../../../../pages/TargetSchools/hooks/TargetSchoolContext'
+import { useApp } from '../../../../hooks/AppContext'
 import { userMenuItems as items } from '../../AppLayoutsConfig'
 import { cookieNames } from '../../../../constants/Generals'
+import * as FilterTypes from '../../../../constants/Filters'
 import classes from './UserMenu.module.scss'
 
-function UserMenu(props) {
-    const { userInfo } = props
+function UserMenu() {
+    // const { userInfo } = props
     const { user, setUser } = useAuth()
+    const { userInfo } = useApp()
+    const { setFilter: setAccountFilter } = useAccount()
+    const { setFilter: setReportFilter } = useReport()
+    const { setFilter: setSchoolFilter } = useSchool()
+    const { setFilter: setTargetFilter } = useTargetSchool()
 
     const { url } = useRouteMatch()
 
@@ -37,6 +48,28 @@ function UserMenu(props) {
         Cookies.setCookie(cookieNames.accessToken, '', 0)
         localStorage.clear()
         setUser()
+        setAccountFilter(FilterTypes.ACTIVE_FILTER, null)
+        setAccountFilter(FilterTypes.ROLE_FILTER, '')
+        setReportFilter(FilterTypes.PIC_FILTER, null)
+        setReportFilter(FilterTypes.DISTRICT_FILTER, '')
+        setReportFilter(FilterTypes.SCHOOL_YEAR_FILTER, '')
+        setReportFilter(FilterTypes.PURPOSE_FILTER, '')
+        setReportFilter(FilterTypes.DATE_RANGE_FILTER, [null, null])
+        setSchoolFilter(FilterTypes.DISTRICT_FILTER, '')
+        setSchoolFilter(FilterTypes.TYPE_FILTER, '')
+        setSchoolFilter(FilterTypes.LEVEL_FILTER, '')
+        setSchoolFilter(FilterTypes.SCALE_FILTER, '')
+        setSchoolFilter(FilterTypes.STATUS_FILTER, '')
+        setSchoolFilter(FilterTypes.ACTIVE_FILTER, null)
+        setTargetFilter(FilterTypes.SCHOOL_YEAR_FILTER, '')
+        setTargetFilter(FilterTypes.DISTRICT_FILTER, '')
+        setTargetFilter(FilterTypes.TYPE_FILTER, '')
+        setTargetFilter(FilterTypes.LEVEL_FILTER, '')
+        setTargetFilter(FilterTypes.SCALE_FILTER, '')
+        setTargetFilter(FilterTypes.PIC_FILTER, null)
+        setTargetFilter(FilterTypes.PURPOSE_FILTER, '')
+        setTargetFilter(FilterTypes.STATUS_FILTER, '')
+        setTargetFilter(FilterTypes.ASSIGNED_FILTER, null)
     }
 
     return (

@@ -26,9 +26,17 @@ import { parseDateToString } from '../../../../utils/DateTimes'
 import * as ReportsServices from '../../ReportsServices'
 import { useHistory } from 'react-router'
 import * as ArrayUtils from '../../../../utils/Arrays'
-import { } from '../../../../utils/DateTimes'
+import {} from '../../../../utils/DateTimes'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { Consts, columns, RESULT, DESCRIPTION, POSITIVITY, DIFFICULTY, FUTURE_PLAN } from '../DialogConfig'
+import {
+    Consts,
+    columns,
+    RESULT,
+    DESCRIPTION,
+    POSITIVITY,
+    DIFFICULTY,
+    FUTURE_PLAN,
+} from '../DialogConfig'
 import { Snackbars } from '../../../../components'
 import { useReport } from '../../hooks/ReportContext'
 import classes from './CreateReports.module.scss'
@@ -39,7 +47,7 @@ const clientSchema = yup.object().shape({
 })
 
 function CreateReportsForm(props) {
-    const { onClose, refreshAPI } = props
+    const { onClose, refreshAPI, setNotify } = props
     const { headers, operations, fields } = Consts
 
     const { user } = useAuth()
@@ -47,12 +55,6 @@ function CreateReportsForm(props) {
 
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
-
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
 
     const typingTimeoutRef = useRef({})
 
@@ -70,28 +72,28 @@ function CreateReportsForm(props) {
     // }
 
     const defaultTarget = {
-        avatar: "",
-        district: "",
-        fullName: "",
+        avatar: '',
+        district: '',
+        fullName: '',
         id: -1,
-        level: "",
+        level: '',
         note: '',
         noteBy: '',
-        purpose: "",
-        reprEmail: "",
+        purpose: '',
+        reprEmail: '',
         reprIsMale: false,
-        reprName: "",
-        reprPhone: "",
-        schoolAddress: "",
+        reprName: '',
+        reprPhone: '',
+        schoolAddress: '',
         schoolId: -1,
-        schoolName: "",
-        schoolScale: "",
-        schoolStatus: "",
-        schoolType: "",
-        schoolYear: "",
-        userEmail: "",
-        userPhone: "",
-        username: "",
+        schoolName: '',
+        schoolScale: '',
+        schoolStatus: '',
+        schoolType: '',
+        schoolYear: '',
+        userEmail: '',
+        userPhone: '',
+        username: '',
     }
     const defaultFormValue = {
         result: '',
@@ -105,25 +107,30 @@ function CreateReportsForm(props) {
     const [formValue, setFormValue] = useState(defaultFormValue)
 
     const getListTargets = (searchKey) => {
-        ReportsServices.getTargetSchools({ username: user.username, schoolYear: calculateSchoolYear(), key: searchKey }).then(data => {
-            setTargets(data);
-            // console.log('list targets = ', data);
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
+        ReportsServices.getTargetSchools({
+            username: user.username,
+            schoolYear: calculateSchoolYear(),
+            key: searchKey,
         })
+            .then((data) => {
+                setTargets(data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     useEffect(getListTargets, [])
 
     const onSearchTargetChange = (event) => {
         if (typingTimeoutRef.current) {
-            clearTimeout(typingTimeoutRef.current);
+            clearTimeout(typingTimeoutRef.current)
         }
 
         typingTimeoutRef.current = setTimeout(() => {
@@ -182,7 +189,7 @@ function CreateReportsForm(props) {
     // }
 
     const addReports = (event) => {
-        event.preventDefault();
+        event.preventDefault()
         // const e = event.target;
 
         // const report = {
@@ -213,18 +220,18 @@ function CreateReportsForm(props) {
             futurePlan: formValue.futurePlan,
         }
 
-        listReports.forEach(re => {
+        listReports.forEach((re) => {
             if (re.targetId === report.targetId) {
                 // Remove target cũ, ghi đè bằng target đó bản chỉnh sửa
                 // console.log('Remove duplicate target ', re.targetId)
                 // setListReports([
                 //     ...ArrayUtils.removeItem(listReports, 'targetId', re.targetId),
                 // ])
-                removeReport(re.targetId)    // tại sao phải viết lại 3 dòng code trên trong khi có thể gọi lại hàm này?
+                removeReport(re.targetId) // tại sao phải viết lại 3 dòng code trên trong khi có thể gọi lại hàm này?
                 // setListReports([...listReports, report])
             }
-        });
-        setListReports([...listReports, report])    // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list 
+        })
+        setListReports([...listReports, report]) // Để ngoài này vì có trùng hay ko thì cũng vẫn add vô list
         resetForm()
 
         // listReportsData()
@@ -244,41 +251,41 @@ function CreateReportsForm(props) {
     }
 
     const handleFormChange = (event, key) => {
-        const value = event.target.value;
+        const value = event.target.value
 
         switch (key) {
             case RESULT:
                 setFormValue({
                     ...formValue,
-                    result: value
+                    result: value,
                 })
-                break;
+                break
             case DESCRIPTION:
                 setFormValue({
                     ...formValue,
-                    description: value
+                    description: value,
                 })
-                break;
+                break
             case POSITIVITY:
                 setFormValue({
                     ...formValue,
-                    positivity: value
+                    positivity: value,
                 })
-                break;
+                break
             case DIFFICULTY:
                 setFormValue({
                     ...formValue,
-                    difficulty: value
+                    difficulty: value,
                 })
-                break;
+                break
             case FUTURE_PLAN:
                 setFormValue({
                     ...formValue,
-                    futurePlan: value
+                    futurePlan: value,
                 })
-                break;
+                break
             default:
-                break;
+                break
         }
     }
 
@@ -286,7 +293,7 @@ function CreateReportsForm(props) {
 
     // Click on a row in the preview table --> data is displayed in form
     const handleShowClickedRow = (event, row) => {
-        const foundTarget = searchTargetSchoolById(row.targetId);
+        const foundTarget = searchTargetSchoolById(row.targetId)
         setTarget(foundTarget)
 
         setFormValue({
@@ -302,15 +309,15 @@ function CreateReportsForm(props) {
     }
 
     const searchTargetSchoolById = (id) => {
-        let foundTarget = { ...defaultTarget };
+        let foundTarget = { ...defaultTarget }
 
-        targets.forEach(aTarget => {
+        targets.forEach((aTarget) => {
             if (aTarget.id === id) {
-                foundTarget = { ...aTarget };
+                foundTarget = { ...aTarget }
             }
-        });
+        })
 
-        return foundTarget;
+        return foundTarget
     }
 
     const handleCreateReport = (event) => {
@@ -333,9 +340,9 @@ function CreateReportsForm(props) {
                 futurePlan: formValue.futurePlan,
             }
 
-            reports.push(report);
+            reports.push(report)
         } else {
-            reports = [...listReports];
+            reports = [...listReports]
         }
 
         // console.log('event: ', event);
@@ -347,6 +354,7 @@ function CreateReportsForm(props) {
                 // console.log('data: ', data);
                 refreshAPI(page, limit, column, direction, searchKey, listFilters)
                 console.log(data)
+                // Xử lý cắt chuỗi msg của a Gia trả về để lấy số reports đã đc nộp
                 if (!String(data).includes('already submitted') && !String(data).includes('Created 0 records')) {
                     setNotify({
                         isOpen: true,
@@ -354,23 +362,19 @@ function CreateReportsForm(props) {
                         type: 'success',
                     })
                 } else if (String(data).includes('already submitted')) {
-                    console.log(data)
-
                     setNotify({
                         isOpen: true,
                         message: `Created unsuccessfully. ${data} today.`,
                         type: 'error',
                     })
                 } else {
-                    console.log(data)
-
                     setNotify({
                         isOpen: true,
                         message: 'Created unsuccessfully.',
                         type: 'error',
                     })
                 }
-                handleCloseDialog();
+                handleCloseDialog()
             })
             .catch((error) => {
                 if (error.response) {
@@ -385,13 +389,13 @@ function CreateReportsForm(props) {
                     message: 'Created unsuccessfully.',
                     type: 'error',
                 })
-                handleCloseDialog();
-            });
+                handleCloseDialog()
+            })
     }
 
     const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear();
-        const thisMonth = new Date().getMonth();
+        const thisYear = new Date().getFullYear()
+        const thisMonth = new Date().getMonth()
         // console.log(`${thisMonth}/${thisYear}`);
         // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
 
@@ -409,7 +413,7 @@ function CreateReportsForm(props) {
         onClose()
     }
 
-    console.log('formvalue: ', formValue);
+    // console.log('formvalue: ', formValue);
 
     return (
         <>
@@ -437,16 +441,26 @@ function CreateReportsForm(props) {
                                             <>
                                                 <TextField
                                                     {...params}
-                                                    label={fields.schoolName.label}
+                                                    label={
+                                                        fields.schoolName.label
+                                                    }
                                                     variant="outlined"
-                                                    name={fields.schoolName.name}
+                                                    name={
+                                                        fields.schoolName.name
+                                                    }
                                                     // value={target}
                                                     required
                                                     inputRef={register}
                                                     error={!!errors.target}
-                                                    helperText={errors?.target?.message}
-                                                    className={classes.autoComplete}
-                                                    onChange={onSearchTargetChange}
+                                                    helperText={
+                                                        errors?.target?.message
+                                                    }
+                                                    className={
+                                                        classes.autoComplete
+                                                    }
+                                                    onChange={
+                                                        onSearchTargetChange
+                                                    }
                                                 />
                                                 <input
                                                     type="hidden"
@@ -499,7 +513,9 @@ function CreateReportsForm(props) {
                                         required
                                         fullWidth
                                         value={formValue.result || ''}
-                                        onChange={(e, key) => handleFormChange(e, RESULT)}
+                                        onChange={(e, key) =>
+                                            handleFormChange(e, RESULT)
+                                        }
                                         inputRef={register}
                                         error={!!errors.result}
                                         helperText={errors?.result?.message}
@@ -518,10 +534,14 @@ function CreateReportsForm(props) {
                                         rows={3}
                                         fullWidth
                                         value={formValue.description || ''}
-                                        onChange={(e, key) => handleFormChange(e, DESCRIPTION)}
+                                        onChange={(e, key) =>
+                                            handleFormChange(e, DESCRIPTION)
+                                        }
                                         inputRef={register}
                                         error={!!errors.description}
-                                        helperText={errors?.description?.message}
+                                        helperText={
+                                            errors?.description?.message
+                                        }
                                     />
                                 </Grid>
 
@@ -532,10 +552,12 @@ function CreateReportsForm(props) {
                                         variant="outlined"
                                         fullWidth
                                         value={formValue.positivity || ''}
-                                        onChange={(e, key) => handleFormChange(e, POSITIVITY)}
-                                    // inputRef={register}
-                                    // error={!!errors.positivity}
-                                    // helperText={errors?.positivity?.message}
+                                        onChange={(e, key) =>
+                                            handleFormChange(e, POSITIVITY)
+                                        }
+                                        // inputRef={register}
+                                        // error={!!errors.positivity}
+                                        // helperText={errors?.positivity?.message}
                                     />
                                 </Grid>
 
@@ -546,10 +568,12 @@ function CreateReportsForm(props) {
                                         variant="outlined"
                                         fullWidth
                                         value={formValue.difficulty || ''}
-                                        onChange={(e, key) => handleFormChange(e, DIFFICULTY)}
-                                    // inputRef={register}
-                                    // error={!!errors.difficulty}
-                                    // helperText={errors?.difficulty?.message}
+                                        onChange={(e, key) =>
+                                            handleFormChange(e, DIFFICULTY)
+                                        }
+                                        // inputRef={register}
+                                        // error={!!errors.difficulty}
+                                        // helperText={errors?.difficulty?.message}
                                     />
                                 </Grid>
 
@@ -560,17 +584,19 @@ function CreateReportsForm(props) {
                                         variant="outlined"
                                         fullWidth
                                         value={formValue.futurePlan || ''}
-                                        onChange={(e, key) => handleFormChange(e, FUTURE_PLAN)}
-                                    // inputRef={register}
-                                    // error={!!errors.futurePlan}
-                                    // helperText={errors?.futurePlan?.message}
+                                        onChange={(e, key) =>
+                                            handleFormChange(e, FUTURE_PLAN)
+                                        }
+                                        // inputRef={register}
+                                        // error={!!errors.futurePlan}
+                                        // helperText={errors?.futurePlan?.message}
                                     />
                                 </Grid>
                             </Grid>
                         </Grid>
 
                         <Grid item xs={12} sm={12} md={12} lg={7}>
-                            <Grid container spacing={3}>
+                            <Grid container spacing={2}>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <Box
                                         display="flex"
@@ -582,26 +608,51 @@ function CreateReportsForm(props) {
                                                 variant="contained"
                                                 color="secondary"
                                                 type="submit"
-                                                disabled={formValue === defaultFormValue}
-                                            // onClick={addReports}
+                                                disabled={
+                                                    formValue ===
+                                                    defaultFormValue
+                                                }
+                                                // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />
                                             </Button>
                                         </Box>
                                         <Box>
-                                            <Chip
+                                            {/* <Chip
                                                 label={parseDateToString(
                                                     new Date(),
                                                     'dddd, DD/MM/YYYY'
                                                 )}
-                                                variant="default"
+                                                variant="outlined"
                                                 className={classes.chipDate}
-                                            />
+                                            /> */}
+                                            <Typography
+                                                variant="subtitle1"
+                                                className={classes.title}
+                                            >
+                                                {parseDateToString(
+                                                    new Date(),
+                                                    'dddd, DD/MM/YYYY'
+                                                )}
+                                            </Typography>
                                         </Box>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <Typography variant="h6">
+                                    {/* <Box
+                                        display="flex"
+                                        justifyContent="flex-end"
+                                    >
+                                        <Typography variant="subtitle1">
+                                            {`${
+                                                headers.child1
+                                            } ${parseDateToString(
+                                                new Date(),
+                                                'dddd, DD/MM/YYYY'
+                                            )}`}
+                                        </Typography>
+                                    </Box> */}
+                                    <Typography variant="subtitle1">
                                         {headers.child1}
                                     </Typography>
                                     <TableContainer
@@ -614,11 +665,15 @@ function CreateReportsForm(props) {
                                             size="small"
                                         >
                                             <TableHead>
-                                                <TableRow className={classes.tHead}>
+                                                <TableRow
+                                                    className={classes.tHead}
+                                                >
                                                     {columns.map((col) => (
                                                         <TableCell
                                                             key={col}
-                                                            className={classes.tHeadCell}
+                                                            className={
+                                                                classes.tHeadCell
+                                                            }
                                                         >
                                                             {col}
                                                         </TableCell>
@@ -626,52 +681,102 @@ function CreateReportsForm(props) {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {listReports.map((row, index) => (
-                                                    <TableRow
-                                                        key={row.targetId}
-                                                        className={classes.tBodyRow}
-                                                    >
-                                                        <TableCell
-                                                            className={classes.tBodyCell}
-                                                            onClick={(e, data) => handleShowClickedRow(e, row)}
+                                                {listReports.map(
+                                                    (row, index) => (
+                                                        <TableRow
+                                                            key={row.targetId}
+                                                            className={
+                                                                classes.tBodyRow
+                                                            }
                                                         >
-                                                            {index + 1}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tBodyCell}
-                                                            onClick={(e, data) => handleShowClickedRow(e, row)}
-                                                        >
-                                                            {`${row.level} ${row.schoolName}`}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tBodyCell}
-                                                            onClick={(e, data) => handleShowClickedRow(e, row)}
-                                                        >
-                                                            {row.result}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tBodyCell}
-                                                            onClick={(e, data) => handleShowClickedRow(e, row)}
-                                                        >
-                                                            {truncateString(row.description)}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tBodyCell}
-                                                            align="right"
-                                                        >
-                                                            <IconButton
-                                                                size="small"
-                                                                onClick={(id) =>
-                                                                    removeReport(
-                                                                        row.targetId
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                                onClick={(
+                                                                    e,
+                                                                    data
+                                                                ) =>
+                                                                    handleShowClickedRow(
+                                                                        e,
+                                                                        row
                                                                     )
                                                                 }
                                                             >
-                                                                <MdDelete />
-                                                            </IconButton>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
+                                                                {index + 1}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                                onClick={(
+                                                                    e,
+                                                                    data
+                                                                ) =>
+                                                                    handleShowClickedRow(
+                                                                        e,
+                                                                        row
+                                                                    )
+                                                                }
+                                                            >
+                                                                {`${row.level} ${row.schoolName}`}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                                onClick={(
+                                                                    e,
+                                                                    data
+                                                                ) =>
+                                                                    handleShowClickedRow(
+                                                                        e,
+                                                                        row
+                                                                    )
+                                                                }
+                                                            >
+                                                                {row.result}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                                onClick={(
+                                                                    e,
+                                                                    data
+                                                                ) =>
+                                                                    handleShowClickedRow(
+                                                                        e,
+                                                                        row
+                                                                    )
+                                                                }
+                                                            >
+                                                                {truncateString(
+                                                                    row.description
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={
+                                                                    classes.tBodyCell
+                                                                }
+                                                                align="right"
+                                                            >
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={(
+                                                                        id
+                                                                    ) =>
+                                                                        removeReport(
+                                                                            row.targetId
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <MdDelete />
+                                                                </IconButton>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                )}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
@@ -698,7 +803,6 @@ function CreateReportsForm(props) {
                     </Button>
                 </DialogActions>
             </form>
-            <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )
 }

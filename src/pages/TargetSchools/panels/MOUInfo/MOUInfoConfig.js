@@ -7,8 +7,9 @@ export const Consts = {
         cancel: 'Cancel',
         save: 'Save',
         view: 'View More',
-        empty: 'There are no memos yet.',
+        empty: 'MOU is empty.',
         restriction: 'What are you looking for?',
+        noMOU: `Don't have any MOU yet.`,
     },
     fields: {
         duration: {

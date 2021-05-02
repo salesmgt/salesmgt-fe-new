@@ -63,7 +63,7 @@ export const Consts = {
             options: { all: 'All' },
         },
         status: {
-            title: 'School Statuses',
+            title: 'School Status',
             options: { all: 'All' },
         },
         schoolType: {

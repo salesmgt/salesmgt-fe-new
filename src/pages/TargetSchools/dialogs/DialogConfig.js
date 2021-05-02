@@ -7,7 +7,7 @@ export const Consts = {
         cannot: 'Cannot Remove',
         // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
-        createMOU: 'Create MOU',
+        createMOU: 'Create MOU for',
     },
     operations: {
         cancel: 'Cancel',
