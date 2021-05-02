@@ -39,7 +39,7 @@ import {
     PIC_FILTER,
     PURPOSE_FILTER,
     STATUS_FILTER,
-    ASSIGNED_FILTER
+    ASSIGNED_FILTER,
 } from '../../../../constants/Filters'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
@@ -293,10 +293,10 @@ function Filters(props) {
             },
         })
     }
-    
+
     const onSearchPICChange = (event) => {
         if (typingTimeoutRef.current) {
-            clearTimeout(typingTimeoutRef.current);
+            clearTimeout(typingTimeoutRef.current)
         }
 
         typingTimeoutRef.current = setTimeout(() => {
@@ -436,12 +436,11 @@ function Filters(props) {
                     />
                 </TargetFormProvider>
             )
-        } else return null;
+        } else return null
     }
 
     const renderAssignDialog = () => {
         // console.log('props.selectedRows = ', props.selectedRows);
-        
         if (props.selectedRows.length > 0) {
             // Checked target schools
             return (
@@ -453,7 +452,8 @@ function Filters(props) {
                     refreshAPI={props.refreshAPI}
                 />
             )
-        } else {    // Have not checked target schools
+        } else {
+            // Have not checked target schools
             return (
                 <NotifyAssign open={openNotifyDialog} onClose={() => setOpenNotifyDialog(false)} />
             )
@@ -520,7 +520,12 @@ function Filters(props) {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -560,7 +565,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -600,7 +610,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -642,7 +657,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -684,7 +704,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -726,7 +751,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -768,7 +798,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -809,38 +844,55 @@ function Filters(props) {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        
-                        {user.roles[0] !== roleNames.salesman &&
+
+                        {user.roles[0] !== roleNames.salesman && (
                             <>
-                                <Grid item xs={12} sm={6} md={4} lg={3}
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    md={4}
+                                    lg={3}
                                     className={classes.paddingTop}
                                 >
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl
+                                        className={classes.formControl}
+                                    >
                                         <InputLabel>
                                             {filters.isAssigned.title}
                                         </InputLabel>
                                         <Select
-                                            value={isAssigned === null ? '' : isAssigned}
+                                            value={
+                                                isAssigned === null
+                                                    ? ''
+                                                    : isAssigned
+                                            }
                                             onChange={handleIsAssignedChange}
                                             MenuProps={MenuProps}
                                         >
-                                            {assignedStatuses?.map((isAssigned) => (
-                                                <MenuItem
-                                                    key={isAssigned}
-                                                    value={isAssigned}
-                                                    className={classes.option}
-                                                    classes={{
-                                                        root: classes.menuItemRoot,
-                                                        selected:
-                                                            classes.menuItemSelected,
-                                                    }}
-                                                >
-                                                    {isAssigned === null 
-                                                        ? `${filters.isAssigned.options.all}` 
-                                                        : (isAssigned ? `${filters.isAssigned.options.assigned}` : `${filters.isAssigned.options.notAssigned}`)
-                                                    }
-                                                </MenuItem>
-                                            ))}
+                                            {assignedStatuses?.map(
+                                                (isAssigned) => (
+                                                    <MenuItem
+                                                        key={isAssigned}
+                                                        value={isAssigned}
+                                                        className={
+                                                            classes.option
+                                                        }
+                                                        classes={{
+                                                            root:
+                                                                classes.menuItemRoot,
+                                                            selected:
+                                                                classes.menuItemSelected,
+                                                        }}
+                                                    >
+                                                        {isAssigned === null
+                                                            ? `${filters.isAssigned.options.all}`
+                                                            : isAssigned
+                                                            ? `${filters.isAssigned.options.assigned}`
+                                                            : `${filters.isAssigned.options.notAssigned}`}
+                                                    </MenuItem>
+                                                )
+                                            )}
                                         </Select>
                                     </FormControl>
                                 </Grid>
@@ -874,7 +926,9 @@ function Filters(props) {
                                                                     <MdAccountCircle />
                                                                 </InputAdornment>
                                                                 {
-                                                                    params.InputProps.startAdornment
+                                                                    params
+                                                                        .InputProps
+                                                                        .startAdornment
                                                                 }
                                                             </>
                                                         ),
@@ -914,7 +968,7 @@ function Filters(props) {
                                     />
                                 </Grid>
                             </>
-                        }
+                        )}
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

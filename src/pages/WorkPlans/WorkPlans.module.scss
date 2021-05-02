@@ -1,0 +1,47 @@
+@import '../../styles/Variables.module.scss';
+
+.treeviewContainer {
+    height: 18.7rem;
+    overflow-y: auto;
+}
+.noteView {
+    padding: 0.5rem;
+    width: 14.8rem;
+    overflow: hidden;
+}
+
+.statusContainer {
+    border: 1px solid #e1e7ec;
+    border-radius: $default-radius;
+}
+
+.statusNote {
+    display: flex;
+    padding: 0.5rem;
+    align-items: center;
+}
+
+.colorComplete {
+    width: 3rem;
+    height: 3rem;
+    background-color: $heals;
+    border-radius: $default-radius;
+}
+
+.colorFail {
+    width: 3rem;
+    height: 3rem;
+    background-color: $compassion;
+    border-radius: $default-radius;
+}
+
+.colorPending {
+    width: 3rem;
+    height: 3rem;
+    background-color: $trust;
+    border-radius: $default-radius;
+}
+
+.status {
+    padding: 0rem 0.75rem;
+}

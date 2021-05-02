@@ -8,15 +8,10 @@ export async function getUser(username) {
 }
 
 export async function getDashboards() {
-    const response = await Api.get('/dashboards')
+    const response = await Api.get('/dashboard')
     const data = await response.data
 
     return data
 }
 
-export async function getDashboardsByKeys(...keys) {
-    const response = await Api.get('/dashboards', { ...keys })
-    const data = await response.data
 
-    return data
-}

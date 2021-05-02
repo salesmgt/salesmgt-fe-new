@@ -28,13 +28,13 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { Consts } from '../../TargetSchoolsConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { getColumns } from '../../TargetSchoolsConfig'
-import { roleNames,purposeNames } from '../../../../constants/Generals'
+import { roleNames, purposeNames } from '../../../../constants/Generals'
 import SortableTableHeaders from './SortableTableHeaders'
-import Highlighter from "react-highlight-words";
+import Highlighter from 'react-highlight-words'
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
-import classes from './Tables.module.scss'
 import { Snackbars } from '../../../../components'
+import classes from './Tables.module.scss'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -124,13 +124,21 @@ const useStyles = makeStyles(() => ({
 function Tables(props) {
     const styles = useStyles()
     // Use States and Props to pass data for rows and columns from the Container/Page
-    const { selectedRows, setSelectedRows,rows, totalRecord, totalPage, refreshAPI } = props // , onGetTargets
+    const {
+        selectedRows,
+        setSelectedRows,
+        rows,
+        totalRecord,
+        totalPage,
+        refreshAPI,
+    } = props // , onGetTargets
     const { messages } = Consts
+
     const [notify, setNotify] = React.useState({
         isOpen: false,
         message: '',
         type: '',
-    })   
+    })
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
@@ -149,19 +157,19 @@ function Tables(props) {
  
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-          const  newSelecteds = rows.filter((row) => !row.username)
+            const newSelecteds = rows.filter((row) => !row.username)
             setSelectedRows(newSelecteds)
-            return;
-          }
-          setSelectedRows([])  
+            return
+        }
+        setSelectedRows([])
     }
-    const handleClick = (event,row) => {
+    const handleClick = (event, row) => {
         console.log(event.target.checked)
         const selectedIndex = selectedRows.indexOf(row)
         let newSelected = []
 
-         if (selectedIndex === -1) {
-             newSelected = newSelected.concat(selectedRows, row)
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedRows, row)
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selectedRows.slice(1))
         } else if (selectedIndex === selectedRows.length - 1) {
@@ -171,18 +179,15 @@ function Tables(props) {
                 selectedRows.slice(0, selectedIndex),
                 selectedRows.slice(selectedIndex + 1)
             )
-      
         }
-        console.log("index ",selectedIndex)
-        console.log("mảng ",newSelected)
+        console.log('index ', selectedIndex)
+        console.log('mảng ', newSelected)
         setSelectedRows(newSelected)
     }
 
-    const isSelected = (row) => 
-    {   
-        if(selectedRows.indexOf(row) !== -1)
-        return true
-       else return false
+    const isSelected = (row) => {
+        if (selectedRows.indexOf(row) !== -1) return true
+        else return false
     }
 
     // ====================Paging====================
@@ -262,7 +267,9 @@ function Tables(props) {
                         column={column}
                         onRequestSort={onSortBy}
                         onSelectAllClick={handleSelectAllClick}
-                        rowCount={rows?.filter(item => !item.username)?.length}
+                        rowCount={
+                            rows?.filter((item) => !item.username)?.length
+                        }
                         numSelected={selectedRows?.length}
                     />
                     <TableBody className={classes.tBody}>
@@ -274,66 +281,101 @@ function Tables(props) {
                                         className={classes.tBodyRow}
                                         // hover
                                         role="checkbox"
-                                        aria-checked={ isSelected(row)}
+                                        aria-checked={isSelected(row)}
                                         tabIndex={-1}
-                                        selected={ isSelected(row)}
+                                        selected={isSelected(row)}
                                     >
                                         {user.roles[0] !==
                                             roleNames.salesman && (
                                             <TableCell
-                                                padding="checkbox" width="1%"
-                                                onClick={(event) => {!row.username &&
-                                                    handleClick(event, row)
+                                                padding="checkbox"
+                                                width="1%"
+                                                onClick={(event) => {
+                                                    !row.username &&
+                                                        handleClick(event, row)
                                                 }}
                                             >
                                                 <Checkbox
-                                                    checked={row.username ? false : isSelected(row)}
-                                                    disabled={row.username ? true : false}
+                                                    checked={
+                                                        row.username
+                                                            ? false
+                                                            : isSelected(row)
+                                                    }
+                                                    disabled={
+                                                        row.username
+                                                            ? true
+                                                            : false
+                                                    }
                                                 />
                                             </TableCell>
                                         )}
-                                        <TableCell 
-                                            className={classes.tBodyCell} align="center"
-                                            width={user.roles[0] !== roleNames.salesman ? "0.5%" : "1%"}
+                                        <TableCell
+                                            className={classes.tBodyCell}
+                                            align="center"
+                                            width={
+                                                user.roles[0] !==
+                                                roleNames.salesman
+                                                    ? '0.5%'
+                                                    : '1%'
+                                            }
                                         >
-                                            {params.page * params.limit + index + 1}
+                                            {params.page * params.limit +
+                                                index +
+                                                1}
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell} 
-                                            width={user.roles[0] !== roleNames.salesman ? "30%" : "35%"}
+                                            className={classes.tBodyCell}
+                                            width={
+                                                user.roles[0] !==
+                                                roleNames.salesman
+                                                    ? '30%'
+                                                    : '35%'
+                                            }
                                         >
                                             <ListItemText
                                                 primary={
-                                                    <> 
-                                                        {row.level} 
+                                                    <>
+                                                        {row.level}
                                                         <Highlighter
                                                             highlightClassName="YourHighlightClass"
-                                                            searchWords={[params.searchKey]}
-                                                            autoEscape={true}   
+                                                            searchWords={[
+                                                                params.searchKey,
+                                                            ]}
+                                                            autoEscape={true}
                                                             textToHighlight={` ${row.schoolName}`}
-                                                        /> 
+                                                        />
                                                     </>
                                                 }
                                                 secondary={row.district}
                                                 classes={{
-                                                    primary: styles.itemTextLarge,
-                                                    secondary: styles.itemTextMedium,
+                                                    primary:
+                                                        styles.itemTextLarge,
+                                                    secondary:
+                                                        styles.itemTextMedium,
                                                 }}
                                             />
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell} 
-                                            width={user.roles[0] !== roleNames.salesman ? "14%" : "22%"}
+                                            className={classes.tBodyCell}
+                                            width={
+                                                user.roles[0] !==
+                                                roleNames.salesman
+                                                    ? '14%'
+                                                    : '22%'
+                                            }
                                         >
                                             <Highlighter
                                                 highlightClassName="YourHighlightClass"
                                                 searchWords={[params.searchKey]}
-                                                autoEscape={true}   
-                                                textToHighlight={row?.reprName
-                                                            ? row.reprIsMale
-                                                                ? `Mr. ${row.reprName}` : `Ms. ${row.reprName}`
-                                                            : ''}
-                                            />                                            
+                                                autoEscape={true}
+                                                textToHighlight={
+                                                    row?.reprName
+                                                        ? row.reprIsMale
+                                                            ? `Mr. ${row.reprName}`
+                                                            : `Ms. ${row.reprName}`
+                                                        : ''
+                                                }
+                                            />
                                         </TableCell>
                                         {user.roles[0] !==
                                             roleNames.salesman && (
@@ -372,28 +414,50 @@ function Tables(props) {
                                             </TableCell>
                                         )}
                                         <TableCell
-                                            className={classes.tBodyCell} 
-                                            width={user.roles[0] !== roleNames.salesman ? "17%" : "20%"}
+                                            className={classes.tBodyCell}
+                                            width={
+                                                user.roles[0] !==
+                                                roleNames.salesman
+                                                    ? '17%'
+                                                    : '20%'
+                                            }
                                         >
                                             <Highlighter
                                                 highlightClassName="YourHighlightClass"
                                                 searchWords={[params.searchKey]}
-                                                autoEscape={true}   
-                                                textToHighlight={row?.schoolYear}
+                                                autoEscape={true}
+                                                textToHighlight={
+                                                    row?.schoolYear
+                                                }
                                             />
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell} 
-                                            width={user.roles[0] !== roleNames.salesman ? "17%" : "20%"}
+                                            className={classes.tBodyCell}
+                                            width={
+                                                user.roles[0] !==
+                                                roleNames.salesman
+                                                    ? '17%'
+                                                    : '20%'
+                                            }
                                         >
                                             {setPurposeChipColor(row.purpose)}
                                         </TableCell>
                                         <TableCell
-                                            className={classes.tBodyCell} 
+                                            className={classes.tBodyCell}
                                             align="right"
-                                            width={user.roles[0] !== roleNames.salesman ? "0.5%" : "2%"}
+                                            width={
+                                                user.roles[0] !==
+                                                roleNames.salesman
+                                                    ? '0.5%'
+                                                    : '2%'
+                                            }
                                         >
-                                            <MenuOptions data={row} notify={notify} setNotify={setNotify} refreshAPI={refreshAPI} />
+                                            <MenuOptions
+                                                data={row}
+                                                notify={notify}
+                                                setNotify={setNotify}
+                                                refreshAPI={refreshAPI}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 )
@@ -438,7 +502,8 @@ function Tables(props) {
                     />
                 )}
             />
-            <Snackbars notify={notify} setNotify={setNotify}/>
+
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

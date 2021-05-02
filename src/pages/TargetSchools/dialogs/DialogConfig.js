@@ -7,7 +7,7 @@ export const Consts = {
         cannot: 'Cannot Remove',
         // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
-        createMOU: 'Create MOU',
+        createMOU: 'Create MOU for',
     },
     operations: {
         cancel: 'Cancel',
@@ -16,6 +16,10 @@ export const Consts = {
         ok: 'OK, I understood',
         yes: 'OK',
         showCreate: 'Memorandum of Contract',
+        filter: 'Filters',
+        search: {
+            placeholder: 'Search...',
+        },
     },
     fields: {
         pic: {
@@ -74,6 +78,29 @@ export const Consts = {
             title: 'Note',
         },
         // End for MOU
+    },
+    filters: {
+        district: {
+            title: 'Districts',
+        },
+        schoolType: {
+            title: 'School Types',
+        },
+        schoolLevel: {
+            title: 'School Levels',
+        },
+        schoolScale: {
+            title: 'School Scales',
+        },
+        schoolStatus: {
+            title: 'School Status',
+        },
+        purpose: {
+            title: 'Purposes',
+            options: {
+                all: 'All',
+            },
+        },
     },
 }
 

@@ -12,10 +12,12 @@
     //     text-decoration: none;
     // }
 
-    // .container {
-    //     height: 73.2vh;
-    //     overflow-y: auto;
-    // }
+    .container {
+        // height: 73.2vh;
+        // overflow-y: auto;
+        margin-top: 0.2rem;
+        border-radius: $default-radius;
+    }
 
     .table {
         padding: 0;
@@ -47,7 +49,7 @@
     }
 }
 
-.btnSave {    
+.btnSave {
     // color: $common-white !important;
     // background-color: $main-info !important;
     // &:hover {
@@ -56,7 +58,7 @@
     // &:disabled {
     //     background-color: $divider !important;
     // }
-    
+
     color: $main-info !important;
     &:hover {
         color: $dark-info !important;
@@ -68,7 +70,7 @@
 
 .autoComplete {
     margin: 0 !important;
-    padding: 0 !important
+    padding: 0 !important;
 }
 
 .item {
@@ -76,20 +78,26 @@
     flex-direction: row;
     align-items: center;
     padding: 0 0.5rem !important;
-    margin: 0 !important
+    margin: 0 !important;
 }
 .itemTextPrimary {
-    font-size: '0.875rem'
+    font-size: '0.875rem';
 }
 .itemTextSecondary {
-    font-size: '0.8rem'
+    font-size: '0.8rem';
 }
 
-.chipDate {
-    padding: 0.3rem !important;
-    font-size: 1.3rem !important;
-    color: $common-white !important;
-    background-color: $main-success !important;
-    box-shadow: 0 4px 6px -6px #000 !important
-    // border-radius: "0.5rem"
+// .chipDate {
+//     padding: 0.3rem !important;
+//     font-size: 1.3rem !important;
+//     // color: $common-white !important;
+//     // background-color: $main-success !important;
+//     // box-shadow: 0 4px 6px -6px #000 !important;
+//     // border-radius: "0.5rem"
+// }
+
+.title {
+    font-weight: 600;
+    color: $secondary-text;
+    font-size: 1.2rem !important;
 }

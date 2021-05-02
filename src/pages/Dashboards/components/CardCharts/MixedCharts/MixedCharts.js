@@ -7,8 +7,8 @@ function MixedCharts(props) {
     const { title, labels, chartView, handleChartView } = props
 
     const opts = [
-        { name: 'Weekly', keyName: 'weekly' },
-        { name: 'Monthly', keyName: 'monthly' },
+        { name: 'Hàng tuần', keyName: 'weekly' },
+        { name: 'Hàng tháng', keyName: 'monthly' },
     ]
 
     return (
@@ -30,7 +30,7 @@ function MixedCharts(props) {
                         labels: labels,
                         datasets: [
                             {
-                                label: 'Sales Targets',
+                                label: 'Cá nhân',
                                 data: chartView.data,
                                 order: 1,
                                 barPercentage: 0.1,
@@ -41,7 +41,7 @@ function MixedCharts(props) {
                             },
                             {
                                 type: 'line',
-                                label: 'Average Target',
+                                label: 'Trung bình',
                                 data: chartView.averageData,
                                 order: 2,
                                 fill: false,

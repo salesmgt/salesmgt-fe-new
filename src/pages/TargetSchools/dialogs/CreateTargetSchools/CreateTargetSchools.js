@@ -8,10 +8,10 @@ import {
     DialogTitle,
     Typography,
     withStyles,
-    Grid
+    Grid,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
-import { useHistory } from "react-router"
+import { useHistory } from 'react-router'
 import { useTargetForm } from './TargetFormContext'
 import { columns } from './CreateTargetSchoolsConfig'
 import { getSchoolsForTargets } from '../../TargetSchoolsServices'
@@ -62,18 +62,33 @@ function CreateTargetSchools(props) {
     const [data, setData] = useState(null)
 
     const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear();
-        const thisMonth = new Date().getMonth();
+        const thisYear = new Date().getFullYear()
+        const thisMonth = new Date().getMonth()
 
-        if (thisMonth < 7)
-            return `${thisYear - 1}-${thisYear}`;
+        if (thisMonth < 7) return `${thisYear - 1}-${thisYear}`
         else return `${thisYear}-${thisYear + 1}`
     }
     const schoolYear = calculateSchoolYear()
 
     let isMounted = true
-    const getListSchools = (schoolYear,page = 0, limit = 10, column = 'id',direction = 'asc',searchKey,listFilters) => {
-        getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,listFilters)
+    const getListSchools = (
+        schoolYear,
+        page = 0,
+        limit = 10,
+        column = 'id',
+        direction = 'asc',
+        searchKey,
+        listFilters
+    ) => {
+        getSchoolsForTargets(
+            schoolYear,
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters
+        )
             .then((res) => {
                 if (isMounted) {
                     // console.log('CreateTarget form - data: ', res);
@@ -92,7 +107,15 @@ function CreateTargetSchools(props) {
     }
 
     useEffect(() => {
-        getListSchools(schoolYear,page, limit, column, direction, searchKey, listFilters)
+        getListSchools(
+            schoolYear,
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters
+        )
         return () => {
             isMounted = false
         }
@@ -136,9 +159,7 @@ function CreateTargetSchools(props) {
                 <Button onClick={() => {}} className={classes.btnSave}>
                     {operations.save}
                 </Button>
-                <Button onClick={onClose}>
-                    {operations.cancel}
-                </Button>
+                <Button onClick={onClose}>{operations.cancel}</Button>
             </DialogActions>
         </Dialog>
     )

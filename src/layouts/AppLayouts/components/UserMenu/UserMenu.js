@@ -17,14 +17,16 @@ import { useAccount } from '../../../../pages/Accounts/hooks/AccountContext'
 import { useReport } from '../../../../pages/Reports/hooks/ReportContext'
 import { useSchool } from '../../../../pages/Schools/hooks/SchoolContext'
 import { useTargetSchool } from '../../../../pages/TargetSchools/hooks/TargetSchoolContext'
+import { useApp } from '../../../../hooks/AppContext'
 import { userMenuItems as items } from '../../AppLayoutsConfig'
 import { cookieNames } from '../../../../constants/Generals'
 import * as FilterTypes from '../../../../constants/Filters'
 import classes from './UserMenu.module.scss'
 
-function UserMenu(props) {
-    const { userInfo } = props
+function UserMenu() {
+    // const { userInfo } = props
     const { user, setUser } = useAuth()
+    const { userInfo } = useApp()
     const { setFilter: setAccountFilter } = useAccount()
     const { setFilter: setReportFilter } = useReport()
     const { setFilter: setSchoolFilter } = useSchool()
