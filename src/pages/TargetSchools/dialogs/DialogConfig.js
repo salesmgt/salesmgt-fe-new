@@ -16,18 +16,41 @@ export const Consts = {
         ok: 'OK, I understood',
         yes: 'OK',
         showCreate: 'Memorandum of Contract',
+        filter: 'Filters',
+        search: {
+            placeholder: 'Search...',
+        },
+    },
+    filters: {        
+        district: {
+            title: 'Districts',
+        },
+        purpose: {
+            title: 'Purposes',
+        },
+        schoolStatus: {
+            title: 'School Status',
+        },
+        schoolType: {
+            title: 'School Types',
+        },
+        schoolLevel: {
+            title: 'School Levels',
+        },
+        schoolScale: {
+            title: 'School Scales',
+        },
     },
     fields: {
-        pic: {
-            name: 'pic',
-            label: 'PICs',
+        schoolYear: {
+            name: 'schoolYear',
+            label: 'School Years',
         },
         purpose: {
             name: 'purpose',
             label: 'Purposes',
             options: { none: 'None' },
         },
-
         // For MOU
         duration: {
             title: 'Duaration',
@@ -75,10 +98,13 @@ export const Consts = {
         },
         // End for MOU
     },
+    messages: {
+        notFound: 'No records found.',
+    }
 }
 
 export const columns = ['#', 'School Name', 'PIC', 'Note', '']
-
+export const columnReview = ['#', 'School Name', 'Address', 'Purpose','']
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     return (
         <>

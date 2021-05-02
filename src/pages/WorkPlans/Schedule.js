@@ -136,7 +136,6 @@ const Schedule = (props) => {
     }
 
     const onPopupOpen = args => {
-        console.log("pop up", args)
         const stringDelete = 'Edit Event'
         if (args.type === 'RecurrenceAlert')
             if (args.element.querySelector('.e-dlg-header').textContent === stringDelete) {
@@ -222,7 +221,6 @@ const Schedule = (props) => {
     const onDrag = e => setStartTime(e.data?.startTime)
 
     const onActionBegin = (e) => {
-        // console.log('action này là ', e)
         if (e.requestType === 'eventCreate' || e.requestType === 'eventRemove' || e.requestType === 'eventChange') {
             props.handleRequestType(e, startTime)
             setStartTime(null)
@@ -422,7 +420,6 @@ const Schedule = (props) => {
                             allowDragAndDrop={props.isEdit}
                             ref={e => tree = e}
                             cssClass="treeview-external-drag"
-                            allowDragAndDrop
                             fields={{ dataSource: props?.tree, id: 'id', text: 'schoolName' }}
                             nodeDragStop={onTreeDragStop}
                             // nodeTemplate={treeTemplate}

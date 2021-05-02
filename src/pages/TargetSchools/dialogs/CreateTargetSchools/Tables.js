@@ -13,9 +13,11 @@ import {
     TableSortLabel,
     withStyles,
     ListItemText,
+    Checkbox,
 } from '@material-ui/core'
 import {
     MdFirstPage,
+    MdInfo,
     MdKeyboardArrowLeft,
     MdKeyboardArrowRight,
     MdLastPage,
@@ -103,7 +105,7 @@ function TablePaginationActions(props) {
 // }
 
 function SortableTableHeaders(props) {
-    const { columns, direction, column, onRequestSort } = props
+    const { columns, direction, column, onRequestSort, numSelected, rowCount, onSelectAllClick } = props
     const createSortHandler = (col, direction) => {
         onRequestSort(col, direction)
     }
@@ -127,12 +129,20 @@ function SortableTableHeaders(props) {
     return (
         <TableHead>
             <TableRow className={classes.tHead}>
+                <TableCell padding="checkbox" className={classes.tHeadCell}>
+                    <Checkbox
+                        indeterminate={
+                            numSelected > 0 && numSelected < rowCount
+                        }
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                    />
+                </TableCell>
                 {columns.map((col) => (
                     <TableCell
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
-                        align={col.key === 'no' ? 'center' : 'left'}
                         width={col.width}
                     >
                         <MuiTableSortLabel
@@ -158,7 +168,7 @@ function SortableTableHeaders(props) {
 
 // Customize component Table
 function Tables(props) {
-    const { columns, rows, totalRecord, totalPage } = props
+    const { selectedRows, setSelectedRows, columns, rows, totalRecord, totalPage } = props
     const { messages } = Consts
 
     const {
@@ -172,6 +182,46 @@ function Tables(props) {
         setPage,
         setDirection,
     } = useTargetForm()
+
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+          const  newSelecteds = rows.filter((row) => !row.username)
+            setSelectedRows(newSelecteds)
+            return;
+          }
+          setSelectedRows([])  
+    }
+
+    const handleClick = (event,row) => {
+        console.log(event.target.checked)
+        // if(!event.target.checked){
+        //     event.target.checked=false
+        // }
+        const selectedIndex = selectedRows.indexOf(row)
+        let newSelected = []
+         if (selectedIndex === -1) {
+             newSelected = newSelected.concat(selectedRows, row)
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedRows.slice(1))
+        } else if (selectedIndex === selectedRows.length - 1) {
+            newSelected = newSelected.concat(selectedRows.slice(0, -1))
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedRows.slice(0, selectedIndex),
+                selectedRows.slice(selectedIndex + 1)
+            )
+        }
+        console.log("index ",selectedIndex)
+        console.log("mảng ",newSelected)
+        setSelectedRows(newSelected)
+    }
+
+    const isSelected = (row) => 
+    {   
+        if(selectedRows.indexOf(row) !== -1)
+        return true
+       else return false
+    }
 
     // ====================Paging====================
     const handleChangePage = (event, newPage) => {
@@ -211,15 +261,20 @@ function Tables(props) {
             })
         }
     }
+    
+    const truncateString = (str) => {
+        if (str) return str.length > 35 ? str.substring(0, 32) + '...' : str
+        else return ''
+    }
 
-    const setStatusChipColor = (status, isActive) => {
+    const setStatusChipColor = (status) => {
         switch (status) {
             case statusNames.lead:
-                return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
+                return <Chip label={status} className={classes.chipLead} />
             case statusNames.customer:
-                return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
+                return <Chip label={status} className={classes.chipCustomer} />
             default:
-                return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+                return <Chip label={status} />
         }
     }
 
@@ -237,32 +292,41 @@ function Tables(props) {
                         direction={direction}
                         column={column}
                         onRequestSort={onSortBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        rowCount={rows?.filter(item => !item.username)?.length}
+                        numSelected={selectedRows?.length}
                     />
                     <TableBody className={classes.tBody}>
                         {rows?.length > 0 ? (
-                            rows.map((row, index) => (
+                            rows.map((row) => (
                                 <TableRow
                                     key={row.id}
                                     className={classes.tBodyRow}
                                 >
                                     <TableCell
-                                        className={classes.tableCell}
-                                        align="center"
+                                        padding="checkbox" width="1%"
+                                        onClick={(event) => {!row.username &&
+                                            handleClick(event, row)
+                                        }}
                                     >
-                                        {params.page * params.limit + index + 1}
+                                        <Checkbox
+                                            checked={row.username ? false : isSelected(row)}
+                                            disabled={row.username ? true : false}
+                                        />
                                     </TableCell>
                                     <TableCell
-                                        className={row.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
+                                        className={classes.tCellSchoolName}
                                     >
+                                        {row.educationalLevel} {' '}
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
                                             autoEscape={true}   
-                                            textToHighlight= {`${row.educationalLevel} ${row.name}`}
-                                        /> 
+                                            textToHighlight={row.name}
+                                        />
                                     </TableCell>
                                     <TableCell
-                                        className={row.active ? classes.tBodyCell : classes.tCellInactive}
+                                        className={classes.tBodyCell}
                                     >
                                         <ListItemText
                                             primary={
@@ -270,7 +334,7 @@ function Tables(props) {
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[params.searchKey]}
                                                     autoEscape={true}   
-                                                    textToHighlight={row.address}
+                                                    textToHighlight={truncateString(row.address)}
                                                 />
                                             }
                                             secondary={row.district}
@@ -281,20 +345,37 @@ function Tables(props) {
                                         />
                                     </TableCell>
                                     <TableCell
-                                        className={row.active ? classes.tBodyCell : classes.tCellInactive}
+                                        className={classes.tBodyCell}
                                     >
-                                        <Highlighter
-                                            highlightClassName="YourHighlightClass"
-                                            searchWords={[params.searchKey]}
-                                            autoEscape={true}   
-                                            textToHighlight={row?.reprName
-                                                    ? (row.reprIsMale
-                                                        ? `Mr. ${row.reprName}` : `Ms. ${row.reprName}`)
-                                                    : ''}
+                                        <ListItemText
+                                            primary={
+                                                <>
+                                                    {row.reprName
+                                                        ? row.reprIsMale ? 'Mr. ' : 'Ms. '
+                                                        : ''
+                                                    }
+                                                    <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}   
+                                                        textToHighlight={row.reprName}
+                                                    />
+                                                </>
+                                            }
+                                            secondary={row.reprPhone}
+                                            classes={{
+                                                primary: classes.itemText,
+                                                secondary: classes.itemText
+                                            }}
                                         />
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        {setStatusChipColor(row.status, row.active)}
+                                    <TableCell>
+                                        {setStatusChipColor(row.status)}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <IconButton>
+                                            <MdInfo />
+                                        </IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))

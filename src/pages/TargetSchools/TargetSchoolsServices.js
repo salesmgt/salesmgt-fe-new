@@ -131,12 +131,12 @@ export async function getDashboardsByKeys(...keys) {
     return data
 }
 
-export async function getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,filters)
+export async function getSchoolsForTargets(page,limit,column,direction,searchKey,filters)
 {    
     // Đây là url đúng nhưng chưa có. Để đây sau này dùng, DO NOT REMOVE!!!
     // let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
     
-    let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+    let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}&active=true`
     url = searchKey ? url.concat(`&key=${searchKey}`) : url
 
     if (filters) {
@@ -156,6 +156,8 @@ export async function getSchoolsForTargets(schoolYear,page,limit,column,directio
             ? url.concat(`&status=${filters['status'].filterValue}`)
             : url
     }
+
+    console.log('url getSchools for targets: ', url);
 
     const response = await Api.get(url)
     const data = await response.data
