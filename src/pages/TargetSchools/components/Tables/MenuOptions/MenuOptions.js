@@ -7,8 +7,15 @@ import {
     Menu,
     MenuItem,
 } from '@material-ui/core'
-import { MdDelete, MdDescription, MdInfo, MdMoreVert, MdPersonAdd, MdNoteAdd } from 'react-icons/md'
-import { IoPersonRemoveSharp } from "react-icons/io5"
+import {
+    MdDelete,
+    MdDescription,
+    MdInfo,
+    MdMoreVert,
+    MdPersonAdd,
+    MdNoteAdd,
+} from 'react-icons/md'
+import { IoPersonRemoveSharp } from 'react-icons/io5'
 import { useAuth } from '../../../../../hooks/AuthContext'
 import ConfirmRemove from '../../../dialogs/ConfirmRemove/ConfirmRemove'
 import CannotRemove from '../../../dialogs/CannotRemove/CannotRemove'
@@ -19,10 +26,11 @@ import { Consts } from '../../../TargetSchoolsConfig'
 import { roleNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
+import { Snackbars } from '../../../../../components'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data, refreshAPI } = props
+    const { data, refreshAPI, setNotify } = props
     const { menuItems } = Consts
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -30,7 +38,7 @@ function MenuOptions(props) {
     const [openAssign, setOpenAssign] = useState(false)
     const [openUnassign, setOpenUnassign] = useState(false)
     const [openMOU, setOpenMOU] = useState(false)
-    
+
     const [rows, setRows] = useState([data])
 
     const { user } = useAuth()
@@ -104,11 +112,12 @@ function MenuOptions(props) {
                     refreshAPI={refreshAPI}
                 />
             )
-        } else if (!data?.fullName){
+        } else if (!data?.fullName) {
             // assign one dialog
-            return(
-                <AssignMultiple                
-                    notify={props.notify} setNotify={props.setNotify}
+            return (
+                <AssignMultiple
+                    notify={props.notify}
+                    setNotify={props.setNotify}
                     open={openAssign}
                     onClose={() => setOpenAssign(false)}
                     rows={rows}
@@ -121,12 +130,18 @@ function MenuOptions(props) {
 
     const renderMOUDialog = () => {
         return (
-            <CreateMOU
-                open={openMOU}
-                onClose={() => setOpenMOU(false)}
-                refreshPage={refreshAPI}
-                // data={data}
-            />
+            <>
+                <CreateMOU
+                    open={openMOU}
+                    onClose={() => setOpenMOU(false)}
+                    // refreshPage={refreshAPI}
+                    targetSchoolId={data?.id}
+                    schoolId={data?.schoolId}
+                    schoolName={data?.schoolName}
+                    schoolStatus={data?.schoolStatus}
+                    setNotify={setNotify}
+                />
+            </>
         )
     }
 
@@ -162,7 +177,10 @@ function MenuOptions(props) {
                     component={Link}
                     to={{
                         pathname: '/apps/reports',
-                        state: { targetId: data.id, schoolName: data.schoolName },
+                        state: {
+                            targetId: data.id,
+                            schoolName: data.schoolName,
+                        },
                     }}
                 >
                     <ListItemIcon className={classes.itemIcon}>

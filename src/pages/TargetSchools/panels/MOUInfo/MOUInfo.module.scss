@@ -66,4 +66,10 @@
         height: 22.5rem;
         overflow-y: auto;
     }
+    .noMOUZone {
+        margin: 0.5rem 1rem;
+        .noMOU{
+            font-style: italic;
+        }
+    }
 }

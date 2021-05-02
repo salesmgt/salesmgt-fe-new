@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     menuItemSelected: {},
     autoComplete: {
         width: 260,
-        marginLeft: '0.5rem'
+        marginLeft: '0.5rem',
     },
     itemPIC: {
         padding: 0,
@@ -96,12 +96,12 @@ function AssignMultipleForm(props) {
     const typingTimeoutRef = useRef({})
 
     const handleSubmit = () => {
-        let array = []
+        const array = []
         rowsState.map((item) => {
             item = { ...item, username: PIC?.username }
             array.push(item)
         })
-        console.log(array)
+        // console.log(array)
         assignMulti(array).then((res) => {
             props.setNotify({
                 isOpen: true,
@@ -181,7 +181,7 @@ function AssignMultipleForm(props) {
             note: e.target.value ? e.target.value : null,
             noteBy: e.target.value ? user.username : null,
         }
-        console.log(array)
+        // console.log(array)
         setRowsState(array)
     }
     return (
@@ -228,15 +228,28 @@ function AssignMultipleForm(props) {
                                     )}
                                     renderOption={(option) => {
                                         return (
-                                            <div className={styles.divItemPIC} key={option.username}>
+                                            <div
+                                                className={styles.divItemPIC}
+                                                key={option.username}
+                                            >
                                                 <ListItemAvatar>
                                                     <Avatar
                                                         src={option.avatar}
                                                     />
                                                 </ListItemAvatar>
-                                                <ListItemText primary={option.fullName ? option.fullName : ''} classes={{ primary: classes.itemTextPrimary }} />
+                                                <ListItemText
+                                                    primary={
+                                                        option.fullName
+                                                            ? option.fullName
+                                                            : ''
+                                                    }
+                                                    classes={{
+                                                        primary:
+                                                            classes.itemTextPrimary,
+                                                    }}
+                                                />
                                             </div>
-                                        );
+                                        )
                                     }}
                                     className={styles.autoComplete}
                                     onChange={(event, newPIC) =>

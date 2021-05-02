@@ -225,7 +225,7 @@ function UpdateSchStatus(props) {
                                         <Controller
                                             name="duration"
                                             control={control}
-                                            defaultValue=""
+                                            defaultValue=''
                                             render={({ value, onChange }) => (
                                                 <TextField
                                                     label={

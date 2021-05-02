@@ -375,6 +375,7 @@ function CreateAccountForm(props) {
                     </Grid>
                 </form>
             </DialogContent>
+
             <DialogActions className={classes.dialogAct}>
                 <Button
                     className={classes.btnSave}

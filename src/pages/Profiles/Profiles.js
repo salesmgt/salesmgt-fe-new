@@ -450,7 +450,6 @@ function Profiles() {
                 </div> */}
                 <div className={classes.infoAvatar}>
                     <Animation animation="transition.expandIn" delay={300}>
-                        {/* <Avatar className={classes.avatar} src={avatar} /> */}
                         {avatar ? (
                             <Avatar
                                 className={classes.avatar}

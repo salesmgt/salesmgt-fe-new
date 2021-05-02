@@ -13,13 +13,15 @@ import {
 import { IconContext } from 'react-icons'
 import * as Cookies from '../../../../utils/Cookies'
 import { useAuth } from '../../../../hooks/AuthContext'
+import { useApp } from '../../../../hooks/AppContext'
 import { userMenuItems as items } from '../../AppLayoutsConfig'
 import { cookieNames } from '../../../../constants/Generals'
 import classes from './UserMenu.module.scss'
 
-function UserMenu(props) {
-    const { userInfo } = props
+function UserMenu() {
+    // const { userInfo } = props
     const { user, setUser } = useAuth()
+    const { userInfo } = useApp()
 
     const { url } = useRouteMatch()
 

@@ -348,8 +348,8 @@ function Filters(props) {
     const handleIsAssignedChange = (event) => {
         const selectedIsAssigned = event.target.value
 
-        console.log('isAssigned? ', selectedIsAssigned);
-        
+        console.log('isAssigned? ', selectedIsAssigned)
+
         setFilter(ASSIGNED_FILTER, selectedIsAssigned)
         dispatchParams({
             type: ReducerActions.FILTER_ASSIGNED,
@@ -433,7 +433,7 @@ function Filters(props) {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
-        console.log('chips array: ', listChips);
+
         return listChips
     }
     //===============================================================================

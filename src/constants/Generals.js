@@ -21,9 +21,10 @@ export const serviceNames = {
 export const purposeNames = {
     salesMoi: 'Sales mới',
     theoDoi: 'Theo dõi',
-    chamSoc: 'Chăm sóc',
+    tiemNang: 'Tiềm năng',
     taiKy: 'Tái ký hợp đồng',
     kyMoi: 'Ký mới hợp đồng',
+    chamSoc: 'Chăm sóc',
 }
 
 export const cookieNames = {

@@ -15,4 +15,5 @@ export const PHONE_RGX = /(0[3|5|7|8|9])+([\d]{8})$/g
 export const TEL_RGX = /(02)+([\d]{9})$/g
 
 // Only has number 0-9
-export const DURATION_RGX = /^[\d]+$/g
+// export const DURATION_RGX = /^[\d]+$/g
+export const DURATION_RGX = /^([1-9])[\d]*$/g

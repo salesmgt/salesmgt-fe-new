@@ -2,40 +2,72 @@ import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import moment from 'moment'
 import { Grid, Typography } from '@material-ui/core'
-import { CardNow, CardRanks, CardJack, MixedCharts } from './components'
-import { Animation, AnimationGroup, Loading } from '../../components'
-import { useAuth } from '../../hooks/AuthContext'
-import * as DashboardsServices from './DashboardsServices'
 import {
-    rankData,
-    chartData as ChartData,
-    cardData,
-    Consts,
-} from './DashboardsConfig'
-import { roleNames } from '../../constants/Generals'
+    MdFiberNew,
+    MdTrendingUp,
+    MdLoop,
+    MdLoyalty,
+    MdVisibility,
+} from 'react-icons/md'
+import { GiProfit } from 'react-icons/gi'
+import { CardJack } from './components'
+import { Animation, AnimationGroup, Loading } from '../../components'
+// import { useAuth } from '../../hooks/AuthContext'
+import { useApp } from '../../hooks/AppContext'
+import * as DashboardsServices from './DashboardsServices'
+import { Consts } from './DashboardsConfig'
+import * as Milk from '../../utils/Milk'
+import { milkNames } from '../../constants/Generals'
 import classes from './Dashboards.module.scss'
 
 function Dashboards() {
-    const { user } = useAuth()
-    const { username, roles } = user
+    // const { user } = useAuth()
+    const { schYears, userInfo } = useApp()
+    const bakschYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
 
     const location = useLocation()
     const history = useHistory()
 
-    const [userData, setUserData] = useState(null)
+    // const [userData, setUserData] = useState(null)
 
-    const [chartData, setChartData] = useState([])
+    const [cardData, setCardData] = useState(null)
 
-    const [chartView, setChartView] = useState([])
+    const { header, cardsConsts } = Consts
 
-    const { cardsConsts, chartsConsts } = Consts
+    // let isMounted = true
+    // const refreshPage = () => {
+    //     DashboardsServices.getUser(user.username)
+    //         .then((data) => {
+    //             if (isMounted) {
+    //                 setUserData(data)
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //         })
+    // }
+
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // useEffect(() => {
+    //     refreshPage()
+    //     return () => {
+    //         // eslint-disable-next-line react-hooks/exhaustive-deps
+    //         isMounted = false
+    //     }
+    // }, [location.pathname])
 
     let isMounted = true
     const refreshPage = () => {
-        DashboardsServices.getUser(username)
+        DashboardsServices.getDashboards()
             .then((data) => {
                 if (isMounted) {
-                    setUserData(data)
+                    setCardData(data)
                 }
             })
             .catch((error) => {
@@ -47,14 +79,6 @@ function Dashboards() {
                     })
                 }
             })
-        new Promise((res, rej) => {
-            setTimeout(() => {
-                if (isMounted) {
-                    setChartData(ChartData)
-                    setChartView(ChartData.datasets[0])
-                }
-            }, 2000)
-        })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,16 +90,30 @@ function Dashboards() {
         }
     }, [location.pathname])
 
-    if (!userData) {
+    // if (!userData) {
+    //     return <Loading />
+    // }
+
+    // if (!schYears) {
+    //     return <Loading />
+    // }
+
+    if (!bakschYears) {
         return <Loading />
     }
 
-    // const { fullName, birthDate } = userData
+    if (!userInfo) {
+        return <Loading />
+    }
+
+    if (!cardData) {
+        return <Loading />
+    }
 
     const generateGreetings = () => {
         const currHour = moment().format('kk')
         const currDay = moment().format('DD/MM')
-        const specialDay = moment(userData?.birthDate).format('DD/MM')
+        const specialDay = moment(userInfo?.birthDate).format('DD/MM')
 
         if (currDay === specialDay) {
             return 'Happy birthday'
@@ -97,157 +135,6 @@ function Dashboards() {
             }
         }
         return 'Hello'
-    }
-
-    const handleChartView = (keyName) => {
-        // eslint-disable-next-line array-callback-return
-        chartData?.datasets.map((val) => {
-            if (val.name === keyName) {
-                setChartView(val)
-            }
-        })
-    }
-
-    const renderLeftBody = (role) => {
-        switch (role) {
-            case roleNames.manager:
-                return (
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card1.title}
-                                color={cardsConsts.card1.color}
-                                isOpts={true}
-                                ranges={cardData.manager.targetLeadSum.ranges}
-                                datasets={
-                                    cardData.manager.targetLeadSum.datasets
-                                }
-                                des={cardsConsts.card1.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card2.title}
-                                color={cardsConsts.card2.color}
-                                isOpts={true}
-                                ranges={cardData.manager.potLeadsum.ranges}
-                                datasets={cardData.manager.potLeadsum.datasets}
-                                des={cardsConsts.card2.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card3.title}
-                                color={cardsConsts.card3.color}
-                                isOpts={true}
-                                ranges={cardData.manager.newLeadSum.ranges}
-                                datasets={cardData.manager.newLeadSum.datasets}
-                                des={cardsConsts.card3.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <MixedCharts
-                                title={chartsConsts.chart1.title}
-                                labels={chartData.labels}
-                                chartView={chartView}
-                                handleChartView={handleChartView}
-                            />
-                        </Grid>
-                    </Grid>
-                )
-            case roleNames.supervisor:
-                return (
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card1.title}
-                                color={cardsConsts.card1.color}
-                                isOpts={true}
-                                ranges={cardData.manager.targetLeadSum.ranges}
-                                datasets={
-                                    cardData.manager.targetLeadSum.datasets
-                                }
-                                des={cardsConsts.card1.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card2.title}
-                                color={cardsConsts.card2.color}
-                                isOpts={true}
-                                ranges={cardData.manager.potLeadsum.ranges}
-                                datasets={cardData.manager.potLeadsum.datasets}
-                                des={cardsConsts.card2.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card3.title}
-                                color={cardsConsts.card3.color}
-                                isOpts={true}
-                                ranges={cardData.manager.newLeadSum.ranges}
-                                datasets={cardData.manager.newLeadSum.datasets}
-                                des={cardsConsts.card3.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <MixedCharts
-                                title={chartsConsts.chart1.title}
-                                labels={chartData.labels}
-                                chartView={chartView}
-                                handleChartView={handleChartView}
-                            />
-                        </Grid>
-                    </Grid>
-                )
-            case roleNames.salesman:
-                return (
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card1.title}
-                                color={cardsConsts.card1.color}
-                                isOpts={false}
-                                ranges={cardData.salesman.targetLeadSum.ranges}
-                                datasets={
-                                    cardData.salesman.targetLeadSum.datasets
-                                }
-                                des={cardsConsts.card1.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card2.title}
-                                color={cardsConsts.card2.color}
-                                isOpts={false}
-                                ranges={cardData.salesman.potLeadsum.ranges}
-                                datasets={cardData.salesman.potLeadsum.datasets}
-                                des={cardsConsts.card2.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <CardJack
-                                title={cardsConsts.card3.title}
-                                color={cardsConsts.card3.color}
-                                isOpts={false}
-                                ranges={cardData.salesman.newLeadSum.ranges}
-                                datasets={cardData.salesman.newLeadSum.datasets}
-                                des={cardsConsts.card3.des}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <MixedCharts
-                                title={chartsConsts.chart1.title}
-                                labels={chartData.labels}
-                                chartView={chartView}
-                                handleChartView={handleChartView}
-                            />
-                        </Grid>
-                    </Grid>
-                )
-            default:
-                break
-        }
     }
 
     return (
@@ -279,9 +166,9 @@ function Dashboards() {
                                     variant="h4"
                                     color="inherit"
                                 >
-                                    {`${generateGreetings()}, ${userData?.fullName
+                                    {`${generateGreetings()}, ${userInfo?.fullName
                                         .split(' ')
-                                        .pop()}!`}
+                                        .pop()}`}
                                 </Typography>
                             </Animation>
                         </Grid>
@@ -298,38 +185,228 @@ function Dashboards() {
                                     animation: 'transition.slideUpBigIn',
                                 }}
                             >
-                                {renderLeftBody(roles[0])}
+                                <Grid container spacing={0}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.rowy}
+                                    >
+                                        <Typography className={classes.title}>
+                                            {header.child1}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                        <Grid container spacing={2}>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
+                                                        cardsConsts.card1.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card1.color
+                                                    }
+                                                    icon={
+                                                        <MdFiberNew
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(75, 192, 192, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={
+                                                        cardData?.salesMoi
+                                                    }
+                                                    des={cardsConsts.card1.des}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
+                                                        cardsConsts.card2.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card2.color
+                                                    }
+                                                    icon={
+                                                        <MdVisibility
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(255, 206, 86, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={cardData?.theoDoi}
+                                                    des={cardsConsts.card2.des}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
+                                                        cardsConsts.card3.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card3.color
+                                                    }
+                                                    icon={
+                                                        <MdTrendingUp
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(54, 162, 235, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={
+                                                        cardData?.tiemNang
+                                                    }
+                                                    des={cardsConsts.card3.des}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.rowy}
+                                    >
+                                        <Typography className={classes.title}>
+                                            {header.child2}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                        <Grid container spacing={2}>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
+                                                        cardsConsts.card4.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card4.color
+                                                    }
+                                                    icon={
+                                                        <GiProfit
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(153, 102, 255, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={cardData?.kyMoi}
+                                                    des={cardsConsts.card4.des}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
+                                                        cardsConsts.card5.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card5.color
+                                                    }
+                                                    icon={
+                                                        <MdLoop
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(255, 159, 64, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={cardData?.taiKy}
+                                                    des={cardsConsts.card5.des}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
+                                                        cardsConsts.card6.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card6.color
+                                                    }
+                                                    icon={
+                                                        <MdLoyalty
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(255, 99, 132, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={cardData?.chamSoc}
+                                                    des={cardsConsts.card6.des}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
                             </AnimationGroup>
                         </Grid>
                     </Grid>
                 </Grid>
-                {/* <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={3}
-                    className={classes.rightSide}
-                >
-                    <AnimationGroup
-                        enter={{
-                            animation: 'transition.slideUpBigIn',
-                        }}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} md={3} lg={12}>
-                                <CardNow />
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={9} lg={12}>
-                                <CardRanks
-                                    title="Monthly Salesman Rank"
-                                    columns={['Rank', 'Person']}
-                                    data={rankData}
-                                />
-                            </Grid>
-                        </Grid>
-                    </AnimationGroup>
-                </Grid> */}
             </Grid>
         </div>
     )
