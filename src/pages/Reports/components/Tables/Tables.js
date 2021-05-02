@@ -30,7 +30,8 @@ import { useReport } from '../../hooks/ReportContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { parseDateToString } from '../../../../utils/DateTimes'
-import Highlighter from "react-highlight-words";
+import Highlighter from 'react-highlight-words';
+import { purposeNames } from '../../../../constants/Generals'
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -234,13 +235,17 @@ function Tables(props) {
 
     const setPurposeChipColor = (purpose) => {
         switch (purpose) {
-            case 'Sales mới':
+            case purposeNames.purp1:
                 return <Chip label={purpose} className={classes.chipSalesMoi} />
-            case 'Chăm sóc':
+            case purposeNames.purp2:
+                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            case purposeNames.purp3:
+                return <Chip label={purpose} className={classes.chipTiemNang} />
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case 'Tái ký hợp đồng':
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case 'Ký mới hợp đồng':
+            case purposeNames.purp6:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 return <Chip label={purpose} /> // #5c21f3

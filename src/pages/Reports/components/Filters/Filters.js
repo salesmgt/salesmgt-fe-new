@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -37,16 +37,18 @@ import {
     DISTRICT_FILTER,
     SCHOOL_YEAR_FILTER,
     PURPOSE_FILTER,
-    // STATUS_FILTER,
     DATE_RANGE_FILTER,
+    // STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
 import { useAuth } from '../../../../hooks/AuthContext'
 import * as Milk from '../../../../utils/Milk'
-import { milkNames } from '../../../../constants/Generals'
+import { milkNames, roleNames } from '../../../../constants/Generals'
 import { Consts } from '../../ReportsConfig'
-import { roleNames } from '../../../../constants/Generals'
+import { getAccount } from '../../../Accounts/AccountsServices'
+// import { getPurpsByStatus } from '../../../../utils/Sortings'
 import styles from './Filters.module.scss'
+import { useLocation } from 'react-router'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -169,21 +171,26 @@ const MuiAccordionDetails = withStyles(() => ({
     },
 }))(AccordionDetails)
 
-function Filters() {
-    // console.log('filter reports nè')
-
+function Filters(props) {
     const classes = useStyles()
     const { operations, filters } = Consts
 
     const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
+
+    const location = useLocation()
+    const schoolName = location?.state?.schoolName ? location?.state?.schoolName : ''
+    const picUsername = location?.state?.PIC ? location?.state?.PIC : ''
+    console.log('Filters.js: ', location);
+
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
     const bakSalesPurps = salesPurps
         ? salesPurps
         : Milk.getMilk(milkNames.salesPurps)
+    // const purposes = getPurpsByStatus()
 
-    //Use states which have been declared in the TargetSchoolContext
+    //Use states which have been declared in the ReportContext
     const {
         params,
         dispatchParams,
@@ -205,17 +212,17 @@ function Filters() {
         setFilter,
         getListPICs,
     } = useReport()
-
-    const typingTimeoutRef = useRef({})
-
+    
+    const [searchKey, setSearchKey] = useState(schoolName)
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
-
+    
+    const typingTimeoutRef = useRef({})
     const onSearchPICChange = (event) => {
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current)
         }
         typingTimeoutRef.current = setTimeout(() => {
-            const searchPIC = event.target.value
+            const searchPIC = event?.target?.value
             if (searchPIC) {
                 getListPICs(searchPIC)
             } else {
@@ -237,7 +244,7 @@ function Filters() {
     }
 
     const handleDistrictChange = (event) => {
-        const selectedDistrict = event.target.value
+        const selectedDistrict = event?.target?.value
         setFilter(DISTRICT_FILTER, selectedDistrict)
         dispatchParams({
             type: ReducerActions.FILTER_DISTRICT,
@@ -249,7 +256,7 @@ function Filters() {
     }
 
     const handleSchoolYearChange = (event) => {
-        const selectedSchoolYear = event.target.value
+        const selectedSchoolYear = event?.target?.value
         setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_YEAR,
@@ -261,7 +268,7 @@ function Filters() {
     }
 
     // const handleSchoolStatusChange = (event) => {
-    //     const selectedSchoolStatus = event.target.value
+    //     const selectedSchoolStatus = event?.target?.value
 
     //     // setSchoolStatus(selectedSchoolStatus)
     //     // if (selectedSchoolStatus) {
@@ -289,7 +296,7 @@ function Filters() {
     // }
 
     const handlePurposeChange = (event) => {
-        const selectedPurpose = event.target.value
+        const selectedPurpose = event?.target?.value
         setFilter(PURPOSE_FILTER, selectedPurpose)
         dispatchParams({
             type: ReducerActions.FILTER_PURPOSE,
@@ -320,56 +327,77 @@ function Filters() {
         })
     }
 
-    //==============Handle action delete from Chips and btn "Clear all"==============
-    // const handleChipsRemoved = (removedFilters) => {
-    //     removedFilters.forEach((removedFilter) => {
-    //         switch (removedFilter) {
-    //             case 'PIC':
-    //                 setPIC(null)
-    //                 break
-    //             case 'district':
-    //                 setDistrict('All')
-    //                 break
-    //             case 'schoolYear':
-    //                 setSchoolYear('All')
-    //                 break
-    //             case 'status':
-    //                 setSchoolStatus('All')
-    //                 break
-    //             case 'purpose':
-    //                 setPurpose('All')
-    //                 break
-    //             case 'dateRange':
-    //                 setDateRange([null, null])
-    //                 break
-    //             default:
-    //                 break
-    //         }
-    //     })
-    // }
+    //=================Handle action enter / submit of SearchFields==================
+    const handleSearch = (keyword) => {
+        setSearchKey(keyword)
+        dispatchParams({
+            type: ReducerActions.ENTER_SEARCH_KEYWORD,
+            payload: keyword,
+        })
+        props.setTargetId(0)
+    }
+    console.log('Filters.js --- searchKey: ', searchKey);
+
+    const resetFilters = () => {
+        // handlePICChange(null, null)
+        handleDistrictChange(null)
+        handleSchoolYearChange(null)
+        handlePurposeChange(null)
+        handleDateRangeChange([null, null])
+        // handleSearch('')
+    }
+
+    // When React router redirects to this screen while containing targetID and PIC's username,
+    // it will filter all reports of this school which is assigned to this PIC 
+    useEffect(() => {
+        if (picUsername) {
+            resetFilters(); // chặn chỗ này cho hợp lý
+            getAccount(picUsername).then(res => {
+                // setSearchingPIC(res)
+                handlePICChange(null, res)
+            }).catch(error => {
+                if (error.response) {
+                    console.log(error)
+                }
+            })
+        }
+    }, [])
+    // console.log('searchingPIC: ', searchingPIC);
 
     const handleChipsRemoved = (removedFilters) => {
+        let count = 0
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 case PIC_FILTER:
                     setFilter(PIC_FILTER, null)
+                    props.setTargetId(0)
+                    count++
                     break
                 case DISTRICT_FILTER:
                     setFilter(DISTRICT_FILTER, '')
+                    count++
                     break
                 case SCHOOL_YEAR_FILTER:
                     setFilter(SCHOOL_YEAR_FILTER, '')
+                    count++
                     break
                 case PURPOSE_FILTER:
                     setFilter(PURPOSE_FILTER, '')
+                    count++
                     break
                 case DATE_RANGE_FILTER:
                     setFilter(DATE_RANGE_FILTER, [null, null])
+                    count++
                     break
                 default:
                     break
             }
         })
+        console.log('count removed filters: ', count);
+        console.log('length = ', Object.keys(params.listFilters).length)
+        if (count === Object.keys(params.listFilters).length) {
+            handleSearch('')
+        }
     }
 
     const generateChipsArray = (listFilters) => {
@@ -401,14 +429,6 @@ function Filters() {
     }
     //===============================================================================
 
-    //=================Handle action enter / submit of SearchFields==================
-    const handleSearch = (keyword) => {
-        dispatchParams({
-            type: ReducerActions.ENTER_SEARCH_KEYWORD,
-            payload: keyword,
-        })
-    }
-
     return (
         <div className={styles.wrapper}>
             <MuiAccordion>
@@ -433,6 +453,7 @@ function Filters() {
                     </Box>
                     <Box className={classes.flexItem}>
                         <SearchFields
+                            searchValue={searchKey}
                             placeholder={operations.search.placeholder}
                             onChange={handleSearch}
                         />
@@ -602,6 +623,7 @@ function Filters() {
                                     pic.fullName ? pic.fullName : ''
                                 }
                                 value={PIC}
+                                // value={searchingPIC ?? PIC}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}

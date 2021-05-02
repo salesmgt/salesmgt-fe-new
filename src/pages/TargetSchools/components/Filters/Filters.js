@@ -301,7 +301,6 @@ function Filters(props) {
 
         typingTimeoutRef.current = setTimeout(() => {
             const searchPIC = event.target.value
-            console.log('searchKey = ', searchPIC)
             if (searchPIC) {
                 getListPICs(searchPIC)
             } else {
@@ -347,9 +346,6 @@ function Filters(props) {
 
     const handleIsAssignedChange = (event) => {
         const selectedIsAssigned = event.target.value
-
-        console.log('isAssigned? ', selectedIsAssigned)
-
         setFilter(ASSIGNED_FILTER, selectedIsAssigned)
         dispatchParams({
             type: ReducerActions.FILTER_ASSIGNED,
@@ -359,38 +355,6 @@ function Filters(props) {
             },
         })
     }
-
-    //==============Handle action delete from Chips and btn "Clear all"==============
-    // const handleChipsRemoved = (removedFilters) => {
-    //     removedFilters.forEach((removedFilter) => {
-    //         switch (removedFilter) {
-    //             case 'schoolYear':
-    //                 setSchoolYear('')
-    //                 break
-    //             case 'district':
-    //                 setDistrict('')
-    //                 break
-    //             case 'type':
-    //                 setSchoolType('')
-    //                 break
-    //             case 'level':
-    //                 setSchoolLevel('')
-    //                 break
-    //             case 'scale':
-    //                 setSchoolScale('')
-    //                 break
-    //             case 'PIC':
-    //                 setPIC(null)
-    //                 break
-    //             case 'purpose':
-    //                 setPurpose('')
-    //                 break
-    //             default:
-    //                 // break;
-    //                 break
-    //         }
-    //     })
-    // }
 
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
@@ -433,7 +397,6 @@ function Filters(props) {
         for (const chip in listFilters) {
             listChips.push(listFilters[chip])
         }
-
         return listChips
     }
     //===============================================================================
@@ -477,6 +440,7 @@ function Filters(props) {
     }
 
     const renderAssignDialog = () => {
+        // console.log('props.selectedRows = ', props.selectedRows);
         if (props.selectedRows.length > 0) {
             // Checked target schools
             return (
@@ -491,10 +455,7 @@ function Filters(props) {
         } else {
             // Have not checked target schools
             return (
-                <NotifyAssign
-                    open={openNotifyDialog}
-                    onClose={() => setOpenNotifyDialog(false)}
-                />
+                <NotifyAssign open={openNotifyDialog} onClose={() => setOpenNotifyDialog(false)} />
             )
         }
     }

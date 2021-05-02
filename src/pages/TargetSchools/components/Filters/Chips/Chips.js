@@ -54,7 +54,7 @@ function Chips(props) {
     const [btnClearAll, setBtnClearAll] = useState(false)
 
     const handleChipDelete = (chipToDelete) => () => {
-        console.log('chipToDelete = ', chipToDelete);
+        // console.log('chipToDelete = ', chipToDelete);
         // setChipData((listChips) => listChips.filter((chip) => chip.filterType !== chipToDelete.filterType));
 
         switch (chipToDelete.filterType) {
@@ -201,7 +201,9 @@ function Chips(props) {
     const handleShowClearAllButton = () => {
         let count = 0
         chips.forEach((chip) => {
-            if (chip.filterValue === '' || chip.filterValue === null) count++
+            if (chip.filterValue === '' || chip.filterValue === null || chip.filterValue === undefined) {
+                count++
+            }
         })
         // if (count === 7) {
         //     setBtnClearAll(false)

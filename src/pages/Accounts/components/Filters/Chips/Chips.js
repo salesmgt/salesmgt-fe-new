@@ -90,7 +90,7 @@ function Chips(props) {
     const handleShowClearAllButton = () => {
         let count = 0
         chips.forEach((chip) => {
-            if (chip.filterValue === '' || chip.filterValue === null)
+            if (chip.filterValue === '' || chip.filterValue === null || chip.filterValue === undefined)
                 count++;
         })
         return count

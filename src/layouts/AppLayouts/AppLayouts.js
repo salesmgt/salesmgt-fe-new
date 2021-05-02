@@ -22,8 +22,6 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    Menu,
-    MenuItem,
     withStyles,
     Typography,
 } from '@material-ui/core'
@@ -36,6 +34,10 @@ import { defaultRoutes, roleRoutes } from '../../routes/routes'
 import * as UserServices from '../../services/UserServices'
 import { UserMenu } from './components'
 import Notify from '../AppLayouts/components/Notify/Notify'
+import AccountProvider from '../../pages/Accounts/hooks/AccountContext'
+import ReportProvider from '../../pages/Reports/hooks/ReportContext'
+import SchoolProvider from '../../pages/Schools/hooks/SchoolContext'
+import TargetSchoolProvider from '../../pages/TargetSchools/hooks/TargetSchoolContext'
 import classes from './AppLayouts.module.scss'
 
 const StyledBadge = withStyles({
@@ -233,9 +235,15 @@ function AppLayouts() {
                         >
                             <MdAccountCircle />
                         </IconButton> */}
-                        <UserMenu
-                        // userInfo={userInfo}
-                        />
+                        <AccountProvider>
+                            <ReportProvider>
+                                <SchoolProvider>
+                                    <TargetSchoolProvider>
+                                        <UserMenu /> {/* userInfo={userInfo} */}
+                                    </TargetSchoolProvider>
+                                </SchoolProvider>
+                            </ReportProvider>
+                        </AccountProvider>
                     </Toolbar>
                 </AppBar>
                 {renderNotifMenu}

@@ -19,12 +19,12 @@ export const serviceNames = {
 }
 
 export const purposeNames = {
-    salesMoi: 'Sales mới',
-    theoDoi: 'Theo dõi',
-    tiemNang: 'Tiềm năng',
-    taiKy: 'Tái ký hợp đồng',
-    kyMoi: 'Ký mới hợp đồng',
-    chamSoc: 'Chăm sóc',
+    purp1: 'Sales mới',
+    purp2: 'Theo dõi',
+    purp3: 'Tiềm năng',
+    purp4: 'Chăm sóc',
+    purp5: 'Tái ký hợp đồng',
+    purp6: 'Ký mới hợp đồng',
 }
 
 export const cookieNames = {

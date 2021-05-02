@@ -40,7 +40,7 @@ function useAppProvider() {
             ? Milk.getMilk(milkNames.salesPurps)
             : null
     )
-
+    
     useEffect(() => {
         FiltersServices.getDistricts()
             .then((data) => {
