@@ -5,11 +5,11 @@ import {
     TextField,
     Paper,
     Typography,
-    Link,
+    Link as MdLink,
     Avatar,
 } from '@material-ui/core'
 import { MdLockOutline } from 'react-icons/md'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import { Consts } from './LoginsConfig'
 import * as LoginsServices from './LoginsServices'
 import * as Cookies from '../../utils/Cookies'
@@ -168,9 +168,14 @@ function Logins() {
                             {Consts.login}
                         </Button>
                     </form>
-                    <Link className={classes.forgetPwd} to="" variant="body2">
-                        {Consts.forgetPwd}
-                    </Link>
+                    <MdLink
+                        component={Link}
+                        className={classes.forgetPwd}
+                        to="/password-reset/"
+                        variant="body2"
+                    >
+                        {Consts.forgotPwd}
+                    </MdLink>
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ function useAuthProvider() {
             : null
     )
 
+    const [verifyCode, setVerifyCode] = useState(null)
 
     if (!user) {
         Milk.makeSour([
@@ -32,6 +33,8 @@ function useAuthProvider() {
     return {
         user,
         setUser,
+        verifyCode,
+        setVerifyCode,
     }
 }
 

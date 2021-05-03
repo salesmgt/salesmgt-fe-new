@@ -16,6 +16,9 @@ export const schConsts = {
         tab1: 'General Info',
         tab2: 'Principal Info',
     },
+    operations: {
+        notFound: 'School Not Found',
+    },
 }
 
 export const Consts = {

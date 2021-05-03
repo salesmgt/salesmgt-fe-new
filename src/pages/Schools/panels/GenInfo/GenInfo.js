@@ -130,19 +130,19 @@ function GenInfo(props) {
         })
     }, [school])
 
-    if (!dists) {
+    if (!bakDists) {
         return <Loading />
     }
 
-    if (!schEduLvls) {
+    if (!bakSchEduLvls) {
         return <Loading />
     }
 
-    if (!schTypes) {
+    if (!bakSchTypes) {
         return <Loading />
     }
 
-    if (!schScales) {
+    if (!bakSchScales) {
         return <Loading />
     }
 
@@ -164,7 +164,6 @@ function GenInfo(props) {
         SchoolsServices.updateSchool(data.id, model)
             .then((res) => {
                 refreshPage(data.id)
-
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',

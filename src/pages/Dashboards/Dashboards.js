@@ -9,7 +9,7 @@ import {
     MdLoyalty,
     MdVisibility,
 } from 'react-icons/md'
-import { GiProfit } from 'react-icons/gi'
+import { FaFileSignature } from 'react-icons/fa'
 import { CardJack } from './components'
 import { Animation, AnimationGroup, Loading } from '../../components'
 // import { useAuth } from '../../hooks/AuthContext'
@@ -319,13 +319,43 @@ function Dashboards() {
                                             >
                                                 <CardJack
                                                     title={
+                                                        cardsConsts.card6.title
+                                                    }
+                                                    color={
+                                                        cardsConsts.card6.color
+                                                    }
+                                                    icon={
+                                                        <MdLoyalty
+                                                            style={{
+                                                                width: '2rem',
+                                                                height: '2rem',
+                                                                color:
+                                                                    'rgba(255, 99, 132, 1)',
+                                                            }}
+                                                        />
+                                                    }
+                                                    isOpts={true}
+                                                    ranges={bakschYears}
+                                                    datasets={cardData?.chamSoc}
+                                                    des={cardsConsts.card6.des}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={4}
+                                                md={4}
+                                                lg={4}
+                                            >
+                                                <CardJack
+                                                    title={
                                                         cardsConsts.card4.title
                                                     }
                                                     color={
                                                         cardsConsts.card4.color
                                                     }
                                                     icon={
-                                                        <GiProfit
+                                                        <FaFileSignature
                                                             style={{
                                                                 width: '2rem',
                                                                 height: '2rem',
@@ -368,36 +398,6 @@ function Dashboards() {
                                                     ranges={bakschYears}
                                                     datasets={cardData?.taiKy}
                                                     des={cardsConsts.card5.des}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card6.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card6.color
-                                                    }
-                                                    icon={
-                                                        <MdLoyalty
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(255, 99, 132, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={cardData?.chamSoc}
-                                                    des={cardsConsts.card6.des}
                                                 />
                                             </Grid>
                                         </Grid>

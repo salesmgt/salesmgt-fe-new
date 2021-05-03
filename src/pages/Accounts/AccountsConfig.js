@@ -15,6 +15,9 @@ export const acctConsts = {
     tabNames: {
         tab1: 'General Info',
     },
+    operations: {
+        notFound: 'Account Not Found',
+    },
 }
 
 export const Consts = {
@@ -24,6 +27,7 @@ export const Consts = {
             placeholder: 'Search...',
         },
         create: 'Create',
+        notFound: 'Account Not Found',
     },
     filters: {
         workingStatus: {

@@ -5,10 +5,10 @@ import { AssignInfo, ReportInfo } from './panels'
 import moment from 'moment'
 import * as ReportsServices from './ReportsServices'
 import { rpConsts } from './ReportsConfig'
-import { Loading } from '../../components'
+import { Loading, NotFound } from '../../components'
 
 function Report() {
-    const { linkNames, tabNames } = rpConsts
+    const { linkNames, tabNames, operations } = rpConsts
     const [tabValue, setTabValue] = useState(0)
 
     const { id } = useParams()
@@ -17,6 +17,8 @@ function Report() {
 
     const stateData = location.state?.data
     const [report, setReport] = useState(stateData?.model)
+
+    const [exist, setExist] = useState(true)
 
     let isMounted = true
     const refreshPage = (reportId) => {
@@ -29,10 +31,14 @@ function Report() {
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+                    if (error.response.status === 403) {
+                        setExist(false)
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                 }
             })
     }
@@ -47,7 +53,11 @@ function Report() {
     }, [])
 
     if (!report) {
-        return <Loading />
+        if (!exist) {
+            return <NotFound title={operations.notFound} />
+        } else {
+            return <Loading />
+        }
     }
 
     const handleChangeTab = (event, value) => {

@@ -11,11 +11,13 @@ function Reports() {
     const history = useHistory()
     const location = useLocation()
 
-    const [targetId, setTargetId] = useState(location?.state?.targetId ? location?.state?.targetId : 0)
+    const [targetId, setTargetId] = useState(
+        location?.state?.targetId ? location?.state?.targetId : 0
+    )
     // const schoolName = location?.state?.schoolName ? location?.state?.schoolName : ''
     // const PIC = location?.state?.PIC ? location?.state?.PIC : null
 
-    console.log('location: ', location);
+    console.log('location: ', location)
 
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -32,31 +34,44 @@ function Reports() {
         targetId
     ) => {
         ReportsServices.getReports(
-            page,limit,column,direction,searchKey,listFilters,targetId
-        ).then((res) => {
-            setData(res)
-            // console.log('reports nè: ', res);
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-        })
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters,
+            targetId
+        )
+            .then((res) => {
+                setData(res)
+                // console.log('reports nè: ', res);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
 
     useEffect(() => {
-        getAllReports(page,limit,column,direction,searchKey,listFilters,targetId)
+        getAllReports(
+            page,
+            limit,
+            column,
+            direction,
+            searchKey,
+            listFilters,
+            targetId
+        )
     }, [params, targetId])
 
     if (!data) {
         return <Loading />
     }
-
-    console.log('params = ', params);
-    console.log('targetId = ', targetId);
 
     return (
         <div className={classes.panel}>

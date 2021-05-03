@@ -3,13 +3,13 @@ import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { SchoolInfo, MOUInfo, AssignInfo } from './panels'
 import { useAuth } from '../../hooks/AuthContext'
-import { roleNames, statusNames } from '../../constants/Generals'
+import { roleNames } from '../../constants/Generals'
 import * as TargetSchoolsServices from './TargetSchoolsServices'
 import { targetConsts } from './TargetSchoolsConfig'
-import { Loading } from '../../components'
+import { Loading, NotFound } from '../../components'
 
 function TargetSchool() {
-    const { linkNames, tabNames } = targetConsts
+    const { linkNames, tabNames, operations } = targetConsts
     const [tabValue, setTabValue] = useState(0)
 
     const { user } = useAuth()
@@ -18,8 +18,10 @@ function TargetSchool() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data    
+    const stateData = location.state?.data
     const [target, setTarget] = useState(stateData?.model)
+
+    const [exist, setExist] = useState(true)
 
     let isMounted = true
     const refreshPage = (targetId) => {
@@ -32,10 +34,14 @@ function TargetSchool() {
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+                    if (error.response.status === 403) {
+                        setExist(false)
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                 }
             })
     }
@@ -50,7 +56,11 @@ function TargetSchool() {
     }, [])
 
     if (!target) {
-        return <Loading />
+        if (!exist) {
+            return <NotFound title={operations.notFound} />
+        } else {
+            return <Loading />
+        }
     }
 
     const handleChangeTab = (event, value) => {
@@ -67,6 +77,7 @@ function TargetSchool() {
                                 linkBack={linkNames.back}
                                 header={target?.schoolName}
                                 subHeader={target?.schoolStatus}
+                                isStatus={true}
                                 tabs={[tabNames.tab1, tabNames.tab2]}
                                 tabValue={tabValue}
                                 handleChangeTab={handleChangeTab}
@@ -89,6 +100,7 @@ function TargetSchool() {
                                 linkBack={linkNames.back}
                                 header={target?.schoolName}
                                 subHeader={target?.schoolStatus}
+                                isStatus={true}
                                 tabs={[
                                     tabNames.tab1,
                                     tabNames.tab2,
@@ -126,6 +138,7 @@ function TargetSchool() {
                             linkBack={linkNames.back}
                             header={`${target?.level} ${target?.schoolName}`}
                             subHeader={target?.schoolStatus}
+                            isStatus={true}
                             tabs={[tabNames.tab1, tabNames.tab2]}
                             tabValue={tabValue}
                             handleChangeTab={handleChangeTab}
@@ -154,6 +167,7 @@ function TargetSchool() {
                                 linkBack={linkNames.back}
                                 header={target?.schoolName}
                                 subHeader={target?.schoolStatus}
+                                isStatus={true}
                                 tabs={[tabNames.tab2, tabNames.tab1]}
                                 tabValue={tabValue}
                                 handleChangeTab={handleChangeTab}
@@ -168,16 +182,23 @@ function TargetSchool() {
                                     />
                                 )}
                             </DetailLayouts>
-                            ) : (
+                        ) : (
                             <DetailLayouts
                                 linkBack={linkNames.back}
                                 header={`${target?.level} ${target?.schoolName}`}
                                 subHeader={target?.schoolStatus}
-                                tabs={[tabNames.tab2, tabNames.tab1, tabNames.tab3]}
+                                isStatus={true}
+                                tabs={[
+                                    tabNames.tab2,
+                                    tabNames.tab1,
+                                    tabNames.tab3,
+                                ]}
                                 tabValue={tabValue}
                                 handleChangeTab={handleChangeTab}
                             >
-                                {tabValue === 0 && <AssignInfo target={target} />}
+                                {tabValue === 0 && (
+                                    <AssignInfo target={target} />
+                                )}
                                 {tabValue === 1 && (
                                     <SchoolInfo
                                         target={target}

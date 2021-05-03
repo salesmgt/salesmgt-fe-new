@@ -9,7 +9,13 @@ import theme from './styles/theme'
 ReactDOM.render(
     <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router basename={process.env.PUBLIC_URL}>
+        <Router
+            basename={process.env.PUBLIC_URL}
+            // getUserConfirmation={(message, callback) => {
+            //     const allowTransition = window.confirm(message)
+            //     callback(allowTransition)
+            // }}
+        >
             <App />
         </Router>
     </ThemeProvider>,

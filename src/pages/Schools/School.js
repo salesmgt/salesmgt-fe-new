@@ -6,10 +6,10 @@ import { GenInfo, RepInfo } from './panels'
 // import { roleNames, statusNames } from '../../constants/Generals'
 import * as SchoolsServices from './SchoolsServices'
 import { schConsts } from './SchoolsConfig'
-import { Loading } from '../../components'
+import { Loading, NotFound } from '../../components'
 
 function School() {
-    const { linkNames, tabNames } = schConsts
+    const { linkNames, tabNames, operations } = schConsts
     const [tabValue, setTabValue] = useState(0)
 
     // const { user } = useAuth()
@@ -20,6 +20,8 @@ function School() {
 
     const stateData = location.state?.data
     const [school, setSchool] = useState(stateData?.model)
+
+    const [exist, setExist] = useState(true)
 
     let isMounted = true
     const refreshPage = (schoolId) => {
@@ -32,10 +34,14 @@ function School() {
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+                    if (error.response.status === 403) {
+                        setExist(false)
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                 }
             })
     }
@@ -50,7 +56,11 @@ function School() {
     }, [])
 
     if (!school) {
-        return <Loading />
+        if (!exist) {
+            return <NotFound title={operations.notFound} />
+        } else {
+            return <Loading />
+        }
     }
 
     const handleChangeTab = (event, value) => {
@@ -79,7 +89,7 @@ function School() {
             <DetailLayouts
                 linkBack={linkNames.back}
                 header={`${school?.educationalLevel} ${school?.name}`}
-                subHeader={school?.active}
+                subHeader={school?.active ? 'Active' : 'Inactive'}
                 isStatus={true}
                 tabs={[tabNames.tab1, tabNames.tab2]}
                 tabValue={tabValue}

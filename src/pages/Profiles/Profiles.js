@@ -90,6 +90,7 @@ const serverSchema = [
 
 function Profiles() {
     const { user } = useAuth()
+    const { headers, operations, fields } = Consts
 
     const location = useLocation()
     const history = useHistory()
@@ -429,8 +430,6 @@ function Profiles() {
     // }
 
     // -------------------------------------------Page config-------------------------------------------
-
-    const { headers, operations, fields } = Consts
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false)

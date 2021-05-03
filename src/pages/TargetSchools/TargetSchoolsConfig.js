@@ -12,12 +12,28 @@ const columns = [
 ]
 
 export function getColumns(role) {
-    const [no, schoolName, principal, pic, schoolYear, purposes, actions] = columns
+    const [
+        no,
+        schoolName,
+        principal,
+        pic,
+        schoolYear,
+        purposes,
+        actions,
+    ] = columns
 
     switch (role) {
         case roleNames.manager:
         case roleNames.supervisor:
-            return [no, schoolName, principal, pic, schoolYear, purposes, actions]
+            return [
+                no,
+                schoolName,
+                principal,
+                pic,
+                schoolYear,
+                purposes,
+                actions,
+            ]
         case roleNames.salesman:
             return [no, schoolName, principal, schoolYear, purposes, actions]
         default:
@@ -33,6 +49,9 @@ export const targetConsts = {
         tab1: 'School Info',
         tab2: 'Assign Info',
         tab3: 'Memorandum of Contract',
+    },
+    operations: {
+        notFound: 'Target School Not Found',
     },
 }
 
@@ -79,7 +98,7 @@ export const Consts = {
             options: { all: 'All' },
         },
         isAssigned: {
-            title: 'Assigned status',            
+            title: 'Assigned status',
             options: {
                 all: 'All',
                 assigned: 'Assigned',
@@ -101,13 +120,13 @@ export const Consts = {
             title: 'Remove',
         },
         mou: {
-            title: 'Create MOU'
+            title: 'Create MOU',
         },
         assign: {
-            title: 'Assign'
+            title: 'Assign',
         },
         unassign: {
-            title: 'Unassign'
+            title: 'Unassign',
         },
     },
 }
