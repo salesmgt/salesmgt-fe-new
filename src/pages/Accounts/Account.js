@@ -4,11 +4,10 @@ import { DetailLayouts } from '../../layouts'
 import { GenInfo } from './panels'
 import * as AccountsServices from './AccountsServices'
 import { acctConsts } from './AccountsConfig'
-import { Loading } from '../../components'
-import { Avatar } from '@material-ui/core'
+import { Loading, NotFound } from '../../components'
 
 function Account() {
-    const { linkNames, tabNames } = acctConsts
+    const { linkNames, tabNames, operations } = acctConsts
     const [tabValue, setTabValue] = useState(0)
 
     const { id } = useParams()
@@ -17,6 +16,8 @@ function Account() {
 
     const stateData = location.state?.data
     const [account, setAccount] = useState(stateData?.model)
+
+    const [exist, setExist] = useState(true)
 
     let isMounted = true
     const refreshPage = (username) => {
@@ -29,10 +30,14 @@ function Account() {
             .catch((error) => {
                 if (error.response) {
                     console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
+                    if (error.response.status === 403) {
+                        setExist(false)
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
                 }
             })
     }
@@ -47,7 +52,11 @@ function Account() {
     }, [])
 
     if (!account) {
-        return <Loading />
+        if (!exist) {
+            return <NotFound title={operations.notFound} />
+        } else {
+            return <Loading />
+        }
     }
 
     const handleChangeTab = (event, value) => {
@@ -57,9 +66,14 @@ function Account() {
     return (
         <DetailLayouts
             linkBack={linkNames.back}
-            avatar={account?.avatar ? account?.avatar : <Avatar />}
+            avatar={
+                account?.avatar
+                    ? account?.avatar
+                    : account?.fullName.split(' ').pop()[0]
+            }
+            checkAvatar={account?.avatar ? true : false}
             header={account?.fullName}
-            subHeader={account?.active}
+            subHeader={account?.active ? 'Active' : 'Inactive'}
             isStatus={true}
             tabs={[tabNames.tab1]}
             tabValue={tabValue}

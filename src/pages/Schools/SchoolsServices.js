@@ -73,24 +73,3 @@ export async function updateSchool(id, school) {
 
     return response
 }
-
-// export async function updateSchool(id, school) {
-//     const response = await Api.put(`/schools/${id}`, school)
-//     // const data = await response.data
-
-//     return response
-// }
-
-// export async function addSchoolsByFile(newSchools) {
-//     const response = await Api.post('/schools', { newSchools })
-//     const data = await response.data
-
-//     return data
-// }
-
-// export async function removeSchool(schoolId) {
-//     const response = await Api.delete('/schools', { schoolId })
-//     const data = await response.data
-
-//     return data
-// }

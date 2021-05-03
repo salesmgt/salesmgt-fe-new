@@ -1,12 +1,14 @@
 // Only has alphabet and number between 8 to 30 chars
 export const USERNAME_RGX = /^[a-zA-Z0-9]{8,30}$/g
 // Has at least 8 chars and contains lowercase, uppercase, number and special chars
-export const PWD_RGX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[@$!%*#?&])(?=.{8,})$/g
+export const PWD_RGX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[@$!%*#?&])(?=.{8,})/g
+// Only has at least alphabet or number
+export const VERIFY_CODE_RGX = /^[a-zA-Z0-9]{10}$/g
 
-// Only has alphabet and spcae between 4 to 30
+// Only has alphabet(vietnamese) and spcae between 4 to 30
 export const FULLNAME_RGX = /^[àảãáạăằẳẵắặâầẩẫấậđèẻẽéẹêềểễếệìỉĩíịòỏõóọôồổỗốộơờởỡớợùủũúụưừửữứựỳỷỹýa-zA-Z]+(?:\s[àảãáạăằẳẵắặâầẩẫấậđèẻẽéẹêềểễếệìỉĩíịòỏõóọôồổỗốộơờởỡớợùủũúụưừửữứựỳỷỹýa-zA-Z]+)*$/g
 // /^[a-zA-Z]+(?:\s[a-zA-Z]+)+$/g
-// Only has alphabet and spcae between 3 to 30
+// Only has alphabet(vietnamese) and spcae between 3 to 30
 export const SCHOOL_NAME_RGX = /^[àảãáạăằẳẵắặâầẩẫấậđèẻẽéẹêềểễếệìỉĩíịòỏõóọôồổỗốộơờởỡớợùủũúụưừửữứựỳỷỹýa-zA-Z]+(?:\s[àảãáạăằẳẵắặâầẩẫấậđèẻẽéẹêềểễếệìỉĩíịòỏõóọôồổỗốộơờởỡớợùủũúụưừửữứựỳỷỹýa-zA-Z]+)*$/g
 
 // Has 10 digits and starts with 03, 05, 07, 08, 09

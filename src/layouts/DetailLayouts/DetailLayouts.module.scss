@@ -74,6 +74,10 @@
                             height: 4.2rem;
                         }
                     }
+                    .avatarTxt {
+                        font-size: 3.5rem;
+                        text-transform: uppercase;
+                    }
                     .infoBasic {
                         display: flex;
                         flex-direction: column;
@@ -89,16 +93,20 @@
                             line-height: 1.75;
                             letter-spacing: 0.00938em;
                         }
-                        .activeSub {
-                            color: $common-white;
-                            background-color: $trust;
-                            width: fit-content;
-                        }
-                        .inactiveSub {
-                            color: $common-white;
-                            background-color: $disabled;
-                            width: fit-content;
-                        }
+                        // .activeSub {
+                        //     color: $common-white;
+                        //     background-color: $trust;
+                        //     width: fit-content;
+                        // }
+                        // .inactiveSub {
+                        //     color: $common-white;
+                        //     background-color: $disabled;
+                        //     width: fit-content;
+                        // }
+                        // .statusSub {
+                        //     color: $common-white;
+                        //     width: fit-content;
+                        // }
                     }
                 }
             }

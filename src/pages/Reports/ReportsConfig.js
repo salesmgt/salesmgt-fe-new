@@ -1,5 +1,5 @@
 export const columns = [
-    { key: "no", name: 'No', sortable: false },
+    { key: 'no', name: 'No', sortable: false },
     { key: 'date', name: 'Date', sortable: true },
     { key: 'targetSchool.school.name', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
     { key: 'targetSchool.user.fullName', name: 'PIC', sortable: true },
@@ -17,6 +17,9 @@ export const rpConsts = {
     tabNames: {
         tab1: 'Report Info',
         tab2: 'Assign Info',
+    },
+    operations: {
+        notFound: 'Report Not Found',
     },
 }
 

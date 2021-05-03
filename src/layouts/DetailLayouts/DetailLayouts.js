@@ -14,6 +14,7 @@ import { MdArrowBack } from 'react-icons/md'
 import { Animation } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import { defaultRoutes } from '../../routes/routes'
+import { statusNames, statusAcct } from '../../constants/Generals'
 import classes from './DetailLayouts.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +31,7 @@ function DetailLayouts(props) {
     const {
         linkBack,
         avatar,
+        checkAvatar,
         header,
         subHeader,
         isStatus,
@@ -44,6 +46,68 @@ function DetailLayouts(props) {
     const styles = useStyles()
 
     const history = useHistory()
+
+    const getChipsByStatus = (status) => {
+        switch (status) {
+            case statusNames.lead:
+                return (
+                    <Chip
+                        label={status}
+                        style={{
+                            backgroundColor: 'rgba(54, 162, 235, 1)',
+                            color: '#fff',
+                            width: 'fit-content',
+                        }}
+                    />
+                )
+            case statusNames.customer:
+                return (
+                    <Chip
+                        label={status}
+                        style={{
+                            backgroundColor: 'rgba(75, 192, 192, 1)',
+                            color: '#fff',
+                            width: 'fit-content',
+                        }}
+                    />
+                )
+            case statusNames.pending:
+                return (
+                    <Chip
+                        label={status}
+                        style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.38)',
+                            color: '#fff',
+                            width: 'fit-content',
+                        }}
+                    />
+                )
+            case statusAcct.active:
+                return (
+                    <Chip
+                        label={status}
+                        style={{
+                            backgroundColor: '#4caf50',
+                            color: '#fff',
+                            width: 'fit-content',
+                        }}
+                    />
+                )
+            case statusAcct.inactive:
+                return (
+                    <Chip
+                        label={status}
+                        style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.38)',
+                            color: '#fff',
+                            width: 'fit-content',
+                        }}
+                    />
+                )
+            default:
+                break
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -75,18 +139,32 @@ function DetailLayouts(props) {
                             </Typography>
                         </Animation>
                         <div className={classes.headerInfo}>
-                            {avatar && (
-                                <Animation
-                                    animation="transition.expandIn"
-                                    delay={300}
-                                >
-                                    <Avatar
-                                        src={avatar}
-                                        alt="avatar"
-                                        className={classes.infoAvatar}
-                                    />
-                                </Animation>
-                            )}
+                            {avatar &&
+                                (checkAvatar ? (
+                                    <Animation
+                                        animation="transition.expandIn"
+                                        delay={300}
+                                    >
+                                        <Avatar
+                                            src={avatar}
+                                            alt="avatar"
+                                            className={classes.infoAvatar}
+                                        />
+                                    </Animation>
+                                ) : (
+                                    <Animation
+                                        animation="transition.expandIn"
+                                        delay={300}
+                                    >
+                                        <Avatar className={classes.infoAvatar}>
+                                            <Typography
+                                                className={classes.avatarTxt}
+                                            >
+                                                {avatar}
+                                            </Typography>
+                                        </Avatar>
+                                    </Animation>
+                                ))}
                             <div className={classes.infoBasic}>
                                 <Animation
                                     animation="transition.slideLeftIn"
@@ -99,25 +177,13 @@ function DetailLayouts(props) {
                                         {header}
                                     </Typography>
                                 </Animation>
-                                {/* {subHeader && (
-                                    <> */}
+
                                 {isStatus ? (
                                     <Animation
                                         animation="transition.slideLeftIn"
                                         delay={300}
                                     >
-                                        <Chip
-                                            label={
-                                                subHeader
-                                                    ? 'Active'
-                                                    : 'Inactive'
-                                            }
-                                            className={
-                                                subHeader
-                                                    ? classes.activeSub
-                                                    : classes.inactiveSub
-                                            }
-                                        />
+                                        <>{getChipsByStatus(subHeader)}</>
                                     </Animation>
                                 ) : (
                                     <Animation
@@ -125,15 +191,12 @@ function DetailLayouts(props) {
                                         delay={300}
                                     >
                                         <Typography
-                                            // variant="h6"
                                             className={classes.basicSub}
                                         >
                                             {subHeader}
                                         </Typography>
                                     </Animation>
                                 )}
-                                {/* </>
-                                )} */}
                             </div>
                         </div>
                     </div>

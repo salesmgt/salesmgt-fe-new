@@ -7,7 +7,7 @@ export const roleNames = {
 
 export const statusAcct = {
     active: 'Active',
-    inactive: 'Inactive'
+    inactive: 'Inactive',
 }
 
 export const statusNames = {

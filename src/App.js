@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
-import { Logins, Errors, getError } from './pages'
+import { Logins, Errors, getError, ForgotPwd } from './pages'
 import { AppLayouts } from './layouts'
 import AuthProvider from './hooks/AuthContext'
 import AppProvider from './hooks/AppContext'
@@ -10,13 +10,17 @@ import PrivateRoute from './routes/PrivateRoute'
 function App() {
     return (
         <AuthProvider>
-            {/* <AppProvider> */}
             <Switch>
                 <PublicRoute
                     exact
                     path="/"
                     restricted={true}
                     component={Logins}
+                />
+                <PublicRoute
+                    path="/password-reset"
+                    restricted={false}
+                    component={ForgotPwd}
                 />
                 <PrivateRoute
                     path="/apps"
@@ -32,7 +36,6 @@ function App() {
                 />
                 <Redirect from="*" to="/errors" />
             </Switch>
-            {/* </AppProvider> */}
         </AuthProvider>
     )
 }

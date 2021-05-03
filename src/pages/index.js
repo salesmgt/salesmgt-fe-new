@@ -8,6 +8,8 @@ export { getError } from './Errors/ErrorsConfig'
 
 export { default as Logins } from './Logins/Logins'
 
+export { default as ForgotPwd } from './ForgotPwd/ForgotPwd'
+
 export { default as Profiles } from './Profiles/Profiles'
 
 export { default as Reports } from './Reports/Reports'
