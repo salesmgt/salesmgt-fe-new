@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Avatar,
     Grid,
@@ -31,7 +31,7 @@ import { MdAccountCircle, MdSearch } from 'react-icons/md'
 import { Autocomplete } from '@material-ui/lab'
 import { getAccount } from '../Accounts/AccountsServices'
 import { useAuth } from '../../hooks/AuthContext'
-import { Consts } from './WorkplansConfig'
+import { Consts } from './WorkPlansConfig'
 import './WorkPlans.scss'
 import styles from './WorkPlans.module.scss'
 
@@ -265,7 +265,11 @@ const Schedule = (props) => {
     const onDrag = (e) => setStartTime(e.data?.startTime)
 
     const onActionBegin = (e) => {
-        if (e.requestType === 'eventCreate' || e.requestType === 'eventRemove' || e.requestType === 'eventChange') {
+        if (
+            e.requestType === 'eventCreate' ||
+            e.requestType === 'eventRemove' ||
+            e.requestType === 'eventChange'
+        ) {
             props.handleRequestType(e, startTime)
             setStartTime(null)
         }

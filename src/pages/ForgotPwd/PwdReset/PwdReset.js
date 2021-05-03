@@ -102,10 +102,6 @@ function PwdReset() {
                     })
                 }
             })
-
-        // history.replace('/')
-
-        console.log(model)
     }
 
     return (
