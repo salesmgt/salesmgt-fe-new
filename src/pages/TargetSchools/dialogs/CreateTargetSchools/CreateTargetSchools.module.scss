@@ -1,9 +1,15 @@
 @import '../../../../styles/Variables.module.scss';
 
 .wrapper {
-    padding: 0.5rem 2rem 1rem !important; // top (right & left) bottom
+    // padding: 0.5rem 2rem 1rem !important; // top (right & left) bottom
+    // height: 100%;
+    // overflow-y: auto;    
+    width: 100%;
     height: 100%;
     overflow-y: auto;
+    // padding: 1rem;
+
+
 }
 
 .btnSave {    
@@ -26,4 +32,20 @@
 
 .dialogText {
     color: $common-black !important;
+}
+
+.searchField {
+    margin-top: 1rem !important;
+}
+
+.btnDiv {
+    display: block;
+    padding-top: 0.8rem;
+    .btnAdd {
+        float: right;
+    }
+}
+
+.filtersZone {
+    padding: 0 1rem;
 }

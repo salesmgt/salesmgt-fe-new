@@ -75,7 +75,7 @@ function TargetSchool() {
                         {!target?.memorandums ? (
                             <DetailLayouts
                                 linkBack={linkNames.back}
-                                header={target?.schoolName}
+                                header={`${target?.level} ${target?.schoolName}`}
                                 subHeader={target?.schoolStatus}
                                 isStatus={true}
                                 tabs={[tabNames.tab1, tabNames.tab2]}
@@ -98,7 +98,7 @@ function TargetSchool() {
                         ) : (
                             <DetailLayouts
                                 linkBack={linkNames.back}
-                                header={target?.schoolName}
+                                header={`${target?.level} ${target?.schoolName}`}
                                 subHeader={target?.schoolStatus}
                                 isStatus={true}
                                 tabs={[
@@ -165,7 +165,7 @@ function TargetSchool() {
                         {!target?.memorandums ? (
                             <DetailLayouts
                                 linkBack={linkNames.back}
-                                header={target?.schoolName}
+                                header={`${target?.level} ${target?.schoolName}`}
                                 subHeader={target?.schoolStatus}
                                 isStatus={true}
                                 tabs={[tabNames.tab2, tabNames.tab1]}

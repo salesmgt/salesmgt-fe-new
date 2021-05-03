@@ -2,97 +2,54 @@ import React, { useState, useEffect } from 'react'
 import {
     Button,
     Dialog,
-    DialogContent,
-    DialogActions,
     IconButton,
-    DialogTitle,
     Typography,
     withStyles,
     Grid,
 } from '@material-ui/core'
+import Slide from '@material-ui/core/Slide';
+import Toolbar from '@material-ui/core/Toolbar';
 import { MdClose } from 'react-icons/md'
 import { useHistory } from 'react-router'
 import { useTargetForm } from './TargetFormContext'
-import { columns } from './CreateTargetSchoolsConfig'
 import { getSchoolsForTargets } from '../../TargetSchoolsServices'
-import Filters from './Filters'
-import Tables from './Tables'
-import { Loading } from '../../../../components'
+// import { Loading } from '../../../../components'
+import AppBar from '@material-ui/core/AppBar';
 import { Consts } from '../DialogConfig'
+import { makeStyles } from '@material-ui/core/styles';
+import LeftSide from './LeftSide';
 import classes from './CreateTargetSchools.module.scss'
+import RightSide from './RightSide';
 
-const stylesTitle = (theme) => ({
-    root: {
-        margin: 0,
-        padding: theme.spacing(2),
+const useStyles = makeStyles((theme) => ({
+    appBar: {
+      position: 'relative',
     },
-    closeButton: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500],
+    title: {
+      marginLeft: theme.spacing(2),
+      flex: 1,
     },
-})
-
-const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
-    const { children, classes, onClose, ...other } = props
-    return (
-        <DialogTitle disableTypography className={classes.root} {...other}>
-            <Typography variant="h6">{children}</Typography>
-            {onClose ? (
-                <IconButton
-                    aria-label="close"
-                    className={classes.closeButton}
-                    onClick={onClose}
-                >
-                    <MdClose />
-                </IconButton>
-            ) : null}
-        </DialogTitle>
-    )
-})
+  }));
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
 function CreateTargetSchools(props) {
     const { open, onClose } = props
-    const { headers, operations } = Consts
+   const { headers, operations } = Consts
     const history = useHistory()
     const { params } = useTargetForm()
     const { listFilters, page, limit, column, direction, searchKey } = params
-
+    const classes = useStyles();
     const [data, setData] = useState(null)
-
-    const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear()
-        const thisMonth = new Date().getMonth()
-
-        if (thisMonth < 7) return `${thisYear - 1}-${thisYear}`
-        else return `${thisYear}-${thisYear + 1}`
-    }
-    const schoolYear = calculateSchoolYear()
+    const [schStatus, setSchStatus] = useState('')
 
     let isMounted = true
-    const getListSchools = (
-        schoolYear,
-        page = 0,
-        limit = 10,
-        column = 'id',
-        direction = 'asc',
-        searchKey,
-        listFilters
-    ) => {
-        getSchoolsForTargets(
-            schoolYear,
-            page,
-            limit,
-            column,
-            direction,
-            searchKey,
-            listFilters
-        )
+    const getListSchools = (page = 0, limit = 10, column = 'id',direction = 'asc',searchKey,listFilters) => {
+        getSchoolsForTargets(page,limit,column,direction,searchKey,listFilters)
             .then((res) => {
                 if (isMounted) {
-                    // console.log('CreateTarget form - data: ', res);
-                    setData(res.data)
+                    setData(res)
                 }
             })
             .catch((error) => {
@@ -107,15 +64,7 @@ function CreateTargetSchools(props) {
     }
 
     useEffect(() => {
-        getListSchools(
-            schoolYear,
-            page,
-            limit,
-            column,
-            direction,
-            searchKey,
-            listFilters
-        )
+        getListSchools(page, limit, column, direction, searchKey, listFilters)
         return () => {
             isMounted = false
         }
@@ -126,41 +75,34 @@ function CreateTargetSchools(props) {
     // }
 
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            maxWidth="md"
-            fullWidth
-            component="form"
-            className={classes.dialog}
-        >
-            <DialogTitleWithIconClose onClose={onClose}>
-                {headers.create}
-            </DialogTitleWithIconClose>
-
-            <DialogContent className={classes.wrapper}>
-                <Grid container>
-                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Filters className={classes.filter} />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                        {/* <Tables
-                            className={classes.table}
-                            columns={columns}
-                            rows={data.list}
-                            totalRecord={data.totalElements}
-                            totalPage={data.totalPage}
-                        /> */}
-                    </Grid>
-                </Grid>
-            </DialogContent>
-
-            <DialogActions className="">
-                <Button onClick={() => {}} className={classes.btnSave}>
-                    {operations.save}
-                </Button>
-                <Button onClick={onClose}>{operations.cancel}</Button>
-            </DialogActions>
+        <Dialog fullScreen open={open}
+         onClose={onClose}
+         TransitionComponent={Transition}
+         PaperProps={{
+            style: {
+            backgroundColor: "#eeeeee",
+            }}}
+         >
+            <AppBar className={classes.appBar}>
+            <Toolbar>
+                <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
+                <MdClose/>
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    {headers.create}
+                </Typography>
+            </Toolbar>
+            </AppBar>
+            
+            <div className={classes.body}>
+                
+                        <LeftSide data={data} setData={setData} />
+                   
+                    {/* <Grid item xs={12} sm={12} md={6} lg={6}>
+                       <RightSide status={schStatus} />
+                    </Grid> */}
+              
+            </div>
         </Dialog>
     )
 }

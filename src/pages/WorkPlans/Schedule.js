@@ -31,7 +31,7 @@ import { MdAccountCircle, MdSearch } from 'react-icons/md'
 import { Autocomplete } from '@material-ui/lab'
 import { getAccount } from '../Accounts/AccountsServices'
 import { useAuth } from '../../hooks/AuthContext'
-import { Consts } from './WorkPlansConfig'
+import { Consts } from './WorkplansConfig'
 import './WorkPlans.scss'
 import styles from './WorkPlans.module.scss'
 
@@ -265,12 +265,7 @@ const Schedule = (props) => {
     const onDrag = (e) => setStartTime(e.data?.startTime)
 
     const onActionBegin = (e) => {
-        // console.log('action này là ', e)
-        if (
-            e.requestType === 'eventCreate' ||
-            e.requestType === 'eventRemove' ||
-            e.requestType === 'eventChange'
-        ) {
+        if (e.requestType === 'eventCreate' || e.requestType === 'eventRemove' || e.requestType === 'eventChange') {
             props.handleRequestType(e, startTime)
             setStartTime(null)
         }
@@ -504,10 +499,10 @@ const Schedule = (props) => {
                         </div>
                         <div className={styles.treeviewContainer}>
                             <TreeViewComponent
-                                allowDragAndDrop={props.isEdit}
+                                allowDragAndDrop={!props.isEdit}
                                 ref={(e) => (tree = e)}
                                 cssClass="treeview-external-drag"
-                                allowDragAndDrop
+                                // allowDragAndDrop
                                 fields={{
                                     dataSource: props?.tree,
                                     id: 'id',

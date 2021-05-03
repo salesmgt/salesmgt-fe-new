@@ -154,7 +154,7 @@ function Tables(props) {
     const { user } = useAuth()
 
     const columns = getColumns(user?.roles[0])
- 
+    
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelecteds = rows.filter((row) => !row.username)

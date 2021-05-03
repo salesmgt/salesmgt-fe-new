@@ -1,7 +1,14 @@
 export const columns = [
-    { key: 'no', name: 'No', sortable: false, width: '' },
-    { key: 'schoolName', name: 'School Name', sortable: true, width: '' },
-    { key: 'reprName', name: 'Principal', sortable: true, width: '' },
-    { key: '', name: 'Status', sortable: true, width: '' },
-    { key: 'purpose', name: 'Purpose', sortable: true, width: '' },
+    { key: 'name', name: 'School Name', sortable: true, width: '30%' },
+    { key: 'address', name: 'Address', sortable: true, width: '30%' },
+    { key: 'reprName', name: 'Principal', sortable: true, width: '20%' },
+    { key: 'schoolStatus.id', name: 'Status', sortable: true, width: '15%' },
+    { key: '', name: '', sortable: false, width: '5%' },
+]
+
+export const previewColumns = [
+    { key: 'no',  name: '#', align: 'center', width: '5%' },
+    { key: 'name',  name: 'School Name', align: 'center', width: '55%' },
+    { key: 'purpose',  name: 'Purpose', align: 'center', width: '35%' },
+    { key: '',  name: '', align: 'right', width: '5%' },
 ]
