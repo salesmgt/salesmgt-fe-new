@@ -172,7 +172,7 @@ e.forEach(item =>{
     status:item[excel.status],
     })
     })
-    console.log(array)
+    // console.log(array)
     setText(array.length)
     if(array.length  < 1 )
         setIsDisableButton(true)

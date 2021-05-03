@@ -11,7 +11,7 @@ function AssignInfo(props) {
     const { headers, fields } = Consts
 
     const location = useLocation()
-    console.log("location Report's: ", location);
+    // console.log("location Report's: ", location);
 
     if (!report) {
         return <Loading />

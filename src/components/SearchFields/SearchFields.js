@@ -67,8 +67,6 @@ function SearchFields(props) {
         e.preventDefault(true)
         const keyword = e?.target?.value
 
-        console.log('keyword: ', keyword)
-
         setSearchKey(keyword)
         if (!onChange) {
             return

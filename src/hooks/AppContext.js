@@ -53,9 +53,9 @@ function useAppProvider() {
                 }
             })
         // Clean the state when the component is unmount
-        return () => {
-            setDists(null);
-        }
+        // return () => {
+        //     setDists(null);
+        // }
     }, [])
 
     useEffect(() => {
@@ -69,7 +69,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setSchEduLvls(null)
+        // return () => setSchEduLvls(null)
     }, [])
 
     useEffect(() => {
@@ -83,7 +83,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setSchTypes(null)
+        // return () => setSchTypes(null)
     }, [])
 
     useEffect(() => {
@@ -97,7 +97,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setSchScales(null)
+        // return () => setSchScales(null)
     }, [])
 
     useEffect(() => {
@@ -111,7 +111,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setSchStatus(null)
+        // return () => setSchStatus(null)
     }, [])
 
     useEffect(() => {
@@ -125,7 +125,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setRoles(null)
+        // return () => setRoles(null)
     }, [])
 
     useEffect(() => {
@@ -139,7 +139,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setSalesPurps(null)
+        // return () => setSalesPurps(null)
     }, [])
 
     useEffect(() => {
@@ -153,7 +153,7 @@ function useAppProvider() {
                     console.log(error)
                 }
             })
-        return () => setSchYears(null)
+        // return () => setSchYears(null)
     }, [])
 
     return {

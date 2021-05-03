@@ -133,20 +133,20 @@ function CreateAccountForm(props) {
     }
     const node = (user) => {
         new Promise((resolve, reject) => {
-            const notiRef = FirebaseApp
-                .database()
+            const notiRef = FirebaseApp.database()
                 .ref('notify')
-                .child(user.username).push({
-                    avatar: 'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Fcong-ty-co-phan-major-education-59313d53b549b_rs.jpg?alt=media&token=166886c5-e210-443a-b262-675ac8ff836b',
-                    actor: "System",
-                    type: "Welcome",
-                    content: "Welcome to Sales Department of Major Education!",
+                .child(user.username)
+                .push({
+                    avatar:
+                        'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Fcong-ty-co-phan-major-education-59313d53b549b_rs.jpg?alt=media&token=166886c5-e210-443a-b262-675ac8ff836b',
+                    actor: 'System',
+                    type: 'Welcome',
+                    content: 'Welcome to Sales Department of Major Education!',
                     timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                     uid: 0,
-                    isSeen: false
-                })               
-            }
-        )
+                    isSeen: false,
+                })
+        })
     }
     const {
         control,
@@ -177,7 +177,14 @@ function CreateAccountForm(props) {
                     type: 'success',
                 })
                 node(model)
-                refreshPage(page, limit, column, direction, searchKey, listFilters)
+                refreshPage(
+                    page,
+                    limit,
+                    column,
+                    direction,
+                    searchKey,
+                    listFilters
+                )
                 // reset({
                 //     username: '',
                 //     fullName: '',
@@ -220,7 +227,8 @@ function CreateAccountForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form noValidate
+                <form
+                    noValidate
                     // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>

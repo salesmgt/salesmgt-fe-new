@@ -122,7 +122,7 @@ function CreateReportsForm(props) {
     }
     useEffect(() => {
         getListTargets()
-        return () => setTargets([])
+        // return () => setTargets([])
     }, [])
 
     const onSearchTargetChange = (event) => {
@@ -343,7 +343,7 @@ function CreateReportsForm(props) {
 
         ReportsServices.addReport(reports)
             .then((data) => {
-                console.log('data: ', data);               
+                // console.log('data: ', data);               
 
                 if (!String(data).includes('already submitted') && !String(data).includes('Created 0 records')) {
                     setNotify({

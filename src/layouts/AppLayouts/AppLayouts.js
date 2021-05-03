@@ -172,7 +172,7 @@ function AppLayouts() {
                     })
                 }
             })
-        return () => setUserInfo(null)
+        // return () => setUserInfo(null)
     }, [])
 
     // if (!userInfo) {

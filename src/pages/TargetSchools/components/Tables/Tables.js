@@ -180,8 +180,8 @@ function Tables(props) {
                 selectedRows.slice(selectedIndex + 1)
             )
         }
-        console.log('index ', selectedIndex)
-        console.log('mảng ', newSelected)
+        // console.log('index ', selectedIndex)
+        // console.log('mảng ', newSelected)
         setSelectedRows(newSelected)
     }
 

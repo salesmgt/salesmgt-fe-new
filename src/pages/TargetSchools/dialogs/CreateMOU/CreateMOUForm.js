@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     DialogContent,
@@ -42,8 +42,9 @@ function CreateMOUForm(props) {
         setNotify,
         targetSchoolId,
         schoolId,
-        schoolName,
+        // schoolName,
         schoolStatus,
+        refreshPage,
     } = props
 
     const { operations, fields } = Consts
@@ -64,36 +65,37 @@ function CreateMOUForm(props) {
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
-    
+
     const [listManagers, setListManagers] = useState([])
     useEffect(() => {
-        TargetSchoolsServices.getListManagers().then(res => setListManagers(res.list))
-        return () => setListManagers([])
+        TargetSchoolsServices.getListManagers().then((res) =>
+            setListManagers(res.list)
+        )
+        // return () => setListManagers([])
     }, [])
 
     // Coi xem chỗ này còn lỗi ko
+    console.log('listManagers: ', listManagers)
     const createNotify = (value) => {
-        console.log('managers: ', targetSchoolId);
-        
         if (listManagers && listManagers?.length > 0) {
             new Promise((resolve, reject) => {
-                listManagers.map(mng => {
-                    console.log('mng: ', mng);
-
-                    const noti = FirebaseApp.database()
+                listManagers.map((mng) => {
+                    FirebaseApp.database()
                         .ref('notify')
-                        .child(mng?.username).push({
+                        .child(mng?.username)
+                        .push({
                             avatar: userInfo?.avatar ? userInfo?.avatar : '',
                             actor: user?.username,
                             type: 'memorandum',
-                            timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                            timestamp: moment(new Date()).format(
+                                'YYYY-MM-DD HH:mm:ss'
+                            ),
                             content: 'Salesman has just create MOU.',
                             uid: targetSchoolId,
-                            isSeen: false
+                            isSeen: false,
                         })
-                    })
-                }
-            )
+                })
+            })
         }
     }
 
@@ -138,7 +140,7 @@ function CreateMOUForm(props) {
         TargetSchoolsServices.createMOU(model)
             .then((res) => {
                 updateStatus2Cust(schoolStatus)
-
+                refreshPage()
                 // Notify by Snackbars
                 setNotify({
                     isOpen: true,
@@ -147,7 +149,7 @@ function CreateMOUForm(props) {
                 })
 
                 // Send notification by Firebase
-                createNotify(data);
+                createNotify(data)
 
                 onClose()
             })

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router'
 import moment from 'moment'
 import Schedule from './Schedule'
 import * as WorkPlansServices from './WorkPlansServices'
+import { roleNames } from '../../constants/Generals'
 
 function WorkPlans() {
     const [data, setData] = React.useState([])
@@ -30,24 +31,26 @@ function WorkPlans() {
     // Get list PICs for autocomplete search
     const [listPICs, setListPICs] = useState([])
     const getListPICs = (e) => {
-        getPICs({ active: true, fullName: e, role: user.roles[0] })
-            .then((data) => {
-                // console.log('data: ', data)
-                setListPICs(data)
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+        if (user.roles[0] === roleNames.salesman) {
+            getPICs({ active: true, fullName: e, role: roleNames.salesman })
+                .then((data) => {
+                    // console.log('data: ', data)
+                    setListPICs(data)
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error)
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
+                })
+        }
     }
     useEffect(() => {
         getListPICs()
-        return () => setListPICs([])
+        // return () => setListPICs([])
     }, [])
 
     //---------------------------------------------------------------------------
@@ -246,7 +249,7 @@ function WorkPlans() {
     }
     React.useEffect(() => {
         callAPI(filter)
-        return () => setData(null)
+        // return () => setData(null)
     }, [filter])
 
     // Get all locations
@@ -271,10 +274,12 @@ function WorkPlans() {
                 }
             })
     }
-    React.useEffect(() =>
-        //call api for tree
-        callAPITree(null)
-        , [])
+    React.useEffect(
+        () =>
+            //call api for tree
+            callAPITree(null),
+        []
+    )
 
     // Change view by "Today" / "Day" / "Week" / "Month"
     const handleChangeView = (e) => {

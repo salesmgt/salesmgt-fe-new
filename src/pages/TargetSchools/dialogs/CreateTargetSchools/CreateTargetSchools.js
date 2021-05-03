@@ -83,7 +83,7 @@ function CreateTargetSchools(props) {
         getListSchools(schoolYear, formParams.page, formParams.limit, formParams.column, formParams.direction, formParams.searchKey, formParams.listFilters)
         return () => {
             isMounted = false
-            setData(null)
+            // setData(null)
         }
     }, [formParams])
 

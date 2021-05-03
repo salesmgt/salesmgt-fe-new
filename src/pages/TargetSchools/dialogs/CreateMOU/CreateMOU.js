@@ -41,7 +41,7 @@ function MOUForm(props) {
     const {
         open,
         onClose,
-        // refreshPage,
+        refreshPage,
         targetSchoolId,
         schoolId,
         schoolName,
@@ -62,6 +62,7 @@ function MOUForm(props) {
                 schoolId={schoolId}
                 schoolStatus={schoolStatus}
                 schoolName={schoolName}
+                refreshPage={refreshPage}
             />
         </Dialog>
     )

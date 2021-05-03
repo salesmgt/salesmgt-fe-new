@@ -811,8 +811,14 @@ function Profiles() {
                                             <Typography
                                                 className={classes.details}
                                             >
-                                                {moment(birthDate).format(
-                                                    'DD/MM/YYYY'
+                                                {birthDate ? (
+                                                    moment(birthDate).format(
+                                                        'DD/MM/YYYY'
+                                                    )
+                                                ) : (
+                                                    <div>
+                                                        {fields.dob.empty}
+                                                    </div>
                                                 )}
                                             </Typography>
                                         </div>

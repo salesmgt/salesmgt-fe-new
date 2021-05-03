@@ -50,6 +50,7 @@ import AssignMultiple from '../../dialogs/AssignMultiple/AssignMultiple'
 import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetSchools'
 import { Consts } from '../../TargetSchoolsConfig'
 import { roleNames } from '../../../../constants/Generals'
+import { Snackbars } from '../../../../components'
 import { getPurpsByStatus } from '../../../../utils/Sortings'
 import TargetFormProvider from '../../dialogs/CreateTargetSchools/TargetFormContext'
 import styles from './Filters.module.scss'
@@ -184,7 +185,11 @@ function Filters(props) {
     const { operations, filters } = Consts
     const { selectedRows, setSelectedRows, refreshAPI } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
-
+    const [notify, setNotify] = React.useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
     const { user } = useAuth()
     const {
         schYears,
@@ -195,7 +200,7 @@ function Filters(props) {
         salesPurps,
         schStatus,
     } = useApp()
-    
+
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
@@ -214,7 +219,7 @@ function Filters(props) {
         setFilter,
         getListPICs,
     } = useTargetSchool()
-    
+
     const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
@@ -222,7 +227,9 @@ function Filters(props) {
         ? schEduLvls
         : Milk.getMilk(milkNames.eduLvls)
     const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
-    const bakSalesPurps = salesPurps ? salesPurps : Milk.getMilk(milkNames.salesPurps)
+    const bakSalesPurps = salesPurps
+        ? salesPurps
+        : Milk.getMilk(milkNames.salesPurps)
     const purpsByStatus = getPurpsByStatus(schoolStatus, bakSalesPurps)
 
     const typingTimeoutRef = useRef({})
@@ -451,12 +458,16 @@ function Filters(props) {
                     rows={selectedRows}
                     setRows={setSelectedRows}
                     refreshAPI={refreshAPI}
+                    setNotify={setNotify}
                 />
             )
         } else {
             // Have not checked target schools
             return (
-                <NotifyAssign open={openNotifyDialog} onClose={() => setOpenNotifyDialog(false)} />
+                <NotifyAssign
+                    open={openNotifyDialog}
+                    onClose={() => setOpenNotifyDialog(false)}
+                />
             )
         }
     }
@@ -973,6 +984,7 @@ function Filters(props) {
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

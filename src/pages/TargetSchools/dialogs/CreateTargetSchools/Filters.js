@@ -80,7 +80,7 @@ function Filters(props) {
         schoolStatus,
         setFilter,
     } = useTargetForm()
-    const [purpose, setPurpose] = useState([])
+    // const [purpose, setPurpose] = useState([])
 
     const { operations, filters } = Consts
 

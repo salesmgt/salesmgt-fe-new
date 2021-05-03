@@ -41,9 +41,10 @@ export async function getTargetSchools(
         url = filters['status'].filterValue
             ? url.concat(`&status=${filters['status'].filterValue}`)
             : url
-        url = filters['isAssigned'].filterValue !== null
-            ? url.concat(`&isAssigned=${filters['isAssigned'].filterValue}`)
-            : url
+        url =
+            filters['isAssigned'].filterValue !== null
+                ? url.concat(`&isAssigned=${filters['isAssigned'].filterValue}`)
+                : url
     }
 
     const response = await Api.get(url)
@@ -114,7 +115,7 @@ export async function updateMOU(mouId, mou) {
 // }
 
 export async function removeTargetSchool(targetId) {
-    const response = await Api.delete(`/targets/${targetId}`, {targetId})
+    const response = await Api.delete(`/targets/${targetId}`, { targetId })
     const data = await response.data
     return data
 }
@@ -126,8 +127,15 @@ export async function getDashboardsByKeys(...keys) {
     return data
 }
 
-export async function getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,filters)
-{    
+export async function getSchoolsForTargets(
+    schoolYear,
+    page,
+    limit,
+    column,
+    direction,
+    searchKey,
+    filters
+) {
     // Đây là url đúng nhưng chưa có. Để đây sau này dùng, DO NOT REMOVE!!!
     let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
 
@@ -152,7 +160,7 @@ export async function getSchoolsForTargets(schoolYear,page,limit,column,directio
             : url
     }
 
-    console.log('url getSchools for targets: ', url);
+    // console.log('url getSchools for targets: ', url);
 
     const response = await Api.get(url)
     const data = await response.data
@@ -166,7 +174,7 @@ export async function createTargetSchools(listTargets) {
 }
 
 export async function assignMulti(list) {
-    const response = await Api.put(`/targets/mutiple-assign`,list)
+    const response = await Api.put(`/targets/mutiple-assign`, list)
     const data = await response.data
     return data
 }

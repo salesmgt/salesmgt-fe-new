@@ -24,7 +24,7 @@ import {
     MdExpandMore,
     MdFilterList,
 } from 'react-icons/md'
-import { SearchFields } from '../../../../components'
+import { SearchFields, Snackbars } from '../../../../components'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useReport } from '../../hooks/ReportContext'
 import Chips from './Chips/Chips'
@@ -180,9 +180,11 @@ function Filters(props) {
     const { dists, schYears, salesPurps } = useApp()
 
     const location = useLocation()
-    const schoolName = location?.state?.schoolName ? location?.state?.schoolName : ''
+    const schoolName = location?.state?.schoolName
+        ? location?.state?.schoolName
+        : ''
     const picUsername = location?.state?.PIC ? location?.state?.PIC : ''
-    console.log('Filters.js: ', location);
+    // console.log('Filters.js: ', location);
 
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
@@ -213,10 +215,16 @@ function Filters(props) {
         setFilter,
         getListPICs,
     } = useReport()
-    
+
     const [searchKey, setSearchKey] = useState(schoolName)
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
-    
+
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: '',
+        type: '',
+    })
+
     const typingTimeoutRef = useRef({})
     const onSearchPICChange = (event) => {
         if (typingTimeoutRef.current) {
@@ -349,18 +357,20 @@ function Filters(props) {
     }
 
     // When React router redirects to this screen while containing targetID and PIC's username,
-    // it will filter all reports of this school which is assigned to this PIC 
+    // it will filter all reports of this school which is assigned to this PIC
     useEffect(() => {
         if (picUsername) {
-            resetFilters(); // chặn chỗ này cho hợp lý
-            getAccount(picUsername).then(res => {
-                // setSearchingPIC(res)
-                handlePICChange(null, res)
-            }).catch(error => {
-                if (error.response) {
-                    console.log(error)
-                }
-            })
+            resetFilters() // chặn chỗ này cho hợp lý
+            getAccount(picUsername)
+                .then((res) => {
+                    // setSearchingPIC(res)
+                    handlePICChange(null, res)
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error)
+                    }
+                })
         }
     }, [])
     // console.log('searchingPIC: ', searchingPIC);
@@ -394,8 +404,8 @@ function Filters(props) {
                     break
             }
         })
-        console.log('count removed filters: ', count);
-        console.log('length = ', Object.keys(params.listFilters).length)
+        // console.log('count removed filters: ', count);
+        // console.log('length = ', Object.keys(params.listFilters).length)
         if (count === Object.keys(params.listFilters).length) {
             handleSearch('')
         }
@@ -474,6 +484,7 @@ function Filters(props) {
                                 open={openCreateDialog}
                                 onClose={() => setOpenCreateDialog(false)}
                                 refreshAPI={refreshAPI}
+                                setNotify={setNotify}
                             />
                         </Box>
                     )}
@@ -718,6 +729,8 @@ function Filters(props) {
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>
+
+            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

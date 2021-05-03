@@ -51,12 +51,12 @@ function ConfirmRemove(props) {
 
     const handleRemove = (id) => {
         // Gọi API xóa
-        console.log('Remove target ', id);
+        // console.log('Remove target ', id);
 
         removeTargetSchool(id).then((res) => {
-            console.log('res: ', res);
+            // console.log('res: ', res);
             refreshAPI(page, limit, column, direction, searchKey, listFilters);
-            console.log('xoa thanh cong target ', id);
+            // console.log('xoa thanh cong target ', id);
             setNotify({
                 isOpen: true,
                 message: 'Removed successfully',

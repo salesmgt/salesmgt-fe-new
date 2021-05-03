@@ -60,7 +60,7 @@ function Reports() {
     useEffect(() => {
         getAllReports(page, limit, column, direction, searchKey, listFilters, targetId)
 
-        return () => setData(null)
+        // return () => setData(null)
     }, [params, targetId])  // Coi lại chỗ này nữa
 
     if (!data) {

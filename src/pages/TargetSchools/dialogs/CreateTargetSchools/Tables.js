@@ -193,7 +193,7 @@ function Tables(props) {
     }
 
     const handleClick = (event,row) => {
-        console.log(event.target.checked)
+        // console.log(event.target.checked)
         // if(!event.target.checked){
         //     event.target.checked=false
         // }

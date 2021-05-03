@@ -1,9 +1,4 @@
-import React, {
-    useState,
-    useContext,
-    createContext,
-    useReducer,
-} from 'react'
+import React, { useState, useContext, createContext, useReducer } from 'react'
 import { TargetFormReducer } from './TargetFormReducer'
 import {
     DISTRICT_FILTER,
@@ -11,7 +6,6 @@ import {
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
-    SCHOOL_YEAR_FILTER,
 } from '../../../../constants/Filters'
 import { statusNames } from '../../../../constants/Generals'
 
@@ -54,7 +48,9 @@ function useTargetFormProvider() {
     const [schoolType, setSchoolType] = useState('')
     const [schoolLevel, setSchoolLevel] = useState('')
     const [schoolScale, setSchoolScale] = useState('')
-    const [schoolStatus, setSchoolStatus] = useState(defaultFilters?.status?.filterValue)
+    const [schoolStatus, setSchoolStatus] = useState(
+        defaultFilters?.status?.filterValue
+    )
 
     // fix major BUG
     const setFilter = (key, value) => {

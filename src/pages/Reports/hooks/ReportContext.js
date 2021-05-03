@@ -195,7 +195,7 @@ function useReportProvider() {
     }
     useEffect(() => {
         getListPICs()
-        return () => setPICs([])
+        // return () => setPICs([])
     }, [])
 
     // const getDistrictsFilter = () => {

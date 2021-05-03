@@ -25,7 +25,7 @@ import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { statusNames } from '../../../../constants/Generals'
 import { Consts } from '../../SchoolsConfig'
-import Highlighter from "react-highlight-words";
+import Highlighter from 'react-highlight-words'
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
@@ -147,7 +147,7 @@ function SortableTableHeaders(props) {
                     </TableCell>
                 ))}
             </TableRow>
-        </TableHead >
+        </TableHead>
     )
 }
 
@@ -173,7 +173,6 @@ function Tables(props) {
         setLimit,
         setPage,
         setDirection,
-
     } = useSchool()
 
     // ====================Paging====================
@@ -215,24 +214,24 @@ function Tables(props) {
         }
     }
 
-    const setStatusChipColor = (status, isActive) => {
-        // if (isActive) {
-            switch (status) {
-                case statusNames.lead:
-                    // return <Chip label={status} className={classes.chipLead} />
-                    return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
-                case statusNames.customer:
-                    // return <Chip label={status} className={classes.chipCustomer} />
-                    return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
-                default:
-                    // #5c21f3
-                    // return <Chip label={status} />
-                    return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
-            }
-        // } else {
-        //     return <Chip label={statusNames.pending} />
-        // }
-    }
+    // const setStatusChipColor = (status, isActive) => {
+    //     // if (isActive) {
+    //         switch (status) {
+    //             case statusNames.lead:
+    //                 // return <Chip label={status} className={classes.chipLead} />
+    //                 return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
+    //             case statusNames.customer:
+    //                 // return <Chip label={status} className={classes.chipCustomer} />
+    //                 return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
+    //             default:
+    //                 // #5c21f3
+    //                 // return <Chip label={status} />
+    //                 return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+    //         }
+    //     // } else {
+    //     //     return <Chip label={statusNames.pending} />
+    //     // }
+    // }
 
     return (
         <div className={classes.wrapper}>
@@ -249,9 +248,8 @@ function Tables(props) {
                         column={column}
                         onRequestSort={onSortBy}
                     />
-                   
+
                     <TableBody className={classes.tBody}>
-                    
                         {rows?.length > 0 ? (
                             rows.map((row, index) => (
                                 <TableRow
@@ -265,53 +263,76 @@ function Tables(props) {
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell
-                                        className={row?.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
+                                        className={
+                                            row?.active
+                                                ? classes.tCellSchoolName
+                                                : classes.tCellInactiveSchoolName
+                                        }
                                     >
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
-                                            autoEscape={true}   
-                                            textToHighlight= {`${row?.educationalLevel} ${row?.name}`}
-                                        /> 
+                                            autoEscape={true}
+                                            textToHighlight={`${row?.educationalLevel} ${row?.name}`}
+                                        />
                                     </TableCell>
                                     <TableCell
-                                        className={row?.active ? classes.tBodyCell : classes.tCellInactive}
+                                        className={
+                                            row?.active
+                                                ? classes.tBodyCell
+                                                : classes.tCellInactive
+                                        }
                                     >
                                         <ListItemText
                                             primary={
                                                 <Highlighter
                                                     highlightClassName="YourHighlightClass"
-                                                    searchWords={[params.searchKey]}
-                                                    autoEscape={true}   
-                                                    textToHighlight={row?.address ? row?.address : ''}
+                                                    searchWords={[
+                                                        params.searchKey,
+                                                    ]}
+                                                    autoEscape={true}
+                                                    textToHighlight={
+                                                        row?.address
+                                                            ? row?.address
+                                                            : ''
+                                                    }
                                                 />
                                             }
                                             secondary={row?.district}
                                             classes={{
                                                 primary: classes.itemText,
-                                                secondary: classes.itemText
+                                                secondary: classes.itemText,
                                             }}
                                         />
                                     </TableCell>
                                     <TableCell
-                                        className={row?.active ? classes.tBodyCell : classes.tCellInactive}
+                                        className={
+                                            row?.active
+                                                ? classes.tBodyCell
+                                                : classes.tCellInactive
+                                        }
                                     >
                                         <>
                                             {row?.reprName
-                                                ? row?.reprIsMale ? 'Mr. ' : 'Ms. '
-                                                : ''
-                                            }
+                                                ? row?.reprIsMale
+                                                    ? 'Mr. '
+                                                    : 'Ms. '
+                                                : ''}
                                             <Highlighter
                                                 highlightClassName="YourHighlightClass"
                                                 searchWords={[params.searchKey]}
-                                                autoEscape={true}   
-                                                textToHighlight={row?.reprName ? row?.reprName : ''}
+                                                autoEscape={true}
+                                                textToHighlight={
+                                                    row?.reprName
+                                                        ? row?.reprName
+                                                        : ''
+                                                }
                                             />
                                         </>
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    {/* <TableCell className={classes.tBodyCell}>
                                         {setStatusChipColor(row?.status, row?.active)}
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell
                                         className={classes.tBodyCell}
                                         align="right"

@@ -27,6 +27,7 @@ export const Consts = {
         },
         dob: {
             title: 'Birthday',
+            empty: 'N/A'
         },
         isMale: {
             title: 'Gender',

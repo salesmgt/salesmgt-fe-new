@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import {
     Dialog,
     IconButton,
@@ -9,7 +9,6 @@ import {
 import { MdClose } from 'react-icons/md'
 import { Consts } from '../DialogConfig'
 import CreateReportsForm from './CreateReportsForm'
-import Snackbars from '../../../../components/Snackbars/Snackbars'
 import classes from './CreateReports.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -44,33 +43,27 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 })
 
 function CreateReports(props) {
-    const { open, onClose, refreshAPI } = props
+    const { open, onClose, refreshAPI, setNotify } = props
     const { headers } = Consts
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
-
     return (
-        <>
-            <Dialog
-                open={open}
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="lg"
+            fullWidth
+            // component="form"
+            className={classes.dialog}
+        >
+            <DialogTitleWithIconClose onClose={onClose}>
+                {headers.create}
+            </DialogTitleWithIconClose>
+            <CreateReportsForm
                 onClose={onClose}
-                maxWidth="lg"
-                fullWidth
-                // component="form"
-                className={classes.dialog}
-            >
-                <DialogTitleWithIconClose onClose={onClose}>
-                    {headers.create}
-                </DialogTitleWithIconClose>
-                <CreateReportsForm onClose={onClose} refreshAPI={refreshAPI} setNotify={setNotify} />
-            </Dialog>
-
-            <Snackbars notify={notify} setNotify={setNotify} />
-        </>
+                refreshAPI={refreshAPI}
+                setNotify={setNotify}
+            />
+        </Dialog>
     )
 }
 

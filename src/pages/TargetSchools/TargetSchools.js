@@ -57,7 +57,7 @@ function TargetSchools() {
         } else {
             onGetTargets(page, limit, column, direction, searchKey, listFilters)
         }
-        return () => setData(null)
+        // return () => setData(null)
     }, [params])
 
     if (!data) {

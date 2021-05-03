@@ -4,7 +4,7 @@ export const columns = [
     // { key: "district.name", name: 'District', sortable: true },
     { key: 'address', name: 'Address', sortable: false, width: '29%' },
     { key: 'reprName', name: 'Principal', sortable: true, width: '20%' },
-    { key: 'schoolStatus.name', name: 'Status', sortable: true, width: '18%' },
+    // { key: 'schoolStatus.name', name: 'Status', sortable: true, width: '18%' },
     { key: '', name: '', sortable: false, width: '2%' },
 ]
 

@@ -222,7 +222,7 @@ function useTargetSchoolProvider() {
     }    
     useEffect(() => {
         getListPICs()
-        return () => setPICs([])
+        // return () => setPICs([])
     }, [])
 
     //================Parse object "params" --> query-string================

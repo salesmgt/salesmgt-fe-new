@@ -19,8 +19,6 @@ function Report() {
     const [report, setReport] = useState(stateData?.model)
     const [exist, setExist] = useState(true)
 
-    console.log('Report details - reportID: ', location?.state?.id);
-
     let isMounted = true
     const refreshPage = (reportId) => {
         ReportsServices.getReport(reportId)

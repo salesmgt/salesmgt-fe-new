@@ -29,7 +29,7 @@ import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data, refreshAPI, notify, setNotify } = props
+    const { data, refreshAPI,setNotify } = props
     const { menuItems } = Consts
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -136,7 +136,7 @@ function MenuOptions(props) {
                 <CreateMOU
                     open={openMOU}
                     onClose={() => setOpenMOU(false)}
-                    // refreshPage={refreshAPI}
+                    refreshPage={refreshAPI}
                     targetSchoolId={data?.id}
                     schoolId={data?.schoolId}
                     schoolName={data?.schoolName}
