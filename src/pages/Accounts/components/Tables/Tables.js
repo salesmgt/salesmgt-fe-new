@@ -250,7 +250,7 @@ function Tables(props) {
                         {rows?.length > 0 ? (
                             rows.map((row, index) => (
                                 <TableRow
-                                    key={row.username}
+                                    key={row?.username}
                                     className={classes.tBodyRow}
                                 >
                                     <TableCell
@@ -260,32 +260,34 @@ function Tables(props) {
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell
-                                        // className={row.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
-                                        className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
-                                    // className={(row.isActive !== null && row.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
+                                        // className={row?.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
+                                        className={(row?.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                        // className={(row?.isActive !== null && row?.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
                                     >
                                         <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.username}
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight={row?.username || ''}
                                         />
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}
                                     >
-                                        <ListItem className={(row.active === false) ? classes.listItemInactive : classes.listItem}>
-                                            <ListItemAvatar className={(row.active === false) ? classes.picAvatarInactive : ''}>
-                                                <Avatar src={row.avatar} />
+                                        <ListItem className={(row?.active === false) ? classes.listItemInactive : classes.listItem}>
+                                            <ListItemAvatar className={(row?.active === false) ? classes.picAvatarInactive : ''}>
+                                                <Avatar src={row?.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
-                                                className={(row.active === false) ? classes.picNameInactive : classes.picName}
-                                                primary={<Highlighter
-                                                highlightClassName="YourHighlightClass"
-                                                searchWords={[params.searchKey]}
-                                                autoEscape={true}   
-                                                textToHighlight={row.fullName}
-                                        />}
+                                                className={(row?.active === false) ? classes.picNameInactive : classes.picName}
+                                                primary={
+                                                    <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}   
+                                                        textToHighlight={row?.fullName || ''}
+                                                    />
+                                                }
                                                 classes={{
                                                     primary:
                                                         classes.itemTextPrimary,
@@ -294,27 +296,27 @@ function Tables(props) {
                                         </ListItem>
                                     </TableCell>
                                     <TableCell
-                                        className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                        className={(row?.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     >
                                        <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.phone}
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight={row?.phone || ''}
                                         />
                                     </TableCell>
                                     <TableCell
-                                        className={(row.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
+                                        className={(row?.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     >
                                        <Highlighter
-                                    highlightClassName="YourHighlightClass"
-                                    searchWords={[params.searchKey]}
-                                    autoEscape={true}   
-                                    textToHighlight={row.email}
+                                            highlightClassName="YourHighlightClass"
+                                            searchWords={[params.searchKey]}
+                                            autoEscape={true}   
+                                            textToHighlight={row?.email || ''}
                                         /> 
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {setRoleChipColor(row.roleName)}
+                                        {setRoleChipColor(row?.roleName)}
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}

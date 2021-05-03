@@ -21,8 +21,9 @@ import {
     STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { Consts } from '../DialogConfig'
-import styles from './CreateTargetSchools.module.scss'
 import { MdAdd } from 'react-icons/md'
+import NotifyDialog from './NotifyDialog'
+import styles from './CreateTargetSchools.module.scss'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -39,7 +40,7 @@ const MenuProps = {
 const useStyles = makeStyles((theme) => ({
     formControl: {
         marginBottom: theme.spacing(1),
-        minWidth: 160,
+        minWidth: 170,
     },
     flexBox: {
         padding: 0,
@@ -82,6 +83,8 @@ function Filters(props) {
     const [purpose, setPurpose] = useState([])
 
     const { operations, filters } = Consts
+
+    const [openNotiDialog, setOpenNotiDialog] = useState(false)
 
     //=========================================Handle filters=========================================
     const handleDistrictChange = (event) => {
@@ -139,7 +142,22 @@ function Filters(props) {
             payload: keyword,
         })
     }
+
+    const renderNotiDialog = () => {
+        return (
+            <NotifyDialog 
+                open={openNotiDialog} onClose={() => setOpenNotiDialog(false)}
+            />
+        )
+    }
+
     const onClick = e =>{
+        console.log('props.rows: ', props.rows);
+        if(props.rows?.length < 1) {
+            setOpenNotiDialog(true)
+            return
+        }
+
         props.setOpen(true)
     }
     return (
@@ -156,6 +174,7 @@ function Filters(props) {
                     <Button onClick={onClick} color="secondary" variant="contained" className={styles.btnAdd}>
                         <MdAdd fontSize="large" />
                     </Button>
+                    {renderNotiDialog()}
                 </Box>
             </Box>
             <Grid container item xs={12} sm={12} md={12} lg={12}>

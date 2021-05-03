@@ -127,7 +127,7 @@ const MuiAccordionDetails = withStyles((theme) => ({
     },
 }))(AccordionDetails)
 
-function Filters() {
+function Filters(props) {
     const classes = useStyles()
 
     //Use states which have been declared in the TargetSchoolContext
@@ -250,6 +250,7 @@ function Filters() {
                         <CreateAccount
                             open={openCreateDialog}
                             onClose={() => setOpenCreateDialog(false)}
+                            refreshPage={props.refreshPage}
                         />
                     </Box>
                 </Box>

@@ -15,7 +15,10 @@ import { Consts } from './ReportInfoConfig'
 import * as ReportsServices from '../../ReportsServices'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
+import { app as FirebaseApp } from '../../../../services/firebase'
+import {useApp} from '../../../../hooks/AppContext'
 import classes from './ReportInfo.module.scss'
+import moment from 'moment'
 
 const rpSchema = yup.object().shape({
     result: yup.string().trim().required('Result is required'),
@@ -49,6 +52,7 @@ function RepInfo(props) {
     const styles = useStyles()
 
     const { user } = useAuth()
+    const {userInfo} = useApp()
 
     const history = useHistory()
 
@@ -164,6 +168,25 @@ function RepInfo(props) {
 
         // alert(JSON.stringify(model))
     }
+    
+    const createNotify = (value) => {
+        new Promise((resolve, reject) => {
+            const noti = FirebaseApp
+                .database()
+                .ref('notify')
+                .child(report.username).push({
+                    avatar: userInfo.avatar,
+                    actor: user.username,
+                    type: "report",
+                    timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                    content: "You've just received a message from Manager.",
+                    // content: `${user.fullName} has just commented on your report.`,
+                    uid: value.id,
+                    isSeen: false
+                }) 
+            }
+        )
+    }
 
     const onCmtSubmit = (data) => {
         const model = {
@@ -179,6 +202,8 @@ function RepInfo(props) {
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+
+                createNotify(data);
             })
             .catch((error) => {
                 if (error.response) {

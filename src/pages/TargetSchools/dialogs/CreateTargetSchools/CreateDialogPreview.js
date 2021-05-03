@@ -10,7 +10,6 @@ import { MdClose } from 'react-icons/md'
 import { Consts } from '../DialogConfig'
 import CreateReviewDialogForm from './CreateReviewDialogForm';
 
-
 const stylesTitle = (theme) => ({
     root: {
         margin: 0,
@@ -39,7 +38,7 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function CreateDialogReview(props) {
-    const { open, onClose, rows, setRows, refreshAPI } = props
+    const { open, onClose, rows, setRows, refreshAPI, schoolStatus, schoolYear } = props
     const { headers } = Consts
     const [notify, setNotify] = React.useState({
         isOpen: false,
@@ -47,11 +46,20 @@ function CreateDialogReview(props) {
         type: '',
     })
     return (<>
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" >
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form">
             <DialogTitleWithIconClose onClose={onClose}>
-                {headers.assignMultiple}
+                {headers.confirmCreateTarget}
             </DialogTitleWithIconClose>
-           <CreateReviewDialogForm onClose={onClose} setNotify={setNotify} notify={notify} rows={rows} setRows={setRows} refreshAPI={refreshAPI} /> 
+            <CreateReviewDialogForm 
+                onClose={onClose} 
+                notify={notify}
+                setNotify={setNotify}
+                rows={rows} 
+                setRows={setRows} 
+                refreshAPI={refreshAPI} 
+                schoolStatus={schoolStatus}
+                schoolYear={schoolYear}
+            />
         </Dialog>
        {/* // <Snackbars notify={notify} setNotify={setNotify}/> */}
         </>

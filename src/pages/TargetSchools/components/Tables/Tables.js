@@ -131,7 +131,7 @@ function Tables(props) {
         totalRecord,
         totalPage,
         refreshAPI,
-    } = props // , onGetTargets
+    } = props
     const { messages } = Consts
 
     const [notify, setNotify] = React.useState({
@@ -157,7 +157,7 @@ function Tables(props) {
     
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.filter((row) => !row.username)
+            const newSelecteds = rows.filter((row) => !row?.username)
             setSelectedRows(newSelecteds)
             return
         }
@@ -277,7 +277,7 @@ function Tables(props) {
                             rows.map((row, index) => {
                                 return (
                                     <TableRow
-                                        key={row.id}
+                                        key={row?.id}
                                         className={classes.tBodyRow}
                                         // hover
                                         role="checkbox"
@@ -291,37 +291,22 @@ function Tables(props) {
                                                 padding="checkbox"
                                                 width="1%"
                                                 onClick={(event) => {
-                                                    !row.username &&
+                                                    !row?.username &&
                                                         handleClick(event, row)
                                                 }}
                                             >
                                                 <Checkbox
-                                                    checked={
-                                                        row.username
-                                                            ? false
-                                                            : isSelected(row)
-                                                    }
-                                                    disabled={
-                                                        row.username
-                                                            ? true
-                                                            : false
-                                                    }
+                                                    checked={ row?.username ? false : isSelected(row) }
+                                                    disabled={ row?.username ? true : false }
                                                 />
                                             </TableCell>
                                         )}
                                         <TableCell
                                             className={classes.tBodyCell}
                                             align="center"
-                                            width={
-                                                user.roles[0] !==
-                                                roleNames.salesman
-                                                    ? '0.5%'
-                                                    : '1%'
-                                            }
+                                            width={ user.roles[0] !== roleNames.salesman ? '0.5%' : '1%' }
                                         >
-                                            {params.page * params.limit +
-                                                index +
-                                                1}
+                                            {params.page * params.limit + index + 1}
                                         </TableCell>
                                         <TableCell
                                             className={classes.tBodyCell}
@@ -335,18 +320,18 @@ function Tables(props) {
                                             <ListItemText
                                                 primary={
                                                     <>
-                                                        {row.level}
+                                                        {`${row?.level} `}
                                                         <Highlighter
                                                             highlightClassName="YourHighlightClass"
                                                             searchWords={[
                                                                 params.searchKey,
                                                             ]}
                                                             autoEscape={true}
-                                                            textToHighlight={` ${row.schoolName}`}
+                                                            textToHighlight={row?.schoolName || ''}
                                                         />
                                                     </>
                                                 }
-                                                secondary={row.district}
+                                                secondary={row?.district}
                                                 classes={{
                                                     primary:
                                                         styles.itemTextLarge,
@@ -357,34 +342,29 @@ function Tables(props) {
                                         </TableCell>
                                         <TableCell
                                             className={classes.tBodyCell}
-                                            width={
-                                                user.roles[0] !==
-                                                roleNames.salesman
-                                                    ? '14%'
-                                                    : '22%'
-                                            }
+                                            width={ user.roles[0] !== roleNames.salesman ? '14%' : '22%' }
                                         >
-                                            <Highlighter
-                                                highlightClassName="YourHighlightClass"
-                                                searchWords={[params.searchKey]}
-                                                autoEscape={true}
-                                                textToHighlight={
-                                                    row?.reprName
-                                                        ? row.reprIsMale
-                                                            ? `Mr. ${row.reprName}`
-                                                            : `Ms. ${row.reprName}`
-                                                        : ''
+                                            <>
+                                                {row?.reprName
+                                                    ? row?.reprIsMale ? 'Mr. ' : 'Ms. '
+                                                    : ''
                                                 }
-                                            />
+                                                <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[params.searchKey]}
+                                                    autoEscape={true}   
+                                                    textToHighlight={row?.reprName || ''}
+                                                />
+                                            </>
                                         </TableCell>
                                         {user.roles[0] !==
                                             roleNames.salesman && (
                                             <TableCell className={classes.tBodyCell} width="20%">
-                                                {row.fullName && (
+                                                {row?.fullName && (
                                                     <ListItem className={classes.itemPIC}>
                                                         <ListItemAvatar>
-                                                            {/* <Avatar src={() => fetchAvatarURL(row.avatar)} /> */}
-                                                            <Avatar src={row.avatar} />
+                                                            {/* <Avatar src={() => fetchAvatarURL(row?.avatar)} /> */}
+                                                            <Avatar src={row?.avatar} />
                                                         </ListItemAvatar>
                                                         <ListItemText
                                                             className={classes.picName}
@@ -393,7 +373,7 @@ function Tables(props) {
                                                                     highlightClassName="YourHighlightClass"
                                                                     searchWords={[params.searchKey]}
                                                                     autoEscape={true}   
-                                                                    textToHighlight={row?.fullName}
+                                                                    textToHighlight={row?.fullName || ''}
                                                                 /> 
                                                             }
                                                             secondary={
@@ -401,7 +381,7 @@ function Tables(props) {
                                                                     highlightClassName="YourHighlightClass"
                                                                     searchWords={[params.searchKey]}
                                                                     autoEscape={true}   
-                                                                    textToHighlight={row?.username} 
+                                                                    textToHighlight={row?.username || ''} 
                                                                 /> 
                                                             }
                                                             classes={{
@@ -417,30 +397,21 @@ function Tables(props) {
                                             className={classes.tBodyCell}
                                             width={
                                                 user.roles[0] !==
-                                                roleNames.salesman
-                                                    ? '17%'
-                                                    : '20%'
+                                                roleNames.salesman ? '17%' : '20%'
                                             }
                                         >
                                             <Highlighter
                                                 highlightClassName="YourHighlightClass"
                                                 searchWords={[params.searchKey]}
                                                 autoEscape={true}
-                                                textToHighlight={
-                                                    row?.schoolYear
-                                                }
+                                                textToHighlight={row?.schoolYear || ''}
                                             />
                                         </TableCell>
                                         <TableCell
                                             className={classes.tBodyCell}
-                                            width={
-                                                user.roles[0] !==
-                                                roleNames.salesman
-                                                    ? '17%'
-                                                    : '20%'
-                                            }
+                                            width={ user.roles[0] !== roleNames.salesman ? '17%' : '20%' }
                                         >
-                                            {setPurposeChipColor(row.purpose)}
+                                            {setPurposeChipColor(row?.purpose)}
                                         </TableCell>
                                         <TableCell
                                             className={classes.tBodyCell}

@@ -87,27 +87,58 @@
   // width: 1000;
 }
 
+
+.chipInactive {
+  color: $grey-400;
+  font-style: italic;
+  text-decoration: line-through $grey-400;
+  opacity: 0.2 !important;
+}
 .chipSalesMoi {
-  background-color: $energy !important;
-  // color: $common-white !important;
+  background-color: $clarity !important;
+  color: $common-white !important;
+}
+.chipSalesMoiInactive {
+  @extend .chipSalesMoi;
+  @extend .chipInactive;
 }
 .chipTheoDoi {
-  background-color: $compassion !important;
+  background-color: $energy !important;
   color: $common-white !important;
+}
+.chipTheoDoiInactive {
+  @extend .chipTheoDoi;
+  @extend .chipInactive;
 }
 .chipTiemNang {
-  background-color: $creative !important;
-  color: $common-white !important;
-}
-.chipChamSoc {
-  background-color: $heals !important;
-  color: $common-white !important;
-}
-.chipTaiKy {
   background-color: $trust !important;
   color: $common-white !important;
 }
-.chipKyMoi {
+.chipTiemNangInactive {
+  @extend .chipTiemNang;
+  @extend .chipInactive;
+}
+.chipChamSoc {
+  background-color: $compassion !important;
+  color: $common-white !important;
+}
+.chipChamSocInactive {
+  @extend .chipChamSoc;
+  @extend .chipInactive;
+}
+.chipTaiKy {
   background-color: $memory !important;
   color: $common-white !important;
+}
+.chipTaiKyInactive {
+  @extend .chipTaiKy;
+  @extend .chipInactive;
+}
+.chipKyMoi {
+  background-color: $creative !important;
+  color: $common-white !important;
+}
+.chipKyMoiInactive {
+  @extend .chipKyMoi;
+  @extend .chipInactive;
 }

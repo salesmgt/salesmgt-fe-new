@@ -26,11 +26,10 @@ import { Consts } from '../../../TargetSchoolsConfig'
 import { roleNames, statusNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import AssignMultiple from '../../../dialogs/AssignMultiple/AssignMultiple'
-import { Snackbars } from '../../../../../components'
 import classes from './MenuOptions.module.scss'
 
 function MenuOptions(props) {
-    const { data, refreshAPI, setNotify } = props
+    const { data, refreshAPI, notify, setNotify } = props
     const { menuItems } = Consts
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -97,6 +96,7 @@ function MenuOptions(props) {
                     onClose={() => setOpen(false)}
                     data={data}
                     refreshAPI={refreshAPI}
+                    setNotify={setNotify}
                 />
             )
         }
@@ -106,10 +106,10 @@ function MenuOptions(props) {
         if (data?.fullName) {
             return (
                 <ConfirmUnassign
-                    notify={props.notify}
-                    setNotify={props.setNotify}
-                    open={openAssign}
-                    onClose={() => setOpenAssign(false)}
+                    // notify={notify}
+                    setNotify={setNotify}
+                    open={openUnassign}
+                    onClose={() => setOpenUnassign(false)}
                     data={data}
                     refreshAPI={refreshAPI}
                 />
@@ -118,8 +118,8 @@ function MenuOptions(props) {
             // assign one dialog
             return (
                 <AssignMultiple
-                    notify={props.notify}
-                    setNotify={props.setNotify}
+                    // notify={notify}
+                    setNotify={setNotify}
                     open={openAssign}
                     onClose={() => setOpenAssign(false)}
                     rows={rows}
@@ -229,7 +229,7 @@ function MenuOptions(props) {
                         {renderAssignedDialog()}
                     </div>
                 )}
-                {user.roles[0] !== roleNames.salesman && data.schoolStatus !== statusNames.pending && !data?.fullName && (
+                {user.roles[0] !== roleNames.salesman && !data?.fullName && (
                     <div>
                         <MenuItem onClick={handleOpenAssignOne}>
                             <ListItemIcon className={classes.itemIcon}>

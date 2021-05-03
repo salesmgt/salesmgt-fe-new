@@ -37,7 +37,6 @@ import {
     DIFFICULTY,
     FUTURE_PLAN,
 } from '../DialogConfig'
-import { Snackbars } from '../../../../components'
 import { useReport } from '../../hooks/ReportContext'
 import classes from './CreateReports.module.scss'
 
@@ -62,10 +61,6 @@ function CreateReportsForm(props) {
         // getValues, , setError, control, handleSubmit, formState
         resolver: yupResolver(clientSchema),
     })
-    // const [open, setOpen] = useToggle()
-
-    // const defaultValue = {
-    // }
 
     // const onSubmit = (data) => {
     //     console.log(data)
@@ -125,8 +120,10 @@ function CreateReportsForm(props) {
                 }
             })
     }
-
-    useEffect(getListTargets, [])
+    useEffect(() => {
+        getListTargets()
+        return () => setTargets([])
+    }, [])
 
     const onSearchTargetChange = (event) => {
         if (typingTimeoutRef.current) {
@@ -339,22 +336,15 @@ function CreateReportsForm(props) {
                 difficulty: formValue.difficulty,
                 futurePlan: formValue.futurePlan,
             }
-
             reports.push(report)
         } else {
             reports = [...listReports]
         }
 
-        // console.log('event: ', event);
-        // console.log('Click Save: ', listReports);
-        // addReports(event);
-
         ReportsServices.addReport(reports)
             .then((data) => {
-                // console.log('data: ', data);
-                refreshAPI(page, limit, column, direction, searchKey, listFilters)
-                console.log(data)
-                // Xử lý cắt chuỗi msg của a Gia trả về để lấy số reports đã đc nộp
+                console.log('data: ', data);               
+
                 if (!String(data).includes('already submitted') && !String(data).includes('Created 0 records')) {
                     setNotify({
                         isOpen: true,
@@ -374,6 +364,8 @@ function CreateReportsForm(props) {
                         type: 'error',
                     })
                 }
+                refreshAPI(page, limit, column, direction, searchKey, listFilters)
+
                 handleCloseDialog()
             })
             .catch((error) => {
@@ -399,8 +391,15 @@ function CreateReportsForm(props) {
         // console.log(`${thisMonth}/${thisYear}`);
         // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
 
-        if (thisMonth < 7) return `${thisYear - 1}-${thisYear}`
-        else return `${thisYear}-${thisYear + 1}`
+        // Từ tháng 5 năm nay tới tháng 5 năm sau: đi sales cho các targets theo năm học sau
+        // nên report cũng tính là năm học sau.
+        if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
+            return `${thisYear}-${thisYear + 1}`
+        } else if (4 <= thisMonth < 11) {
+            return `${thisYear - 1}-${thisYear}`
+        } else {
+            return null
+        }
     }
 
     const truncateString = (str) => {
@@ -608,10 +607,7 @@ function CreateReportsForm(props) {
                                                 variant="contained"
                                                 color="secondary"
                                                 type="submit"
-                                                disabled={
-                                                    formValue ===
-                                                    defaultFormValue
-                                                }
+                                                disabled={ formValue === defaultFormValue }
                                                 // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />

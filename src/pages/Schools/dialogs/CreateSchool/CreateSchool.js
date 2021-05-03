@@ -43,7 +43,7 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 })
 
 function CreateSchool(props) {
-    const { open, onClose } = props
+    const { open, onClose, refreshPage } = props
 
     const { headers } = Consts
 
@@ -59,7 +59,7 @@ function CreateSchool(props) {
                 <DialogTitleWithIconClose onClose={onClose}>
                     {headers.child1}
                 </DialogTitleWithIconClose>
-                <CreateSchoolForm onClose={onClose} setNotify={setNotify} />
+                <CreateSchoolForm onClose={onClose} setNotify={setNotify} refreshPage={refreshPage} />
             </Dialog>
 
             <Snackbars notify={notify} setNotify={setNotify} />

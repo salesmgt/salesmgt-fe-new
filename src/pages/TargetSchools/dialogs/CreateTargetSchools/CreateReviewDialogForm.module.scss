@@ -26,12 +26,12 @@
       color: $common-white;
       font-weight: bold;
       font-size: larger;
-       text-align: center !important;
+      // text-align: left  !important;
     }
-    .tHeadCellNo {
-        @extend .tHeadCell;
-        width: 1rem;
-    }
+    // .tHeadCellNo {
+    //     @extend .tHeadCell;
+    //     width: 1rem;
+    // }
     // .tHeadCellName {
     //     @extend .tHeadCell;
     //     width: 14rem;
@@ -50,11 +50,9 @@
     // }
 
     .tBody {
-      
-        .tBodyCell {
-          
+      .tBodyCell {          
         padding: 0.1rem 1rem;
-        justify-content: center !important;
+        // justify-content: center !important;
     }
     }
   }
@@ -81,3 +79,44 @@
     text-decoration-line: line-through;
     
   }
+
+.title {
+  font-weight: 600;
+  color: $secondary-text;
+  font-size: 1.2rem !important;
+  padding: 1.6rem 0.5rem 0 0;
+}
+
+.chipLead {
+  background-color: $trust !important;
+  color: $common-white !important;
+}
+.chipCustomer {
+  background-color: $clarity !important;
+  color: $common-white !important;
+}
+
+.chipSalesMoi {
+  background-color: $clarity !important;
+  color: $common-white !important;
+}
+.chipTheoDoi {
+  background-color: $energy !important;
+  color: $common-white !important;
+}
+.chipTiemNang {
+  background-color: $trust !important;
+  color: $common-white !important;
+}
+.chipChamSoc {
+  background-color: $compassion !important;
+  color: $common-white !important;
+}
+.chipTaiKy {
+  background-color: $memory !important;
+  color: $common-white !important;
+}
+.chipKyMoi {
+  background-color: $creative !important;
+  color: $common-white !important;
+}

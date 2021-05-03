@@ -57,6 +57,7 @@ function TargetSchools() {
         } else {
             onGetTargets(page, limit, column, direction, searchKey, listFilters)
         }
+        return () => setData(null)
     }, [params])
 
     if (!data) {
@@ -66,9 +67,9 @@ function TargetSchools() {
     return (
         <div className={classes.panel}>
             <Filters 
+                className={classes.filter}
                 selectedRows={selectedRows} 
                 setSelectedRows={setSelectedRows} 
-                className={classes.filter} 
                 refreshAPI={onGetTargets}
             />
             <Tables

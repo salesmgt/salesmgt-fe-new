@@ -44,9 +44,8 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmRemove(props) {
-    const { open, onClose, data, refreshAPI } = props
+    const { open, onClose, data, refreshAPI, setNotify } = props
     const { headers, operations } = Consts
-
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
@@ -58,12 +57,22 @@ function ConfirmRemove(props) {
             console.log('res: ', res);
             refreshAPI(page, limit, column, direction, searchKey, listFilters);
             console.log('xoa thanh cong target ', id);
+            setNotify({
+                isOpen: true,
+                message: 'Removed successfully',
+                type: 'success'
+            })
+            onClose();
         }).catch(error => {
             if (error.response) {
                 console.log(error)
+                setNotify({
+                    isOpen: false,
+                    message: 'Removed unsuccessfully',
+                    type: 'error',
+                })
             }
         })
-        onClose();
     }
 
     return (

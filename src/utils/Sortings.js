@@ -25,9 +25,8 @@ export function getPurpsByStatus(schStatus, salesPurps) {
         case statusNames.customer:
             return [purps[3], purps[4], purps[5]]
         case statusNames.pending:
-            return purps
         default:
-            break
+            return purps
     }
 }
 

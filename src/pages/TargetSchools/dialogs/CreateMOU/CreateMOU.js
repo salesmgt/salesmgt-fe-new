@@ -61,6 +61,7 @@ function MOUForm(props) {
                 targetSchoolId={targetSchoolId}
                 schoolId={schoolId}
                 schoolStatus={schoolStatus}
+                schoolName={schoolName}
             />
         </Dialog>
     )

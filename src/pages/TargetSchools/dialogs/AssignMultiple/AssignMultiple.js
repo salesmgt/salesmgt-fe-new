@@ -42,22 +42,20 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function AssignMultiple(props) {
-    const { open, onClose, rows, setRows, refreshAPI } = props
+    const { open, onClose, rows, setRows, refreshAPI, setNotify } = props
     const { headers } = Consts
-    const [notify, setNotify] = React.useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
-    return (<>
+    // const [notify, setNotify] = React.useState({
+    //     isOpen: false,
+    //     message: '',
+    //     type: '',
+    // })
+    return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.assignMultiple}
             </DialogTitleWithIconClose>
-            <AssignMultipleForm onClose={onClose} setNotify={setNotify} notify={notify} rows={rows} setRows={setRows} refreshAPI={refreshAPI} />
+            <AssignMultipleForm onClose={onClose} setNotify={setNotify} rows={rows} setRows={setRows} refreshAPI={refreshAPI} />
         </Dialog>
-        <Snackbars notify={notify} setNotify={setNotify}/>
-        </>
     )
 }
 

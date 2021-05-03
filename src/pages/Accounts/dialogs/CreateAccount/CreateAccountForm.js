@@ -28,6 +28,8 @@ import { useApp } from '../../../../hooks/AppContext'
 import { USERNAME_RGX, PHONE_RGX } from '../../../../utils/Regex'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
+import { useAccount } from '../../hooks/AccountContext'
+import { app as FirebaseApp } from '../../../../services/firebase'
 import classes from './CreateAccount.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -101,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CreateAccountForm(props) {
-    const { onClose, setNotify } = props
+    const { onClose, setNotify, refreshPage } = props
     const { operations, fields } = Consts
     const styles = useStyles()
 
@@ -109,6 +111,9 @@ function CreateAccountForm(props) {
     const bakRoles = roles ? roles : Milk.getMilk(milkNames.roles)
 
     const history = useHistory()
+
+    const { params } = useAccount()
+    const { page, limit, column, direction, searchKey, listFilters } = params
 
     // const [notify, setNotify] = useState({
     //     isOpen: false,
@@ -126,7 +131,23 @@ function CreateAccountForm(props) {
         isMale: String(true),
         birthDate: null,
     }
-
+    const node = (user) => {
+        new Promise((resolve, reject) => {
+            const notiRef = FirebaseApp
+                .database()
+                .ref('notify')
+                .child(user.username).push({
+                    avatar: 'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Fcong-ty-co-phan-major-education-59313d53b549b_rs.jpg?alt=media&token=166886c5-e210-443a-b262-675ac8ff836b',
+                    actor: "System",
+                    type: "Welcome",
+                    content: "Welcome to Sales Department of Major Education!",
+                    timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                    uid: 0,
+                    isSeen: false
+                })               
+            }
+        )
+    }
     const {
         control,
         handleSubmit,
@@ -155,6 +176,8 @@ function CreateAccountForm(props) {
                     message: 'Created Successfully',
                     type: 'success',
                 })
+                node(model)
+                refreshPage(page, limit, column, direction, searchKey, listFilters)
                 // reset({
                 //     username: '',
                 //     fullName: '',
@@ -197,8 +220,7 @@ function CreateAccountForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form
-                    noValidate
+                <form noValidate
                     // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>

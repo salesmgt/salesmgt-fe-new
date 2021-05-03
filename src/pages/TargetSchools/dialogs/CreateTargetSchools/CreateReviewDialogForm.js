@@ -5,11 +5,7 @@ import {
     DialogActions,
     Grid,
     Typography,
-    InputAdornment,
-    ListItem,
-    Avatar,
     ListItemText,
-    ListItemAvatar,
     TableHead,
     Table,
     TableCell,
@@ -19,29 +15,42 @@ import {
     makeStyles,
     Paper,
     IconButton,
-    Chip
+    Chip,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Box
 } from '@material-ui/core'
-import { MdAccountCircle, MdClose } from 'react-icons/md'
-import { BiEdit } from 'react-icons/bi'
-import { useTargetSchool } from '../../hooks/TargetSchoolContext'
-import { Consts, columnReview } from '../DialogConfig'
-import { statusNames } from '../../../../constants/Generals'
+import { MdClose } from 'react-icons/md'
+import { previewColumns } from './CreateTargetSchoolsConfig'
+import { Consts, schoolYearSubTitle } from '../DialogConfig'
+import { statusNames, purposeNames, milkNames } from '../../../../constants/Generals'
+import * as Milk from '../../../../utils/Milk'
 import { useAuth } from '../../../../hooks/AuthContext'
+import { useApp } from '../../../../hooks/AppContext'
+import { useTargetForm } from './TargetFormContext'
+import { getPurpsByStatus } from '../../../../utils/Sortings'
+import { createTargetSchools } from '../../TargetSchoolsServices'
 import classes from './CreateReviewDialogForm.module.scss'
 
+//===============Set max-height for dropdown list===============
+const ITEM_HEIGHT = 38
+const ITEM_PADDING_TOP = 5
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
+        },
+    },
+}
 const useStyles = makeStyles((theme) => ({
     formControl: {
-        // margin: theme.spacing(1),
-        marginTop: '0.8rem',
-        minWidth: 160,
-        // maxWidth: 180
+        marginTop: '0.5rem',
+        minWidth: 180,
     },
     option: {
         fontSize: '0.875rem',
-    },
-    lastOption: {
-        fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0',
     },
     root: {},
     menuItemRoot: {
@@ -79,25 +88,47 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateReviewDialogForm(props) {
     const styles = useStyles()
-    const { onClose, refreshAPI } = props
+    const { onClose, schoolStatus, refreshAPI } = props
     const [rowsState, setRowsState] = React.useState(props.rows)
-    const { operations } = Consts
+    const { fields, operations } = Consts
     const [object, setObject] = React.useState(null)
+    const [purpose, setPurpose] = useState(null)
 
-    const { params } = useTargetSchool()
-    const { listFilters, page, limit, column, direction, searchKey } = params
-    const { user } = useAuth()
+    const { salesPurps } = useApp()
+    const { params, dispatchParams, setFilter } = useTargetForm()
+    const { page, limit, column, direction, searchKey, listFilters } = params
 
-    const [PIC, setPIC] = useState(null)
+    // 1 năm học sẽ kéo dài từ tháng 5 năm nay tới tháng 5 năm sau
+    const calculateSchoolYear = () => {
+        const thisYear = new Date().getFullYear()
+        const thisMonth = new Date().getMonth()
 
-    const typingTimeoutRef = useRef({})
+        if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
+            return `${thisYear}-${thisYear + 1}`
+        } else if (4 <= thisMonth < 11) {
+            return `${thisYear - 1}-${thisYear}`
+        } else {
+            return null
+        }
+    }
+    const schoolYear = calculateSchoolYear()
+    
+    const bakSalesPurps = salesPurps ? salesPurps : Milk.getMilk(milkNames.salesPurps)
+    const purpsByStatus = getPurpsByStatus(schoolStatus, bakSalesPurps)
 
     const handleSubmit = () => {
         let array = []
         rowsState.map((item) => {
-            item = { ...item, username: PIC?.username }
+            item = { ...item, purpose: purpose,schoolYear: schoolYear, schoolId: item.id }
             array.push(item)
         })
+        createTargetSchools(array).then(res => {
+            // console.log('Created. res = ', res);
+            setRowsState([]);
+            refreshAPI(schoolYear, page, limit, column, direction, searchKey, listFilters)
+            onClose()
+        })
+
         // console.log(array)
         // assignMulti(array).then((res) => {
         //     props.setNotify({
@@ -111,18 +142,6 @@ function CreateReviewDialogForm(props) {
         //     onClose()
         // })
     }
-    const [anchorEl, setAnchorEl] = React.useState(null)
-
-    const handleClick = (event, row) => {
-        setAnchorEl(event.currentTarget)
-        setObject(row)
-    }
-
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-      console.log(rowsState)
-    const open = Boolean(anchorEl)
 
     const handleOnRemove = (e, row) => {
         let newSelected = []
@@ -142,10 +161,11 @@ function CreateReviewDialogForm(props) {
             onClose()
         }
     }
-    const truncateString = (str) => {
-        if (str) return str.length > 26 ? str.substring(0, 25) + '...' : str
-        else return ''
+
+    const handlePurposeChange = (event) => {
+        setPurpose(event.target.value)
     }
+
     const setStatusChipColor = (status) => {
         switch (status) {
             case statusNames.lead:
@@ -153,11 +173,32 @@ function CreateReviewDialogForm(props) {
             case statusNames.customer:
                 return <Chip label={status} className={classes.chipCustomer} />
             default:
-                return <Chip label={status} />
+                break
+                // return <Chip label={status} />
+        }
+    }
+
+    const setPurposeChipColor = (purpose) => {
+        switch (purpose) {
+            case purposeNames.purp1:
+                return <Chip label={purpose} className={classes.chipSalesMoi} />
+            case purposeNames.purp2:
+                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            case purposeNames.purp3:
+                return <Chip label={purpose} className={classes.chipTiemNang} />
+            case purposeNames.purp4:
+                return <Chip label={purpose} className={classes.chipChamSoc} />
+            case purposeNames.purp5:
+                return <Chip label={purpose} className={classes.chipTaiKy} />
+            case purposeNames.purp6:
+                return <Chip label={purpose} className={classes.chipKyMoi} />
+            default:
+                break
+                // return <Chip label={purpose} /> // #5c21f3
         }
     }
    
-    //     const object = rowsState.findIndex((obj) => obj.id === row.id)
+    //     const object = rowsState.findIndex((obj) => obj.id === row?.id)
     //     //const item ={...rowsState[object],note: e.target.value}
     //     let array = [null]
     //     array = [...rowsState]
@@ -169,55 +210,85 @@ function CreateReviewDialogForm(props) {
     //     console.log(array)
     //     setRowsState(array)
     // }
+    
     return (
         <>
             <DialogContent className={classes.wrapper}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Box display="flex" flexDirection="row" flexWrap="nowrap">
+                            <Box flexGrow={1}>
+                                <FormControl className={styles.formControl}>
+                                    <InputLabel>{fields.purpose.label}</InputLabel>
+                                    <Select
+                                        value={purpose || ''}
+                                        onChange={handlePurposeChange}
+                                        MenuProps={MenuProps}
+                                    >
+                                        <MenuItem
+                                            value=""
+                                            className={styles.option}
+                                            classes={{
+                                                root: styles.menuItemRoot,
+                                                selected: styles.menuItemSelected,
+                                            }}
+                                        >
+                                            {fields.purpose.options.none}
+                                        </MenuItem>
+                                        {purpsByStatus?.map((purp) => (
+                                            <MenuItem
+                                                key={purp}
+                                                value={purp}
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected:
+                                                        styles.menuItemSelected,
+                                                }}
+                                            >
+                                                {purp}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box>
+                                <Typography variant="subtitle1" className={classes.title}>
+                                    {schoolYearSubTitle(schoolYear)}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
                         <Typography variant="subtitle1">
                             List of assigned schools:
                         </Typography>
-                        <TableContainer
-                            className={classes.container}
-                            component={Paper}
-                        >
-                            <Table
-                                className={classes.table}
-                                stickyHeader
-                                size="small"
-                            >
+                        <TableContainer className={classes.container} component={Paper}>
+                            <Table className={classes.table} stickyHeader size="small">
                                 <TableHead>
                                     <TableRow className={classes.tHead}>
-                                        {columnReview.map((col) => (
+                                        {previewColumns.map((col) => (
                                             <TableCell
-                                                key={col}
+                                                key={col.key}
                                                 className={classes.tHeadCell}
-                                                align={
-                                                    col === 'no'
-                                                        ? 'center'
-                                                        : 'left'
-                                                }
+                                                align={col.align}
+                                                width={col.width}
                                             >
-                                                {col}
+                                                {col.name}
                                             </TableCell>
                                         ))}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody className={classes.tBody}>
                                     {rowsState?.map((row, index) => (
-                                        <TableRow key={row.id}>
-                                            <TableCell
-                                                align="center"
-                                                width="5%"
-                                            >
+                                        <TableRow key={row?.id}>
+                                            <TableCell className={classes.tBodyCell}>
                                                 {index + 1}
                                             </TableCell>
-                                            <TableCell
-                                                width="30%"
-                                                className={classes.tBodyCell}
-                                            >
+                                            <TableCell className={classes.tBodyCell}>
                                                 <ListItemText
-                                                    primary={`${row.educationalLevel} ${row.name}`}
+                                                    primary={`${row?.educationalLevel} ${row?.name}`}
+                                                    secondary={row?.district}
                                                     classes={{
                                                         primary:
                                                             classes.itemTextPrimary,
@@ -226,29 +297,15 @@ function CreateReviewDialogForm(props) {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell
-                                                width="30%"
-                                                className={classes.tBodyCell}
-                                            >
-                                                <ListItemText
-                                                    primary={truncateString(row.address)}
-                                                    secondary={row.district}
-                                                    classes={{
-                                                        primary:
-                                                            classes.itemTextPrimary,
-                                                        secondary:
-                                                            classes.itemTextSecondary,
-                                                    }}
-                                                />
+                                            <TableCell className={classes.tBodyCell}>
+                                                {setStatusChipColor(row?.status)}
                                             </TableCell>
-                                            <TableCell>
-                                        {setStatusChipColor(row.status)}
+                                            <TableCell className={classes.tBodyCell}>
+                                                {setPurposeChipColor(purpose)}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className={classes.tBodyCell}>
                                                 <IconButton
-                                                    onClick={(e) =>
-                                                        handleOnRemove(e, row)
-                                                    }
+                                                    onClick={(e) => handleOnRemove(e, row)}
                                                 >
                                                     <MdClose />
                                                 </IconButton>
@@ -265,7 +322,7 @@ function CreateReviewDialogForm(props) {
                 <Button
                     type="submit"
                     onClick={handleSubmit}
-                    disabled={!PIC}
+                     disabled={!purpose}
                     className={classes.btnSave}
                 >
                     {operations.save}

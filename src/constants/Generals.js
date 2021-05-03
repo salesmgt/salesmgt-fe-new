@@ -5,6 +5,11 @@ export const roleNames = {
     salesman: 'SALESMAN',
 }
 
+export const statusAcct = {
+    active: 'Active',
+    inactive: 'Inactive'
+}
+
 export const statusNames = {
     lead: 'Chưa hợp tác',
     customer: 'Đang hợp tác',

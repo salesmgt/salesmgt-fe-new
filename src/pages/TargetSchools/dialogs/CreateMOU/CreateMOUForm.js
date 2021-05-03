@@ -1,11 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect} from 'react'
 import { useHistory } from 'react-router-dom'
 import {
-    Dialog,
-    IconButton,
-    DialogTitle,
-    Typography,
-    withStyles,
     DialogContent,
     DialogActions,
     Button,
@@ -18,15 +13,16 @@ import {
     InputLabel,
 } from '@material-ui/core'
 import moment from 'moment'
-import { MdClose } from 'react-icons/md'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Snackbars } from '../../../../components'
 import { Consts } from '../DialogConfig'
 import * as TargetSchoolsServices from '../../TargetSchoolsServices'
 import { DURATION_RGX } from '../../../../utils/Regex'
 import { statusNames } from '../../../../constants/Generals'
+import { useAuth } from '../../../../hooks/AuthContext'
+import { useApp } from '../../../../hooks/AppContext'
+import { app as FirebaseApp } from '../../../../services/firebase'
 import classes from './CreateMOU.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -46,12 +42,14 @@ function CreateMOUForm(props) {
         setNotify,
         targetSchoolId,
         schoolId,
-        // schoolName,
+        schoolName,
         schoolStatus,
     } = props
 
     const { operations, fields } = Consts
 
+    const { user } = useAuth()
+    const { userInfo } = useApp()
     const history = useHistory()
 
     const defaultValues = {
@@ -66,6 +64,38 @@ function CreateMOUForm(props) {
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
+    
+    const [listManagers, setListManagers] = useState([])
+    useEffect(() => {
+        TargetSchoolsServices.getListManagers().then(res => setListManagers(res.list))
+        return () => setListManagers([])
+    }, [])
+
+    // Coi xem chỗ này còn lỗi ko
+    const createNotify = (value) => {
+        console.log('managers: ', targetSchoolId);
+        
+        if (listManagers && listManagers?.length > 0) {
+            new Promise((resolve, reject) => {
+                listManagers.map(mng => {
+                    console.log('mng: ', mng);
+
+                    const noti = FirebaseApp.database()
+                        .ref('notify')
+                        .child(mng?.username).push({
+                            avatar: userInfo?.avatar ? userInfo?.avatar : '',
+                            actor: user?.username,
+                            type: 'memorandum',
+                            timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                            content: 'Salesman has just create MOU.',
+                            uid: targetSchoolId,
+                            isSeen: false
+                        })
+                    })
+                }
+            )
+        }
+    }
 
     const onSubmit = (data) => {
         const model = {
@@ -108,11 +138,17 @@ function CreateMOUForm(props) {
         TargetSchoolsServices.createMOU(model)
             .then((res) => {
                 updateStatus2Cust(schoolStatus)
+
+                // Notify by Snackbars
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',
                     type: 'success',
                 })
+
+                // Send notification by Firebase
+                createNotify(data);
+
                 onClose()
             })
             .catch((error) => {

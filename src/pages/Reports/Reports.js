@@ -15,7 +15,7 @@ function Reports() {
     // const schoolName = location?.state?.schoolName ? location?.state?.schoolName : ''
     // const PIC = location?.state?.PIC ? location?.state?.PIC : null
 
-    console.log('location: ', location);
+    // console.log('location: ', location);
 
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -48,19 +48,21 @@ function Reports() {
     }
 
     useEffect(() => {
-        getAllReports(page,limit,column,direction,searchKey,listFilters,targetId)
-    }, [params, targetId])
+        getAllReports(page, limit, column, direction, searchKey, listFilters, targetId)
+
+        return () => setData(null)
+    }, [params, targetId])  // Coi lại chỗ này nữa
 
     if (!data) {
         return <Loading />
     }
 
-    console.log('params = ', params);
-    console.log('targetId = ', targetId);
+    // console.log('params = ', params);
+    // console.log('targetId = ', targetId);
 
     return (
         <div className={classes.panel}>
-            <Filters setTargetId={setTargetId} />
+            <Filters setTargetId={setTargetId} refreshAPI={getAllReports} />
             <Tables
                 columns={columns}
                 rows={data.list}

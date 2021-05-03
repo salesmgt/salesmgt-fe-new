@@ -155,7 +155,7 @@ function SortableTableHeaders(props) {
                     </TableCell>
                 ))}
             </TableRow>
-        </TableHead >
+        </TableHead>
     )
 }
 
@@ -185,7 +185,7 @@ function Tables(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-          const  newSelecteds = rows.filter((row) => !row.username)
+          const  newSelecteds = rows.filter((row) => !row?.username)
             setSelectedRows(newSelecteds)
             return;
           }
@@ -211,8 +211,8 @@ function Tables(props) {
                 selectedRows.slice(selectedIndex + 1)
             )
         }
-        console.log("index ",selectedIndex)
-        console.log("mảng ",newSelected)
+        // console.log("index ",selectedIndex)
+        // console.log("mảng ",newSelected)
         setSelectedRows(newSelected)
     }
 
@@ -263,7 +263,7 @@ function Tables(props) {
     }
     
     const truncateString = (str) => {
-        if (str) return str.length > 35 ? str.substring(0, 32) + '...' : str
+        if (str) return str.length > 45 ? str.substring(0, 42) + '...' : str
         else return ''
     }
 
@@ -300,29 +300,29 @@ function Tables(props) {
                         {rows?.length > 0 ? (
                             rows.map((row) => (
                                 <TableRow
-                                    key={row.id}
+                                    key={row?.id}
                                     className={classes.tBodyRow}
                                 >
                                     <TableCell
                                         padding="checkbox" width="1%"
-                                        onClick={(event) => {!row.username &&
+                                        onClick={(event) => {!row?.username &&
                                             handleClick(event, row)
                                         }}
                                     >
                                         <Checkbox
-                                            checked={row.username ? false : isSelected(row)}
-                                            disabled={row.username ? true : false}
+                                            checked={row?.username ? false : isSelected(row)}
+                                            disabled={row?.username ? true : false}
                                         />
                                     </TableCell>
                                     <TableCell
                                         className={classes.tCellSchoolName}
                                     >
-                                        {row.educationalLevel} {' '}
+                                        {`${row?.educationalLevel} `}
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
                                             autoEscape={true}   
-                                            textToHighlight={row.name}
+                                            textToHighlight={row?.name ? row?.name : ''}
                                         />
                                     </TableCell>
                                     <TableCell
@@ -334,10 +334,10 @@ function Tables(props) {
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[params.searchKey]}
                                                     autoEscape={true}   
-                                                    textToHighlight={truncateString(row.address)}
+                                                    textToHighlight={row?.address ? truncateString(row?.address) : ''}
                                                 />
                                             }
-                                            secondary={row.district}
+                                            secondary={row?.district}
                                             classes={{
                                                 primary: classes.itemText,
                                                 secondary: classes.itemText
@@ -350,19 +350,19 @@ function Tables(props) {
                                         <ListItemText
                                             primary={
                                                 <>
-                                                    {row.reprName
-                                                        ? row.reprIsMale ? 'Mr. ' : 'Ms. '
+                                                    {row?.reprName
+                                                        ? row?.reprIsMale ? 'Mr. ' : 'Ms. '
                                                         : ''
                                                     }
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
                                                         autoEscape={true}   
-                                                        textToHighlight={row.reprName}
+                                                        textToHighlight={row?.reprName ? row?.reprName : ''}
                                                     />
                                                 </>
                                             }
-                                            secondary={row.reprPhone}
+                                            secondary={row?.reprPhone}
                                             classes={{
                                                 primary: classes.itemText,
                                                 secondary: classes.itemText
@@ -370,12 +370,7 @@ function Tables(props) {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        {setStatusChipColor(row.status)}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <IconButton>
-                                            <MdInfo />
-                                        </IconButton>
+                                        {setStatusChipColor(row?.status)}
                                     </TableCell>
                                 </TableRow>
                             ))

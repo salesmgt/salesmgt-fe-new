@@ -50,8 +50,9 @@ import AssignMultiple from '../../dialogs/AssignMultiple/AssignMultiple'
 import CreateTargetSchools from '../../dialogs/CreateTargetSchools/CreateTargetSchools'
 import { Consts } from '../../TargetSchoolsConfig'
 import { roleNames } from '../../../../constants/Generals'
-import styles from './Filters.module.scss'
+import { getPurpsByStatus } from '../../../../utils/Sortings'
 import TargetFormProvider from '../../dialogs/CreateTargetSchools/TargetFormContext'
+import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -64,7 +65,6 @@ const MenuProps = {
     },
 }
 //==============================================================
-
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -182,7 +182,7 @@ function Filters(props) {
     //   const style = useStyles();
     const classes = useStyles()
     const { operations, filters } = Consts
-    // const { onGetTargets } = props
+    const { selectedRows, setSelectedRows, refreshAPI } = props
     // const [listFilters, dispatchFilters] = useReducer(FilterReducer, [])
 
     const { user } = useAuth()
@@ -195,17 +195,7 @@ function Filters(props) {
         salesPurps,
         schStatus,
     } = useApp()
-    const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
-    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
-    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
-    const bakSchEduLvls = schEduLvls
-        ? schEduLvls
-        : Milk.getMilk(milkNames.eduLvls)
-    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
-    const bakSalesPurps = salesPurps
-        ? salesPurps
-        : Milk.getMilk(milkNames.salesPurps)
-
+    
     //Use states which have been declared in the TargetSchoolContext
     const {
         params,
@@ -224,6 +214,16 @@ function Filters(props) {
         setFilter,
         getListPICs,
     } = useTargetSchool()
+    
+    const bakSchYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
+    const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
+    const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
+    const bakSchEduLvls = schEduLvls
+        ? schEduLvls
+        : Milk.getMilk(milkNames.eduLvls)
+    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    const bakSalesPurps = salesPurps ? salesPurps : Milk.getMilk(milkNames.salesPurps)
+    const purpsByStatus = getPurpsByStatus(schoolStatus, bakSalesPurps)
 
     const typingTimeoutRef = useRef({})
 
@@ -415,7 +415,7 @@ function Filters(props) {
     }
 
     const handleOpenAssignDialog = () => {
-        if (props.selectedRows.length > 0) {
+        if (selectedRows.length > 0) {
             // console.log('assign dialog')
             setOpenAssignDialog(true)
         } else {
@@ -433,6 +433,7 @@ function Filters(props) {
                     <CreateTargetSchools
                         open={openCreateDialog}
                         onClose={() => setOpenCreateDialog(false)}
+                        refreshTargetPage={refreshAPI}
                     />
                 </TargetFormProvider>
             )
@@ -440,16 +441,16 @@ function Filters(props) {
     }
 
     const renderAssignDialog = () => {
-        // console.log('props.selectedRows = ', props.selectedRows);
-        if (props.selectedRows.length > 0) {
+        // console.log('selectedRows = ', selectedRows);
+        if (selectedRows.length > 0) {
             // Checked target schools
             return (
                 <AssignMultiple
                     open={openAssignDialog}
                     onClose={() => setOpenAssignDialog(false)}
-                    rows={props.selectedRows}
-                    setRows={props.setSelectedRows}
-                    refreshAPI={props.refreshAPI}
+                    rows={selectedRows}
+                    setRows={setSelectedRows}
+                    refreshAPI={refreshAPI}
                 />
             )
         } else {
@@ -592,7 +593,7 @@ function Filters(props) {
                                     >
                                         {filters.purpose.options.all}
                                     </MenuItem>
-                                    {bakSalesPurps?.map((purp) => (
+                                    {purpsByStatus?.map((purp) => (
                                         <MenuItem
                                             key={purp}
                                             value={purp}
@@ -979,9 +980,9 @@ function Filters(props) {
 export default React.memo(Filters)
 
 // Filters.propTypes = {
-//     onGetTargets: PropTypes.func
+//     refreshAPI: PropTypes.func
 // }
 
 // Filters.defaultProps = {
-//     onGetTargets: null
+//     refreshAPI: null
 // }

@@ -344,16 +344,17 @@ function Filters(props) {
                             onClose={() => setAnchorEl(null)}
                         >
                             <MenuItem onClick={() => handleOpenCreateDialog()}>
-                                <MdCreate /> &nbsp; &nbsp; {operations.create}
+                                <MdCreate style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.create}
                             </MenuItem>
                             <MenuItem onClick={() => handleOpenImportDialog()}>
-                                <FaFileImport /> &nbsp; &nbsp; {operations.import}
+                                <FaFileImport style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.import}
                             </MenuItem>
                         </Menu>
 
                         <CreateSchool
                             open={openCreateDialog}
                             onClose={() => setOpenCreateDialog(false)}
+                            refreshPage={props.refreshAPI}
                         />
                         <ImportFile
                             open={openImportDialog}

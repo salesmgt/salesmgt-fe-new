@@ -11,7 +11,9 @@ import {
     LEVEL_FILTER,
     SCALE_FILTER,
     STATUS_FILTER,
+    SCHOOL_YEAR_FILTER,
 } from '../../../../constants/Filters'
+import { statusNames } from '../../../../constants/Generals'
 
 const TargetFormContext = createContext()
 
@@ -24,7 +26,8 @@ let defaultFilters = {
     type: { filterType: TYPE_FILTER, filterValue: '' },
     level: { filterType: LEVEL_FILTER, filterValue: '' },
     scale: { filterType: SCALE_FILTER, filterValue: '' },
-    status: { filterType: STATUS_FILTER, filterValue: '' }
+    status: { filterType: STATUS_FILTER, filterValue: statusNames.lead },
+    // schoolYear: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
 }
 
 function useTargetFormProvider() {
@@ -51,7 +54,7 @@ function useTargetFormProvider() {
     const [schoolType, setSchoolType] = useState('')
     const [schoolLevel, setSchoolLevel] = useState('')
     const [schoolScale, setSchoolScale] = useState('')
-    const [schoolStatus, setSchoolStatus] = useState('')
+    const [schoolStatus, setSchoolStatus] = useState(defaultFilters?.status?.filterValue)
 
     // fix major BUG
     const setFilter = (key, value) => {

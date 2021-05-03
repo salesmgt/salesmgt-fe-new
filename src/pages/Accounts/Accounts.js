@@ -55,6 +55,7 @@ function Accounts() {
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             isMounted = false
+            setData(null)
         }
     }, [params])
 
@@ -64,7 +65,7 @@ function Accounts() {
 
     return (
         <div className={classes.panel}>
-            <Filters className={classes.filter} />
+            <Filters className={classes.filter} refreshPage={refreshPage} />
             <Tables
                 columns={columns}
                 rows={data.list}

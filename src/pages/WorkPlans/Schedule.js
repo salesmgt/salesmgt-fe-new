@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
     Avatar,
     Grid,
@@ -73,8 +73,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     autoComplete: {
-        width: 250,
-        marginLeft: '0.5rem',
+        width: 260,
     },
     itemPIC: {
         padding: 0,
@@ -92,7 +91,7 @@ L10n.load({
             deleteEvent: 'Delete Activity',
             deleteMultipleEvent: 'Delete Multiple Activities',
             sameDayAlert:
-                'The activity cannot be beyond itnpm starts boundary.',
+                'The activity cannot be beyond its boundary.',
             editRecurrence: 'Edit Recurrence',
             edit: 'Edit',
         },
@@ -100,15 +99,14 @@ L10n.load({
 })
 
 const Schedule = (props) => {
-    const [username, setUsername] = React.useState('')
-    // const [me, setMe] = useState(null)
     const classes = useStyles()
-    const [key, setKey] = React.useState('')
-    const [startTime, setStartTime] = React.useState(null)
-    const [PIC, setPIC] = React.useState(null)
-    let schedule = React.useRef(null)
-    let tree = React.useRef(null)
-    const typingTimeoutRef = React.useRef(null)
+    const [username, setUsername] = useState('')
+    const [key, setKey] = useState('')
+    const [startTime, setStartTime] = useState(null)
+    const [PIC, setPIC] = useState(null)
+    let schedule = useRef(null)
+    let tree = useRef(null)
+    const typingTimeoutRef = useRef(null)
     const { user } = useAuth()
 
     const localDate = {
@@ -182,7 +180,7 @@ const Schedule = (props) => {
                 noButton.innerHTML = 'Save'
                 noButton.style.color = '#e3165b'
                 args.element.querySelector('.e-dlg-content').innerHTML =
-                    'Your changes shall only apply to unchanged instances of this series. Are you sure ?'
+                    'Your changes shall only be applied to unchanged instances of this series. Are you sure?'
             }
         }
         if (args.type === 'Editor') {
@@ -307,8 +305,8 @@ const Schedule = (props) => {
                         startTime: cellData.startTime,
                         endTime: cellData.endTime,
                         allDay: cellData.isAllDay,
-                        location:
-                            schoolName + ' (' + filteredData[0].district + ')',
+                        location: filteredData[0].district ?
+                            schoolName + ' (' + filteredData[0].district + ')': schoolName,
                     }
                     schedule.openEditor(eventData, 'Add', true)
                 }
@@ -433,9 +431,9 @@ const Schedule = (props) => {
                                 onChange={(event, newPIC) =>
                                     handleSearchNameChange(event, newPIC)
                                 }
-                                onBlur={(event, pic) =>
-                                    handleSearchNameChange(event, pic)
-                                }
+                                // onBlur={(event, pic) =>
+                                //     handleSearchNameChange(event, pic)
+                                // }
                             />
                         </div>
                         <ScheduleComponent
@@ -559,11 +557,7 @@ const Schedule = (props) => {
                                         </Typography>
                                     </Grid>
                                     <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
+                                        item xs={12} sm={12} md={12} lg={12}
                                         className={styles.statusNote}
                                     >
                                         <div className={styles.colorPending} />

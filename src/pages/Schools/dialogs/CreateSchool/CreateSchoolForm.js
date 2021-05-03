@@ -26,6 +26,7 @@ import { milkNames } from '../../../../constants/Generals'
 import * as SchoolsServices from '../../SchoolsServices'
 import { Consts } from '../DialogConfig'
 import { SCHOOL_NAME_RGX, PHONE_RGX, TEL_RGX } from '../../../../utils/Regex'
+import { useSchool } from '../../hooks/SchoolContext'
 import classes from './CreateSchool.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -97,11 +98,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CreateSchoolForm(props) {
-    const { onClose, setNotify } = props
+    const { onClose, setNotify, refreshPage } = props
     const { operations, fields } = Consts
     const styles = useStyles()
 
     const { dists, schEduLvls, schTypes, schScales, schStatus } = useApp()
+    const { params } = useSchool()
+    const { page, limit, column, direction, searchKey, listFilters } = params
+
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchEduLvls = schEduLvls
         ? schEduLvls
@@ -156,6 +160,7 @@ function CreateSchoolForm(props) {
                     message: 'Created Successfully',
                     type: 'success',
                 })
+                refreshPage(page, limit, column, direction, searchKey, listFilters)
                 // reset({
                 //     name: '',
                 //     address: '',

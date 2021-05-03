@@ -39,7 +39,7 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 })
 
 function CreateAccount(props) {
-    const { open, onClose } = props
+    const { open, onClose, refreshPage } = props
 
     const { headers } = Consts
 
@@ -55,7 +55,7 @@ function CreateAccount(props) {
                 <DialogTitleWithIconClose onClose={onClose}>
                     {headers.child1}
                 </DialogTitleWithIconClose>
-                <CreateAccountForm onClose={onClose} setNotify={setNotify} />
+                <CreateAccountForm onClose={onClose} setNotify={setNotify} refreshPage={refreshPage} />
             </Dialog>
             
             <Snackbars notify={notify} setNotify={setNotify} />

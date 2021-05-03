@@ -8,6 +8,7 @@ export const Consts = {
         // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
         createMOU: 'Create MOU for',
+        confirmCreateTarget: 'Confirm Create Target Schools'
     },
     operations: {
         cancel: 'Cancel',
@@ -42,10 +43,6 @@ export const Consts = {
         },
     },
     fields: {
-        schoolYear: {
-            name: 'schoolYear',
-            label: 'School Years',
-        },
         purpose: {
             name: 'purpose',
             label: 'Purposes',
@@ -104,7 +101,7 @@ export const Consts = {
 }
 
 export const columns = ['#', 'School Name', 'PIC', 'Note', '']
-export const columnReview = ['#', 'School Name', 'Address', 'Purpose','']
+
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     return (
         <>
@@ -121,7 +118,6 @@ export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
         </>
     )
 }
-
 export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
     return (
         <>
@@ -139,7 +135,6 @@ export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
         </>
     )
 }
-
 export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
     return (
         <>
@@ -156,7 +151,6 @@ export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
         </>
     )
 }
-
 export const updateStatusMessage = () => {
     return (
         <>
@@ -166,6 +160,13 @@ export const updateStatusMessage = () => {
                 <em>Memorandum of Contract</em>
             </strong>
             .
+        </>
+    )
+}
+export const schoolYearSubTitle = (schoolYear) => {
+    return (
+        <>
+            <b><i>School Year: </i></b>&nbsp;{schoolYear}
         </>
     )
 }

@@ -82,7 +82,7 @@ function SearchFields(props) {
     }, 300)
   }
 
-  console.log('SearchFields: searchKey = ', searchKey);
+  // console.log('SearchFields: searchKey = ', searchKey);
   
   return (
     <div className={classes.search}>

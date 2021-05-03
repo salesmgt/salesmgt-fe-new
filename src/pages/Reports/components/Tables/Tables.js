@@ -276,13 +276,13 @@ function Tables(props) {
                         {rows?.length > 0 ? (
                             rows.map((row, index) => (
                                 <TableRow
-                                    key={row.id}
+                                    key={row?.id}
                                     className={classes.tBodyRow}
                                 >
                                     <TableCell className={classes.tableCell} width="0.5%" align="center">{params.page * params.limit + index + 1}</TableCell>
                                     <TableCell className={classes.tBodyCell} width="10%">
-                                        {parseDateToString(row.date, 'DD/MM/YYYY')} &nbsp;
-                                        {row.contextComments && (
+                                        {parseDateToString(row?.date, 'DD/MM/YYYY')} &nbsp;
+                                        {row?.contextComments && (
                                             <Badge
                                                 color="secondary"
                                                 variant="dot"
@@ -295,16 +295,16 @@ function Tables(props) {
                                         <ListItemText
                                             primary={
                                                 <>
-                                                    {row.level} 
+                                                    {`${row?.level} `}
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
                                                         autoEscape={true}   
-                                                        textToHighlight={ ` ${row.schoolName}`}
+                                                        textToHighlight={row?.schoolName || ''}
                                                     />
                                                 </>
                                             }
-                                            secondary={row.district}
+                                            secondary={row?.district}
                                             classes={{
                                                 primary: styles.itemTextLarge,
                                                 secondary:
@@ -315,7 +315,7 @@ function Tables(props) {
                                     <TableCell className={classes.tBodyCell} width="16%">
                                         <ListItem className={styles.itemPIC}>
                                             <ListItemAvatar>
-                                                <Avatar src={row.avatar} />
+                                                <Avatar src={row?.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
                                                 className={classes.picName}
@@ -324,7 +324,7 @@ function Tables(props) {
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
                                                         autoEscape={true}   
-                                                        textToHighlight={row.fullName} 
+                                                        textToHighlight={row?.fullName || ''} 
                                                     />
                                                 }
                                                 secondary={
@@ -332,7 +332,7 @@ function Tables(props) {
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
                                                         autoEscape={true}   
-                                                        textToHighlight={row.username}
+                                                        textToHighlight={row?.username || ''}
                                                     />
                                                 }
                                                 classes={{
@@ -345,14 +345,14 @@ function Tables(props) {
                                         </ListItem>
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell} width="11%">
-                                        {setPurposeChipColor(row.purpose)}
+                                        {setPurposeChipColor(row?.purpose)}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell} width="15%">
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
                                             autoEscape={true}   
-                                            textToHighlight={row.result}
+                                            textToHighlight={row?.result || ''}
                                         />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell} width="19%">
@@ -360,10 +360,10 @@ function Tables(props) {
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
                                             autoEscape={true}   
-                                            textToHighlight={truncateString(row.description)}
+                                            textToHighlight={truncateString(row?.description) || ''}
                                         />
                                     </TableCell>
-                                    {/* <TableCell className={classes.tBodyCell}>{truncateString(row.comment?.content)}</TableCell> */}
+                                    {/* <TableCell className={classes.tBodyCell}>{truncateString(row?.comment?.content)}</TableCell> */}
                                     <TableCell
                                         className={classes.tBodyCell}
                                         align="right" width="0.5%"

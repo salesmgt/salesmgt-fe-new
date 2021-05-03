@@ -4,10 +4,14 @@ import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { Loading } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import classes from './AssignInfo.module.scss'
+import { useLocation } from 'react-router'
 
 function AssignInfo(props) {
     const { report } = props
     const { headers, fields } = Consts
+
+    const location = useLocation()
+    console.log("location Report's: ", location);
 
     if (!report) {
         return <Loading />

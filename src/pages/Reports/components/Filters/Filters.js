@@ -174,6 +174,7 @@ const MuiAccordionDetails = withStyles(() => ({
 function Filters(props) {
     const classes = useStyles()
     const { operations, filters } = Consts
+    const { setTargetId, refreshAPI } = props
 
     const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
@@ -334,9 +335,9 @@ function Filters(props) {
             type: ReducerActions.ENTER_SEARCH_KEYWORD,
             payload: keyword,
         })
-        props.setTargetId(0)
+        setTargetId(0)
     }
-    console.log('Filters.js --- searchKey: ', searchKey);
+    // console.log('Filters.js --- searchKey: ', searchKey);
 
     const resetFilters = () => {
         // handlePICChange(null, null)
@@ -370,7 +371,7 @@ function Filters(props) {
             switch (removedFilter) {
                 case PIC_FILTER:
                     setFilter(PIC_FILTER, null)
-                    props.setTargetId(0)
+                    setTargetId(0)
                     count++
                     break
                 case DISTRICT_FILTER:
@@ -472,6 +473,7 @@ function Filters(props) {
                             <CreateReports
                                 open={openCreateDialog}
                                 onClose={() => setOpenCreateDialog(false)}
+                                refreshAPI={refreshAPI}
                             />
                         </Box>
                     )}

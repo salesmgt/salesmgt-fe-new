@@ -31,7 +31,7 @@
     }
 
     .tBodyCell {
-      padding: 0.1rem 1rem
+      padding: 0.1rem
     }
     .tCellInactive {
       @extend .tBodyCell;
@@ -72,29 +72,13 @@
   flex-shrink: 0;
 }
 
-.chipInactive {
-  color: $grey-400;
-  font-style: italic;
-  text-decoration: line-through $grey-400;
-  opacity: 0.2 !important;
-}
-
 .chipLead {
-  background-color: $dark-info !important;
+  background-color: $trust !important;
   color: $common-white !important;
 }
-.chipLeadInactive {
-  @extend .chipLead;
-  @extend .chipInactive;
-}
-
 .chipCustomer {
-  background-color: $main-success !important;
+  background-color: $clarity !important;
   color: $common-white !important;
-}
-.chipCustomerInactive {
-  @extend .chipCustomer;
-  @extend .chipInactive;
 }
 
 .itemText {

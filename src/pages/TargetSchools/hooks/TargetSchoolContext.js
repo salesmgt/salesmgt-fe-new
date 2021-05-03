@@ -19,6 +19,7 @@ import {
     STATUS_FILTER,
     ASSIGNED_FILTER
 } from '../../../constants/Filters'
+import { roleNames } from '../../../constants/Generals'
 
 const TargetSchoolContext = createContext()
 
@@ -206,7 +207,7 @@ function useTargetSchoolProvider() {
     // Search field (do not have)
 
     const getListPICs = (fullName) => {
-        getPICs({active: true, fullName: fullName}).then((data) => {
+        getPICs({active: true, fullName: fullName, role: roleNames.salesman}).then((data) => {
             // console.log('list PICs: ', data)
             setPICs(data)
         }).catch((error) => {
@@ -218,9 +219,11 @@ function useTargetSchoolProvider() {
                 })
             }
         })
-    }
-    
-    useEffect(getListPICs, [])
+    }    
+    useEffect(() => {
+        getListPICs()
+        return () => setPICs([])
+    }, [])
 
     //================Parse object "params" --> query-string================
     //........

@@ -109,11 +109,6 @@ export async function updateMOU(mouId, mou) {
 // }
 
 //============================Chưa dùng tới============================
-
-// export async function addTargetSchools(newTargetSchools) {
-//     return await Api.post('/targets', { newTargetSchools })
-// }
-
 // export async function updateTargetSchool(targetSchool) {
 //     return await Api.put('/targets', { targetSchool })
 // }
@@ -131,12 +126,12 @@ export async function getDashboardsByKeys(...keys) {
     return data
 }
 
-export async function getSchoolsForTargets(page,limit,column,direction,searchKey,filters)
+export async function getSchoolsForTargets(schoolYear,page,limit,column,direction,searchKey,filters)
 {    
     // Đây là url đúng nhưng chưa có. Để đây sau này dùng, DO NOT REMOVE!!!
-    // let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
-    
-    let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}&active=true`
+    let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+
+    // let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}&active=true`
     url = searchKey ? url.concat(`&key=${searchKey}`) : url
 
     if (filters) {
@@ -164,6 +159,12 @@ export async function getSchoolsForTargets(page,limit,column,direction,searchKey
     return data
 }
 
+export async function createTargetSchools(listTargets) {
+    const response = await Api.post('/targets', listTargets)
+    const data = await response.data
+    return data
+}
+
 export async function assignMulti(list) {
     const response = await Api.put(`/targets/mutiple-assign`,list)
     const data = await response.data
@@ -172,6 +173,13 @@ export async function assignMulti(list) {
 
 export async function unassign(id) {
     const response = await Api.put(`/targets/unassign/${id}`)
+    const data = await response.data
+    return data
+}
+
+export async function getListManagers() {
+    // Làm sao để load all Managers trong hth mà ko phân trang?
+    const response = await Api.get('/users?active=true&role=SALES MANAGER')
     const data = await response.data
     return data
 }

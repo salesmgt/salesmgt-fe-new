@@ -20,6 +20,7 @@ import { storage } from '../../../../services/firebase'
 import { Snackbars } from '../../../../components'
 import * as SchoolsServices from '../../SchoolsServices'
 import { useSchool } from '../../hooks/SchoolContext'
+import { PHONE_RGX } from '../../../../utils/Regex'
 import classes from './ImportFile.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -96,11 +97,12 @@ function ImportFile(props) {
                 })
         })
     }, [])
-    const handleUploadAvatar = (event) => {
+
+    const handleUploadFile = (event) => {
         const filePath = event.target.files[0]
 
-        setFileName(filePath.name)
-        if (!filePath.name.match(/\.(xlsx|xls|csv|xml|xslx)$/)) {
+        setFileName(filePath?.name)
+        if (!filePath?.name.match(/\.(xlsx|xls|csv|xml|xslx)$/)) {
             setNotify({
                 isOpen: true,
                 message: 'Error file type',
@@ -111,7 +113,7 @@ function ImportFile(props) {
             setText(0)
             return false
         } else {
-            if (filePath.size > 1572864) {
+            if (filePath?.size > 1572864) {
                 setNotify({
                     isOpen: true,
                     message:
@@ -147,7 +149,9 @@ function ImportFile(props) {
                         !item[excel.educationalLevel] ||
                         !item[excel.scale] ||
                         !item[excel.type] ||
-                        !item[excel.district]
+                        !item[excel.district] //||
+                        // !item[excel.phone] ||
+                        // !String(item[excel.phone]).match(PHONE_RGX)
                     ) {
                         setNotify({
                             isOpen: true,
@@ -167,7 +171,7 @@ function ImportFile(props) {
                         address: item[excel.address],
                         reprName: item[excel.reprName],
                         reprIsMale:
-                            item[excel.isMale] === excel.isMaleValue
+                            "Nam" === excel.isMaleValue
                                 ? true
                                 : false,
                         reprPhone: item[excel.reprPhone],
@@ -186,6 +190,7 @@ function ImportFile(props) {
             })
         }
     }
+
     const handleSubmit = (e) => {
         SchoolsServices.importSchool(data)
             .then((res) => {
@@ -251,10 +256,10 @@ function ImportFile(props) {
                             <FaFileImport /> &nbsp;&nbsp;
                             <input
                                 id="icon-button-file"
-                                className={classes.inputAvatar}
+                                className={classes.inputFile}
                                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                 type="file"
-                                onChange={(event) => handleUploadAvatar(event)}
+                                onChange={(event) => handleUploadFile(event)}
                             />
                             Choose file
                         </IconButton>

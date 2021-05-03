@@ -6,15 +6,48 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import Avatar from '@material-ui/core/Avatar'
 import { Consts } from './NotifyConfig'
+import { Link, useRouteMatch } from 'react-router-dom'
 import classes from './Notify.module.scss'
+import { useState } from 'react'
 
 function Notify(props) {
-    const { todoList, limit, next, onUpdate } = props
+    const { notiList, limit, next, onUpdate } = props
     const isNotifMenuOpen = Boolean(props.notifAnchorEl)
+
+    const { url } = useRouteMatch()
+
+    // console.log('notiList: ', notiList);
+    // console.log('notify url: ', url);
 
     const handleNotifMenuClose = useCallback(() => {
         props.setNotifAnchorEl(null)
     }, [])
+
+    const [notiState, setNotiState] = useState({})
+    const handleNotiClicked = (e, noti) => {
+        switch (noti.type) {
+            case 'Welcome':
+                onUpdate(e, noti)
+                break;
+            case 'report':
+                onUpdate(e, noti)
+                // Set state ở đây làm chậm 1 thao tác
+                setNotiState({
+                    pathname: `${url}/reports/${noti?.uid}`,
+                    state: { id: noti?.uid }
+                })
+                break;
+            case 'memorandum':
+                onUpdate(e, noti)
+                setNotiState({
+                    pathname: `${url}/targets/${noti?.uid}`,
+                    state: { id: noti?.uid }
+                })
+                break;
+            default:
+                break;
+        }
+    }
 
     return (
         <Menu
@@ -32,19 +65,28 @@ function Notify(props) {
                 },
             }}
         >
-            {todoList?.length < 1 && (
+            {notiList?.length < 1 && (
                 <MenuItem>
                     <span>{Consts.noNotif}</span>
                 </MenuItem>
             )}
 
-            {todoList?.map((item, index) => (
+            {notiList?.map((item, index) => (
                 <MenuItem
                     key={index}
-                    onClick={(e) => onUpdate(e, item)}
+                    onClick={(e) => handleNotiClicked(e, item)}
                     className={classes.notiItem}
+                    component={Link}
+                    to={notiState}
                 >
-                    <Card className={classes.notiCard}>
+                    <Card className={classes.notiCard}
+                        style={item.type !== 'Welcome' 
+                            ? (item.type === 'report' 
+                                ? { borderLeft: '5px solid rgba(255, 99, 132, 1)'}
+                                : { borderLeft: '5px solid rgba(54, 162, 235, 1)'})
+                            : { borderLeft: '5px solid rgba(255, 206, 86, 1)'}
+                        }
+                    >
                         <CardHeader
                             avatar={<Avatar src={item.avatar} />}
                             title={`${item.actor} (${item.type})`}
@@ -52,12 +94,12 @@ function Notify(props) {
                         />
                         <CardContent className={classes.notiContent}>
                             <Typography
-                                className={classes.typo}
+                                className={item?.isSeen ? classes.typo : classes.notSeenTypo}
                                 variant="body2"
                                 color="textSecondary"
                                 component="p"
                             >
-                                {item.content}
+                                {item?.content}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -65,7 +107,7 @@ function Notify(props) {
                 </MenuItem>
             ))}
 
-            {limit && todoList?.length > 5 && (
+            {limit && notiList?.length > 5 && (
                 <MenuItem onClick={next}>
                     <span>{Consts.more}</span>
                 </MenuItem>

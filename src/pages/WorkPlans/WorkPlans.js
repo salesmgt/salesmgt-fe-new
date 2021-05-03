@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import formatISO9075 from 'date-fns/formatISO9075'
 import { useAuth } from '../../hooks/AuthContext'
 import { getPICs } from '../../services/FiltersServices'
 import { useHistory } from 'react-router'
 import moment from 'moment'
-import * as WorkPlansServices from './WorkPlansServices'
 import Schedule from './Schedule'
+import * as WorkPlansServices from './WorkPlansServices'
 
 function WorkPlans() {
     const [data, setData] = React.useState([])
@@ -18,7 +18,7 @@ function WorkPlans() {
 
     const { user } = useAuth()
     const history = useHistory()
-    const [filter, setFilter] = React.useState({
+    const [filter, setFilter] = useState({
         action: 'view',
         currentDate: new Date(),
         currentView: 'Week',
@@ -30,7 +30,7 @@ function WorkPlans() {
     // Get list PICs for autocomplete search
     const [listPICs, setListPICs] = useState([])
     const getListPICs = (e) => {
-        getPICs({ active: true, fullName: e })
+        getPICs({ active: true, fullName: e, role: user.roles[0] })
             .then((data) => {
                 // console.log('data: ', data)
                 setListPICs(data)
@@ -45,7 +45,10 @@ function WorkPlans() {
                 }
             })
     }
-    React.useEffect(getListPICs, [])
+    useEffect(() => {
+        getListPICs()
+        return () => setListPICs([])
+    }, [])
 
     //---------------------------------------------------------------------------
     // Call APIs for workplans
@@ -243,6 +246,7 @@ function WorkPlans() {
     }
     React.useEffect(() => {
         callAPI(filter)
+        return () => setData(null)
     }, [filter])
 
     // Get all locations
@@ -267,12 +271,10 @@ function WorkPlans() {
                 }
             })
     }
-    React.useEffect(
-        () =>
-            //call api for tree
-            callAPITree(null),
-        []
-    )
+    React.useEffect(() =>
+        //call api for tree
+        callAPITree(null)
+        , [])
 
     // Change view by "Today" / "Day" / "Week" / "Month"
     const handleChangeView = (e) => {
@@ -324,7 +326,8 @@ function WorkPlans() {
         }
 
         typingTimeoutRef.current = setTimeout(() => {
-            getListPICs(e)
+            if (e) getListPICs(e)
+            else getListPICs()
         }, 300)
     }
     return (

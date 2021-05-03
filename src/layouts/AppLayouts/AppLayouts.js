@@ -9,7 +9,7 @@ import {
     useRouteMatch,
     useHistory,
 } from 'react-router-dom'
-import { app } from '../../services/firebase'
+import { app as FirebaseApp } from '../../services/firebase'
 import { IconContext } from 'react-icons'
 import { MdMenu, MdNotifications, MdChevronLeft } from 'react-icons/md'
 import {
@@ -56,7 +56,7 @@ function AppLayouts() {
     const menuItems = getMenuItems(user.roles[0])
     // const [userInfo, setUserInfo] = useState(null)
 
-    const [todoList, setTodoList] = useState([])
+    const [notiList, setNotiList] = useState([])
     const [limit, setLimit] = useState('')
     const [badge, setBadge] = useState(0)
 
@@ -106,54 +106,54 @@ function AppLayouts() {
     }
 
     useEffect(() => {
-        setBadge(todoList?.filter((item) => item.isSeen === false).length)
-    }, [todoList])
+        setBadge(notiList?.filter((item) => item.isSeen === false).length)
+    }, [notiList])
 
     useEffect(() => {
         new Promise((resolve, reject) => {
-            const todoRef = app
+            const notiRef = FirebaseApp
                 .database()
                 .ref('notify')
                 .child(user.username)
                 .orderByChild('timestamp')
                 .limitToLast(6)
-            todoRef.on('value', (snapshot) => {
-                const todos = snapshot.val()
-                const todoList = []
-                for (const id in todos) {
-                    todoList.push({ id, ...todos[id] })
+            notiRef.on('value', (snapshot) => {
+                const notis = snapshot.val()
+                const notiList = []
+                for (const id in notis) {
+                    notiList.push({ id, ...notis[id] })
                 }
-                todoList.sort(sort)
-                setTodoList(todoList)
-                setLimit(todoList[todoList.length - 1]?.timestamp)
+                notiList.sort(sort)
+                setNotiList(notiList)
+                setLimit(notiList[notiList.length - 1]?.timestamp)
             })
         })
     }, [])
 
     const next = (e) => {
         new Promise((resolve, reject) => {
-            const todoRef = app
+            const notiRef = FirebaseApp
                 .database()
                 .ref('notify')
                 .child(user.username)
                 .orderByChild('timestamp')
                 .endBefore(limit)
                 .limitToLast(5)
-            todoRef.on('value', (snapshot) => {
-                const todos = snapshot.val()
-                const todoss = []
-                for (const id in todos) {
-                    todoss.push({ id, ...todos[id] })
+            notiRef.on('value', (snapshot) => {
+                const notis = snapshot.val()
+                const notiss = []
+                for (const id in notis) {
+                    notiss.push({ id, ...notis[id] })
                 }
-                todoss.sort(sort)
-                setTodoList(todoList.concat(todoss))
-                setLimit(todoss[todoss.length - 1]?.timestamp)
+                notiss.sort(sort)
+                setNotiList(notiList.concat(notiss))
+                setLimit(notiss[notiss.length - 1]?.timestamp)
             })
         })
     }
 
     const onUpdate = (e, item) => {
-        app.database().ref(`notify/${user.username}`).child(item.id).update({
+        FirebaseApp.database().ref(`notify/${user.username}`).child(item.id).update({
             isSeen: true,
         })
     }
@@ -172,6 +172,7 @@ function AppLayouts() {
                     })
                 }
             })
+        return () => setUserInfo(null)
     }, [])
 
     // if (!userInfo) {
@@ -187,7 +188,7 @@ function AppLayouts() {
     const renderNotifMenu = (
         <Notify
             onUpdate={onUpdate}
-            todoList={todoList}
+            notiList={notiList}
             limit={limit}
             next={next}
             setNotifAnchorEl={setNotifAnchorEl}

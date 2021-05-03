@@ -1,21 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Grid,
     makeStyles,
-    Paper
 } from '@material-ui/core'
 import { MdFavorite } from 'react-icons/md'
 import { columns } from './CreateTargetSchoolsConfig'
-import Filters from './Filters'
-import Tables from './Tables'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Consts } from '../DialogConfig'
 import { useApp } from '../../../../hooks/AppContext'
-// import { useTargetForm } from './TargetFormContext'
-// import { statusNames } from '../../../../constants/Generals'
-import classes from './LeftSide.module.scss'
+import { useTargetForm } from './TargetFormContext'
+import { STATUS_FILTER } from '../../../../constants/Filters'
+import { FILTER_SCHOOL_STATUS } from '../../../../constants/ActionTypes'
+import Filters from './Filters'
+import Tables from './Tables'
 import CreateDialogReview from './CreateDialogPreview'
+import classes from './LeftSide.module.scss'
 
 const useStyles = makeStyles((theme) => ({
     // root: { color: 'rgba(0, 0, 0, 0.87)' },
@@ -29,18 +28,37 @@ const useStyles = makeStyles((theme) => ({
 
 function LeftSide(props) {
     const styles = useStyles()
-    const { data, setData } = props
+    const { data, refreshAPI, schoolYear } = props
     // const { headers, operations } = Consts
     const { schStatus } = useApp()
-    const [open,setOpen] = useState(false)
+    const [open, setOpen] = useState(false)
     const [selectedRows, setSelectedRows] = useState([])
     const [tabIndex, setTabIndex] = useState(0)
-    // const [tabLabel, setTabLabel] = useState(schStatus[0])
+    const [tabLabel, setTabLabel] = useState(schStatus[0])
+
+    const { params, dispatchParams, setFilter } = useTargetForm()
+    const { listFilters, page, limit, column, direction, searchKey } = params
+    
+    const onClose = () => setOpen(false)
 
     const handleTabChange = (e, newTabIndex) => {
-        setTabIndex(newTabIndex);
+        setSelectedRows([])
+        const selectedStatus = schStatus[newTabIndex]
+        setTabIndex(newTabIndex ? newTabIndex : 0);
+        setTabLabel(selectedStatus ? selectedStatus : schStatus[0])
+        setFilter(STATUS_FILTER, selectedStatus ? selectedStatus : schStatus[0])
+        dispatchParams({
+            type: FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: selectedStatus ? selectedStatus : schStatus[0],
+            },
+        })
     }
-    const onClose = () => setOpen(false)
+
+    useEffect(() => {
+        refreshAPI(schoolYear, page, limit, column, direction, searchKey, listFilters)
+    }, [tabIndex])
 
     return (
         <div className={classes.root}>
@@ -60,7 +78,6 @@ function LeftSide(props) {
                         >
                             <Tab
                                 label={schStatus[0]}
-                                icon={<MdFavorite />} 
                                 classes={{
                                     textColorInherit:
                                         styles.textColorInherit,
@@ -69,7 +86,6 @@ function LeftSide(props) {
                             />
                             <Tab
                                 label={schStatus[1]}
-                                icon={<MdFavorite />} 
                                 classes={{
                                     textColorInherit:
                                         styles.textColorInherit,
@@ -81,7 +97,7 @@ function LeftSide(props) {
                         <div className={classes.wrapper}>
                             <Grid container spacing={2}> 
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <Filters setOpen={setOpen} className={classes.filter} />
+                                    <Filters rows={selectedRows} setOpen={setOpen} className={classes.filter} />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <Tables
@@ -99,9 +115,16 @@ function LeftSide(props) {
                     </div>
                 </div>
             </div>
-            <CreateDialogReview open={open} setRows={setSelectedRows} rows={selectedRows} onClose={onClose} />
+            <CreateDialogReview 
+                open={open}
+                onClose={onClose} 
+                rows={selectedRows} 
+                setRows={setSelectedRows}
+                schoolStatus={tabLabel}
+                refreshAPI={refreshAPI}
+            />
         </div>
     )
 }
 
-export default LeftSide
+export default React.memo(LeftSide)

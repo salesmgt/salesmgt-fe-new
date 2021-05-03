@@ -44,22 +44,27 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmUnassign(props) {
-    const { open, onClose, data, refreshAPI } = props
+    const { open, onClose, data, refreshAPI, setNotify } = props
     const { headers, operations } = Consts
     const { params } = useTargetSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
-
     const handleOK = () => {
-       unassign(data.id).then(res=>{
-        refreshAPI(page, limit, column, direction, searchKey, listFilters);
-        onClose();
-        props.setNotify({
-            isOpen: true,
-            message: 'Unassigned successfully',
-            type: 'success'
+        unassign(data?.id).then(res=>{
+            refreshAPI(page, limit, column, direction, searchKey, listFilters);
+            setNotify({
+                isOpen: true,
+                message: 'Unassigned successfully',
+                type: 'success'
+            })
+            onClose();
+        }).catch(error => {
+            setNotify({
+                isOpen: false,
+                message: 'Unassigned unsuccessfully',
+                type: 'error',
+            })
         })
-       })
     }
 
     return (

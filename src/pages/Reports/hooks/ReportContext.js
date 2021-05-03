@@ -16,6 +16,7 @@ import {
     PURPOSE_FILTER,
     DATE_RANGE_FILTER,
 } from '../../../constants/Filters'
+import { roleNames } from '../../../constants/Generals'
 
 const ReportContext = createContext()
 
@@ -179,7 +180,7 @@ function useReportProvider() {
     // Get filters' data
     
     const getListPICs = (fullName) => {
-        getPICs({active: true, fullName: fullName}).then((data) => {
+        getPICs({active: true, fullName: fullName, role: roleNames.salesman}).then((data) => {
             // console.log('list PICs: ', data)
             setPICs(data)
         }).catch((error) => {
@@ -192,7 +193,10 @@ function useReportProvider() {
             }
         })
     }
-    useEffect(getListPICs, [])
+    useEffect(() => {
+        getListPICs()
+        return () => setPICs([])
+    }, [])
 
     // const getDistrictsFilter = () => {
     //     FiltersServices.getDistricts()
