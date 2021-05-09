@@ -6,7 +6,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(to left, $navy-800 0%, rgba(9, 17, 24, 1) 100%);
+    // background: linear-gradient(to left, $navy-800 0%, rgba(9, 17, 24, 1) 100%);
+    background-color: $grey-400;
     padding: 1.6rem;
 }
 .wrapper {

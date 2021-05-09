@@ -7,6 +7,7 @@ import { GenInfo, RepInfo } from './panels'
 import * as SchoolsServices from './SchoolsServices'
 import { schConsts } from './SchoolsConfig'
 import { Loading, NotFound } from '../../components'
+import HistoryInfo from './panels/HistoryInfo/HistoryInfo'
 
 function School() {
     const { linkNames, tabNames, operations } = schConsts
@@ -91,16 +92,20 @@ function School() {
                 header={`${school?.educationalLevel} ${school?.name}`}
                 subHeader={school?.active ? 'Active' : 'Inactive'}
                 isStatus={true}
-                tabs={[tabNames.tab1, tabNames.tab2]}
+                tabs={[tabNames.tab1, tabNames.tab2, tabNames.tab3]}
                 tabValue={tabValue}
                 handleChangeTab={handleChangeTab}
             >
                 {tabValue === 0 && (
-                    <GenInfo school={school} refreshPage={refreshPage} />
+                    <GenInfo school={school} />
                 )}
 
                 {tabValue === 1 && (
-                    <RepInfo school={school} refreshPage={refreshPage} />
+                    <RepInfo school={school} />
+                )}
+
+                {tabValue === 2 && (
+                    <HistoryInfo />
                 )}
             </DetailLayouts>
             {/* )} */}

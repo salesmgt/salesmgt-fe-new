@@ -15,6 +15,7 @@ export const schConsts = {
     tabNames: {
         tab1: 'General Info',
         tab2: 'Principal Info',
+        tab3: 'History Info',
     },
     operations: {
         notFound: 'School Not Found',

@@ -1,15 +1,17 @@
 import React from 'react'
 import {
     MdDashboard,
-    MdPerson,
-    MdAssignment,
+    // MdPerson,
+    // MdAssignment,
     MdDateRange,
-    MdSchool,
-    // MdGroup,
+    // MdSchool,
+    MdGroup,
     MdDescription,
     MdAccountCircle,
     MdExitToApp,
 } from 'react-icons/md'
+import { ImTarget } from 'react-icons/im'
+import { FaSchool } from 'react-icons/fa'
 import { roleNames } from '../../constants/Generals'
 
 const menuItems = [
@@ -21,12 +23,12 @@ const menuItems = [
     {
         title: 'Accounts',
         path: 'accounts',
-        icon: <MdPerson />,
+        icon: <MdGroup />,
     },
     {
-        title: 'Target Schools',
-        path: 'target-schools',
-        icon: <MdAssignment />,
+        title: 'Targets',
+        path: 'targets',
+        icon: <ImTarget />,
     },
     {
         title: 'Work Plans',
@@ -36,7 +38,7 @@ const menuItems = [
     {
         title: 'Schools',
         path: 'schools',
-        icon: <MdSchool />,
+        icon: <FaSchool />,
     },
     {
         title: 'Reports',
@@ -49,7 +51,7 @@ export function getMenuItems(role) {
     const [
         dashboards,
         accounts,
-        targetSchools,
+        targets,
         workPlans,
         schools,
         reports,
@@ -58,11 +60,11 @@ export function getMenuItems(role) {
         case roleNames.admin:
             return [accounts, schools]
         case roleNames.manager:
-            return [dashboards, workPlans, targetSchools, reports]
+            return [dashboards, schools, targets, reports, workPlans]
         case roleNames.supervisor:
-            return [dashboards, workPlans, targetSchools, reports]
+            return [dashboards, schools, targets, reports, workPlans]
         case roleNames.salesman:
-            return [dashboards, workPlans, targetSchools, reports]
+            return [dashboards, targets, reports, workPlans]
         default:
             break
     }

@@ -44,11 +44,11 @@ const pwdSchema = yup.object().shape({
         )
         .matches(
             PWD_RGX,
-            'Password must contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
+            'Password must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
         ),
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref('newPassword'), null], "Password's not match")
+        .oneOf([yup.ref('newPassword'), null], "Confirm password is not match")
         .required('Confirm is required'),
 })
 
@@ -261,7 +261,7 @@ function Profiles() {
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
-                (snapshot) => {},
+                (snapshot) => { },
                 (error) => {
                     console.log(error)
                     reject('Upload Image to firebase failed: ' + error)

@@ -15,11 +15,11 @@ const clientSchema = yup.object().shape({
         .string()
         .matches(
             PWD_RGX,
-            'Password must contain 8 Characters, One Uppercase, One Lowercase, One Number and One special case Character'
+            'Password must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
         ),
     confirmPwd: yup
         .string()
-        .oneOf([yup.ref('newPwd'), null], "Password's not match")
+        .oneOf([yup.ref('newPwd'), null], "Confirm password is not match")
         .required('Confirm is required'),
 })
 

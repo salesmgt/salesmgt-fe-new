@@ -16,7 +16,7 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { useAccount } from '../../../../pages/Accounts/hooks/AccountContext'
 import { useReport } from '../../../../pages/Reports/hooks/ReportContext'
 import { useSchool } from '../../../../pages/Schools/hooks/SchoolContext'
-import { useTargetSchool } from '../../../../pages/TargetSchools/hooks/TargetSchoolContext'
+import { useTarget } from '../../../../pages/Targets/hooks/TargetContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { userMenuItems as items } from '../../AppLayoutsConfig'
 import { cookieNames } from '../../../../constants/Generals'
@@ -30,7 +30,7 @@ function UserMenu() {
     const { setFilter: setAccountFilter } = useAccount()
     const { setFilter: setReportFilter } = useReport()
     const { setFilter: setSchoolFilter } = useSchool()
-    const { setFilter: setTargetFilter } = useTargetSchool()
+    const { setFilter: setTargetFilter } = useTarget()
 
     const { url } = useRouteMatch()
 

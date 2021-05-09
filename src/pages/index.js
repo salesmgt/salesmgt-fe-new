@@ -21,7 +21,7 @@ export { default as Report } from './Reports/Report'
 export { default as Schools } from './Schools/Schools'
 export { default as School } from './Schools/School'
 
-export { default as TargetSchools } from './TargetSchools/TargetSchools'
-export { default as TargetSchool } from './TargetSchools/TargetSchool'
+export { default as Targets } from './Targets/Targets'
+export { default as Target } from './Targets/Target'
 
 export { default as WorkPlans } from './WorkPlans/WorkPlans'

@@ -37,7 +37,7 @@ import Notify from '../AppLayouts/components/Notify/Notify'
 import AccountProvider from '../../pages/Accounts/hooks/AccountContext'
 import ReportProvider from '../../pages/Reports/hooks/ReportContext'
 import SchoolProvider from '../../pages/Schools/hooks/SchoolContext'
-import TargetSchoolProvider from '../../pages/TargetSchools/hooks/TargetSchoolContext'
+import TargetProvider from '../../pages/Targets/hooks/TargetContext'
 import classes from './AppLayouts.module.scss'
 
 const StyledBadge = withStyles({
@@ -239,9 +239,9 @@ function AppLayouts() {
                         <AccountProvider>
                             <ReportProvider>
                                 <SchoolProvider>
-                                    <TargetSchoolProvider>
+                                    <TargetProvider>
                                         <UserMenu /> {/* userInfo={userInfo} */}
-                                    </TargetSchoolProvider>
+                                    </TargetProvider>
                                 </SchoolProvider>
                             </ReportProvider>
                         </AccountProvider>
