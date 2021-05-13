@@ -110,14 +110,14 @@
   @extend .chipTheoDoi;
   @extend .chipInactive;
 }
-.chipTiemNang {
-  background-color: $trust !important;
-  color: $common-white !important;
-}
-.chipTiemNangInactive {
-  @extend .chipTiemNang;
-  @extend .chipInactive;
-}
+// .chipTiemNang {
+//   background-color: $trust !important;
+//   color: $common-white !important;
+// }
+// .chipTiemNangInactive {
+//   @extend .chipTiemNang;
+//   @extend .chipInactive;
+// }
 .chipChamSoc {
   background-color: $compassion !important;
   color: $common-white !important;

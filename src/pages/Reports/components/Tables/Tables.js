@@ -240,12 +240,10 @@ function Tables(props) {
             case purposeNames.purp2:
                 return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
-                return <Chip label={purpose} className={classes.chipTiemNang} />
-            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case purposeNames.purp5:
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case purposeNames.purp6:
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 return <Chip label={purpose} /> // #5c21f3
@@ -299,7 +297,7 @@ function Tables(props) {
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
-                                                        autoEscape={true}   
+                                                        autoEscape={true}
                                                         textToHighlight={row?.schoolName || ''}
                                                     />
                                                 </>
@@ -323,15 +321,15 @@ function Tables(props) {
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
-                                                        autoEscape={true}   
-                                                        textToHighlight={row?.fullName || ''} 
+                                                        autoEscape={true}
+                                                        textToHighlight={row?.fullName || ''}
                                                     />
                                                 }
                                                 secondary={
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
-                                                        autoEscape={true}   
+                                                        autoEscape={true}
                                                         textToHighlight={row?.username || ''}
                                                     />
                                                 }
@@ -351,7 +349,7 @@ function Tables(props) {
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
-                                            autoEscape={true}   
+                                            autoEscape={true}
                                             textToHighlight={row?.result || ''}
                                         />
                                     </TableCell>
@@ -359,7 +357,7 @@ function Tables(props) {
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
-                                            autoEscape={true}   
+                                            autoEscape={true}
                                             textToHighlight={truncateString(row?.description) || ''}
                                         />
                                     </TableCell>

@@ -17,10 +17,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
-import { Snackbars, Loading } from '../../../../components'
+import { Snackbars, Loading, AddressField } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import * as SchoolsServices from '../../SchoolsServices'
-import { SCHOOL_NAME_RGX, TEL_RGX } from '../../../../utils/Regex'
+import { TEL_RGX } from '../../../../utils/Regex'   //SCHOOL_NAME_RGX, 
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -29,9 +29,9 @@ const clientSchema = yup.object().shape({
         .trim()
         .min(3, 'Name must be at least 3 characters')
         .max(30, 'Name must be at most 30 characters')
-        .required('Name is required')
-        .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
-    address: yup.string().trim().required('Address is required'),
+        .required('Name is required'),
+    // .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
+    // address: yup.string().trim().required('Address is required'),
     phone: yup
         .string()
         .max(11, 'Tel must be at most 11 digits and has the correct format')
@@ -83,24 +83,32 @@ function GenInfo(props) {
         type: '',
     })
 
-    const { dists, schEduLvls, schTypes, schScales } = useApp()
+    const { dists, schEduLvls, schTypes } = useApp()   // , schScales
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchEduLvls = schEduLvls
         ? schEduLvls
         : Milk.getMilk(milkNames.eduLvls)
     const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
-    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+
+    let district = '';
+    const [latitude, setLatitude] = useState(0.0);
+    const [longitude, setLongitude] = useState(0.0);
+    const [addressErr, setAddressErr] = useState('');
+    const [isClicked, setIsClicked] = useState(false);
 
     const defaultValues = {
         id: school?.id,
         name: school?.name ? school?.name : '',
         address: school?.address ? school?.address : '',
         district: school?.district ? school?.district : bakDists[0],
+        latitude: school?.latitude ? school?.latitude : latitude,
+        longitude: school?.longitude ? school?.longitude : longitude,
 
         educationalLevel: school?.educationalLevel
             ? school?.educationalLevel
             : bakSchEduLvls[0],
-        scale: school?.scale ? school?.scale : bakSchScales[0],
+        // scale: school?.scale ? school?.scale : bakSchScales[0],
         type: school?.type ? school?.type : bakSchTypes[0],
         phone: school?.phone ? school?.phone : '',
 
@@ -118,11 +126,13 @@ function GenInfo(props) {
             name: school?.name ? school?.name : '',
             address: school?.address ? school?.address : '',
             district: school?.district ? school?.district : bakDists[0],
+            latitude: school?.latitude ? school?.latitude : latitude,
+            longitude: school?.longitude ? school?.longitude : longitude,
 
             educationalLevel: school?.educationalLevel
                 ? school?.educationalLevel
                 : bakSchEduLvls[0],
-            scale: school?.scale ? school?.scale : bakSchScales[0],
+            // scale: school?.scale ? school?.scale : bakSchScales[0],
             type: school?.type ? school?.type : bakSchTypes[0],
             phone: school?.phone ? school?.phone : '',
 
@@ -130,30 +140,68 @@ function GenInfo(props) {
         })
     }, [school])
 
-    if (!bakDists) {
+    if (!bakDists || !bakSchEduLvls || !bakSchTypes || !school) {
         return <Loading />
     }
 
-    if (!bakSchEduLvls) {
-        return <Loading />
+    // if (!bakSchEduLvls) {
+    //     return <Loading />
+    // }
+
+    // if (!bakSchTypes) {
+    //     return <Loading />
+    // }
+
+    // // if (!bakSchScales) {
+    // //     return <Loading />
+    // // }
+
+    // if (!school) {
+    //     return <Loading />
+    // }
+
+    const validateAddress = (address) => {
+        setAddressErr('')
+        if (address.includes('Thành phố Hồ Chí Minh')) {
+            if (address.includes('Quận')) {
+                const tmp1 = address.substring(address.lastIndexOf('Quận'))
+                district = tmp1.substring(0, tmp1.indexOf(', '))
+                setAddressErr('')
+            } else {    // Quận/Huyện tên chữ, ko có số
+                const tmp1 = address.substring(0, address.lastIndexOf(', Thành phố Hồ Chí Minh'))
+                const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
+                district = tmp2.substring(2)
+                setAddressErr('')
+                if (!district) {
+                    setAddressErr('Please input exactly address')
+                }
+            }
+        } else if (address) {
+            setAddressErr('Please choose address locates in Ho Chi Minh City')
+        }
     }
 
-    if (!bakSchTypes) {
-        return <Loading />
-    }
-
-    if (!bakSchScales) {
-        return <Loading />
-    }
-
-    if (!school) {
-        return <Loading />
+    // Sao ko in đc lỗi của tr.hợp này ta???
+    const hasAddress = (address) => {
+        // setAddressErr('')
+        // console.log('hasAddress?   address: ', address);
+        if (!address) {
+            setAddressErr('Address is required')
+            return false
+        } else {
+            setAddressErr('')
+            return true
+        }
     }
 
     const onSubmit = (data) => {
         const model = {
             ...data,
             // description: school?.description,
+            district: district,
+            latitude: latitude,
+            longitude: longitude,
+
             status: school?.status,
             reprName: school?.reprName,
             reprIsMale: school?.reprIsMale,
@@ -161,16 +209,17 @@ function GenInfo(props) {
             reprEmail: school?.reprEmail,
         }
 
-        SchoolsServices.updateSchool(data.id, model)
-            .then((res) => {
+        // console.log('data?.address: ', data?.address);
+
+        if (hasAddress(data.address)) {
+            SchoolsServices.updateSchool(data.id, model).then((res) => {
                 refreshPage(data.id)
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',
                     type: 'success',
                 })
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 if (error.response) {
                     console.log(error)
                     history.push({
@@ -184,59 +233,28 @@ function GenInfo(props) {
                     type: 'error',
                 })
             })
+        }
 
-        // alert(JSON.stringify(model))
+        alert(JSON.stringify(model))
     }
 
     return (
         <div className={classes.panel}>
             <Grid container spacing={0} className={classes.body}>
                 {/* Content Sector */}
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    className={classes.content}
-                >
+                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                         {/* School Detail */}
-
                         <Grid container spacing={0} className={classes.wrapper}>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={3}
-                                lg={3}
-                                className={classes.row}
-                            >
-                                <Typography
-                                    color="inherit"
-                                    className={classes.header}
-                                >
+                            <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
+                                <Typography color="inherit" className={classes.header}>
                                     {headers.child1}
                                 </Typography>
                             </Grid>
                             {/* Detail */}
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={7}
-                                lg={5}
-                                className={classes.row}
-                            >
+                            <Grid item xs={12} sm={12} md={9} lg={8} className={classes.row}>
                                 <Grid container spacing={0}>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
                                         <Controller
                                             name="id"
                                             control={control}
@@ -269,42 +287,53 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={9}
-                                        md={8}
-                                        lg={8}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                         <Controller
                                             name="address"
                                             control={control}
-                                            render={({ value, onChange }) => (
-                                                <TextField
-                                                    label={fields.addr.title}
-                                                    variant="outlined"
-                                                    required
-                                                    fullWidth
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    error={!!errors.address}
-                                                    helperText={
-                                                        errors?.address?.message
-                                                    }
-                                                />
-                                            )}
+                                            render={({ value, onChange }) => {
+                                                if (!isClicked) {
+                                                    return (
+                                                        <TextField
+                                                            label={fields.addr.title}
+                                                            variant="outlined"
+                                                            required
+                                                            fullWidth
+                                                            value={value}
+                                                            onClick={() => setIsClicked(true)}
+                                                            error={addressErr ? true : false}
+                                                            helperText={addressErr}
+                                                        // error={errors?.address ? errors.address : (addressErr ? true : false)}
+                                                        // helperText={errors?.address?.message
+                                                        //     ? errors?.address?.message
+                                                        //     : addressErr
+                                                        // }
+                                                        />
+                                                    )
+                                                }
+                                                if (isClicked) {
+                                                    return (
+                                                        <AddressField
+                                                            setLatitude={setLatitude}
+                                                            setLongitude={setLongitude}
+                                                            inputValue={value} setInputValue={onChange}
+                                                            onBlur={() => {
+                                                                validateAddress(value)
+                                                                setIsClicked(false)
+                                                            }}
+                                                            errText={addressErr}
+                                                        // error={!!errors.address}
+                                                        // helperText={
+                                                        //     errors?.address?.message
+                                                        // }
+                                                        />
+                                                    )
+                                                }
+                                            }}
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={3}
-                                        md={4}
-                                        lg={4}
-                                        className={classes.row}
-                                    >
+                                    {/* <Grid item xs={12} sm={3} md={4} lg={4} className={classes.row}>
                                         <InputLabel>
                                             {fields.dist.title}
                                         </InputLabel>
@@ -335,16 +364,62 @@ function GenInfo(props) {
                                                 </Select>
                                             )}
                                         />
+                                    </Grid> */}
+
+                                    {/* <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
+                                        <InputLabel>{fields.scale.title}</InputLabel>
+                                        <Controller
+                                            name="scale"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <Select
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    MenuProps={MenuProps}
+                                                    disableUnderline
+                                                >
+                                                    {bakSchScales.map(
+                                                        (data) => (
+                                                            <MenuItem
+                                                                key={data}
+                                                                value={data}
+                                                                classes={{
+                                                                    root:
+                                                                        styles.menuItemRoot,
+                                                                    selected:
+                                                                        styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                {data}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Select>
+                                            )}
+                                        />
+                                    </Grid> */}
+
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                        <Controller
+                                            name="phone"
+                                            control={control}
+                                            render={({ value, onChange }) => (
+                                                <TextField
+                                                    label={fields.tel.title}
+                                                    variant="outlined"
+                                                    // fullWidth
+                                                    value={value}
+                                                    onChange={onChange}
+                                                    error={!!errors.phone}
+                                                    helperText={
+                                                        errors?.phone?.message
+                                                    }
+                                                />
+                                            )}
+                                        />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        md={6}
-                                        lg={6}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={5} md={5} lg={5} className={classes.row}>
                                         <InputLabel>
                                             {fields.eduLvl.title}
                                         </InputLabel>
@@ -379,14 +454,7 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        md={6}
-                                        lg={6}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
                                         <InputLabel>
                                             {fields.type.title}
                                         </InputLabel>
@@ -419,83 +487,7 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        md={6}
-                                        lg={6}
-                                        className={classes.row}
-                                    >
-                                        <InputLabel>
-                                            {fields.scale.title}
-                                        </InputLabel>
-                                        <Controller
-                                            name="scale"
-                                            control={control}
-                                            render={({ value, onChange }) => (
-                                                <Select
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    MenuProps={MenuProps}
-                                                    disableUnderline
-                                                >
-                                                    {bakSchScales.map(
-                                                        (data) => (
-                                                            <MenuItem
-                                                                key={data}
-                                                                value={data}
-                                                                classes={{
-                                                                    root:
-                                                                        styles.menuItemRoot,
-                                                                    selected:
-                                                                        styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                {data}
-                                                            </MenuItem>
-                                                        )
-                                                    )}
-                                                </Select>
-                                            )}
-                                        />
-                                    </Grid>
-
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
-                                        <Controller
-                                            name="phone"
-                                            control={control}
-                                            render={({ value, onChange }) => (
-                                                <TextField
-                                                    label={fields.tel.title}
-                                                    variant="outlined"
-                                                    fullWidth
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    error={!!errors.phone}
-                                                    helperText={
-                                                        errors?.phone?.message
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                    </Grid>
-
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                         <InputLabel>
                                             {fields.status.title}
                                         </InputLabel>
@@ -515,14 +507,7 @@ function GenInfo(props) {
                                         />
                                     </Grid>
                                     {/* Action */}
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.action}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.action}>
                                         <Button
                                             className={classes.submit}
                                             variant="contained"

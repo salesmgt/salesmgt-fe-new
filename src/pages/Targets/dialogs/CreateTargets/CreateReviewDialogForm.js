@@ -91,11 +91,11 @@ function CreateReviewDialogForm(props) {
     const { onClose, schoolStatus, refreshAPI } = props
     const [rowsState, setRowsState] = React.useState(props.rows)
     const { fields, operations } = Consts
-    const [object, setObject] = React.useState(null)
+    // const [object, setObject] = React.useState(null)
     const [purpose, setPurpose] = useState(null)
 
     const { salesPurps } = useApp()
-    const { params, dispatchParams, setFilter } = useTargetForm()
+    const { params } = useTargetForm()  //, dispatchParams, setFilter
     const { page, limit, column, direction, searchKey, listFilters } = params
 
     // 1 năm học sẽ kéo dài từ tháng 5 năm nay tới tháng 5 năm sau
@@ -119,7 +119,8 @@ function CreateReviewDialogForm(props) {
     const handleSubmit = () => {
         let array = []
         rowsState.map((item) => {
-            item = { ...item, purpose: purpose, schoolYear: schoolYear, schoolId: item.id }
+            item = { ...item, purpose: purpose, schoolYear: schoolYear }   // , schoolId: item.id
+            // console.log('item là gì vậy??? ', item);
             array.push(item)
         })
         createTargets(array).then(res => {
@@ -185,12 +186,10 @@ function CreateReviewDialogForm(props) {
             case purposeNames.purp2:
                 return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
-                return <Chip label={purpose} className={classes.chipTiemNang} />
-            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case purposeNames.purp5:
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case purposeNames.purp6:
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 break

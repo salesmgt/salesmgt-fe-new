@@ -11,7 +11,7 @@ export const Consts = {
             title: 'Username',
         },
         isMale: {
-            title: 'Gender',
+            title: 'Gender *',
             male: {
                 lb: 'Male',
                 value: 'true',
@@ -35,10 +35,10 @@ export const Consts = {
             title: 'Address',
         },
         status: {
-            title: 'Account Active',
+            title: 'Account Active *',
         },
         roles: {
-            title: 'Roles',
+            title: 'Roles *',
         },
     },
 }

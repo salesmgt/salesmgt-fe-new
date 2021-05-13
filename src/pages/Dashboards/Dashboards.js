@@ -64,21 +64,21 @@ function Dashboards() {
 
     let isMounted = true
     const refreshPage = () => {
-        DashboardsServices.getDashboards()
-            .then((data) => {
-                if (isMounted) {
-                    setCardData(data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+        // DashboardsServices.getDashboards()
+        //     .then((data) => {
+        //         if (isMounted) {
+        //             setCardData(data)
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         if (error.response) {
+        //             console.log(error)
+        //             history.push({
+        //                 pathname: '/errors',
+        //                 state: { error: error.response.status },
+        //             })
+        //         }
+        //     })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,25 +90,25 @@ function Dashboards() {
         }
     }, [location.pathname])
 
-    // if (!userData) {
+    // // if (!userData) {
+    // //     return <Loading />
+    // // }
+
+    // // if (!schYears) {
+    // //     return <Loading />
+    // // }
+
+    // if (!bakschYears) {
     //     return <Loading />
     // }
 
-    // if (!schYears) {
+    // if (!userInfo) {
     //     return <Loading />
     // }
 
-    if (!bakschYears) {
-        return <Loading />
-    }
-
-    if (!userInfo) {
-        return <Loading />
-    }
-
-    if (!cardData) {
-        return <Loading />
-    }
+    // if (!cardData) {
+    //     return <Loading />
+    // }
 
     const generateGreetings = () => {
         const currHour = moment().format('kk')
@@ -139,7 +139,7 @@ function Dashboards() {
 
     return (
         <div className={classes.wrapper}>
-            <Grid container spacing={0}>
+            {/* <Grid container spacing={0}>
                 <Grid
                     item
                     xs={12}
@@ -407,7 +407,7 @@ function Dashboards() {
                         </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
+            </Grid> */}
         </div>
     )
 }

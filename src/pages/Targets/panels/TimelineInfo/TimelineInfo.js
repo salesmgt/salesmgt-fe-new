@@ -17,15 +17,19 @@ import {
     TimelineOppositeContent,
     TimelineSeparator
 } from '@material-ui/lab';
+import { useRouteMatch } from 'react-router';
+import { Link } from 'react-router-dom';
 import { MdDescription } from 'react-icons/md';
-import { IoPersonAddSharp, IoPersonRemoveSharp } from 'react-icons/io5'
+import { IoPersonAddSharp } from 'react-icons/io5'
 import { FaHandshake } from 'react-icons/fa'
-import { Consts, timeline } from './HistoryInfoConfig'
+import { Consts, timeline } from './TimelineInfoConfig'
 import { purposeNames } from '../../../../constants/Generals'
-import classes from './HistoryInfo.module.scss'
+import classes from './TimelineInfo.module.scss'
 
-function HistoryInfo() {
+function TimelineInfo() {
     const { headers, labels } = Consts
+    const { url } = useRouteMatch()
+    const newUrl = url.substring(0, 5)
 
     const setPurposeChipColor = (purpose) => {
         switch (purpose) {
@@ -34,12 +38,10 @@ function HistoryInfo() {
             case purposeNames.purp2:
                 return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
-                return <Chip label={purpose} className={classes.chipTiemNang} />
-            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case purposeNames.purp5:
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case purposeNames.purp6:
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 return <Chip label={purpose} /> // #5c21f3
@@ -61,8 +63,8 @@ function HistoryInfo() {
                         {/* Detail */}
                         <Grid item xs={12} sm={12} md={10} lg={9} className={classes.row}>
                             <Timeline>
-                                {timeline.map(item =>
-                                    <>
+                                {timeline.map((item, index) =>
+                                    <div key={index}>
                                         {item?.type === 'assign' && (
                                             <TimelineItem>
                                                 <TimelineOppositeContent>
@@ -95,7 +97,7 @@ function HistoryInfo() {
                                             </TimelineItem>
                                         )}
 
-                                        {item?.type === 'unassign' && (
+                                        {/* {item?.type === 'unassign' && (
                                             <TimelineItem>
                                                 <TimelineOppositeContent>
                                                     <div className={classes.tlnOpsContent}>
@@ -127,7 +129,7 @@ function HistoryInfo() {
                                                     </div>
                                                 </TimelineContent>
                                             </TimelineItem>
-                                        )}
+                                        )} */}
 
                                         {item?.type === 'report' && (
                                             <TimelineItem>
@@ -148,14 +150,20 @@ function HistoryInfo() {
                                                     <TimelineConnector className={classes.primaryTail} />
                                                 </TimelineSeparator>
                                                 <TimelineContent>
-                                                    <div
-                                                        className={item?.result ? classes.reportSuccess : classes.reportFailed}
+                                                    <Link
+                                                        to={{
+                                                            pathname: `${newUrl}/reports/${item?.reportId}`
+                                                        }}
+                                                        onClick={() => console.log(item.targetId)}
+                                                        className={classes.linkCard}
                                                     >
-                                                        <Typography variant="subtitle1">
-                                                            {item?.description}
-                                                        </Typography>
-                                                        {setPurposeChipColor(item?.purpose)}
-                                                    </div>
+                                                        <div className={item?.result ? classes.reportSuccess : classes.reportFailed}>
+                                                            <Typography variant="subtitle1">
+                                                                {item?.description}
+                                                            </Typography>
+                                                            {setPurposeChipColor(item?.purpose)}
+                                                        </div>
+                                                    </Link>
                                                 </TimelineContent>
                                             </TimelineItem>
                                         )}
@@ -190,7 +198,7 @@ function HistoryInfo() {
                                                 </TimelineContent>
                                             </TimelineItem>
                                         )}
-                                    </>
+                                    </div>
                                 )}
 
                                 {/* <TimelineItem>
@@ -228,4 +236,4 @@ function HistoryInfo() {
     )
 }
 
-export default HistoryInfo
+export default TimelineInfo

@@ -164,7 +164,7 @@ function Tables(props) {
         setSelectedRows([])
     }
     const handleClick = (event, row) => {
-        console.log(event.target.checked)
+        // console.log(event.target.checked)
         const selectedIndex = selectedRows.indexOf(row)
         let newSelected = []
 
@@ -238,12 +238,10 @@ function Tables(props) {
             case purposeNames.purp2:
                 return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
-                return <Chip label={purpose} className={classes.chipTiemNang} />
-            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case purposeNames.purp5:
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case purposeNames.purp6:
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 return <Chip label={purpose} /> // #5c21f3

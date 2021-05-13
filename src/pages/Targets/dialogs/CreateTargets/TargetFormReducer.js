@@ -11,8 +11,8 @@ export const TargetFormReducer = (params, action) => {
             return { ...params, page: 0, listFilters: { ...listFilters, type: payload } }
         case Actions.FILTER_SCHOOL_LEVEL:
             return { ...params, page: 0, listFilters: { ...listFilters, level: payload } }
-        case Actions.FILTER_SCHOOL_SCALE:
-            return { ...params, page: 0, listFilters: { ...listFilters, scale: payload } }
+        // case Actions.FILTER_SCHOOL_SCALE:
+        //     return { ...params, page: 0, listFilters: { ...listFilters, scale: payload } }
         case Actions.FILTER_SCHOOL_STATUS:
             return { ...params, page: 0, listFilters: { ...listFilters, status: payload } }
 

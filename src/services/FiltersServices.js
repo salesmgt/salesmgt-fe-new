@@ -20,11 +20,11 @@ export async function getEducationalLevels() {
     return data
 }
 
-export async function getSchoolScales() {
-    const response = await Api.get('/scales')
-    const data = await response.data
-    return data
-}
+// export async function getSchoolScales() {
+//     const response = await Api.get('/scales')
+//     const data = await response.data
+//     return data
+// }
 
 export async function getSchoolTypes() {
     const response = await Api.get('/types')

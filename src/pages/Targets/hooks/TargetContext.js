@@ -12,7 +12,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
+    // SCALE_FILTER,
     PURPOSE_FILTER,
     PIC_FILTER,
     SCHOOL_YEAR_FILTER,
@@ -32,7 +32,7 @@ let defaultFilters = {
     district: { filterType: DISTRICT_FILTER, filterValue: '' },
     type: { filterType: TYPE_FILTER, filterValue: '' },
     level: { filterType: LEVEL_FILTER, filterValue: '' },
-    scale: { filterType: SCALE_FILTER, filterValue: '' },
+    // scale: { filterType: SCALE_FILTER, filterValue: '' },
     PIC: { filterType: PIC_FILTER, filterValue: null },
     purpose: { filterType: PURPOSE_FILTER, filterValue: '' },
     status: { filterType: STATUS_FILTER, filterValue: '' },
@@ -92,9 +92,9 @@ function useTargetProvider() {
     const [schoolLevel, setSchoolLevel] = useState(
         defaultFilters.level.filterValue ? defaultFilters.level.filterValue : ''
     )
-    const [schoolScale, setSchoolScale] = useState(
-        defaultFilters.scale.filterValue ? defaultFilters.scale.filterValue : ''
-    )
+    // const [schoolScale, setSchoolScale] = useState(
+    //     defaultFilters.scale.filterValue ? defaultFilters.scale.filterValue : ''
+    // )
     const [PIC, setPIC] = useState(
         defaultFilters.PIC.filterValue ? defaultFilters.PIC.filterValue : null
     )
@@ -153,13 +153,13 @@ function useTargetProvider() {
                 }
                 setSchoolLevel(value)
                 break
-            case SCALE_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    scale: { filterType: SCALE_FILTER, filterValue: value },
-                }
-                setSchoolScale(value)
-                break
+            // case SCALE_FILTER:
+            //     defaultFilters = {
+            //         ...defaultFilters,
+            //         scale: { filterType: SCALE_FILTER, filterValue: value },
+            //     }
+            //     setSchoolScale(value)
+            //     break
             case PIC_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
@@ -253,7 +253,7 @@ function useTargetProvider() {
         // setSchoolType,
         schoolLevel,
         // setSchoolLevel,
-        schoolScale,
+        // schoolScale,
         // setSchoolScale,
         PIC,
         // setPIC,

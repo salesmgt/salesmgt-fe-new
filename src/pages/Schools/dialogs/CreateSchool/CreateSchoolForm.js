@@ -25,8 +25,9 @@ import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import * as SchoolsServices from '../../SchoolsServices'
 import { Consts } from '../DialogConfig'
-import { SCHOOL_NAME_RGX, PHONE_RGX, TEL_RGX } from '../../../../utils/Regex'
+import { PHONE_RGX, TEL_RGX } from '../../../../utils/Regex'  //SCHOOL_NAME_RGX, 
 import { useSchool } from '../../hooks/SchoolContext'
+import { AddressField } from '../../../../components';
 import classes from './CreateSchool.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -35,13 +36,13 @@ const clientSchema = yup.object().shape({
         .trim()
         .min(3, 'Name must be at least 3 characters')
         .max(30, 'Name must be at most 30 characters')
-        .required('Name is required')
-        .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
-    address: yup.string().trim().required('Address is required'),
+        .required('Name is required'),
+    // .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
+    // address: yup.string().trim().required('Address is required'),
     phone: yup
         .string()
         .max(11, 'Tel must be at most 11 digits and has the correct format')
-        .matches(TEL_RGX, 'Incorrect entry'),
+        .matches(TEL_RGX, { message: 'Telephone number is in wrong format (02xxxxxxxxx)', excludeEmptyString: true }),
     reprName: yup
         .string()
         .trim()
@@ -50,7 +51,7 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits')
-        .matches(PHONE_RGX, 'Incorrect entry'),
+        .matches(PHONE_RGX, { message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)', excludeEmptyString: true }),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
@@ -102,7 +103,7 @@ function CreateSchoolForm(props) {
     const { operations, fields } = Consts
     const styles = useStyles()
 
-    const { dists, schEduLvls, schTypes, schScales, schStatus } = useApp()
+    const { dists, schEduLvls, schTypes, schStatus } = useApp()     //, schScales
     const { params } = useSchool()
     const { page, limit, column, direction, searchKey, listFilters } = params
 
@@ -111,7 +112,7 @@ function CreateSchoolForm(props) {
         ? schEduLvls
         : Milk.getMilk(milkNames.eduLvls)
     const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
-    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
     const bakSchStatus = schStatus ? schStatus : Milk.getMilk(milkNames.status)
 
     const history = useHistory()
@@ -122,6 +123,10 @@ function CreateSchoolForm(props) {
     //     type: '',
     // })
 
+    const [latitude, setLatitude] = useState(0.0);
+    const [longitude, setLongitude] = useState(0.0);
+
+    let district = '';
     const defaultValues = {
         name: '',
         address: '',
@@ -129,7 +134,7 @@ function CreateSchoolForm(props) {
         phone: '',
         educationalLevel: bakSchEduLvls[0],
         type: bakSchTypes[0],
-        scale: bakSchScales[0],
+        // scale: bakSchScales[0],
 
         showRep: false,
     }
@@ -142,39 +147,94 @@ function CreateSchoolForm(props) {
         formState,
         reset,
         watch,
+        register
     } = useForm({
+        mode: 'onBlur',
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
 
     const repWatch = watch('showRep')
 
-    const onSubmit = (data) => {
-        const model = { ...data, status: bakSchStatus[0] }
-        delete model.showRep
+    const [addressErr, setAddressErr] = useState('');
+    const validateAddress = (address) => {
+        setAddressErr('')
+        if (address) {
+            if (address.includes('Thành phố Hồ Chí Minh')) {
+                if (address.includes('Quận')) {
+                    const tmp1 = address.substring(address.lastIndexOf('Quận'))
+                    district = tmp1.substring(0, tmp1.indexOf(', '))
+                    setAddressErr('')
+                    return true
+                } else {    // Quận/Huyện tên chữ, ko có số
+                    const tmp1 = address.substring(0, address.lastIndexOf(', Thành phố Hồ Chí Minh'))
+                    // const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
+                    district = tmp1.substring(tmp1.lastIndexOf(', ') + 1).trim()
+                    // district = tmp2.substring(2)
+                    console.log('district nè: ', district);
+                    setAddressErr('')
+                    if (!district || district.includes('Hồ Chí Minh')) {
+                        setAddressErr('Please input exactly address')
+                        return false
+                    }
+                    return true
+                }
+            } else if (address) {
+                setAddressErr('Please choose address locates in Ho Chi Minh City')
+                return false
+            }
+        } else {
+            setLatitude(0.0)
+            setLongitude(0.0)
+            setAddressErr('Address is required')
+            return false
+        }
+    }
 
-        SchoolsServices.createSchool(model)
-            .then((res) => {
+    // Sao ko in đc lỗi của tr.hợp này ta???
+    // const hasAddress = (address) => {
+    //     // setAddressErr('')
+    //     console.log('hasAddress?   address: ', address);
+    //     if (!address) {
+    //         setLatitude(0.0)
+    //         setLongitude(0.0)
+    //         setAddressErr('Address is required')
+    //         return false
+    //     } else {
+    //         setAddressErr('')
+    //         return true
+    //     }
+    // }
+
+    const onSubmit = (data) => {
+        if (validateAddress(data.address)) {
+            const model = {
+                ...data,
+                status: bakSchStatus[0],
+
+                // active: true,
+                district: district,
+                latitude: latitude,
+                longitude: longitude,
+
+                // reprName: null,
+                // reprIsMale: false,
+                // reprPhone: null,
+                // reprEmail: null,
+            }
+            delete model.showRep
+
+            // console.log('data?.address: ', data?.address);
+
+            SchoolsServices.createSchool(model).then((res) => {
                 setNotify({
                     isOpen: true,
                     message: 'Created Successfully',
                     type: 'success',
                 })
                 refreshPage(page, limit, column, direction, searchKey, listFilters)
-                // reset({
-                //     name: '',
-                //     address: '',
-                //     district: bakDists[0],
-                //     phone: '',
-                //     educationalLevel: bakSchEduLvls[0],
-                //     type: bakSchTypes[0],
-                //     scale: bakSchScales[0],
-
-                //     showRep: false,
-                // })
                 onClose()
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 if (error.response) {
                     console.log(error)
                     if (error.response.status === 409) {
@@ -194,19 +254,18 @@ function CreateSchoolForm(props) {
                     type: 'error',
                 })
             })
-
-        // alert(JSON.stringify(model))
+            alert(JSON.stringify(model))
+        }
     }
 
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form
-                    noValidate
-                    // onSubmit={handleSubmit(onSubmit)}
+                <form noValidate
+                // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Grid item xs={12} sm={8} md={8} lg={8}>
                             <Controller
                                 name="name"
                                 control={control}
@@ -225,25 +284,32 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={7} md={7} lg={7}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Controller
                                 name="address"
                                 control={control}
                                 render={({ value, onChange }) => (
-                                    <TextField
-                                        label={fields.addr.title}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        value={value}
-                                        onChange={onChange}
-                                        error={!!errors.address}
-                                        helperText={errors?.address?.message}
+                                    <AddressField
+                                        setLatitude={setLatitude}
+                                        setLongitude={setLongitude}
+                                        inputValue={value} setInputValue={onChange}
+                                        onBlur={validateAddress(value)}
+                                        errText={formState.isDirty ? addressErr : ''}
                                     />
+                                    // <TextField
+                                    //     label={fields.addr.title}
+                                    //     variant="outlined"
+                                    //     required
+                                    //     fullWidth
+                                    //     value={value}
+                                    //     onChange={onChange}
+                                    //     error={!!errors.address}
+                                    //     helperText={errors?.address?.message}
+                                    // />
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={5} md={5} lg={5}>
+                        {/* <Grid item xs={12} sm={12} md={6} lg={6}>
                             <InputLabel>{fields.dist.title}</InputLabel>
                             <Controller
                                 name="district"
@@ -271,8 +337,8 @@ function CreateSchoolForm(props) {
                                     </Select>
                                 )}
                             />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        </Grid> */}
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                             <Controller
                                 name="phone"
                                 control={control}
@@ -280,7 +346,7 @@ function CreateSchoolForm(props) {
                                     <TextField
                                         label={fields.tel.title}
                                         variant="outlined"
-                                        fullWidth
+                                        // fullWidth
                                         value={value}
                                         onChange={onChange}
                                         error={!!errors.phone}
@@ -289,7 +355,7 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                        <Grid item xs={12} sm={7} md={7} lg={7}>
                             <InputLabel>{fields.eduLvl.title}</InputLabel>
                             <Controller
                                 name="educationalLevel"
@@ -318,7 +384,7 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                        <Grid item xs={12} sm={5} md={5} lg={5}>
                             <InputLabel>{fields.type.title}</InputLabel>
                             <Controller
                                 name="type"
@@ -347,7 +413,7 @@ function CreateSchoolForm(props) {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                        {/* <Grid item xs={12} sm={6} md={6} lg={6}>
                             <InputLabel>{fields.scale.title}</InputLabel>
                             <Controller
                                 name="scale"
@@ -375,7 +441,7 @@ function CreateSchoolForm(props) {
                                     </Select>
                                 )}
                             />
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <FormLabel>{operations.WithData}</FormLabel>
@@ -384,9 +450,7 @@ function CreateSchoolForm(props) {
                                 control={control}
                                 render={({ value, onChange }) => (
                                     <Checkbox
-                                        onChange={(e) =>
-                                            onChange(e.target.checked)
-                                        }
+                                        onChange={(e) => onChange(e.target.checked)}
                                         checked={value}
                                     />
                                 )}
@@ -454,7 +518,7 @@ function CreateSchoolForm(props) {
                                         )}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Grid item xs={12} sm={6} md={6} lg={6}>
                                     <Controller
                                         name="reprPhone"
                                         control={control}
@@ -503,7 +567,7 @@ function CreateSchoolForm(props) {
                 <Button
                     className={classes.btnSave}
                     // type="submit"
-                    disabled={!formState.isDirty}
+                    disabled={!formState.isDirty}   // || addressErr
                     onClick={handleSubmit(onSubmit)}
                 >
                     {operations.save}
@@ -518,7 +582,7 @@ function CreateSchoolForm(props) {
                             phone: '',
                             educationalLevel: bakSchEduLvls[0],
                             type: bakSchTypes[0],
-                            scale: bakSchScales[0],
+                            // scale: bakSchScales[0],
 
                             showRep: false,
                         })

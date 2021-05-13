@@ -747,48 +747,20 @@ function SchoolInfo(props) {
                             </Grid>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
-                                    <Typography
-                                        color="inherit"
-                                        className={classes.title}
-                                    >
+                        {/* <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                            <Grid container spacing={0} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                    <Typography color="inherit" className={classes.title}>
                                         {fields.scale.title}
                                     </Typography>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={7}
-                                    lg={5}
-                                    className={classes.rowx}
-                                >
+                                {/.* <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {target?.schoolScale}
                                     </Typography>
-                                </Grid>
+                                </Grid> *./}
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Grid>
 

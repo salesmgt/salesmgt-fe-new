@@ -32,12 +32,12 @@ export const TargetReducer = (params, action) => {
                 page: 0,
                 listFilters: { ...listFilters, level: payload },
             }
-        case Actions.FILTER_SCHOOL_SCALE:
-            return {
-                ...params,
-                page: 0,
-                listFilters: { ...listFilters, scale: payload },
-            }
+        // case Actions.FILTER_SCHOOL_SCALE:
+        //     return {
+        //         ...params,
+        //         page: 0,
+        //         listFilters: { ...listFilters, scale: payload },
+        //     }
         case Actions.FILTER_PIC:
             return {
                 ...params,

@@ -11,7 +11,7 @@ export const Consts = {
             title: 'Full Name',
         },
         reprIsMale: {
-            title: 'Gender',
+            title: 'Gender *',
             male: {
                 lb: 'Male',
                 value: 'true',

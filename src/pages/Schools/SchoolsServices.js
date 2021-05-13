@@ -3,7 +3,7 @@ import Api from '../../services/Api'
 export async function getSchools(
     page = 0,
     limit = 10,
-    column = 'id',
+    column = 'schoolId',
     direction = 'asc',
     searchKey = undefined,
     filters = undefined
@@ -22,9 +22,9 @@ export async function getSchools(
         url = filters['level'].filterValue
             ? url.concat(`&level=${filters['level'].filterValue}`)
             : url
-        url = filters['scale'].filterValue
-            ? url.concat(`&scale=${filters['scale'].filterValue}`)
-            : url
+        // url = filters['scale'].filterValue
+        //     ? url.concat(`&scale=${filters['scale'].filterValue}`)
+        //     : url
         url = filters['status'].filterValue
             ? url.concat(`&status=${filters['status'].filterValue}`)
             : url

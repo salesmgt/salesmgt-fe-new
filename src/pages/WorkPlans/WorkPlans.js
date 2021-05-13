@@ -261,7 +261,7 @@ function WorkPlans() {
 
         WorkPlansServices.callAPITree(convert)
             .then((data) => {
-                data?.forEach((element) => {})
+                data?.forEach((element) => { })
                 setTree(data)
             })
             .catch((error) => {

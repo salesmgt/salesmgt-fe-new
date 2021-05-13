@@ -51,6 +51,8 @@ function CardJack(props) {
         setCurrentRange(event.target.value)
     }
 
+    console.log('datasets: ', datasets);
+
     return (
         <Paper className={classes.paper}>
             <div className={classes.header}>
@@ -65,7 +67,7 @@ function CardJack(props) {
                         onChange={handleChangeRange}
                         disableUnderline
                         MenuProps={MenuProps}
-                        // style={{ display: isOpts ? 'inline-flex' : 'none' }}
+                    // style={{ display: isOpts ? 'inline-flex' : 'none' }}
                     >
                         {ranges.map((key) => {
                             return (
@@ -98,7 +100,7 @@ function CardJack(props) {
                     <div className={classes.info}>
                         <Typography
                             className={classes.detail}
-                            // style={{ color: color }}
+                        // style={{ color: color }}
                         >
                             {obj.schools}
                             {/* {`${obj.leads} ${des}`} */}

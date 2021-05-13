@@ -7,7 +7,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
+    // SCALE_FILTER,
     STATUS_FILTER,
     ACTIVE_FILTER
 } from '../../../../../constants/Filters'
@@ -68,12 +68,12 @@ function Chips(props) {
                 })
                 break
 
-            case SCALE_FILTER:
-                dispatch({
-                    type: ReducerActions.FILTER_SCHOOL_SCALE,
-                    payload: { filterType: SCALE_FILTER, filterValue: '' },
-                })
-                break
+            // case SCALE_FILTER:
+            //     dispatch({
+            //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+            //         payload: { filterType: SCALE_FILTER, filterValue: '' },
+            //     })
+            //     break
 
             case STATUS_FILTER:
                 dispatch({
@@ -117,10 +117,10 @@ function Chips(props) {
             type: ReducerActions.FILTER_SCHOOL_LEVEL,
             payload: { filterType: LEVEL_FILTER, filterValue: '' },
         })
-        dispatch({
-            type: ReducerActions.FILTER_SCHOOL_SCALE,
-            payload: { filterType: SCALE_FILTER, filterValue: '' },
-        })
+        // dispatch({
+        //     type: ReducerActions.FILTER_SCHOOL_SCALE,
+        //     payload: { filterType: SCALE_FILTER, filterValue: '' },
+        // })
         dispatch({
             type: ReducerActions.FILTER_SCHOOL_STATUS,
             payload: { filterType: STATUS_FILTER, filterValue: '' },
@@ -134,7 +134,7 @@ function Chips(props) {
             DISTRICT_FILTER,
             TYPE_FILTER,
             LEVEL_FILTER,
-            SCALE_FILTER,
+            // SCALE_FILTER,
             STATUS_FILTER,
             ACTIVE_FILTER
         ]
@@ -154,7 +154,7 @@ function Chips(props) {
 
     return (
         <div>
-            {handleShowClearAllButton() !== 6 && (
+            {handleShowClearAllButton() !== 5 && (
                 <div className={classes.root}>
                     <Button
                         size="small"

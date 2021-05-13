@@ -61,7 +61,7 @@ function CreateTargets(props) {
     // console.log('schoolYear ne: ', schoolYear);
 
     let isMounted = true
-    const getListSchools = (schoolYear = calculateSchoolYear(), page = 0, limit = 10, column = 'id', direction = 'asc', searchKey, listFilters) => {
+    const getListSchools = (schoolYear = calculateSchoolYear(), page = 0, limit = 10, column = 'schoolId', direction = 'asc', searchKey, listFilters) => {
         getSchoolsForTargets(schoolYear, page, limit, column, direction, searchKey, listFilters)
             .then((res) => {
                 if (isMounted) {

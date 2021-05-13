@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Grid,
     Typography,
-    ListItem,
     ListItemAvatar,
     Avatar,
     ListItemText,
@@ -17,13 +16,18 @@ import {
     TimelineOppositeContent,
     TimelineSeparator
 } from '@material-ui/lab';
-import { Consts, timeline } from './HistoryInfoConfig'
+import { useRouteMatch } from 'react-router';
+import { Link } from 'react-router-dom';
+import { Consts, timeline } from './TimelineInfoConfig'
 import { purposeNames } from '../../../../constants/Generals'
-import classes from './HistoryInfo.module.scss'
+import classes from './TimelineInfo.module.scss'
 
-function HistoryInfo() {
+function TimelineInfo() {
     const { headers, labels } = Consts
-    const [schoolYear, setSchoolYear] = useState('')
+    const { url } = useRouteMatch()
+    const newUrl = url.substring(0, 5)
+    // console.log('newUrl = ', newUrl);
+    // const [schoolYear, setSchoolYear] = useState('')
 
     // const calculateCurrentSchoolYear = () => {
     //     const thisYear = new Date().getFullYear()
@@ -46,12 +50,10 @@ function HistoryInfo() {
             case purposeNames.purp2:
                 return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
-                return <Chip label={purpose} className={classes.chipTiemNang} />
-            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
-            case purposeNames.purp5:
+            case purposeNames.purp4:
                 return <Chip label={purpose} className={classes.chipTaiKy} />
-            case purposeNames.purp6:
+            case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
                 return <Chip label={purpose} /> // #5c21f3
@@ -59,16 +61,16 @@ function HistoryInfo() {
     }
 
     // Sao hàm này bị infinity loop nhỉ?
-    const updateSchoolYear = (itemSchoolYear) => {
-        console.log(itemSchoolYear);
-        if (itemSchoolYear !== schoolYear) {
-            // setSchoolYear(itemSchoolYear)
-            return (
-                <strong>{itemSchoolYear}</strong>
-            )
-        }
-        return <></>
-    }
+    // const updateSchoolYear = (itemSchoolYear) => {
+    //     console.log(itemSchoolYear);
+    //     if (itemSchoolYear !== schoolYear) {
+    //         // setSchoolYear(itemSchoolYear)
+    //         return (
+    //             <strong>{itemSchoolYear}</strong>
+    //         )
+    //     }
+    //     return <></>
+    // }
 
     return (
         <div className={classes.panel}>
@@ -106,33 +108,42 @@ function HistoryInfo() {
                                             />
                                         </TimelineSeparator>
                                         <TimelineContent>
-                                            <div className={classes.tlnContent}>
-                                                <div className={classes.tlnContentChild}>
-                                                    <div className={classes.picZone}>
-                                                        <ListItemAvatar className={classes.picAvatar}>
-                                                            <Avatar src={item?.avatar} />
-                                                        </ListItemAvatar>
-                                                        <ListItemText primary={item?.fullName} className={classes.picName} />
-                                                    </div>
-                                                    {setPurposeChipColor(item?.purpose)}
-                                                </div>
-                                                {/* <div className={classes.tlnContentChild}>
-                                                    <Typography variant="subtitle2" color="textSecondary">
-                                                        <b>{labels.startDate}</b> {item?.startDate}
-                                                    </Typography>
-                                                    <Typography variant="subtitle2" color="textSecondary">
-                                                        <b>{labels.endDate}</b> {item?.endDate}
-                                                    </Typography>
-                                                </div> */}
-                                                {(item?.purpose === purposeNames.purp1 || item?.purpose === purposeNames.purp5 || item?.purpose === purposeNames.purp6) &&
+                                            <Link
+                                                to={{
+                                                    pathname: `${newUrl}/targets/${item.targetId}`,
+                                                    state: { tabNo: 3 } // chỗ này cần tính toán xíu vì có trang tabNo=3, có trang tabNo=2
+                                                }}
+                                                onClick={() => console.log(item.targetId)}
+                                                className={classes.linkCard}
+                                            >
+                                                <div className={classes.tlnContent}>
                                                     <div className={classes.tlnContentChild}>
-                                                        <Typography variant="subtitle2" color="textSecondary">
-                                                            <b>{labels.services} </b>
-                                                            {item?.services ? item?.services.join(', ') : '(none)'}
-                                                        </Typography>
+                                                        <div className={classes.picZone}>
+                                                            <ListItemAvatar className={classes.picAvatar}>
+                                                                <Avatar src={item?.avatar} />
+                                                            </ListItemAvatar>
+                                                            <ListItemText primary={item?.fullName} className={classes.picName} />
+                                                        </div>
+                                                        {setPurposeChipColor(item?.purpose)}
                                                     </div>
-                                                }
-                                            </div>
+                                                    {/* <div className={classes.tlnContentChild}>
+                                                        <Typography variant="subtitle2" color="textSecondary">
+                                                            <b>{labels.startDate}</b> {item?.startDate}
+                                                        </Typography>
+                                                        <Typography variant="subtitle2" color="textSecondary">
+                                                            <b>{labels.endDate}</b> {item?.endDate}
+                                                        </Typography>
+                                                    </div> */}
+                                                    {(item?.purpose === purposeNames.purp1 || item?.purpose === purposeNames.purp4 || item?.purpose === purposeNames.purp5) &&
+                                                        <div className={classes.tlnContentChild}>
+                                                            <Typography variant="subtitle2" color="textSecondary">
+                                                                <b>{labels.services} </b>
+                                                                {item?.services ? item?.services.join(', ') : '(none)'}
+                                                            </Typography>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </Link>
                                         </TimelineContent>
                                     </TimelineItem>
                                 )}
@@ -147,4 +158,4 @@ function HistoryInfo() {
     )
 }
 
-export default HistoryInfo
+export default TimelineInfo

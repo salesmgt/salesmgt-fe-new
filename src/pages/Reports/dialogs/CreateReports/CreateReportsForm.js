@@ -26,7 +26,7 @@ import { parseDateToString } from '../../../../utils/DateTimes'
 import * as ReportsServices from '../../ReportsServices'
 import { useHistory } from 'react-router'
 import * as ArrayUtils from '../../../../utils/Arrays'
-import {} from '../../../../utils/DateTimes'
+import { } from '../../../../utils/DateTimes'
 import { useAuth } from '../../../../hooks/AuthContext'
 import {
     Consts,
@@ -82,7 +82,7 @@ function CreateReportsForm(props) {
         schoolAddress: '',
         schoolId: -1,
         schoolName: '',
-        schoolScale: '',
+        // schoolScale: '',
         schoolStatus: '',
         schoolType: '',
         schoolYear: '',
@@ -554,9 +554,9 @@ function CreateReportsForm(props) {
                                         onChange={(e, key) =>
                                             handleFormChange(e, POSITIVITY)
                                         }
-                                        // inputRef={register}
-                                        // error={!!errors.positivity}
-                                        // helperText={errors?.positivity?.message}
+                                    // inputRef={register}
+                                    // error={!!errors.positivity}
+                                    // helperText={errors?.positivity?.message}
                                     />
                                 </Grid>
 
@@ -570,9 +570,9 @@ function CreateReportsForm(props) {
                                         onChange={(e, key) =>
                                             handleFormChange(e, DIFFICULTY)
                                         }
-                                        // inputRef={register}
-                                        // error={!!errors.difficulty}
-                                        // helperText={errors?.difficulty?.message}
+                                    // inputRef={register}
+                                    // error={!!errors.difficulty}
+                                    // helperText={errors?.difficulty?.message}
                                     />
                                 </Grid>
 
@@ -586,9 +586,9 @@ function CreateReportsForm(props) {
                                         onChange={(e, key) =>
                                             handleFormChange(e, FUTURE_PLAN)
                                         }
-                                        // inputRef={register}
-                                        // error={!!errors.futurePlan}
-                                        // helperText={errors?.futurePlan?.message}
+                                    // inputRef={register}
+                                    // error={!!errors.futurePlan}
+                                    // helperText={errors?.futurePlan?.message}
                                     />
                                 </Grid>
                             </Grid>
@@ -607,8 +607,8 @@ function CreateReportsForm(props) {
                                                 variant="contained"
                                                 color="secondary"
                                                 type="submit"
-                                                disabled={ formValue === defaultFormValue }
-                                                // onClick={addReports}
+                                                disabled={formValue === defaultFormValue}
+                                            // onClick={addReports}
                                             >
                                                 <MdAdd fontSize="large" />
                                             </Button>

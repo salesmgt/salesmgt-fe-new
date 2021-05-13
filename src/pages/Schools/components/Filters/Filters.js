@@ -26,7 +26,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
+    // SCALE_FILTER,
     // STATUS_FILTER,
     ACTIVE_FILTER,
 } from '../../../../constants/Filters'
@@ -139,12 +139,11 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters(props) {
     const classes = useStyles()
 
-    const { dists, schTypes, schEduLvls, schScales } = useApp()    //, schStatus
+    const { dists, schTypes, schEduLvls } = useApp()    //, schStatus, schScales
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
     const bakSchEduLvls = schEduLvls ? schEduLvls : Milk.getMilk(milkNames.eduLvls)
-    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
-    
+    // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
 
     //Use states which have been declared in the TargetSchoolContext
     const {
@@ -153,7 +152,7 @@ function Filters(props) {
         district,
         schoolType,
         schoolLevel,
-        schoolScale,
+        // schoolScale,
         // schoolStatus,
         isActive,
         workingStatuses,
@@ -213,17 +212,17 @@ function Filters(props) {
         })
     }
 
-    const handleSchoolScaleChange = (event) => {
-        const selectedSchoolScale = event.target.value
-        setFilter(SCALE_FILTER, selectedSchoolScale)
-        dispatchParams({
-            type: ReducerActions.FILTER_SCHOOL_SCALE,
-            payload: {
-                filterType: SCALE_FILTER,
-                filterValue: selectedSchoolScale ? selectedSchoolScale : '',
-            },
-        })
-    }
+    // const handleSchoolScaleChange = (event) => {
+    //     const selectedSchoolScale = event.target.value
+    //     setFilter(SCALE_FILTER, selectedSchoolScale)
+    //     dispatchParams({
+    //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+    //         payload: {
+    //             filterType: SCALE_FILTER,
+    //             filterValue: selectedSchoolScale ? selectedSchoolScale : '',
+    //         },
+    //     })
+    // }
 
     const handleIsActiveChange = (event) => {
         const selectedIsActive = event.target.value
@@ -263,9 +262,9 @@ function Filters(props) {
                 case LEVEL_FILTER:
                     setFilter(LEVEL_FILTER, '')
                     break
-                case SCALE_FILTER:
-                    setFilter(SCALE_FILTER, '')
-                    break
+                // case SCALE_FILTER:
+                //     setFilter(SCALE_FILTER, '')
+                //     break
                 // case STATUS_FILTER:
                 //     setFilter(STATUS_FILTER, '')
                 //     break
@@ -331,7 +330,7 @@ function Filters(props) {
                             onClick={(event) =>
                                 setAnchorEl(event.currentTarget)
                             }
-                            // onClick={() => setOpenCreateDialog(true)}
+                        // onClick={() => setOpenCreateDialog(true)}
                         >
                             <MdAdd fontSize="large" />
                             {/* &nbsp;Create */}
@@ -473,7 +472,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={4}>
+                        {/* <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>{filters.schoolScale.title}</InputLabel>
                                 <Select
@@ -507,7 +506,7 @@ function Filters(props) {
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={6} sm={4} md={4} lg={4}>
                             <FormControl className={classes.formControl}>

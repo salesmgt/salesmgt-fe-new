@@ -12,16 +12,18 @@ export const Consts = {
 
 // Cách tổ chức data mới
 export const timeline = [
+    // {
+    //     targetId: 50,
+    //     startDate: '10-05-2019',
+    //     endDate: '01-09-2019',
+    //     schoolYear: '2019-2020',
+    //     purpose: 'Sales mới',
+    //     fullName: 'Nguyễn Hoàng Anh',
+    //     avatar: 'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Favatars%2FZe6axJ1.jpg?alt=media&token=3d31ba01-f18f-4c8b-a456-b051fc190354',
+    //     services: null
+    // },
     {
-        startDate: '10-05-2019',
-        endDate: '01-09-2019',
-        schoolYear: '2019-2020',
-        purpose: 'Sales mới',
-        fullName: 'Nguyễn Hoàng Anh',
-        avatar: 'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Favatars%2FZe6axJ1.jpg?alt=media&token=3d31ba01-f18f-4c8b-a456-b051fc190354',
-        services: null
-    },
-    {
+        targetId: 50,
         startDate: '30-06-2019',
         endDate: '01-09-2019',
         schoolYear: '2019-2020',
@@ -31,6 +33,7 @@ export const timeline = [
         services: ['ESL', 'STEM']
     },
     {
+        targetId: 51,
         startDate: '10-11-2019',
         endDate: '25-11-2019',
         schoolYear: '2019-2020',
@@ -40,6 +43,7 @@ export const timeline = [
         services: null
     },
     {
+        targetId: 51,
         startDate: '01-12-2019',
         endDate: '15-12-2019',
         schoolYear: '2019-2020',
@@ -49,6 +53,7 @@ export const timeline = [
         services: null
     },
     {
+        targetId: 51,
         startDate: '10-05-2020',
         endDate: '01-09-2021',
         schoolYear: '2020-2021',
@@ -58,6 +63,7 @@ export const timeline = [
         services: ['ESL']
     },
     {
+        targetId: 51,
         startDate: '10-11-2020',
         endDate: '25-11-2020',
         schoolYear: '2020-2021',

@@ -22,7 +22,7 @@ function useAuthProvider() {
             milkNames.dists,
             milkNames.eduLvls,
             milkNames.types,
-            milkNames.scales,
+            // milkNames.scales,
             milkNames.status,
             milkNames.roles,
             milkNames.schYears,

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
-import { GenInfo, RepInfo } from './panels'
+import { GenInfo, RepInfo, TimelineInfo } from './panels'
 // import { useAuth } from '../../hooks/AuthContext'
 // import { roleNames, statusNames } from '../../constants/Generals'
 import * as SchoolsServices from './SchoolsServices'
 import { schConsts } from './SchoolsConfig'
 import { Loading, NotFound } from '../../components'
-import HistoryInfo from './panels/HistoryInfo/HistoryInfo'
 
 function School() {
     const { linkNames, tabNames, operations } = schConsts
@@ -105,7 +104,7 @@ function School() {
                 )}
 
                 {tabValue === 2 && (
-                    <HistoryInfo />
+                    <TimelineInfo />
                 )}
             </DetailLayouts>
             {/* )} */}

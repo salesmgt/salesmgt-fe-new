@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
-import { SchoolInfo, MOUInfo, AssignInfo } from './panels'
+import { SchoolInfo, MOUInfo, AssignInfo, TimelineInfo } from './panels'
 import { useAuth } from '../../hooks/AuthContext'
 import { roleNames } from '../../constants/Generals'
 import * as TargetsServices from './TargetsServices'
 import { targetConsts } from './TargetsConfig'
 import { Loading, NotFound } from '../../components'
-import HistoryInfo from './panels/HistoryInfo/HistoryInfo'
 
 function Target() {
     const { linkNames, tabNames, operations } = targetConsts
-    const [tabValue, setTabValue] = useState(0)
 
     const { user } = useAuth()
 
@@ -19,7 +17,11 @@ function Target() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
+    console.log('location = ', location);
+
+    const [tabValue, setTabValue] = useState(location?.state?.tabNo ? location?.state?.tabNo : 0)
+
+    const stateData = location?.state?.data
     const [target, setTarget] = useState(stateData?.model)
 
     const [exist, setExist] = useState(true)
@@ -68,7 +70,7 @@ function Target() {
         setTabValue(value)
     }
 
-    const getTabs = (role) => {
+    const getTabNames = (role) => {
         switch (role) {
             case roleNames.manager:
                 if (!target?.memorandums) {
@@ -91,34 +93,96 @@ function Target() {
         }
     }
 
-    const renderTargetDetail = (role) => {
-        return (
-            <DetailLayouts
-                linkBack={linkNames.back}
-                header={`${target?.level} ${target?.schoolName}`}
-                subHeader={target?.schoolStatus}
-                isStatus={true}
-                tabs={getTabs(role)}
-                tabValue={tabValue}
-                handleChangeTab={handleChangeTab}
-            >
-                {tabValue === 0 && (
-                    <SchoolInfo target={target} refreshPage={refreshPage} />
-                )}
-                {tabValue === 1 && (
-                    <AssignInfo target={target} refreshPage={refreshPage} />
-                )}
-                {tabValue === 2 && (
-                    <MOUInfo target={target} refreshPage={refreshPage} />
-                )}
-                {tabValue === 3 && (
-                    <HistoryInfo />
-                )}
-            </DetailLayouts>
-        );
+    const getTabs = (role, tabValue) => {
+        switch (role) {
+            case roleNames.manager:
+                if (!target?.memorandums) {
+                    //[tabNames.tab1, tabNames.tab2, tabNames.tab4]
+                    switch (tabValue) {
+                        case 0:
+                            return <SchoolInfo target={target} refreshPage={refreshPage} />;
+                        case 1:
+                            return <AssignInfo target={target} refreshPage={refreshPage} />;
+                        case 2:
+                            return <TimelineInfo />;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    //[tabNames.tab1, tabNames.tab2, tabNames.tab3, tabNames.tab4]
+                    switch (tabValue) {
+                        case 0:
+                            return <SchoolInfo target={target} refreshPage={refreshPage} />;
+                        case 1:
+                            return <AssignInfo target={target} refreshPage={refreshPage} />;
+                        case 2:
+                            return <MOUInfo target={target} refreshPage={refreshPage} />;
+                        case 3:
+                            return <TimelineInfo />;
+                        default:
+                            break;
+                    }
+                }
+            case roleNames.supervisor:
+                //[tabNames.tab1, tabNames.tab2, tabNames.tab4]
+                switch (tabValue) {
+                    case 0:
+                        return <SchoolInfo target={target} refreshPage={refreshPage} />;
+                    case 1:
+                        return <AssignInfo target={target} refreshPage={refreshPage} />;
+                    case 2:
+                        return <TimelineInfo />;
+                    default:
+                        break;
+                }
+            case roleNames.salesman:
+                if (!target?.memorandums) {   // ý đồ gì mà phải đảo thứ tự nhỉ?
+                    //[tabNames.tab2, tabNames.tab1, tabNames.tab4]
+                    switch (tabValue) {
+                        case 0:
+                            return <AssignInfo target={target} refreshPage={refreshPage} />;
+                        case 1:
+                            return <SchoolInfo target={target} refreshPage={refreshPage} />;
+                        case 2:
+                            return <TimelineInfo />;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    //[tabNames.tab2, tabNames.tab1, tabNames.tab3, tabNames.tab4]
+                    switch (tabValue) {
+                        case 0:
+                            return <AssignInfo target={target} refreshPage={refreshPage} />;
+                        case 1:
+                            return <SchoolInfo target={target} refreshPage={refreshPage} />;
+                        case 2:
+                            return <MOUInfo target={target} refreshPage={refreshPage} />;
+                        case 3:
+                            return <TimelineInfo />;
+                        default:
+                            break;
+                    }
+                }
+            default:
+                break;
+        }
     }
 
-    return renderTargetDetail(user.roles[0])
+    return (
+        <DetailLayouts
+            linkBack={linkNames.back}
+            header={`${target?.level} ${target?.schoolName}`}
+            subHeader={target?.schoolStatus}
+            isStatus={true}
+            tabs={getTabNames(user.roles[0])}
+            tabValue={tabValue}
+            handleChangeTab={handleChangeTab}
+        >
+            {getTabs(user.roles[0], tabValue)}
+        </DetailLayouts>
+    )
 }
 
 export default Target

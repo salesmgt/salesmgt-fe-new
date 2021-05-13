@@ -35,6 +35,13 @@
     padding-top: 0.2rem;
 }
 
+.linkCard {
+  text-decoration: none;
+  &:link {
+    color: $common-black;
+  }
+}
+
 .tlnContent {
     padding: 0.5rem 1rem 0.5rem 0.7rem;
     margin-bottom: 0.5rem;
@@ -94,15 +101,15 @@
   @extend .chipTheoDoi;
   @extend .chipInactive;
 }
-.chipTiemNang {
-  @extend .chip;
-  background-color: $trust !important;
-  color: $common-white !important;
-}
-.chipTiemNangInactive {
-  @extend .chipTiemNang;
-  @extend .chipInactive;
-}
+// .chipTiemNang {
+//   @extend .chip;
+//   background-color: $trust !important;
+//   color: $common-white !important;
+// }
+// .chipTiemNangInactive {
+//   @extend .chipTiemNang;
+//   @extend .chipInactive;
+// }
 .chipChamSoc {
   @extend .chip;
   background-color: $compassion !important;

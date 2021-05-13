@@ -25,9 +25,9 @@ export const Consts = {
         eduLvl: {
             title: 'Educational Level',
         },
-        scale: {
-            title: 'School Scale',
-        },
+        // scale: {
+        //     title: 'School Scale',
+        // },
         type: {
             title: 'School Type',
         },

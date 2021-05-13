@@ -24,9 +24,9 @@ export const Consts = {
         eduLvl: {
             title: 'Educational Level',
         },
-        scale: {
-            title: 'School Scale',
-        },
+        // scale: {
+        //     title: 'School Scale',
+        // },
         type: {
             title: 'School Type',
         },
@@ -72,7 +72,7 @@ export const Consts = {
         reprPhone: 'SĐT HT/HP',
         reprEmail: 'Email HT/HP',
         type: 'Loại hình',
-        scale: 'Quy mô',
+        // scale: 'Quy mô',
         status: 'Tình trạng',
         description: 'Thông tin chi tiết',
         isMaleValue: 'Nam',

@@ -22,7 +22,7 @@ export const Consts = {
             placeholder: 'Search...',
         },
     },
-    filters: {        
+    filters: {
         district: {
             title: 'Districts',
         },
@@ -38,9 +38,9 @@ export const Consts = {
         schoolLevel: {
             title: 'School Levels',
         },
-        schoolScale: {
-            title: 'School Scales',
-        },
+        // schoolScale: {
+        //     title: 'School Scales',
+        // },
     },
     fields: {
         purpose: {

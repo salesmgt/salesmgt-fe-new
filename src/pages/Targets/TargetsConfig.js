@@ -100,10 +100,10 @@ export const Consts = {
             title: 'School Levels',
             options: { all: 'All' },
         },
-        schoolScale: {
-            title: 'School Scales',
-            options: { all: 'All' },
-        },
+        // schoolScale: {
+        //     title: 'School Scales',
+        //     options: { all: 'All' },
+        // },
         isAssigned: {
             title: 'Assigned status',
             options: {

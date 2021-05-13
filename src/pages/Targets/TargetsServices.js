@@ -26,12 +26,12 @@ export async function getTargets(
         url = filters['type'].filterValue
             ? url.concat(`&type=${filters['type'].filterValue}`)
             : url
-        url = filters['level'].filterValue
-            ? url.concat(`&level=${filters['level'].filterValue}`)
-            : url
-        url = filters['scale'].filterValue
-            ? url.concat(`&scale=${filters['scale'].filterValue}`)
-            : url
+        // url = filters['level'].filterValue
+        //     ? url.concat(`&level=${filters['level'].filterValue}`)
+        //     : url
+        // url = filters['scale'].filterValue
+        //     ? url.concat(`&scale=${filters['scale'].filterValue}`)
+        //     : url
         url = filters['PIC'].filterValue
             ? url.concat(`&fullName=${filters['PIC'].filterValue.fullName}`)
             : url
@@ -152,9 +152,9 @@ export async function getSchoolsForTargets(
         url = filters['level'].filterValue
             ? url.concat(`&level=${filters['level'].filterValue}`)
             : url
-        url = filters['scale'].filterValue
-            ? url.concat(`&scale=${filters['scale'].filterValue}`)
-            : url
+        // url = filters['scale'].filterValue
+        //     ? url.concat(`&scale=${filters['scale'].filterValue}`)
+        //     : url
         url = filters['status'].filterValue
             ? url.concat(`&status=${filters['status'].filterValue}`)
             : url

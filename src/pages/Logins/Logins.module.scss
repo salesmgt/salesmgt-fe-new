@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     // background: linear-gradient(to left, $navy-800 0%, rgba(9, 17, 24, 1) 100%);
-    background-color: $grey-400;
+    background-color: $grey-500;
     padding: 1.6rem;
 }
 .wrapper {
@@ -31,7 +31,7 @@
         border-style: none !important;
         .majorImg {
             width: 16rem;
-            height: 16rem;
+            height: 14.5rem;
         }
     }
     .submit {

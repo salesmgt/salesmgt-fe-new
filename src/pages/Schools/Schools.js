@@ -19,7 +19,7 @@ function Schools() {
     const refreshPage = (
         page = 0,
         limit = 10,
-        column = 'id',
+        column = 'schoolId',
         direction = 'asc',
         searchKey,
         listFilters

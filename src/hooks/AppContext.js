@@ -18,11 +18,11 @@ function useAppProvider() {
     const [schEduLvls, setSchEduLvls] = useState(
         Milk.getMilk(milkNames.eduLvls) ? Milk.getMilk(milkNames.eduLvls) : null
     )
-    const [schScales, setSchScales] = useState(
-        Milk.getMilk(milkNames.types) ? Milk.getMilk(milkNames.types) : null
-    )
+    // const [schScales, setSchScales] = useState(
+    //     Milk.getMilk(milkNames.types) ? Milk.getMilk(milkNames.types) : null
+    // )
     const [schTypes, setSchTypes] = useState(
-        Milk.getMilk(milkNames.scales) ? Milk.getMilk(milkNames.scales) : null
+        Milk.getMilk(milkNames.types) ? Milk.getMilk(milkNames.types) : null
     )
     const [schStatus, setSchStatus] = useState(
         Milk.getMilk(milkNames.status) ? Milk.getMilk(milkNames.status) : null
@@ -40,7 +40,7 @@ function useAppProvider() {
             ? Milk.getMilk(milkNames.salesPurps)
             : null
     )
-    
+
     useEffect(() => {
         FiltersServices.getDistricts()
             .then((data) => {
@@ -86,19 +86,19 @@ function useAppProvider() {
         // return () => setSchTypes(null)
     }, [])
 
-    useEffect(() => {
-        FiltersServices.getSchoolScales()
-            .then((data) => {
-                Milk.setMilk(milkNames.scales, data)
-                setSchScales(Milk.getMilk(milkNames.scales))
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                }
-            })
-        // return () => setSchScales(null)
-    }, [])
+    // useEffect(() => {
+    //     FiltersServices.getSchoolScales()
+    //         .then((data) => {
+    //             Milk.setMilk(milkNames.scales, data)
+    //             setSchScales(Milk.getMilk(milkNames.scales))
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //             }
+    //         })
+    //     // return () => setSchScales(null)
+    // }, [])
 
     useEffect(() => {
         FiltersServices.getSchoolStatus()
@@ -162,7 +162,7 @@ function useAppProvider() {
         dists,
         schEduLvls,
         schTypes,
-        schScales,
+        // schScales,
         schStatus,
         roles,
         schYears,

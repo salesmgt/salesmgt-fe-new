@@ -26,10 +26,9 @@ export const serviceNames = {
 export const purposeNames = {
     purp1: 'Sales mới',
     purp2: 'Theo dõi',
-    purp3: 'Tiềm năng',
-    purp4: 'Chăm sóc',
-    purp5: 'Tái ký hợp đồng',
-    purp6: 'Ký mới hợp đồng',
+    purp3: 'Chăm sóc',
+    purp4: 'Tái ký hợp đồng',
+    purp5: 'Ký mới hợp đồng',
 }
 
 export const cookieNames = {
@@ -41,7 +40,7 @@ export const milkNames = {
     dists: 'dists',
     eduLvls: 'eduLvls',
     types: 'types',
-    scales: 'scales',
+    // scales: 'scales',
     status: 'status',
     roles: 'roles',
     schYears: 'schYears',

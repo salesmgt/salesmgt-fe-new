@@ -22,7 +22,7 @@ import { Animation, AnimationGroup, NotFound } from '../../components'
 import * as ProfilesServices from './ProfilesServices'
 import { Consts } from './ProfilesConfig'
 import { CardHeaders } from './components'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 // import * as Cookies from '../../utils/Cookies'
@@ -30,7 +30,7 @@ import { useAuth } from '../../hooks/AuthContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
-import { Snackbars, Loading } from '../../components'
+import { Snackbars, Loading, AddressField } from '../../components'
 import { PWD_RGX, PHONE_RGX } from '../../utils/Regex'
 import classes from './Profiles.module.scss'
 
@@ -113,6 +113,9 @@ function Profiles() {
     const phoneValues = { phone: '' }
 
     const addrValues = { address: '' }
+    // const [address, setAddress] = useState('');
+    const [latitude, setLatitude] = useState(0.0);
+    const [longitude, setLongitude] = useState(0.0);
 
     const {
         handleSubmit: pwdSubmit,
@@ -150,10 +153,11 @@ function Profiles() {
 
     const {
         handleSubmit: addrSubmit,
-        errors: addrErrors,
-        register: addrRegister,
+        // errors: addrErrors,
+        // register: addrRegister,
         reset: addrReset,
         formState: addrState,
+        control: addrControl,
     } = useForm({
         resolver: yupResolver(addrSchema),
         defaultValues: addrValues,
@@ -257,7 +261,7 @@ function Profiles() {
     const uploadAvatarToFirebase = async (file) => {
         return new Promise((resolve, reject) => {
             const uploadImageTask = storage
-                .ref(`images/avatars/${`${user.username}-${file.name}`}`)
+                .ref(`images/avatars/${user.username}-${file.name}`)
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
@@ -396,6 +400,9 @@ function Profiles() {
     }
 
     const onAddrSubmit = (data) => {
+        console.log('address data: ', data);
+
+        // Ở đây sẽ ko chỉ mỗi address nữa mà còn cả [lat,long] cũng bị đổi
         ProfilesServices.updateGeneral(user.username, 'address', data.address)
             .then((data) => {
                 refreshPage()
@@ -771,9 +778,7 @@ function Profiles() {
                 </AnimationGroup>
 
                 <AnimationGroup
-                    enter={{
-                        animation: 'transition.slideUpBigIn',
-                    }}
+                    enter={{ animation: 'transition.slideUpBigIn' }}
                 >
                     <Card className={classes.me} elevation={1}>
                         <CardHeaders header={headers.child2} />
@@ -1078,10 +1083,7 @@ function Profiles() {
                             </form>
 
                             {/* Address section */}
-                            <form
-                                noValidate
-                                onSubmit={addrSubmit(onAddrSubmit)}
-                            >
+                            <form noValidate onSubmit={addrSubmit(onAddrSubmit)}>
                                 <Accordion
                                     className={classes.accor}
                                     elevation={0}
@@ -1101,7 +1103,7 @@ function Profiles() {
                                                     {fields.address.title}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item sm={6} md={6} lg={4}>
+                                            <Grid item sm={9} md={9} lg={9}>
                                                 <TextField
                                                     className={clsx(
                                                         classes.details,
@@ -1120,29 +1122,26 @@ function Profiles() {
                                             </Grid>
                                         </Grid>
                                     </AccordionSummary>
-                                    <AccordionDetails
-                                        className={classes.accorDetails}
-                                    >
+                                    <AccordionDetails className={classes.accorDetails}>
                                         <Grid container>
-                                            <Grid
-                                                item
-                                                xs={1}
-                                                sm={3}
-                                                md={3}
-                                                lg={3}
-                                            />
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={6}
-                                                md={6}
-                                                lg={4}
+                                            <Grid item xs={1} sm={3} md={3} lg={3} />
+                                            <Grid item xs={12} sm={9} md={9} lg={9}
                                                 className={classes.inputZone}
                                             >
-                                                <TextField
-                                                    className={
-                                                        classes.inputField
-                                                    }
+                                                <Controller
+                                                    className={classes.inputField}
+                                                    name="address"
+                                                    control={addrControl}
+                                                    render={({ value, onChange }) => (
+                                                        <AddressField
+                                                            setLatitude={setLatitude}
+                                                            setLongitude={setLongitude}
+                                                            inputValue={value} setInputValue={onChange}
+                                                        />
+                                                    )}
+                                                />
+                                                {/* <TextField
+                                                    className={ classes.inputField}
                                                     fullWidth
                                                     autoFocus
                                                     name="address"
@@ -1155,7 +1154,7 @@ function Profiles() {
                                                         addrErrors?.address
                                                             ?.message
                                                     }
-                                                />
+                                                /> */}
                                             </Grid>
                                         </Grid>
                                     </AccordionDetails>
@@ -1171,7 +1170,7 @@ function Profiles() {
                                         >
                                             {operations.save}
                                         </Button>
-                                        <Button
+                                        {/* <Button
                                             className={classes.cancelBtn}
                                             size="large"
                                             onClick={() =>
@@ -1182,7 +1181,7 @@ function Profiles() {
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button>
+                                        </Button> */}
                                     </AccordionActions>
                                 </Accordion>
                             </form>

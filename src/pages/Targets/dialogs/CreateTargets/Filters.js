@@ -17,8 +17,8 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
-    STATUS_FILTER,
+    // SCALE_FILTER,
+    // STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { Consts } from '../DialogConfig'
 import { MdAdd } from 'react-icons/md'
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 function Filters(props) {
     const classes = useStyles()
 
-    const { dists, schTypes, schEduLvls, schScales } = useApp()
+    const { dists, schTypes, schEduLvls } = useApp()    //, schScales
 
     //Use states which have been declared in the TargetFormContext
     const {
@@ -76,8 +76,8 @@ function Filters(props) {
         district,
         schoolType,
         schoolLevel,
-        schoolScale,
-        schoolStatus,
+        // schoolScale,
+        // schoolStatus,
         setFilter,
     } = useTargetForm()
     // const [purpose, setPurpose] = useState([])
@@ -123,17 +123,17 @@ function Filters(props) {
         })
     }
 
-    const handleSchoolScaleChange = (event) => {
-        const selectedSchoolScale = event.target.value
-        setFilter(SCALE_FILTER, selectedSchoolScale)
-        dispatchParams({
-            type: ReducerActions.FILTER_SCHOOL_SCALE,
-            payload: {
-                filterType: SCALE_FILTER,
-                filterValue: selectedSchoolScale ? selectedSchoolScale : '',
-            },
-        })
-    }
+    // const handleSchoolScaleChange = (event) => {
+    //     const selectedSchoolScale = event.target.value
+    //     setFilter(SCALE_FILTER, selectedSchoolScale)
+    //     dispatchParams({
+    //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+    //         payload: {
+    //             filterType: SCALE_FILTER,
+    //             filterValue: selectedSchoolScale ? selectedSchoolScale : '',
+    //         },
+    //     })
+    // }
 
     //=================Handle action enter / submit of SearchFields==================
     const handleSearch = (keyword) => {
@@ -152,7 +152,7 @@ function Filters(props) {
     }
 
     const onClick = e => {
-        console.log('props.rows: ', props.rows);
+        // console.log('props.rows: ', props.rows);
         if (props.rows?.length < 1) {
             setOpenNotiDialog(true)
             return
@@ -286,7 +286,7 @@ function Filters(props) {
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={6} sm={4} md={3} lg={3}>
+                {/* <Grid item xs={6} sm={4} md={3} lg={3}>
                     <FormControl className={classes.formControl}>
                         <InputLabel>{filters.schoolScale.title}</InputLabel>
                         <Select
@@ -320,7 +320,7 @@ function Filters(props) {
                             ))}
                         </Select>
                     </FormControl>
-                </Grid>
+                </Grid> */}
             </Grid>
         </div>
     )

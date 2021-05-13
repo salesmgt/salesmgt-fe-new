@@ -44,9 +44,9 @@ export const Consts = {
         schoolLevel: {
             title: 'School Levels',
         },
-        schoolScale: {
-            title: 'School Scales',
-        },
+        // schoolScale: {
+        //     title: 'School Scales',
+        // },
         workingStatus: {
             title: 'Working Status',
             options: {

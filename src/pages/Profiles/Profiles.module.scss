@@ -45,10 +45,10 @@
             .avatar {
                 width: 7rem;
                 height: 7rem;
-                font-size: 2rem !important;
+                // font-size: 2rem !important;
             }
             .avatarTxt {
-                font-size: 5rem;
+                font-size: 4.5rem;
                 text-transform: uppercase;
             }
             .inputAvatar {
@@ -89,14 +89,14 @@
         }
         .titles {
             font-weight: 700;
-            font-size: 1.4rem;
+            font-size: 1.1rem;
         }
         .detailZone {
             display: flex;
             flex-direction: row;
         }
         .details {
-            font-size: 1.3rem !important;
+            font-size: 1rem !important;
             margin-right: 0.5rem;
             input:disabled {
                 color: $common-black !important;

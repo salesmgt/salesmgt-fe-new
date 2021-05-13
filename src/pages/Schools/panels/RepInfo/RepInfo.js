@@ -86,7 +86,7 @@ function RepInfo(props) {
 
             educationalLevel: school?.educationalLevel,
             type: school?.type,
-            scale: school?.scale,
+            // scale: school?.scale,
             phone: school?.phone,
 
             // description: school?.description,

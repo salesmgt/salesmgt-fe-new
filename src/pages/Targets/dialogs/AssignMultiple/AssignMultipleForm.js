@@ -95,6 +95,8 @@ function AssignMultipleForm(props) {
 
     const typingTimeoutRef = useRef({})
 
+    console.log('assign form --- rowsState: ', rowsState);
+
     const handleSubmit = () => {
         const array = []
         rowsState.map((item) => {
@@ -304,7 +306,7 @@ function AssignMultipleForm(props) {
                                                 className={classes.tBodyCell}
                                             >
                                                 <ListItemText
-                                                    primary={row.schoolName}
+                                                    primary={`${row.level} ${row.schoolName}`}
                                                     secondary={row.district}
                                                     classes={{
                                                         primary:

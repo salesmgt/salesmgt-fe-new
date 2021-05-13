@@ -35,7 +35,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
+    // SCALE_FILTER,
     PIC_FILTER,
     PURPOSE_FILTER,
     STATUS_FILTER,
@@ -196,7 +196,7 @@ function Filters(props) {
         dists,
         schTypes,
         schEduLvls,
-        schScales,
+        // schScales,
         salesPurps,
         schStatus,
     } = useApp()
@@ -210,7 +210,7 @@ function Filters(props) {
         district,
         schoolType,
         schoolLevel,
-        schoolScale,
+        // schoolScale,
         PIC,
         purpose,
         schoolStatus,
@@ -226,7 +226,7 @@ function Filters(props) {
     const bakSchEduLvls = schEduLvls
         ? schEduLvls
         : Milk.getMilk(milkNames.eduLvls)
-    const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
     const bakSalesPurps = salesPurps
         ? salesPurps
         : Milk.getMilk(milkNames.salesPurps)
@@ -289,17 +289,17 @@ function Filters(props) {
         })
     }
 
-    const handleSchoolScaleChange = (event) => {
-        const selectedSchoolScale = event.target.value
-        setFilter(SCALE_FILTER, selectedSchoolScale)
-        dispatchParams({
-            type: ReducerActions.FILTER_SCHOOL_SCALE,
-            payload: {
-                filterType: SCALE_FILTER,
-                filterValue: selectedSchoolScale ? selectedSchoolScale : '',
-            },
-        })
-    }
+    // const handleSchoolScaleChange = (event) => {
+    //     const selectedSchoolScale = event.target.value
+    //     setFilter(SCALE_FILTER, selectedSchoolScale)
+    //     dispatchParams({
+    //         type: ReducerActions.FILTER_SCHOOL_SCALE,
+    //         payload: {
+    //             filterType: SCALE_FILTER,
+    //             filterValue: selectedSchoolScale ? selectedSchoolScale : '',
+    //         },
+    //     })
+    // }
 
     const onSearchPICChange = (event) => {
         if (typingTimeoutRef.current) {
@@ -378,9 +378,9 @@ function Filters(props) {
                 case LEVEL_FILTER:
                     setFilter(LEVEL_FILTER, '')
                     break
-                case SCALE_FILTER:
-                    setFilter(SCALE_FILTER, '')
-                    break
+                // case SCALE_FILTER:
+                //     setFilter(SCALE_FILTER, '')
+                //     break
                 case PIC_FILTER:
                     setFilter(PIC_FILTER, null)
                     break
@@ -810,12 +810,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
+                        {/* <Grid item xs={12} sm={6} md={4} lg={3}
                             // md={user.roles[0] === roleNames.salesman ? 4: 3}
                             // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                             className={classes.paddingTop}
@@ -855,7 +850,7 @@ function Filters(props) {
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                         {user.roles[0] !== roleNames.salesman && (
                             <>

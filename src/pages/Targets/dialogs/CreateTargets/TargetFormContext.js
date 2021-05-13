@@ -4,7 +4,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
+    // SCALE_FILTER,
     STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { statusNames } from '../../../../constants/Generals'
@@ -19,7 +19,7 @@ let defaultFilters = {
     district: { filterType: DISTRICT_FILTER, filterValue: '' },
     type: { filterType: TYPE_FILTER, filterValue: '' },
     level: { filterType: LEVEL_FILTER, filterValue: '' },
-    scale: { filterType: SCALE_FILTER, filterValue: '' },
+    // scale: { filterType: SCALE_FILTER, filterValue: '' },
     status: { filterType: STATUS_FILTER, filterValue: statusNames.lead },
     // schoolYear: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
 }
@@ -31,7 +31,7 @@ function useTargetFormProvider() {
         searchKey: '',
         page: 0,
         limit: 10,
-        column: 'id',
+        column: 'schoolId',
         direction: 'asc',
     })
 
@@ -47,7 +47,7 @@ function useTargetFormProvider() {
     const [district, setDistrict] = useState('')
     const [schoolType, setSchoolType] = useState('')
     const [schoolLevel, setSchoolLevel] = useState('')
-    const [schoolScale, setSchoolScale] = useState('')
+    // const [schoolScale, setSchoolScale] = useState('')
     const [schoolStatus, setSchoolStatus] = useState(
         defaultFilters?.status?.filterValue
     )
@@ -79,13 +79,13 @@ function useTargetFormProvider() {
                 }
                 setSchoolLevel(value)
                 break
-            case SCALE_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    scale: { filterType: SCALE_FILTER, filterValue: value },
-                }
-                setSchoolScale(value)
-                break
+            // case SCALE_FILTER:
+            //     defaultFilters = {
+            //         ...defaultFilters,
+            //         scale: { filterType: SCALE_FILTER, filterValue: value },
+            //     }
+            //     setSchoolScale(value)
+            //     break
             case STATUS_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
@@ -112,7 +112,7 @@ function useTargetFormProvider() {
         district,
         schoolType,
         schoolLevel,
-        schoolScale,
+        // schoolScale,
         schoolStatus,
         setFilter,
     }

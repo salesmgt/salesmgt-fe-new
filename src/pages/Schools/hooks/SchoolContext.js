@@ -9,7 +9,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
-    SCALE_FILTER,
+    // SCALE_FILTER,
     STATUS_FILTER,
     ACTIVE_FILTER
 } from '../../../constants/Filters'
@@ -26,7 +26,7 @@ let defaultFilters = {
     district: { filterType: DISTRICT_FILTER, filterValue: '' },
     type: { filterType: TYPE_FILTER, filterValue: '' },
     level: { filterType: LEVEL_FILTER, filterValue: '' },
-    scale: { filterType: SCALE_FILTER, filterValue: '' },
+    // scale: { filterType: SCALE_FILTER, filterValue: '' },
     status: { filterType: STATUS_FILTER, filterValue: '' },
     isActive: { filterType: ACTIVE_FILTER, filterValue: null },
 }
@@ -40,7 +40,7 @@ function useSchoolProvider() {
         searchKey: '',
         page: 0,
         limit: 10,
-        column: 'id',
+        column: 'schoolId',
         direction: 'asc',
     })
 
@@ -64,9 +64,9 @@ function useSchoolProvider() {
     const [schoolLevel, setSchoolLevel] = useState(
         defaultFilters.level.filterValue ? defaultFilters.level.filterValue : ''
     )
-    const [schoolScale, setSchoolScale] = useState(
-        defaultFilters.scale.filterValue ? defaultFilters.scale.filterValue : ''
-    )
+    // const [schoolScale, setSchoolScale] = useState(
+    //     defaultFilters.scale.filterValue ? defaultFilters.scale.filterValue : ''
+    // )
     const [schoolStatus, setSchoolStatus] = useState(
         defaultFilters.status.filterValue
             ? defaultFilters.status.filterValue
@@ -107,13 +107,13 @@ function useSchoolProvider() {
                 }
                 setSchoolLevel(value)
                 break
-            case SCALE_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    scale: { filterType: SCALE_FILTER, filterValue: value },
-                }
-                setSchoolScale(value)
-                break
+            // case SCALE_FILTER:
+            //     defaultFilters = {
+            //         ...defaultFilters,
+            //         scale: { filterType: SCALE_FILTER, filterValue: value },
+            //     }
+            //     setSchoolScale(value)
+            //     break
             case STATUS_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
@@ -151,7 +151,7 @@ function useSchoolProvider() {
         district,
         schoolType,
         schoolLevel,
-        schoolScale,
+        // schoolScale,
         schoolStatus,
         isActive,
         workingStatuses,

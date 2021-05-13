@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     Button,
@@ -30,6 +30,7 @@ import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import { useAccount } from '../../hooks/AccountContext'
 import { app as FirebaseApp } from '../../../../services/firebase'
+import { AddressField } from '../../../../components';
 import classes from './CreateAccount.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -56,7 +57,7 @@ const clientSchema = yup.object().shape({
         .trim()
         .email('Invalid email')
         .required('Email is required'),
-    address: yup.string().trim(),
+    // address: yup.string().trim().required('Address is required'),
 })
 
 const serverSchema = [
@@ -120,6 +121,10 @@ function CreateAccountForm(props) {
     //     message: '',
     //     type: '',
     // })
+    // let latitude = 0.0, longitude = 0.0
+    const [address, setAddress] = useState('');
+    const [latitude, setLatitude] = useState(0.0);
+    const [longitude, setLongitude] = useState(0.0);
 
     const defaultValues = {
         username: '',
@@ -127,11 +132,14 @@ function CreateAccountForm(props) {
         roleName: bakRoles[3],
         phone: '',
         email: '',
-        address: '',
+        address: address,
+        // latitude: latitude,
+        // longitude: longitude,
         isMale: String(true),
         birthDate: null,
     }
-    const node = (user) => {
+
+    const createNoti = (user) => {
         new Promise((resolve, reject) => {
             const notiRef = FirebaseApp.database()
                 .ref('notify')
@@ -148,6 +156,7 @@ function CreateAccountForm(props) {
                 })
         })
     }
+
     const {
         control,
         handleSubmit,
@@ -161,12 +170,19 @@ function CreateAccountForm(props) {
     })
 
     const onSubmit = (data) => {
+        // console.log('---------form nè---------');
+        // console.log('address nè: ', address);
+        // console.log(`[${latitude}, ${longitude}]`);
+
         const model = {
             ...data,
-            isMale: data.isMale === 'true' ? true : false,
-            birthDate: data.birthDate
-                ? moment(data.birthDate).format('YYYY-MM-DD')
+            isMale: data?.isMale === 'true' ? true : false,
+            birthDate: data?.birthDate
+                ? moment(data?.birthDate).format('YYYY-MM-DD')
                 : null,
+            address: address,
+            latitude: latitude,
+            longitude: longitude,
         }
 
         AccountsServices.createAccount(model)
@@ -176,7 +192,7 @@ function CreateAccountForm(props) {
                     message: 'Created Successfully',
                     type: 'success',
                 })
-                node(model)
+                createNoti(model)
                 refreshPage(
                     page,
                     limit,
@@ -227,9 +243,8 @@ function CreateAccountForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form
-                    noValidate
-                    // onSubmit={handleSubmit(onSubmit)}
+                <form noValidate
+                // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -309,7 +324,13 @@ function CreateAccountForm(props) {
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Controller
+                            {/* <InputLabel>{fields.addr.title}</InputLabel> */}
+                            <AddressField
+                                setLatitude={setLatitude}
+                                setLongitude={setLongitude}
+                                inputValue={address} setInputValue={setAddress}
+                            />
+                            {/* <Controller
                                 name="address"
                                 control={control}
                                 render={({ value, onChange }) => (
@@ -323,7 +344,7 @@ function CreateAccountForm(props) {
                                         helperText={errors?.address?.message}
                                     />
                                 )}
-                            />
+                            /> */}
                         </Grid>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
                             <InputLabel>{fields.isMale.title}</InputLabel>

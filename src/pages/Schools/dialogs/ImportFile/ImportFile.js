@@ -20,7 +20,7 @@ import { storage } from '../../../../services/firebase'
 import { Snackbars } from '../../../../components'
 import * as SchoolsServices from '../../SchoolsServices'
 import { useSchool } from '../../hooks/SchoolContext'
-import { PHONE_RGX } from '../../../../utils/Regex'
+// import { PHONE_RGX } from '../../../../utils/Regex'
 import classes from './ImportFile.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -75,7 +75,7 @@ function ImportFile(props) {
         alertText,
     } = Consts
     const { params } = useSchool()
-    const { listFilters, page, limit, column, direction, searchKey } = params 
+    const { listFilters, page, limit, column, direction, searchKey } = params
     const [fileName, setFileName] = React.useState('')
     const [text, setText] = React.useState(0)
     const [link, setLink] = React.useState('')
@@ -147,7 +147,7 @@ function ImportFile(props) {
                         !item[excel.name] ||
                         !item[excel.address] ||
                         !item[excel.educationalLevel] ||
-                        !item[excel.scale] ||
+                        // !item[excel.scale] ||
                         !item[excel.type] ||
                         !item[excel.district] //||
                         // !item[excel.phone] ||
@@ -177,7 +177,7 @@ function ImportFile(props) {
                         reprPhone: item[excel.reprPhone],
                         reprEmail: item[excel.reprEmail],
                         type: item[excel.type],
-                        scale: item[excel.scale],
+                        // scale: item[excel.scale],
                     })
                 })
                 console.log(array)

@@ -3,30 +3,37 @@
 .panel {
     height: auto;
     .content {
+      padding: 0.75rem;
+      .wrapper {
         padding: 0.75rem;
-        .wrapper {
-            padding: 0.75rem;
-            border: 1px solid $divider;
-            border-radius: $default-radius;
-        }
-        .row {
-            padding: 0.5rem;
-        }
-        .header {
-            text-transform: uppercase;
-        }
+        border: 1px solid $divider;
+        border-radius: $default-radius;
+      }
+      .row {
+        padding: 0.5rem;
+      }
+      .header {
+        text-transform: uppercase;
+      }
     }
 }
 
 .primaryTail {
-    background-color: $main-primary !important;
+  background-color: $main-primary !important;
 }
 .secondaryTail {
-    background-color: $main-secondary !important
+  background-color: $main-secondary !important
 }
 
 .tlnOpsContent {
   padding-top: 0.2rem;
+}
+
+.linkCard {
+  text-decoration: none;
+  &:link {
+    color: $common-black;
+  }
 }
 
 .tlnContent {
@@ -35,6 +42,7 @@
   border-radius: $default-radius;
   box-shadow: 0 4px 6px -6px $common-black;
   background-color: $grey-100;
+  // text-decoration: none !important;
 
   .picZone {
     display: flex;
@@ -64,9 +72,9 @@
 }
 
 .chip {
-    justify-self: flex-end;
-    align-self: flex-start;
-    margin-left: 0.5rem;
+  justify-self: flex-end;
+  align-self: flex-start;
+  margin-left: 0.5rem;
 }
 .chipInactive {
   color: $grey-400;
@@ -92,15 +100,15 @@
   @extend .chipTheoDoi;
   @extend .chipInactive;
 }
-.chipTiemNang {
-  @extend .chip;
-  background-color: $trust !important;
-  color: $common-white !important;
-}
-.chipTiemNangInactive {
-  @extend .chipTiemNang;
-  @extend .chipInactive;
-}
+// .chipTiemNang {
+//   @extend .chip;
+//   background-color: $trust !important;
+//   color: $common-white !important;
+// }
+// .chipTiemNangInactive {
+//   @extend .chipTiemNang;
+//   @extend .chipInactive;
+// }
 .chipChamSoc {
   @extend .chip;
   background-color: $compassion !important;
