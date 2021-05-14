@@ -28,7 +28,7 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, 'Incorrect entry'),
+        .matches(PHONE_RGX, { message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)', excludeEmptyString: true }),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
@@ -45,13 +45,13 @@ function RepInfo(props) {
     })
 
     const defaultValues = {
-        id: school?.id,
+        id: school?.schoolId,
         reprName: school?.reprName ? school?.reprName : '',
         reprIsMale: String(school?.reprIsMale)
             ? String(school?.reprIsMale)
             : String(true),
-        reprPhone: school?.reprPhone ? school?.reprPhone : '',
-        reprEmail: school?.reprEmail ? school?.reprEmail : '',
+        reprPhone: school?.reprPhone ? school?.reprPhone : null,
+        reprEmail: school?.reprEmail ? school?.reprEmail : null,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -60,15 +60,7 @@ function RepInfo(props) {
     })
 
     useEffect(() => {
-        reset({
-            id: school?.id,
-            reprName: school?.reprName ? school?.reprName : '',
-            reprIsMale: String(school?.reprIsMale)
-                ? String(school?.reprIsMale)
-                : String(true),
-            reprPhone: school?.reprPhone ? school?.reprPhone : '',
-            reprEmail: school?.reprEmail ? school?.reprEmail : '',
-        })
+        reset(defaultValues)
     }, [school])
 
     if (!school) {
@@ -78,11 +70,14 @@ function RepInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
-            reprIsMale: data.reprIsMale === 'true' ? true : false,
+            reprIsMale: data?.reprIsMale === 'true' ? true : false,
 
+            id: school?.schoolId,
             name: school?.name,
             address: school?.address,
             district: school?.district,
+            latitude: school?.latitude ? school?.latitude : 0.0,
+            longitude: school?.longitude ? school?.longitude : 0.0,
 
             educationalLevel: school?.educationalLevel,
             type: school?.type,
@@ -94,6 +89,9 @@ function RepInfo(props) {
 
             active: school?.active,
         }
+
+        console.log('data.id: ', data.id);
+        console.log('model: ', model);
 
         SchoolsServices.updateSchool(data.id, model)
             .then((res) => {

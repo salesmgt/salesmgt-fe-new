@@ -51,7 +51,7 @@ const clientSchema = yup.object().shape({
         .string()
         .required('Phone is required')
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Phone number is in wrong format (03|5|7|9xxxxxxxx)'),
     email: yup
         .string()
         .trim()

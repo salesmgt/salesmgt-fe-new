@@ -16,6 +16,11 @@ import {
     TableBody,
     Chip,
     Box,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    makeStyles,
 } from '@material-ui/core'
 import { MdAdd, MdDelete } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
@@ -31,7 +36,7 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import {
     Consts,
     columns,
-    RESULT,
+    IS_SUCCESS,
     DESCRIPTION,
     POSITIVITY,
     DIFFICULTY,
@@ -45,7 +50,41 @@ const clientSchema = yup.object().shape({
     // fullName: yup.string().trim().max(50).required(),
 })
 
+//===============Set max-height for dropdown list===============
+const ITEM_HEIGHT = 38
+const ITEM_PADDING_TOP = 5
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
+        },
+    },
+}
+//==============================================================
+
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        margin: theme.spacing(1),
+        // minWidth: 160,
+    },
+    option: {
+        fontSize: '0.875rem',
+    },
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
+}))
+
 function CreateReportsForm(props) {
+    const styles = useStyles()
     const { onClose, refreshAPI, setNotify } = props
     const { headers, operations, fields } = Consts
 
@@ -66,7 +105,7 @@ function CreateReportsForm(props) {
     //     console.log(data)
     // }
 
-    const defaultTarget = {
+    const defaultTask = {
         avatar: '',
         district: '',
         fullName: '',
@@ -91,24 +130,24 @@ function CreateReportsForm(props) {
         username: '',
     }
     const defaultFormValue = {
-        result: '',
+        isSuccess: true,
         description: '',
         positivity: '',
         difficulty: '',
         futurePlan: '',
     }
-    const [target, setTarget] = useState(defaultTarget)
-    const [targets, setTargets] = useState([])
+    const [task, setTask] = useState(defaultTask)
+    const [tasks, setTasks] = useState([])
     const [formValue, setFormValue] = useState(defaultFormValue)
 
-    const getListTargets = (searchKey) => {
-        ReportsServices.getTargetSchools({
+    const getListTasks = (searchKey) => {
+        ReportsServices.getTasks({
             username: user.username,
             schoolYear: calculateSchoolYear(),
             key: searchKey,
         })
             .then((data) => {
-                setTargets(data)
+                setTasks(data)
             })
             .catch((error) => {
                 if (error.response) {
@@ -121,11 +160,11 @@ function CreateReportsForm(props) {
             })
     }
     useEffect(() => {
-        getListTargets()
-        // return () => setTargets([])
+        getListTasks()
+        // return () => setTasks([])
     }, [])
 
-    const onSearchTargetChange = (event) => {
+    const onSearchTaskChange = (event) => {
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current)
         }
@@ -134,41 +173,41 @@ function CreateReportsForm(props) {
             const searchKey = event.target.value
             // console.log('searchKey = ', searchKey)
             if (searchKey) {
-                // setTarget(searchKey);
-                getListTargets(searchKey)
+                // setTask(searchKey);
+                getListTasks(searchKey)
             } else {
-                getListTargets()
+                getListTasks()
             }
         }, 300)
     }
 
-    // console.log('initial value for target: ', target);
+    // console.log('initial value for task: ', task);
 
-    const handleTargetChange = (event, newTarget) => {
-        // console.log('handleTargetChange - event: ', event);
-        if (newTarget) {
+    const handleTaskChange = (event, newTask) => {
+        // console.log('handleTaskChange - event: ', event);
+        if (newTask) {
             // console.log('ko null');
-            setTarget(newTarget)
+            setTask(newTask)
         } else {
             // console.log('null roi');
-            setTarget(defaultTarget)
+            setTask(defaultTask)
         }
-        // console.log('newTarget: ', newTarget)
+        // console.log('newTask: ', newTask)
     }
 
     const [listReports, setListReports] = useState([])
 
     // const listReportsData = () => {
     //     console.log('listReportsData - form value: ', formValue);
-    //     console.log('listReportsData - target: ', target);
+    //     console.log('listReportsData - task: ', task);
 
     //     const report = {
     //         username: user.username,
     //         date: parseDateToString(new Date(), 'YYYY-MM-DD'),
     //         schoolYear: calculateSchoolYear(),
-    //         targetId: parseInt(target.id),
-    //         schoolName: target.schoolName,
-    //         level: target.level,
+    //         taskId: parseInt(task.id),
+    //         schoolName: task.schoolName,
+    //         level: task.level,
     //         result: formValue.result,
     //         description: formValue.description,
     //         positivity: formValue.positivity,
@@ -177,8 +216,8 @@ function CreateReportsForm(props) {
     //     }
 
     //     listReports.forEach(re => {
-    //         if (re.targetId === report.targetId) {
-    //             removeReport(re.targetId)
+    //         if (re.taskId === report.taskId) {
+    //             removeReport(re.taskId)
     //         }
     //     });
     //     setListReports([...listReports, report])
@@ -193,7 +232,7 @@ function CreateReportsForm(props) {
         //     username: user.username,
         //     date: parseDateToString(new Date(), 'YYYY-MM-DD'),
         //     schoolYear: calculateSchoolYear(),
-        //     targetId: parseInt(e.targetId.value),
+        //     taskId: parseInt(e.taskId.value),
         //     schoolName: e.targetName.value,
         //     level: e.level.value,
         //     result: e.result.value,
@@ -204,13 +243,13 @@ function CreateReportsForm(props) {
         // }
 
         const report = {
-            username: user.username,
-            date: parseDateToString(new Date(), 'YYYY-MM-DD'),
-            schoolYear: calculateSchoolYear(),
-            targetId: parseInt(target.id),
-            schoolName: target.schoolName,
-            level: target.level,
-            result: formValue.result,
+            // username: user.username,
+            date: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+            // schoolYear: calculateSchoolYear(),
+            taskId: parseInt(task.id),
+            schoolName: task.schoolName,
+            level: task.level,
+            isSuccess: formValue.isSuccess,
             description: formValue.description,
             positivity: formValue.positivity,
             difficulty: formValue.difficulty,
@@ -218,13 +257,13 @@ function CreateReportsForm(props) {
         }
 
         listReports.forEach((re) => {
-            if (re.targetId === report.targetId) {
-                // Remove target cũ, ghi đè bằng target đó bản chỉnh sửa
-                // console.log('Remove duplicate target ', re.targetId)
+            if (re.taskId === report.taskId) {
+                // Remove task cũ, ghi đè bằng task đó bản chỉnh sửa
+                // console.log('Remove duplicate task ', re.taskId)
                 // setListReports([
-                //     ...ArrayUtils.removeItem(listReports, 'targetId', re.targetId),
+                //     ...ArrayUtils.removeItem(listReports, 'taskId', re.taskId),
                 // ])
-                removeReport(re.targetId) // tại sao phải viết lại 3 dòng code trên trong khi có thể gọi lại hàm này?
+                removeReport(re.taskId) // tại sao phải viết lại 3 dòng code trên trong khi có thể gọi lại hàm này?
                 // setListReports([...listReports, report])
             }
         })
@@ -234,16 +273,16 @@ function CreateReportsForm(props) {
         // listReportsData()
     }
 
-    const removeReport = (targetId) => {
+    const removeReport = (taskId) => {
         setListReports([
-            ...ArrayUtils.removeItem(listReports, 'targetId', targetId),
+            ...ArrayUtils.removeItem(listReports, 'taskId', taskId),
         ])
         resetForm()
-        // console.log('Remove target ', targetId)
+        // console.log('Remove task ', taskId)
     }
 
     const resetForm = () => {
-        setTarget(defaultTarget)
+        setTask(defaultTask)
         setFormValue(defaultFormValue)
     }
 
@@ -251,10 +290,10 @@ function CreateReportsForm(props) {
         const value = event.target.value
 
         switch (key) {
-            case RESULT:
+            case IS_SUCCESS:
                 setFormValue({
                     ...formValue,
-                    result: value,
+                    isSuccess: value,
                 })
                 break
             case DESCRIPTION:
@@ -290,31 +329,31 @@ function CreateReportsForm(props) {
 
     // Click on a row in the preview table --> data is displayed in form
     const handleShowClickedRow = (event, row) => {
-        const foundTarget = searchTargetSchoolById(row.targetId)
-        setTarget(foundTarget)
+        const foundTask = searchTasksSchoolById(row.taskId)
+        setTask(foundTask)
 
         setFormValue({
-            result: row.result,
+            isSuccess: row.isSuccess,
             description: row.description,
             positivity: row.positivity,
             difficulty: row.difficulty,
             futurePlan: row.futurePlan,
         })
 
-        // console.log('foundTarget: ', foundTarget);
+        // console.log('foundTask: ', foundTask);
         // console.log('Data of row: ', row);
     }
 
-    const searchTargetSchoolById = (id) => {
-        let foundTarget = { ...defaultTarget }
+    const searchTasksSchoolById = (id) => {
+        let foundTask = { ...defaultTask }
 
-        targets.forEach((aTarget) => {
-            if (aTarget.id === id) {
-                foundTarget = { ...aTarget }
+        tasks.forEach((aTask) => {
+            if (aTask.id === id) {
+                foundTask = { ...aTask }
             }
         })
 
-        return foundTarget
+        return foundTask
     }
 
     const handleCreateReport = (event) => {
@@ -324,13 +363,13 @@ function CreateReportsForm(props) {
         let reports = []
         if (listReports.length === 0) {
             const report = {
-                username: user.username,
-                date: parseDateToString(new Date(), 'YYYY-MM-DD'),
-                schoolYear: calculateSchoolYear(),
-                targetId: parseInt(target.id),
-                schoolName: target.schoolName,
-                level: target.level,
-                result: formValue.result,
+                // username: user.username,
+                date: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+                // schoolYear: calculateSchoolYear(),
+                taskId: parseInt(task.id),
+                // schoolName: task.schoolName,
+                // level: task.level,
+                isSuccess: formValue.isSuccess,
                 description: formValue.description,
                 positivity: formValue.positivity,
                 difficulty: formValue.difficulty,
@@ -345,6 +384,7 @@ function CreateReportsForm(props) {
             .then((data) => {
                 // console.log('data: ', data);               
 
+                // Chưa báo đc snackbars chỗ này
                 if (!String(data).includes('already submitted') && !String(data).includes('Created 0 records')) {
                     setNotify({
                         isOpen: true,
@@ -391,7 +431,7 @@ function CreateReportsForm(props) {
         // console.log(`${thisMonth}/${thisYear}`);
         // console.log(`This school year: ${thisYear - 1}-${thisYear}`);
 
-        // Từ tháng 5 năm nay tới tháng 5 năm sau: đi sales cho các targets theo năm học sau
+        // Từ tháng 5 năm nay tới tháng 5 năm sau: đi sales cho các tasks theo năm học sau
         // nên report cũng tính là năm học sau.
         if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
             return `${thisYear}-${thisYear + 1}`
@@ -427,59 +467,59 @@ function CreateReportsForm(props) {
                                         autoSelect
                                         autoHighlight
                                         clearOnEscape
-                                        options={targets ? targets : []}
-                                        // getOptionLabel={(target) => target.schoolName}
-                                        getOptionLabel={(target) =>
-                                            target?.schoolName
-                                                ? `${target?.level} ${target?.schoolName}`
+                                        options={tasks ? tasks : []}
+                                        // getOptionLabel={(task) => task.schoolName}
+                                        getOptionLabel={(task) =>
+                                            task?.schoolName
+                                                ? `${task?.level} ${task?.schoolName}`
                                                 : ''
                                         }
-                                        value={target || defaultTarget}
-                                        // value={target || {}}
+                                        value={task || defaultTask}
+                                        // value={task || {}}
                                         renderInput={(params) => (
                                             <>
                                                 <TextField
                                                     {...params}
                                                     label={
-                                                        fields.schoolName.label
+                                                        fields.task.label
                                                     }
                                                     variant="outlined"
                                                     name={
-                                                        fields.schoolName.name
+                                                        fields.task.name
                                                     }
-                                                    // value={target}
+                                                    // value={task}
                                                     required
                                                     inputRef={register}
-                                                    error={!!errors.target}
+                                                    error={!!errors.task}
                                                     helperText={
-                                                        errors?.target?.message
+                                                        errors?.task?.message
                                                     }
                                                     className={
                                                         classes.autoComplete
                                                     }
                                                     onChange={
-                                                        onSearchTargetChange
+                                                        onSearchTaskChange
                                                     }
                                                 />
                                                 <input
                                                     type="hidden"
                                                     name={fields.level.name}
-                                                    value={target?.level}
+                                                    value={task?.level}
                                                 />
                                             </>
                                         )}
-                                        renderOption={(target) => {
+                                        renderOption={(task) => {
                                             return (
                                                 <div className={classes.item}>
                                                     <ListItemText
                                                         primary={
-                                                            target?.schoolName
-                                                                ? `${target?.level} ${target?.schoolName}`
+                                                            task?.schoolName
+                                                                ? `${task?.level} ${task?.schoolName}`
                                                                 : ''
                                                         }
                                                         secondary={
-                                                            target?.district
-                                                                ? target?.district
+                                                            task?.district
+                                                                ? task?.district
                                                                 : ''
                                                         }
                                                         classes={{
@@ -492,33 +532,53 @@ function CreateReportsForm(props) {
                                                 </div>
                                             )
                                         }}
-                                        onChange={(event, newTarget) =>
-                                            handleTargetChange(event, newTarget)
+                                        onChange={(event, newTask) =>
+                                            handleTaskChange(event, newTask)
                                         }
                                     />
                                     <input
                                         type="hidden"
                                         name={fields.id.name}
-                                        value={target?.id}
+                                        value={task?.id}
                                     />
                                 </Grid>
 
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <TextField
-                                        label={fields.result.label}
-                                        name={fields.result.name}
-                                        className=""
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        value={formValue.result || ''}
-                                        onChange={(e, key) =>
-                                            handleFormChange(e, RESULT)
-                                        }
-                                        inputRef={register}
-                                        error={!!errors.result}
-                                        helperText={errors?.result?.message}
-                                    />
+                                    <FormControl variant="outlined" fullWidth required>
+                                        <InputLabel id="isSuccess-label">{fields.isSuccess.label}</InputLabel>
+                                        <Select
+                                            labelId="isSuccess-label"
+                                            label={fields.isSuccess.label}
+                                            value={formValue.isSuccess || false}
+                                            onChange={(e, key) => handleFormChange(e, IS_SUCCESS)}
+                                            MenuProps={MenuProps}
+                                        // fullWidth
+                                        // inputRef={register}
+                                        // error={!!errors.isSuccess}
+                                        // helperText={errors?.isSuccess?.message}
+                                        >
+                                            <MenuItem
+                                                value={true}
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Đã gặp người đại diện (HT/HP)
+                                            </MenuItem>
+                                            <MenuItem
+                                                value={false}
+                                                className={styles.option}
+                                                classes={{
+                                                    root: styles.menuItemRoot,
+                                                    selected: styles.menuItemSelected,
+                                                }}
+                                            >
+                                                Chưa gặp người đại diện (HT/HP)
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
 
                                 <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -680,7 +740,7 @@ function CreateReportsForm(props) {
                                                 {listReports.map(
                                                     (row, index) => (
                                                         <TableRow
-                                                            key={row.targetId}
+                                                            key={row.taskId}
                                                             className={
                                                                 classes.tBodyRow
                                                             }
@@ -721,31 +781,16 @@ function CreateReportsForm(props) {
                                                                 className={
                                                                     classes.tBodyCell
                                                                 }
-                                                                onClick={(
-                                                                    e,
-                                                                    data
-                                                                ) =>
+                                                                onClick={(e, data) =>
                                                                     handleShowClickedRow(
-                                                                        e,
-                                                                        row
-                                                                    )
+                                                                        e, row)
                                                                 }
                                                             >
-                                                                {row.result}
+                                                                {row?.isSuccess ? 'Đã gặp người đại diện (HT/HP)' : 'Chưa gặp người đại diện (HT/HP)'}
                                                             </TableCell>
                                                             <TableCell
-                                                                className={
-                                                                    classes.tBodyCell
-                                                                }
-                                                                onClick={(
-                                                                    e,
-                                                                    data
-                                                                ) =>
-                                                                    handleShowClickedRow(
-                                                                        e,
-                                                                        row
-                                                                    )
-                                                                }
+                                                                className={classes.tBodyCell}
+                                                                onClick={(e, data) => handleShowClickedRow(e, row)}
                                                             >
                                                                 {truncateString(
                                                                     row.description
@@ -763,7 +808,7 @@ function CreateReportsForm(props) {
                                                                         id
                                                                     ) =>
                                                                         removeReport(
-                                                                            row.targetId
+                                                                            row.taskId
                                                                         )
                                                                     }
                                                                 >

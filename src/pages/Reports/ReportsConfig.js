@@ -1,9 +1,9 @@
 export const columns = [
     { key: 'no', name: 'No', sortable: false },
     { key: 'date', name: 'Date', sortable: true },
-    { key: 'targetSchool.school.name', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
-    { key: 'targetSchool.user.fullName', name: 'PIC', sortable: true },
-    { key: 'targetSchool.targetPurpose.name', name: 'Purpose', sortable: true }, // Purpose - primary
+    { key: 'task.school.name', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
+    { key: 'task.user.fullName', name: 'PIC', sortable: true },
+    { key: 'task.purpose.name', name: 'Purpose', sortable: true }, // Purpose - primary
     { key: 'result', name: 'Result', sortable: true },
     { key: 'description', name: 'Description', sortable: true }, // truncate 30 kí tự thôi
     // { key: "comment", name: 'Comment', sortable: false }, // truncate 30 kí tự thôi

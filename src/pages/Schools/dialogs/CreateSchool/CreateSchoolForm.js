@@ -147,7 +147,7 @@ function CreateSchoolForm(props) {
         formState,
         reset,
         watch,
-        register
+        // register
     } = useForm({
         mode: 'onBlur',
         resolver: yupResolver(clientSchema),
@@ -191,7 +191,7 @@ function CreateSchoolForm(props) {
         }
     }
 
-    // Sao ko in đc lỗi của tr.hợp này ta???
+    // Sao ko in đc lỗi của tr.hợp này ta???    => Bị errorMessage của validateAddress đè mất rồi còn đâu
     // const hasAddress = (address) => {
     //     // setAddressErr('')
     //     console.log('hasAddress?   address: ', address);
@@ -247,12 +247,12 @@ function CreateSchoolForm(props) {
                             state: { error: error.response.status },
                         })
                     }
+                    setNotify({
+                        isOpen: true,
+                        message: 'Create Unsuccessful',
+                        type: 'error',
+                    })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Create Unsuccessful',
-                    type: 'error',
-                })
             })
             alert(JSON.stringify(model))
         }
@@ -293,7 +293,7 @@ function CreateSchoolForm(props) {
                                         setLatitude={setLatitude}
                                         setLongitude={setLongitude}
                                         inputValue={value} setInputValue={onChange}
-                                        onBlur={validateAddress(value)}
+                                        onBlur={() => validateAddress(value)}
                                         errText={formState.isDirty ? addressErr : ''}
                                     />
                                     // <TextField

@@ -145,7 +145,7 @@ function Filters(props) {
     const bakSchEduLvls = schEduLvls ? schEduLvls : Milk.getMilk(milkNames.eduLvls)
     // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
 
-    //Use states which have been declared in the TargetSchoolContext
+    //Use states which have been declared in the SchoolContext
     const {
         params,
         dispatchParams,

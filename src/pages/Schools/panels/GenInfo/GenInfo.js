@@ -31,11 +31,11 @@ const clientSchema = yup.object().shape({
         .max(30, 'Name must be at most 30 characters')
         .required('Name is required'),
     // .matches(SCHOOL_NAME_RGX, 'Incorrect entry'),
-    // address: yup.string().trim().required('Address is required'),
+    address: yup.string().trim(),
     phone: yup
         .string()
         .max(11, 'Tel must be at most 11 digits and has the correct format')
-        .matches(TEL_RGX, 'Incorrect entry'),
+        .matches(TEL_RGX, { message: 'Telephone number is in wrong format (02xxxxxxxxx)', excludeEmptyString: true }),
 })
 
 const ITEM_HEIGHT = 120
@@ -85,9 +85,7 @@ function GenInfo(props) {
 
     const { dists, schEduLvls, schTypes } = useApp()   // , schScales
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
-    const bakSchEduLvls = schEduLvls
-        ? schEduLvls
-        : Milk.getMilk(milkNames.eduLvls)
+    const bakSchEduLvls = schEduLvls ? schEduLvls : Milk.getMilk(milkNames.eduLvls)
     const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
     // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
 
@@ -97,8 +95,10 @@ function GenInfo(props) {
     const [addressErr, setAddressErr] = useState('');
     const [isClicked, setIsClicked] = useState(false);
 
+    console.log('schoolId: ', school);
+
     const defaultValues = {
-        id: school?.id,
+        id: school?.schoolId,
         name: school?.name ? school?.name : '',
         address: school?.address ? school?.address : '',
         district: school?.district ? school?.district : bakDists[0],
@@ -121,98 +121,67 @@ function GenInfo(props) {
     })
 
     useEffect(() => {
-        reset({
-            id: school?.id,
-            name: school?.name ? school?.name : '',
-            address: school?.address ? school?.address : '',
-            district: school?.district ? school?.district : bakDists[0],
-            latitude: school?.latitude ? school?.latitude : latitude,
-            longitude: school?.longitude ? school?.longitude : longitude,
-
-            educationalLevel: school?.educationalLevel
-                ? school?.educationalLevel
-                : bakSchEduLvls[0],
-            // scale: school?.scale ? school?.scale : bakSchScales[0],
-            type: school?.type ? school?.type : bakSchTypes[0],
-            phone: school?.phone ? school?.phone : '',
-
-            active: school?.active,
-        })
+        reset(defaultValues)
     }, [school])
 
     if (!bakDists || !bakSchEduLvls || !bakSchTypes || !school) {
         return <Loading />
     }
 
-    // if (!bakSchEduLvls) {
-    //     return <Loading />
-    // }
-
-    // if (!bakSchTypes) {
-    //     return <Loading />
-    // }
-
-    // // if (!bakSchScales) {
-    // //     return <Loading />
-    // // }
-
-    // if (!school) {
-    //     return <Loading />
-    // }
-
     const validateAddress = (address) => {
         setAddressErr('')
-        if (address.includes('Thành phố Hồ Chí Minh')) {
-            if (address.includes('Quận')) {
-                const tmp1 = address.substring(address.lastIndexOf('Quận'))
-                district = tmp1.substring(0, tmp1.indexOf(', '))
-                setAddressErr('')
-            } else {    // Quận/Huyện tên chữ, ko có số
-                const tmp1 = address.substring(0, address.lastIndexOf(', Thành phố Hồ Chí Minh'))
-                const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
-                district = tmp2.substring(2)
-                setAddressErr('')
-                if (!district) {
-                    setAddressErr('Please input exactly address')
+        if (address) {
+            if (address.includes('Thành phố Hồ Chí Minh')) {
+                if (address.includes('Quận')) {
+                    const tmp1 = address.substring(address.lastIndexOf('Quận'))
+                    district = tmp1.substring(0, tmp1.indexOf(', '))
+                    setAddressErr('')
+                    return true
+                } else {    // Quận/Huyện tên chữ, ko có số
+                    const tmp1 = address.substring(0, address.lastIndexOf(', Thành phố Hồ Chí Minh'))
+                    // const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
+                    district = tmp1.substring(tmp1.lastIndexOf(', ') + 1).trim()
+                    // district = tmp2.substring(2)
+                    console.log('district nè: ', district);
+                    setAddressErr('')
+                    if (!district || district.includes('Hồ Chí Minh')) {
+                        setAddressErr('Please input exactly address')
+                        return false
+                    }
+                    return true
                 }
+            } else if (address) {
+                setAddressErr('Please choose address locates in Ho Chi Minh City')
+                return false
             }
-        } else if (address) {
-            setAddressErr('Please choose address locates in Ho Chi Minh City')
-        }
-    }
-
-    // Sao ko in đc lỗi của tr.hợp này ta???
-    const hasAddress = (address) => {
-        // setAddressErr('')
-        // console.log('hasAddress?   address: ', address);
-        if (!address) {
+        } else {
+            setLatitude(0.0)
+            setLongitude(0.0)
             setAddressErr('Address is required')
             return false
-        } else {
-            setAddressErr('')
-            return true
         }
     }
 
     const onSubmit = (data) => {
-        const model = {
-            ...data,
-            // description: school?.description,
-            district: district,
-            latitude: latitude,
-            longitude: longitude,
+        if (validateAddress(data?.address)) {
+            const model = {
+                ...data,
+                // description: school?.description,
+                district: district,
+                latitude: school?.latitude ? school?.latitude : latitude,
+                longitude: school?.longitude ? school?.longitude : longitude,
 
-            status: school?.status,
-            reprName: school?.reprName,
-            reprIsMale: school?.reprIsMale,
-            reprPhone: school?.reprPhone,
-            reprEmail: school?.reprEmail,
-        }
+                status: school?.status,
+                reprName: school?.reprName,
+                reprIsMale: school?.reprIsMale,
+                reprPhone: school?.reprPhone,
+                reprEmail: school?.reprEmail,
+            }
 
-        // console.log('data?.address: ', data?.address);
+            console.log('data?.address: ', data);
 
-        if (hasAddress(data.address)) {
             SchoolsServices.updateSchool(data.id, model).then((res) => {
+                console.log(res);
                 refreshPage(data.id)
                 setNotify({
                     isOpen: true,
@@ -226,16 +195,15 @@ function GenInfo(props) {
                         pathname: '/errors',
                         state: { error: error.response.status },
                     })
+                    setNotify({
+                        isOpen: true,
+                        message: 'Update Unsuccessful',
+                        type: 'error',
+                    })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Update Unsuccessful',
-                    type: 'error',
-                })
             })
+            alert(JSON.stringify(model))
         }
-
-        alert(JSON.stringify(model))
     }
 
     return (
@@ -321,7 +289,7 @@ function GenInfo(props) {
                                                                 validateAddress(value)
                                                                 setIsClicked(false)
                                                             }}
-                                                            errText={addressErr}
+                                                            errText={formState.isDirty ? addressErr : ''}
                                                         // error={!!errors.address}
                                                         // helperText={
                                                         //     errors?.address?.message

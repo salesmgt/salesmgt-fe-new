@@ -3,8 +3,8 @@ import {
     Dashboards,
     Account,
     Accounts,
-    Target,
-    Targets,
+    Task,
+    Tasks,
     WorkPlans,
     School,
     Schools,
@@ -14,7 +14,7 @@ import {
 import AccountProvider from '../pages/Accounts/hooks/AccountContext'
 import ReportProvider from '../pages/Reports/hooks/ReportContext'
 import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
-import TargetProvider from '../pages/Targets/hooks/TargetContext'
+import TaskProvider from '../pages/Tasks/hooks/TaskContext'
 
 export const defaultRoutes = {
     ADMIN: { route: '/apps/accounts' },
@@ -56,14 +56,14 @@ export const roleRoutes = {
         },
         { path: 'schools/:id', component: () => <School /> },
         {
-            path: 'targets',
+            path: 'tasks',
             component: () => (
-                <TargetProvider>
-                    <Targets />
-                </TargetProvider>
+                <TaskProvider>
+                    <Tasks />
+                </TaskProvider>
             ),
         },
-        { path: 'targets/:id', component: () => <Target /> },
+        { path: 'tasks/:id', component: () => <Task /> },
         {
             path: 'reports',
             component: () => (
@@ -87,14 +87,14 @@ export const roleRoutes = {
         },
         { path: 'schools/:id', component: () => <School /> },
         {
-            path: 'targets',
+            path: 'tasks',
             component: () => (
-                <TargetProvider>
-                    <Targets />
-                </TargetProvider>
+                <TaskProvider>
+                    <Tasks />
+                </TaskProvider>
             ),
         },
-        { path: 'targets/:id', component: () => <Target /> },
+        { path: 'tasks/:id', component: () => <Task /> },
         {
             path: 'reports',
             component: () => (
@@ -109,16 +109,16 @@ export const roleRoutes = {
     SALESMAN: [
         { path: 'dashboards', component: () => <Dashboards /> },
         {
-            path: 'targets',
+            path: 'tasks',
             component: () => (
-                <TargetProvider>
-                    <Targets />
-                </TargetProvider>
+                <TaskProvider>
+                    <Tasks />
+                </TaskProvider>
             ),
         },
         {
-            path: 'targets/:id',
-            component: () => <Target />,
+            path: 'tasks/:id',
+            component: () => <Task />,
         },
         {
             path: 'reports',

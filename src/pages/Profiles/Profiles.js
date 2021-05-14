@@ -68,7 +68,7 @@ const phoneSchema = yup.object().shape({
             10,
             'Phone number must be at most 10 digits and has the correct format'
         )
-        .matches(PHONE_RGX, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Phone number is in wrong format (03|5|7|9xxxxxxxx)'),
 })
 
 const addrSchema = yup.object().shape({

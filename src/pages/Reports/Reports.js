@@ -11,8 +11,8 @@ function Reports() {
     const history = useHistory()
     const location = useLocation()
 
-    const [targetId, setTargetId] = useState(
-        location?.state?.targetId ? location?.state?.targetId : 0
+    const [taskId, setTaskId] = useState(
+        location?.state?.taskId ? location?.state?.taskId : 0
     )
     // const schoolName = location?.state?.schoolName ? location?.state?.schoolName : ''
     // const PIC = location?.state?.PIC ? location?.state?.PIC : null
@@ -31,7 +31,7 @@ function Reports() {
         direction = 'desc',
         searchKey,
         listFilters,
-        targetId
+        taskId
     ) => {
         ReportsServices.getReports(
             page,
@@ -40,7 +40,7 @@ function Reports() {
             direction,
             searchKey,
             listFilters,
-            targetId
+            taskId
         )
             .then((res) => {
                 setData(res)
@@ -58,10 +58,10 @@ function Reports() {
     }
 
     useEffect(() => {
-        getAllReports(page, limit, column, direction, searchKey, listFilters, targetId)
+        getAllReports(page, limit, column, direction, searchKey, listFilters, taskId)
 
         // return () => setData(null)
-    }, [params, targetId])  // Coi lại chỗ này nữa
+    }, [params, taskId])  // Coi lại chỗ này nữa, click lại Sidebar thì ko thấy load lại từ đầu
 
     if (!data) {
         return <Loading />
@@ -69,7 +69,7 @@ function Reports() {
 
     return (
         <div className={classes.panel}>
-            <Filters setTargetId={setTargetId} refreshAPI={getAllReports} />
+            <Filters setTaskId={setTaskId} refreshAPI={getAllReports} />
             <Tables
                 columns={columns}
                 rows={data.list}

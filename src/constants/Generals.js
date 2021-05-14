@@ -16,11 +16,24 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
+export const taskStatusNames = {
+    ongoing: 'Ongoing',
+    success: 'Successful',
+    failed: 'Failed',
+}
+
 export const serviceNames = {
     svc1: 'ESL',
     svc2: 'SEL',
     svc3: 'Toán khoa',
     svc4: 'Stem',
+}
+
+export const serviceStatusNames = {
+    // notStart: '',    // chỉ cần null là đc rồi chứ nhỉ? khỏi cần 1 status riêng cho nó
+    pending: 'Pending',
+    approved: 'Approved',
+    rejected: 'Rejected',
 }
 
 export const purposeNames = {

@@ -42,7 +42,7 @@ export const Consts = {
             title: 'Account Active *',
         },
         roles: {
-            title: 'Roles *',
+            title: 'Roles',
         },
     },
 }

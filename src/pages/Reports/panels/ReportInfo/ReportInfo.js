@@ -16,7 +16,7 @@ import * as ReportsServices from '../../ReportsServices'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import {useApp} from '../../../../hooks/AppContext'
+import { useApp } from '../../../../hooks/AppContext'
 import classes from './ReportInfo.module.scss'
 import moment from 'moment'
 
@@ -52,7 +52,7 @@ function RepInfo(props) {
     const styles = useStyles()
 
     const { user } = useAuth()
-    const {userInfo} = useApp()
+    const { userInfo } = useApp()
 
     const history = useHistory()
 
@@ -133,7 +133,7 @@ function RepInfo(props) {
             // reprName: report?.reprName,
             // reprIsMale: report?.reprIsMale,
 
-            // targetId: report?.targetId,
+            // taskId: report?.taskId,
             // schoolYear: report?.schoolYear,
             // purpose: report?.schoolYear,
 
@@ -168,7 +168,7 @@ function RepInfo(props) {
 
         // alert(JSON.stringify(model))
     }
-    
+
     const createNotify = (value) => {
         new Promise((resolve, reject) => {
             const noti = FirebaseApp
@@ -183,8 +183,8 @@ function RepInfo(props) {
                     // content: `${user.fullName} has just commented on your report.`,
                     uid: value.id,
                     isSeen: false
-                }) 
-            }
+                })
+        }
         )
     }
 
@@ -236,8 +236,8 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     {user.username === report?.username &&
-                    report?.commentedPerson === null &&
-                    report?.contextComments === null ? (
+                        report?.commentedPerson === null &&
+                        report?.contextComments === null ? (
                         <form onSubmit={rpSubmit(onRpSubmit)} noValidate>
                             {/* Report Detail */}
                             <Grid
@@ -722,8 +722,8 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     {user.roles[0] === roleNames.salesman ||
-                    (user.roles[0] !== roleNames.salesman &&
-                        user.username === report?.username) ? (
+                        (user.roles[0] !== roleNames.salesman &&
+                            user.username === report?.username) ? (
                         <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
                                 item
@@ -860,7 +860,7 @@ function RepInfo(props) {
                                                             report?.commentedPerson
                                                                 ? `${fields.cmt.hasCmt} ${report?.commentedPerson}`
                                                                 : fields.cmt
-                                                                      .noCmt
+                                                                    .noCmt
                                                         }
                                                         variant="outlined"
                                                         fullWidth

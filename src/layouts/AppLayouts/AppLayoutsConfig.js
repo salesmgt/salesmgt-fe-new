@@ -26,8 +26,8 @@ const menuItems = [
         icon: <MdGroup />,
     },
     {
-        title: 'Targets',
-        path: 'targets',
+        title: 'Tasks',
+        path: 'tasks',
         icon: <ImTarget />,
     },
     {
@@ -51,7 +51,7 @@ export function getMenuItems(role) {
     const [
         dashboards,
         accounts,
-        targets,
+        tasks,
         workPlans,
         schools,
         reports,
@@ -60,11 +60,11 @@ export function getMenuItems(role) {
         case roleNames.admin:
             return [accounts, schools]
         case roleNames.manager:
-            return [dashboards, schools, targets, reports, workPlans]
+            return [dashboards, schools, tasks, reports, workPlans]
         case roleNames.supervisor:
-            return [dashboards, schools, targets, reports, workPlans]
+            return [dashboards, schools, tasks, reports, workPlans]
         case roleNames.salesman:
-            return [dashboards, targets, reports, workPlans]
+            return [dashboards, tasks, reports, workPlans]
         default:
             break
     }

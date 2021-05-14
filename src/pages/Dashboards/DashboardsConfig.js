@@ -5,7 +5,7 @@ import { GiProfit } from 'react-icons/gi'
 
 export const cardData = {
     manager: {
-        targetLeadSum: {
+        taskLeadSum: {
             // ranges: [2016, 2017, 2018, 2019, 2020, 2021],
             // datasets: {
             //     2016: [{ leads: 25 }],
@@ -56,7 +56,7 @@ export const cardData = {
         },
     },
     salesman: {
-        targetLeadSum: {
+        taskLeadSum: {
             ranges: [2021],
             datasets: {
                 2021: [{ leads: 29 }],

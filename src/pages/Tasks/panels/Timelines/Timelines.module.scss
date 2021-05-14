@@ -1,0 +1,160 @@
+@import '../../../../styles/Variables.module.scss';
+
+.panel {
+    height: auto;
+    .content {
+        padding: 0.75rem;
+        .wrapper {
+            padding: 0.75rem;
+            border: 1px solid $divider;
+            border-radius: $default-radius;
+        }
+        .row {
+            padding: 0.5rem;
+        }
+        .header {
+            text-transform: uppercase;
+        }
+    }
+}
+
+.primaryTail {
+    background-color: $main-primary !important;
+}
+.secondaryTail {
+    background-color: $main-secondary !important
+}
+.ternaryTail {
+    background-color: $comfort !important
+}
+.ternary {
+    background-color: $comfort !important
+}
+
+.tlnOpsContent {
+    padding-top: 0.2rem;
+}
+
+.linkCard {
+  text-decoration: none;
+  &:link {
+    color: $common-black;
+  }
+}
+
+.tlnContent {
+    padding: 0.5rem 1rem 0.5rem 0.7rem;
+    margin-bottom: 0.5rem;
+    border-radius: $default-radius;
+    box-shadow: 0 4px 6px -6px $common-black;
+    background-color: $grey-100;
+
+    .picZone {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 0;
+      padding: 0 0 0.3rem;
+    }
+}
+.tlnContentChild {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.1rem 0 0.1rem;
+}
+// .tlnContent1 {
+//     @extend .tlnContent;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+// }
+.tlnContentSuccess {
+    @extend .tlnContent;
+    border-left: solid 5px $main-success;
+}
+.tlnContentFailed {
+    @extend .tlnContent;
+    border-left: solid 5px $main-error;
+}
+
+/*==================Task purpose chip==================*/
+.chip {
+  justify-self: flex-end;
+  align-self: flex-start;
+  margin-left: 0.5rem;
+}
+.chipInactive {
+  color: $grey-400;
+  font-style: italic;
+  text-decoration: line-through $grey-400;
+  opacity: 0.2 !important;
+}
+.chipSalesMoi {
+  @extend .chip;
+  background-color: $clarity !important;
+  color: $common-white !important;
+}
+.chipSalesMoiInactive {
+  @extend .chipSalesMoi;
+  @extend .chipInactive;
+}
+.chipTheoDoi {
+  @extend .chip;
+  background-color: $energy !important;
+  color: $common-white !important;
+}
+.chipTheoDoiInactive {
+  @extend .chipTheoDoi;
+  @extend .chipInactive;
+}
+// .chipTiemNang {
+//   @extend .chip;
+//   background-color: $trust !important;
+//   color: $common-white !important;
+// }
+// .chipTiemNangInactive {
+//   @extend .chipTiemNang;
+//   @extend .chipInactive;
+// }
+.chipChamSoc {
+  @extend .chip;
+  background-color: $compassion !important;
+  color: $common-white !important;
+}
+.chipChamSocInactive {
+  @extend .chipChamSoc;
+  @extend .chipInactive;
+}
+.chipTaiKy {
+  @extend .chip;
+  background-color: $memory !important;
+  color: $common-white !important;
+}
+.chipTaiKyInactive {
+  @extend .chipTaiKy;
+  @extend .chipInactive;
+}
+.chipKyMoi {
+  @extend .chip;
+  background-color: $creative !important;
+  color: $common-white !important;
+}
+.chipKyMoiInactive {
+  @extend .chipKyMoi;
+  @extend .chipInactive;
+}
+
+/*==================Task status chip==================*/
+.chipOnGoing {
+  background-color: $dark-info !important;
+  color: $common-white !important;
+}
+.chipSuccess {
+  background-color: $main-success !important;
+  color: $common-white !important;
+}
+.chipFailed {
+  background-color: $dark-error !important;
+  color: $common-white !important;
+}

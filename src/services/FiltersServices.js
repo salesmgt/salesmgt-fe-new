@@ -1,7 +1,6 @@
 import Api from './Api'
 import queryString from 'query-string'
 
-//===========Schools & Target Schools===========
 export async function getSchoolYears() {
     const response = await Api.get('/school-years')
     const data = await response.data

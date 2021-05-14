@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
-import { GenInfo, RepInfo, TimelineInfo } from './panels'
+import { GenInfo, RepInfo, Timelines } from './panels'
 // import { useAuth } from '../../hooks/AuthContext'
 // import { roleNames, statusNames } from '../../constants/Generals'
 import * as SchoolsServices from './SchoolsServices'
@@ -96,15 +96,15 @@ function School() {
                 handleChangeTab={handleChangeTab}
             >
                 {tabValue === 0 && (
-                    <GenInfo school={school} />
+                    <GenInfo school={school} refreshPage={refreshPage} />
                 )}
 
                 {tabValue === 1 && (
-                    <RepInfo school={school} />
+                    <RepInfo school={school} refreshPage={refreshPage} />
                 )}
 
                 {tabValue === 2 && (
-                    <TimelineInfo />
+                    <Timelines />
                 )}
             </DetailLayouts>
             {/* )} */}

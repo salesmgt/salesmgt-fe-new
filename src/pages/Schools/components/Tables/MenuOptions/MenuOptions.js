@@ -26,7 +26,7 @@ function MenuOptions(props) {
     const stateData = {
         model: data,
         params: params,
-        pathName: `${url}/${data.name}`,
+        // pathName: `${url}/${data.name}`,
     }
 
     const handleOpen = (event) => {
@@ -52,7 +52,7 @@ function MenuOptions(props) {
                     onClick={handleCloseMenus}
                     component={Link}
                     to={{
-                        pathname: `${url}/${data.id}`,
+                        pathname: `${url}/${data.schoolId}`,
                         state: { data: stateData },
                     }}
                 >
