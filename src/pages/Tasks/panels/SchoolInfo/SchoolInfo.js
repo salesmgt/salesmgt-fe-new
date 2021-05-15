@@ -34,7 +34,7 @@ const reprSchema = yup.object().shape({
     reprName: yup
         .string()
         .trim()
-        .min(4, 'Name must be at least 4 characters')
+        .min(4, 'Full name must be at least 4 characters')
         .max(30, 'Name must be at most 30 characters'),
     reprPhone: yup
         .string()
@@ -156,13 +156,13 @@ function SchoolInfo(props) {
         })
     }, [task])
 
-    if (!schStatus) {
+    if (!schStatus || !task) {
         return <Loading />
     }
 
-    if (!task) {
-        return <Loading />
-    }
+    // if (!task) {
+    //     return <Loading />
+    // }
 
     const onReprSubmit = (data) => {
         const model = {
@@ -176,7 +176,6 @@ function SchoolInfo(props) {
 
         TasksServices.updatePrinciple(task?.schoolId, model)
             .then((res) => {
-                console.log(res)
                 refreshPage(task?.id)
                 setNotify({
                     isOpen: true,
@@ -507,23 +506,9 @@ function SchoolInfo(props) {
         <div className={classes.panel}>
             <Grid container spacing={0} className={classes.body}>
                 {/* School detail Sector */}
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    className={classes.content}
-                >
+                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                     <Grid container spacing={0} className={classes.wrapper}>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                             <Typography
                                 color="inherit"
                                 className={classes.header}
@@ -532,27 +517,9 @@ function SchoolInfo(props) {
                             </Typography>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                            <Grid container spacing={0} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -560,42 +527,17 @@ function SchoolInfo(props) {
                                         {fields.name.title}
                                     </Typography>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={7}
-                                    lg={5}
-                                    className={classes.rowx}
-                                >
+                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                     <Typography color="inherit">
-                                        {task?.schoolName}
+                                        {task?.level} {task?.schoolName}
                                     </Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                            <Grid container spacing={0} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -603,14 +545,7 @@ function SchoolInfo(props) {
                                         {fields.addr.title}
                                     </Typography>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={7}
-                                    lg={5}
-                                    className={classes.rowx}
-                                >
+                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.schoolAddress}
                                     </Typography>
@@ -618,27 +553,9 @@ function SchoolInfo(props) {
                             </Grid>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                            <Grid container spacing={0} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -646,14 +563,7 @@ function SchoolInfo(props) {
                                         {fields.dist.title}
                                     </Typography>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={7}
-                                    lg={5}
-                                    className={classes.rowx}
-                                >
+                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.district}
                                     </Typography>
@@ -661,70 +571,9 @@ function SchoolInfo(props) {
                             </Grid>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
-                                    <Typography
-                                        color="inherit"
-                                        className={classes.title}
-                                    >
-                                        {fields.eduLvl.title}
-                                    </Typography>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={7}
-                                    lg={5}
-                                    className={classes.rowx}
-                                >
-                                    <Typography color="inherit">
-                                        {task?.level}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                            <Grid container spacing={0} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -732,14 +581,7 @@ function SchoolInfo(props) {
                                         {fields.type.title}
                                     </Typography>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={7}
-                                    lg={5}
-                                    className={classes.rowx}
-                                >
+                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.schoolType}
                                     </Typography>
@@ -764,11 +606,11 @@ function SchoolInfo(props) {
                     </Grid>
                 </Grid>
 
-                {/* Principal detail Sector */}
-                {task?.schoolStatus !== statusNames.pending ? (
-                    user.roles[0] !== roleNames.salesman ||
-                        (user.roles[0] === roleNames.salesman &&
-                            user.username !== task?.username) ? (
+                {/* School status Sector */}
+                {user.roles[0] !== roleNames.salesman ||
+                    (user.roles[0] === roleNames.salesman &&
+                        user.username === task?.username) ? (
+                    <>
                         <Grid
                             item
                             xs={12}
@@ -777,19 +619,157 @@ function SchoolInfo(props) {
                             lg={12}
                             className={classes.content}
                         >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.wrapper}
+                            <form noValidate
+                            // onSubmit={handleSubmit(onSubmit)}
                             >
                                 <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.row}
+                                    container
+                                    spacing={0}
+                                    className={classes.wrapper}
                                 >
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={4}
+                                        lg={3}
+                                        className={classes.row}
+                                    >
+                                        <Typography
+                                            color="inherit"
+                                            className={classes.header}
+                                        >
+                                            {headers.child2}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12} sm={12} md={7} lg={5}
+                                        className={classes.statusCbZone}
+                                    >
+                                        <Controller
+                                            name="schoolStatus"
+                                            control={statusControl}
+                                            render={({ value, onChange }) => (
+                                                <Select
+                                                    value={value}
+                                                    onChange={(e) => {
+                                                        setStatus(
+                                                            'schoolStatus',
+                                                            e.target.value
+                                                        )
+                                                        statusSubmit(
+                                                            onStatusSubmit
+                                                        )()
+                                                    }}
+                                                    MenuProps={MenuProps}
+                                                    disableUnderline
+                                                >
+                                                    {bakSchStatus.map(
+                                                        (data) => (
+                                                            <MenuItem
+                                                                key={data}
+                                                                value={data}
+                                                                classes={{
+                                                                    root:
+                                                                        styles.menuItemRoot,
+                                                                    selected:
+                                                                        styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                {data}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Select>
+                                            )}
+                                        />
+                                    </Grid>
+                                    {/* Action */}
+                                    {/* <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    className={classes.action}
+                >
+                    <Button
+                        className={classes.submit}
+                        variant="contained"
+                        // disabled={!cmtState.isDirty}
+                        type="submit"
+                    >
+                        {operations.save}
+                    </Button>
+                </Grid> */}
+                                    {/* End Action */}
+                                    {/* </Grid>
+            </Grid> */}
+                                </Grid>
+                            </form>
+                        </Grid>
+                        <UpdateSchStatus
+                            open={open}
+                            onClose={() => {
+                                resetStatus()
+                                setOpen(false)
+                            }}
+                            resetStatus={resetStatus}
+                            task={task}
+                            currStatus={currStatus}
+                            refreshPage={refreshPage}
+                        />
+                    </>
+                ) : (
+                    <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        className={classes.content}
+                    >
+                        <Grid container spacing={0} className={classes.wrapper}>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={4}
+                                lg={3}
+                                className={classes.row}
+                            >
+                                <Typography
+                                    color="inherit"
+                                    className={classes.header}
+                                >
+                                    {headers.child2}
+                                </Typography>
+                            </Grid>
+
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={7}
+                                lg={5}
+                                className={classes.statusTxtZone}
+                            >
+                                <Typography color="inherit">
+                                    {task?.schoolStatus}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                )}
+
+                {/* Principal detail Sector */}
+                {task?.schoolStatus !== statusNames.pending ? (
+                    user.roles[0] !== roleNames.salesman ||
+                        (user.roles[0] === roleNames.salesman &&
+                            user.username !== task?.username) ? (
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
+                            <Grid container spacing={0} className={classes.wrapper}>
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                     <Typography
                                         color="inherit"
                                         className={classes.header}
@@ -798,27 +778,9 @@ function SchoolInfo(props) {
                                     </Typography>
                                 </Grid>
 
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.row}
-                                >
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        className={classes.rowx}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={4}
-                                            lg={3}
-                                            className={classes.rowx}
-                                        >
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid container spacing={0} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                             <Typography
                                                 color="inherit"
                                                 className={classes.title}
@@ -826,115 +788,19 @@ function SchoolInfo(props) {
                                                 {fields.reprName.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={7}
-                                            lg={5}
-                                            className={classes.rowx}
-                                        >
+                                        <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                             <Typography color="inherit">
                                                 {task?.reprName
-                                                    ? task?.reprName
+                                                    ? (`${task?.reprIsMale ? 'Mr. ' : 'Ms. '} ${task?.reprName}`)
                                                     : fields.empty.title}
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>
 
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.row}
-                                >
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        className={classes.rowx}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={4}
-                                            lg={3}
-                                            className={classes.rowx}
-                                        >
-                                            <Typography
-                                                color="inherit"
-                                                className={classes.title}
-                                            >
-                                                {fields.reprIsMale.title}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={7}
-                                            lg={5}
-                                            className={classes.rowx}
-                                        >
-                                            {task?.reprName ? (
-                                                <div
-                                                    className={
-                                                        classes.genderZone
-                                                    }
-                                                >
-                                                    <Typography
-                                                        color="inherit"
-                                                        className={
-                                                            classes.gender
-                                                        }
-                                                    >
-                                                        {task?.reprIsMale
-                                                            ? fields.reprIsMale
-                                                                .male.lb
-                                                            : fields.reprIsMale
-                                                                .female.lb}
-                                                    </Typography>
-                                                    <Icon>
-                                                        {task?.reprIsMale ? (
-                                                            <AiOutlineMan color="#005BB5" />
-                                                        ) : (
-                                                            <AiOutlineWoman color="#E26A89" />
-                                                        )}
-                                                    </Icon>
-                                                </div>
-                                            ) : (
-                                                <Typography color="inherit">
-                                                    {fields.empty.title}
-                                                </Typography>
-                                            )}
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.row}
-                                >
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        className={classes.rowx}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={4}
-                                            lg={3}
-                                            className={classes.rowx}
-                                        >
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid container spacing={0} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                             <Typography
                                                 color="inherit"
                                                 className={classes.title}
@@ -942,14 +808,7 @@ function SchoolInfo(props) {
                                                 {fields.reprPhone.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={7}
-                                            lg={5}
-                                            className={classes.rowx}
-                                        >
+                                        <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                             <Typography color="inherit">
                                                 {task?.reprPhone
                                                     ? task?.reprPhone
@@ -959,27 +818,9 @@ function SchoolInfo(props) {
                                     </Grid>
                                 </Grid>
 
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.row}
-                                >
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        className={classes.rowx}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={4}
-                                            lg={3}
-                                            className={classes.rowx}
-                                        >
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid container spacing={0} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
                                             <Typography
                                                 color="inherit"
                                                 className={classes.title}
@@ -987,14 +828,7 @@ function SchoolInfo(props) {
                                                 {fields.reprEmail.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={7}
-                                            lg={5}
-                                            className={classes.rowx}
-                                        >
+                                        <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
                                             <Typography color="inherit">
                                                 {task?.reprEmail
                                                     ? task?.reprEmail
@@ -1162,7 +996,7 @@ function SchoolInfo(props) {
                                                             }
                                                             variant="outlined"
                                                             // required
-                                                            fullWidth
+                                                            // fullWidth
                                                             value={value}
                                                             onChange={onChange}
                                                             error={
@@ -1306,74 +1140,9 @@ function SchoolInfo(props) {
                                     >
                                         <Typography color="inherit">
                                             {task?.reprName
-                                                ? task?.reprName
+                                                ? (`${task?.reprIsMale ? 'Mr. ' : 'Ms. '} ${task?.reprName}`)
                                                 : fields.empty.title}
                                         </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={12}
-                                lg={12}
-                                className={classes.row}
-                            >
-                                <Grid
-                                    container
-                                    spacing={0}
-                                    className={classes.rowx}
-                                >
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={4}
-                                        lg={3}
-                                        className={classes.rowx}
-                                    >
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.title}
-                                        >
-                                            {fields.reprIsMale.title}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.rowx}
-                                    >
-                                        {task?.reprName ? (
-                                            <div className={classes.genderZone}>
-                                                <Typography
-                                                    color="inherit"
-                                                    className={classes.gender}
-                                                >
-                                                    {task?.reprIsMale
-                                                        ? fields.reprIsMale.male
-                                                            .lb
-                                                        : fields.reprIsMale
-                                                            .female.lb}
-                                                </Typography>
-                                                <Icon>
-                                                    {task?.reprIsMale ? (
-                                                        <AiOutlineMan color="#005BB5" />
-                                                    ) : (
-                                                        <AiOutlineWoman color="#E26A89" />
-                                                    )}
-                                                </Icon>
-                                            </div>
-                                        ) : (
-                                            <Typography color="inherit">
-                                                {fields.empty.title}
-                                            </Typography>
-                                        )}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -1452,162 +1221,6 @@ function SchoolInfo(props) {
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                )}
-
-                {/* School status Sector */}
-                {user.roles[0] !== roleNames.salesman ||
-                    (user.roles[0] === roleNames.salesman &&
-                        user.username === task?.username) ? (
-                    <>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.content}
-                        >
-                            <form noValidate
-                            // onSubmit={handleSubmit(onSubmit)}
-                            >
-                                <Grid
-                                    container
-                                    spacing={0}
-                                    className={classes.wrapper}
-                                >
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={4}
-                                        lg={3}
-                                        className={classes.row}
-                                    >
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.header}
-                                        >
-                                            {headers.child2}
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={12} md={7} lg={5}
-                                        className={classes.statusCbZone}
-                                    >
-                                        <Controller
-                                            name="schoolStatus"
-                                            control={statusControl}
-                                            render={({ value, onChange }) => (
-                                                <Select
-                                                    value={value}
-                                                    onChange={(e) => {
-                                                        setStatus(
-                                                            'schoolStatus',
-                                                            e.target.value
-                                                        )
-                                                        statusSubmit(
-                                                            onStatusSubmit
-                                                        )()
-                                                    }}
-                                                    MenuProps={MenuProps}
-                                                    disableUnderline
-                                                >
-                                                    {bakSchStatus.map(
-                                                        (data) => (
-                                                            <MenuItem
-                                                                key={data}
-                                                                value={data}
-                                                                classes={{
-                                                                    root:
-                                                                        styles.menuItemRoot,
-                                                                    selected:
-                                                                        styles.menuItemSelected,
-                                                                }}
-                                                            >
-                                                                {data}
-                                                            </MenuItem>
-                                                        )
-                                                    )}
-                                                </Select>
-                                            )}
-                                        />
-                                    </Grid>
-                                    {/* Action */}
-                                    {/* <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.action}
-                                >
-                                    <Button
-                                        className={classes.submit}
-                                        variant="contained"
-                                        // disabled={!cmtState.isDirty}
-                                        type="submit"
-                                    >
-                                        {operations.save}
-                                    </Button>
-                                </Grid> */}
-                                    {/* End Action */}
-                                    {/* </Grid>
-                            </Grid> */}
-                                </Grid>
-                            </form>
-                        </Grid>
-                        <UpdateSchStatus
-                            open={open}
-                            onClose={() => {
-                                resetStatus()
-                                setOpen(false)
-                            }}
-                            resetStatus={resetStatus}
-                            task={task}
-                            currStatus={currStatus}
-                            refreshPage={refreshPage}
-                        />
-                    </>
-                ) : (
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                        className={classes.content}
-                    >
-                        <Grid container spacing={0} className={classes.wrapper}>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={4}
-                                lg={3}
-                                className={classes.row}
-                            >
-                                <Typography
-                                    color="inherit"
-                                    className={classes.header}
-                                >
-                                    {headers.child2}
-                                </Typography>
-                            </Grid>
-
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={7}
-                                lg={5}
-                                className={classes.statusTxtZone}
-                            >
-                                <Typography color="inherit">
-                                    {task?.schoolStatus}
-                                </Typography>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -136,3 +136,12 @@
   @extend .chipKyMoi;
   @extend .chipInactive;
 }
+
+.rsSuccess {
+  color: $main-success;
+  margin-left: 0.5rem;
+}
+.rsFailed {
+  color: $dark-error;
+  margin-left: 0.5rem;
+}

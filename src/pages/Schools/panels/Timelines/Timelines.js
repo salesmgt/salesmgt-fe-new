@@ -39,7 +39,7 @@ function Timelines() {
         getTimeline(schoolId).then(res => {
             if (isMounted) {
                 setTimeline(res)
-                // console.log('SchoolDetail - getTimeline: ', res);
+                console.log('SchoolDetail - getTimeline: ', res);
             }
         }).catch((error) => {
             if (error.response) {
@@ -123,13 +123,8 @@ function Timelines() {
                                             <TimelineOppositeContent>
                                                 <div className={classes.tlnOpsContent}>
                                                     <Typography variant="body1">
-                                                        {/* <strong>{item?.startDate}</strong> */}
-                                                        {/* {updateSchoolYear(item?.schoolYear)} */}
                                                         <strong>{item?.schoolYear}</strong>
                                                     </Typography>
-                                                    {/* <Typography variant="subtitle2" color="textSecondary">
-                                                        {labels.schoolYear} <em>{item?.schoolYear}</em>
-                                                    </Typography> */}
                                                 </div>
                                             </TimelineOppositeContent>
                                             <TimelineSeparator>
@@ -144,10 +139,11 @@ function Timelines() {
                                                         pathname: `${newUrl}/tasks/${item?.taskId}`,
                                                         state: { openTimeline: true } // chỗ này cần tính toán xíu vì có trang tabNo=3, có trang tabNo=2
                                                     }}
-                                                    // onClick={() => console.log(item.taskId)}
                                                     className={classes.linkCard}
                                                 >
-                                                    <div className={classes.tlnContent}>
+                                                    <div className={item?.result === null ? classes.tlnContent :
+                                                        (item?.result ? classes.tlnContentSuccess : classes.tlnContentFailed)}
+                                                    >
                                                         <div className={classes.tlnContentChild}>
                                                             <div className={classes.picZone}>
                                                                 <ListItemAvatar className={classes.picAvatar}>
@@ -166,11 +162,23 @@ function Timelines() {
                                                             </Typography>
                                                         </div> */}
                                                         {(item?.purpose === purposeNames.purp1 || item?.purpose === purposeNames.purp4 || item?.purpose === purposeNames.purp5) &&
-                                                            <div className={classes.tlnContentChild}>
-                                                                <Typography variant="subtitle2" color="textSecondary">
-                                                                    <b>{labels.services} </b>
-                                                                    {item?.services ? item?.services.join(', ') : '(none)'}
-                                                                </Typography>
+                                                            <div>
+                                                                <div className={classes.tlnContentChild}>
+                                                                    <Typography variant="subtitle2" color="textSecondary">
+                                                                        <b>{labels.result} </b>
+                                                                        {item?.result
+                                                                            ? <span className={classes.rsSuccess}>Successful</span>
+                                                                            : <span className={classes.rsFailed}>Failed</span>
+                                                                        }
+                                                                    </Typography>
+                                                                </div>
+                                                                <div className={classes.tlnContentChild}>
+                                                                    <Typography variant="subtitle2" color="textSecondary">
+                                                                        <b>{labels.services} </b>
+                                                                        {item?.services ? item?.services : '(none)'}
+                                                                        {/* {item?.services ? item?.services.join(', ') : '(none)'} */}
+                                                                    </Typography>
+                                                                </div>
                                                             </div>
                                                         }
                                                     </div>

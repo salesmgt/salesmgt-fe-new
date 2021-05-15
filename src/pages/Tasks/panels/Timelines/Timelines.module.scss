@@ -145,16 +145,28 @@
   @extend .chipInactive;
 }
 
-/*==================Task status chip==================*/
+/*==================Task's status (& Report's result) chip==================*/
 .chipOnGoing {
   background-color: $dark-info !important;
   color: $common-white !important;
+  margin-left: 0.5rem;
 }
 .chipSuccess {
   background-color: $main-success !important;
   color: $common-white !important;
+  margin-left: 0.5rem;
 }
 .chipFailed {
   background-color: $dark-error !important;
   color: $common-white !important;
+  margin-left: 0.5rem;
+}
+
+.rpDaGap {
+  color: $main-success;
+  margin-left: 0.5rem;
+}
+.rpChuaGap {
+  color: $dark-error;
+  margin-left: 0.5rem;
 }

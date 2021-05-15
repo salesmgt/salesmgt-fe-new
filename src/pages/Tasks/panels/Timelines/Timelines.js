@@ -44,7 +44,7 @@ function Timelines(props) {
         getTimeline(taskId).then(res => {
             if (isMounted) {
                 setTimeline(res)
-                console.log('TaskDetail - getTimeline: ', res);
+                // console.log('TaskDetail - getTimeline: ', res);
             }
         }).catch((error) => {
             if (error.response) {
@@ -94,6 +94,14 @@ function Timelines(props) {
         }
     }
 
+    const setResultChipColor = (result) => {
+        if (result === true) {
+            return <Chip label='Đã gặp HT/HP' className={classes.chipSuccess} />
+        } else if (result === false) {
+            return <Chip label='Chưa gặp HT/HP' className={classes.chipFailed} />
+        }
+    }
+
     // console.log('timeline: ', timeline);
 
     return (
@@ -117,7 +125,7 @@ function Timelines(props) {
                                             <TimelineOppositeContent>
                                                 <div className={classes.tlnOpsContent}>
                                                     <Typography variant="body1">
-                                                        <strong>{parseDateToString(task?.assignDate, 'DD/MM/yyyy')}</strong>
+                                                        <strong>{parseDateToString(task?.assignDate, 'DD-MM-yyyy')}</strong>
                                                     </Typography>
                                                     <Typography variant="subtitle2" color="textSecondary">
                                                         {labels.schoolYear} <em>{task?.schoolYear}</em>
@@ -200,7 +208,11 @@ function Timelines(props) {
                                                                 <div className={classes.tlnContentChild}>
                                                                     <Typography variant="subtitle2" color="textSecondary">
                                                                         <b>{labels.result}</b>
-                                                                        {item?.isSuccess ? 'Gặp được HT/HP' : 'Chưa gặp được HT/HP'}
+                                                                        {item?.isSuccess
+                                                                            ? <span className={classes.rpDaGap}>Đã gặp HT/HP</span>
+                                                                            : <span className={classes.rpChuaGap}>Chưa gặp HT/HP</span>
+                                                                        }
+                                                                        {/* {setResultChipColor(item?.isSuccess)} */}
                                                                     </Typography>
                                                                 </div>
                                                             </div>

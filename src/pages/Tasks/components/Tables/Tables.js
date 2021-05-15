@@ -14,6 +14,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Chip,
+    Badge,
 } from '@material-ui/core'
 import {
     MdFirstPage,
@@ -21,6 +22,7 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
+import { RiStickyNoteFill } from 'react-icons/ri';
 // import { schools as schoolsData } from '../../data/mock-data'
 import { useTask } from '../../hooks/TaskContext'
 import MenuOptions from './MenuOptions/MenuOptions'
@@ -28,12 +30,13 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { Consts } from '../../TasksConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { getColumns } from '../../TasksConfig'
-import { roleNames, purposeNames } from '../../../../constants/Generals'
+import { roleNames, purposeNames, taskStatusNames } from '../../../../constants/Generals'
 import SortableTableHeaders from './SortableTableHeaders'
 import Highlighter from 'react-highlight-words'
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
 import { Snackbars } from '../../../../components'
+import { parseDateToString } from '../../../../utils/DateTimes';
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -247,6 +250,19 @@ function Tables(props) {
                 return <Chip label={purpose} /> // #5c21f3
         }
     }
+
+    const setTaskStatusChipColor = (status) => {
+        switch (status) {
+            case taskStatusNames.ongoing:
+                return <Chip label={status} className={classes.chipOnGoing} />
+            case taskStatusNames.success:
+                return <Chip label={status} className={classes.chipSuccess} />
+            case taskStatusNames.failed:
+                return <Chip label={status} className={classes.chipFailed} />
+            default:
+                return <Chip label={status} /> // #5c21f3
+        }
+    }
     //=================================================================================
 
     return (
@@ -287,7 +303,6 @@ function Tables(props) {
                                             roleNames.salesman && (
                                                 <TableCell
                                                     padding="checkbox"
-                                                    width="1%"
                                                     onClick={(event) => {
                                                         !row?.username &&
                                                             handleClick(event, row)
@@ -302,19 +317,10 @@ function Tables(props) {
                                         <TableCell
                                             className={classes.tBodyCell}
                                             align="center"
-                                            width={user.roles[0] !== roleNames.salesman ? '0.5%' : '1%'}
                                         >
                                             {params.page * params.limit + index + 1}
                                         </TableCell>
-                                        <TableCell
-                                            className={classes.tBodyCell}
-                                            width={
-                                                user.roles[0] !==
-                                                    roleNames.salesman
-                                                    ? '26%'
-                                                    : '35%'
-                                            }
-                                        >
+                                        <TableCell className={classes.tBodyCell}>
                                             <ListItemText
                                                 primary={
                                                     <>
@@ -326,15 +332,18 @@ function Tables(props) {
                                                             ]}
                                                             autoEscape={true}
                                                             textToHighlight={row?.schoolName || ''}
-                                                        />
+                                                        /> &nbsp;
+                                                        {row?.note && (
+                                                            <Badge color="secondary" variant="dot">
+                                                                <RiStickyNoteFill className={classes.iconNote} />
+                                                            </Badge>
+                                                        )}
                                                     </>
                                                 }
                                                 secondary={row?.district}
                                                 classes={{
-                                                    primary:
-                                                        styles.itemTextLarge,
-                                                    secondary:
-                                                        styles.itemTextMedium,
+                                                    primary: styles.itemTextLarge,
+                                                    secondary: styles.itemTextMedium,
                                                 }}
                                             />
                                         </TableCell>
@@ -356,7 +365,7 @@ function Tables(props) {
                                             </>
                                         </TableCell> */}
                                         {user.roles[0] !== roleNames.salesman && (
-                                            <TableCell className={classes.tBodyCell} width="22%">
+                                            <TableCell className={classes.tBodyCell}>
                                                 {row?.fullName && (
                                                     <ListItem className={classes.itemPIC}>
                                                         <ListItemAvatar>
@@ -403,34 +412,29 @@ function Tables(props) {
                                                 textToHighlight={row?.schoolYear || ''}
                                             />
                                         </TableCell> */}
-                                        <TableCell
-                                            className={classes.tBodyCell}
-                                            width={user.roles[0] !== roleNames.salesman ? '17%' : '20%'}
-                                        >
-                                            07-05-2021
-                                        </TableCell>
-                                        <TableCell
-                                            className={classes.tBodyCell}
-                                            width={user.roles[0] !== roleNames.salesman ? '17%' : '20%'}
-                                        >
-                                            31-05-2021
-                                        </TableCell>
-                                        <TableCell
-                                            className={classes.tBodyCell}
-                                            width={user.roles[0] !== roleNames.salesman ? '14%' : '20%'}
-                                        >
+                                        <TableCell className={classes.tBodyCell}>
                                             {setPurposeChipColor(row?.purpose)}
                                         </TableCell>
-                                        <TableCell
-                                            className={classes.tBodyCell}
-                                            align="right"
-                                            width={
-                                                user.roles[0] !==
-                                                    roleNames.salesman
-                                                    ? '0.5%'
-                                                    : '2%'
-                                            }
-                                        >
+                                        <TableCell className={classes.tBodyCell}>
+                                            <Highlighter
+                                                highlightClassName="YourHighlightClass"
+                                                searchWords={[params.searchKey]}
+                                                autoEscape={true}
+                                                textToHighlight={parseDateToString(row?.assignDate, 'DD-MM-yyyy') || '07-05-2021'}
+                                            />
+                                        </TableCell>
+                                        <TableCell className={classes.tBodyCell}>
+                                            <Highlighter
+                                                highlightClassName="YourHighlightClass"
+                                                searchWords={[params.searchKey]}
+                                                autoEscape={true}
+                                                textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || '30-09-2021'}
+                                            />
+                                        </TableCell>
+                                        <TableCell className={classes.tBodyCell}>
+                                            {setTaskStatusChipColor(row?.purpose)}
+                                        </TableCell>
+                                        <TableCell className={classes.tBodyCell} align="right">
                                             <MenuOptions
                                                 data={row}
                                                 notify={notify}

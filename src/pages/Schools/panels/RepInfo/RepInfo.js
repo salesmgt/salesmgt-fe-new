@@ -50,8 +50,8 @@ function RepInfo(props) {
         reprIsMale: String(school?.reprIsMale)
             ? String(school?.reprIsMale)
             : String(true),
-        reprPhone: school?.reprPhone ? school?.reprPhone : null,
-        reprEmail: school?.reprEmail ? school?.reprEmail : null,
+        reprPhone: school?.reprPhone ? school?.reprPhone : '',
+        reprEmail: school?.reprEmail ? school?.reprEmail : '',
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -70,6 +70,8 @@ function RepInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
+            reprPhone: data?.reprPhone ? data?.reprPhone : null,
+            reprEmail: data?.reprEmail ? data?.reprEmail : null,
             reprIsMale: data?.reprIsMale === 'true' ? true : false,
 
             id: school?.schoolId,
@@ -90,8 +92,8 @@ function RepInfo(props) {
             active: school?.active,
         }
 
-        console.log('data.id: ', data.id);
-        console.log('model: ', model);
+        // console.log('data.id: ', data.id);
+        // console.log('model: ', model);
 
         SchoolsServices.updateSchool(data.id, model)
             .then((res) => {
@@ -155,19 +157,12 @@ function RepInfo(props) {
                                 item
                                 xs={12}
                                 sm={12}
-                                md={7}
-                                lg={5}
+                                md={9}
+                                lg={8}
                                 className={classes.row}
                             >
                                 <Grid container spacing={0}>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
                                         <Controller
                                             name="id"
                                             control={control}
@@ -202,14 +197,7 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                         <InputLabel>
                                             {fields.reprIsMale.title}
                                         </InputLabel>
@@ -249,14 +237,7 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                         <Controller
                                             name="reprPhone"
                                             control={control}
@@ -265,7 +246,7 @@ function RepInfo(props) {
                                                     label={fields.phone.title}
                                                     variant="outlined"
                                                     // required
-                                                    fullWidth
+                                                    // fullWidth
                                                     value={value}
                                                     onChange={onChange}
                                                     error={!!errors.reprPhone}
@@ -278,14 +259,7 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
                                         <Controller
                                             name="reprEmail"
                                             control={control}

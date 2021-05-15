@@ -192,8 +192,8 @@ function CreatePreviewDialogForm(props) {
             case purposeNames.purp5:
                 return <Chip label={purpose} className={classes.chipKyMoi} />
             default:
-                break
-            // return <Chip label={purpose} /> // #5c21f3
+                return <Chip label={purpose} /> // #5c21f3
+            // break
         }
     }
 

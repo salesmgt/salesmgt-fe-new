@@ -45,3 +45,12 @@
         }
     }
 }
+
+.chipSuccess {
+    background-color: $main-success !important;
+    color: $common-white !important;
+}
+.chipFailed {
+    background-color: $dark-error !important;
+    color: $common-white !important;
+}

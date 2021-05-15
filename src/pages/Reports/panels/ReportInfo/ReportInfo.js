@@ -6,6 +6,11 @@ import {
     TextField,
     Typography,
     makeStyles,
+    Chip,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
 } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
@@ -17,11 +22,12 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
 import { app as FirebaseApp } from '../../../../services/firebase'
 import { useApp } from '../../../../hooks/AppContext'
-import classes from './ReportInfo.module.scss'
 import moment from 'moment'
+import { parseDateToString } from '../../../../utils/DateTimes';
+import classes from './ReportInfo.module.scss'
 
 const rpSchema = yup.object().shape({
-    result: yup.string().trim().required('Result is required'),
+    isSuccess: yup.string().trim().required('Result is required'),
     description: yup.string().trim().required('Description is required'),
     positivity: yup.string().trim(),
     difficulty: yup.string().trim(),
@@ -31,6 +37,25 @@ const rpSchema = yup.object().shape({
 const cmtSchema = yup.object().shape({
     contextComments: yup.string().trim(),
 })
+
+//===============Set max-height for dropdown list===============
+const ITEM_HEIGHT = 38
+const ITEM_PADDING_TOP = 5
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
+        },
+    },
+}
+//==============================================================
+
+// const useStyles = makeStyles((theme) => ({
+//     formControl: {
+//         margin: theme.spacing(1),
+//         // minWidth: 160,
+//     },
+// }))
 
 const useStyles = makeStyles((theme) => ({
     // disabledInput: {
@@ -44,12 +69,26 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     disabled: {},
+    option: {
+        fontSize: '0.875rem',
+    },
+    root: {},
+    menuItemRoot: {
+        '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+        '&$menuItemSelected:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+        '&$menuItemSelected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04);',
+        },
+    },
+    menuItemSelected: {},
 }))
 
 function RepInfo(props) {
+    const styles = useStyles()
     const { report, refreshPage } = props
     const { headers, operations, fields } = Consts
-    const styles = useStyles()
 
     const { user } = useAuth()
     const { userInfo } = useApp()
@@ -64,12 +103,14 @@ function RepInfo(props) {
 
     const rpValues = {
         id: report?.id,
-        result: report?.result ? report?.result : '',
+        isSuccess: report?.isSuccess,
         description: report?.description ? report?.description : '',
         positivity: report?.positivity ? report?.positivity : '',
         difficulty: report?.difficulty ? report?.difficulty : '',
         futurePlan: report?.futurePlan ? report?.futurePlan : '',
     }
+
+    // console.log('rpValues: ', rpValues);
 
     const cmtValues = {
         id: report?.id,
@@ -101,7 +142,7 @@ function RepInfo(props) {
     useEffect(() => {
         rpReset({
             id: report?.id,
-            result: report?.result ? report?.result : '',
+            isSuccess: report?.isSuccess,
             description: report?.description ? report?.description : '',
             positivity: report?.positivity ? report?.positivity : '',
             difficulty: report?.difficulty ? report?.difficulty : '',
@@ -125,7 +166,8 @@ function RepInfo(props) {
     const onRpSubmit = (data) => {
         const model = {
             ...data,
-            date: report?.date,
+            date: parseDateToString(report?.date, 'YYYY-MM-DD HH:mm:ss'),
+            isSuccess: data?.isSuccess === '' ? false : (data?.isSuccess === "true" ? true : false)
 
             // schoolName: report?.name,
             // address: report?.address,
@@ -166,7 +208,7 @@ function RepInfo(props) {
                 })
             })
 
-        // alert(JSON.stringify(model))
+        alert(JSON.stringify(model))
     }
 
     const createNotify = (value) => {
@@ -221,6 +263,14 @@ function RepInfo(props) {
             })
 
         // alert(JSON.stringify(model))
+    }
+
+    const setResultChipColor = (result) => {
+        if (result === true) {
+            return <Chip label='Đã gặp người đại diện (HT/HP)' className={classes.chipSuccess} />
+        } else if (result === false) {
+            return <Chip label='Chưa gặp người đại diện (HT/HP)' className={classes.chipFailed} />
+        }
     }
 
     return (
@@ -289,31 +339,64 @@ function RepInfo(props) {
                                                     />
                                                 )}
                                             />
-                                            <Controller
-                                                name="result"
-                                                control={rpControl}
-                                                render={({
-                                                    value,
-                                                    onChange,
-                                                }) => (
-                                                    <TextField
-                                                        label={fields.rs.title}
-                                                        variant="outlined"
-                                                        required
-                                                        fullWidth
-                                                        autoFocus
-                                                        value={value}
-                                                        onChange={onChange}
-                                                        error={
-                                                            !!rpErrors.result
-                                                        }
-                                                        helperText={
-                                                            rpErrors?.result
-                                                                ?.message
-                                                        }
-                                                    />
-                                                )}
-                                            />
+                                            <FormControl variant="outlined" fullWidth required>
+                                                <InputLabel id="isSuccess-label">{fields.rs.title}</InputLabel>
+                                                <Controller
+                                                    name="isSuccess"
+                                                    control={rpControl}
+                                                    render={({ value, onChange }) => (
+                                                        <Select
+                                                            labelId="isSuccess-label"
+                                                            label={fields.rs.title}
+                                                            value={value}
+                                                            onChange={onChange}
+                                                            MenuProps={MenuProps}
+                                                        // fullWidth
+                                                        // variant="outlined"
+                                                        // inputRef={register}
+                                                        // error={!!errors.isSuccess}
+                                                        // helperText={errors?.isSuccess?.message}
+                                                        >
+                                                            <MenuItem
+                                                                value={true}
+                                                                className={styles.option}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Đã gặp người đại diện (HT/HP)
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={false}
+                                                                className={styles.option}
+                                                                classes={{
+                                                                    root: styles.menuItemRoot,
+                                                                    selected: styles.menuItemSelected,
+                                                                }}
+                                                            >
+                                                                Chưa gặp người đại diện (HT/HP)
+                                                            </MenuItem>
+                                                        </Select>
+                                                        // <TextField
+                                                        //     label={fields.rs.title}
+                                                        //     variant="outlined"
+                                                        //     required
+                                                        //     fullWidth
+                                                        //     autoFocus
+                                                        //     value={value}
+                                                        //     onChange={onChange}
+                                                        //     error={
+                                                        //         !!rpErrors.isSuccess
+                                                        //     }
+                                                        //     helperText={
+                                                        //         rpErrors?.isSuccess
+                                                        //             ?.message
+                                                        //     }
+                                                        // />
+                                                    )}
+                                                />
+                                            </FormControl>
                                         </Grid>
 
                                         <Grid
@@ -532,7 +615,7 @@ function RepInfo(props) {
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
-                                            {report?.result}
+                                            {setResultChipColor(report?.isSuccess)}
                                         </Typography>
                                     </Grid>
                                 </Grid>

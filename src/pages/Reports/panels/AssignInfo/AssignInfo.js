@@ -1,20 +1,39 @@
 import React from 'react'
-import { Grid, Typography, Icon, Avatar } from '@material-ui/core'
+import { Grid, Typography, Icon, Avatar, Chip } from '@material-ui/core'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { Loading } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import classes from './AssignInfo.module.scss'
 import { useLocation } from 'react-router'
+import { purposeNames } from '../../../../constants/Generals'
 
 function AssignInfo(props) {
     const { report } = props
     const { headers, fields } = Consts
 
-    const location = useLocation()
+    // const location = useLocation()
     // console.log("location Report's: ", location);
+    // console.log('report: ', report);
 
     if (!report) {
         return <Loading />
+    }
+
+    const setPurposeChipColor = (purpose) => {
+        switch (purpose) {
+            case purposeNames.purp1:
+                return <Chip label={purpose} className={classes.chipSalesMoi} />
+            case purposeNames.purp2:
+                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            case purposeNames.purp3:
+                return <Chip label={purpose} className={classes.chipChamSoc} />
+            case purposeNames.purp4:
+                return <Chip label={purpose} className={classes.chipTaiKy} />
+            case purposeNames.purp5:
+                return <Chip label={purpose} className={classes.chipKyMoi} />
+            default:
+                return <Chip label={purpose} /> // #5c21f3
+        }
     }
 
     return (
@@ -162,6 +181,42 @@ function AssignInfo(props) {
                             </Grid>
                         </Grid>
 
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                            <Grid
+                                container
+                                spacing={0}
+                                className={classes.rowx}
+                            >
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={12}
+                                    md={4}
+                                    lg={3}
+                                    className={classes.rowx}
+                                >
+                                    <Typography
+                                        color="inherit"
+                                        className={classes.title}
+                                    >
+                                        {fields.duration.title}
+                                    </Typography>
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
+                                    className={classes.rowx}
+                                >
+                                    <Typography color="inherit">
+                                        01/06/2021 &nbsp; ➜ &nbsp; 30/09/2021
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                         <Grid
                             item
                             xs={12}
@@ -199,7 +254,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.purpose}
+                                        {setPurposeChipColor(report?.purpose)}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -272,7 +327,7 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.schoolName}
+                                        {report?.level} {report?.schoolName}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -389,49 +444,6 @@ function AssignInfo(props) {
                                         color="inherit"
                                         className={classes.title}
                                     >
-                                        {fields.eduLvl.title}
-                                    </Typography>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={8}
-                                    lg={6}
-                                    className={classes.rowx}
-                                >
-                                    <Typography color="inherit">
-                                        {report?.level}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
-                                    <Typography
-                                        color="inherit"
-                                        className={classes.title}
-                                    >
                                         {fields.reprName.title}
                                     </Typography>
                                 </Grid>
@@ -444,65 +456,11 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {report?.reprName}
+                                        {report?.reprName
+                                            ? (`${report?.reprIsMale ? 'Mr. ' : 'Ms. '} ${report?.reprName}`)
+                                            : fields.empty.title
+                                        }
                                     </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.row}
-                        >
-                            <Grid
-                                container
-                                spacing={0}
-                                className={classes.rowx}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={4}
-                                    lg={3}
-                                    className={classes.rowx}
-                                >
-                                    <Typography
-                                        color="inherit"
-                                        className={classes.title}
-                                    >
-                                        {fields.reprIsMale.title}
-                                    </Typography>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={8}
-                                    lg={6}
-                                    className={classes.rowx}
-                                >
-                                    <div className={classes.genderZone}>
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.gender}
-                                        >
-                                            {report?.reprIsMale
-                                                ? fields.reprIsMale.male.lb
-                                                : fields.reprIsMale.female.lb}
-                                        </Typography>
-                                        <Icon>
-                                            {report?.reprIsMale ? (
-                                                <AiOutlineMan color="#005BB5" />
-                                            ) : (
-                                                <AiOutlineWoman color="#E26A89" />
-                                            )}
-                                        </Icon>
-                                    </div>
                                 </Grid>
                             </Grid>
                         </Grid>

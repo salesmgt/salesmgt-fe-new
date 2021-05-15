@@ -6,7 +6,8 @@ export const Consts = {
         schoolYear: 'School year:',
         startDate: 'Start date:',
         endDate: 'End date:',
-        services: 'Services:'
+        services: 'Services:',
+        result: 'Result:',
     },
 }
 

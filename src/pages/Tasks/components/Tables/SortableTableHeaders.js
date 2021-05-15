@@ -39,7 +39,7 @@ export default function SortableTableHeaders(props) {
             color: 'white !important',
         },
     })(TableSortLabel)
-    
+
     return (
         <TableHead>
             <TableRow className={classes.tHead}>
@@ -54,28 +54,28 @@ export default function SortableTableHeaders(props) {
                         />
                     </TableCell>
                 )}
-                {columns.map((col) => (
-                    <TableCell
-                        key={col.key}
-                        className={classes.tHeadCell}
-                        sortDirection={column === col.key ? direction : false}
-                        align={
-                            col.key === 'no'
-                                ? 'center' :
-                                col.key === 'user.fullName'
-                                ? 'center'
-                                : 'left'
-                        }
-                    >
-                        <MuiTableSortLabel
-                            active={column === col.key}
-                            direction={column === col.key ? direction : 'asc'}
-                            onClick={() => createSortHandler(col, direction)}
+                {columns.map((col) => {
+                    return (
+                        <TableCell
+                            key={col.key}
+                            className={classes.tHeadCell}
+                            sortDirection={column === col.key ? direction : false}
+                            align={
+                                (col.key === 'no' || col.key === 'user.fullName')
+                                    ? 'center' : 'left'
+                            }
+                            width={user.roles[0] !== roleNames.salesman ? col.width1 : col.width2}
                         >
-                            {col.name}
-                        </MuiTableSortLabel>
-                    </TableCell>
-                ))}
+                            <MuiTableSortLabel
+                                active={column === col.key}
+                                direction={column === col.key ? direction : 'asc'}
+                                onClick={() => createSortHandler(col, direction)}
+                            >
+                                {col.name}
+                            </MuiTableSortLabel>
+                        </TableCell>
+                    )
+                })}
             </TableRow>
         </TableHead>
     )

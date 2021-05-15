@@ -139,6 +139,7 @@ function SortableTableHeaders(props) {
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
+                        width={col.width}
                     >
                         <MuiTableSortLabel
                             active={column === col.key}
@@ -250,8 +251,16 @@ function Tables(props) {
         }
     }
 
+    // const setResultChipColor = (result) => {
+    //     if (result === true) {
+    //         return <Chip label='Đã gặp HT/HP' className={classes.chipSuccess} />
+    //     } else if (result === false) {
+    //         return <Chip label='Chưa gặp HT/HP' className={classes.chipFailed} />
+    //     }
+    // }
+
     const truncateString = (str) => {
-        if (str) return str.length > 30 ? str.substring(0, 27) + '...' : str
+        if (str) return str.length > 60 ? str.substring(0, 57) + '...' : str
         else return ''
     }
 
@@ -277,8 +286,8 @@ function Tables(props) {
                                     key={row?.id}
                                     className={classes.tBodyRow}
                                 >
-                                    <TableCell className={classes.tableCell} width="0.5%" align="center">{params.page * params.limit + index + 1}</TableCell>
-                                    <TableCell className={classes.tBodyCell} width="10%">
+                                    <TableCell className={classes.tableCell} align="center">{params.page * params.limit + index + 1}</TableCell>
+                                    <TableCell className={classes.tBodyCell}>
                                         {parseDateToString(row?.date, 'DD/MM/YYYY')} &nbsp;
                                         {row?.contextComments && (
                                             <Badge
@@ -289,7 +298,7 @@ function Tables(props) {
                                             </Badge>
                                         )}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell} width="28%">
+                                    <TableCell className={classes.tBodyCell}>
                                         <ListItemText
                                             primary={
                                                 <>
@@ -310,7 +319,7 @@ function Tables(props) {
                                             }}
                                         />
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell} width="16%">
+                                    <TableCell className={classes.tBodyCell}>
                                         <ListItem className={styles.itemPIC}>
                                             <ListItemAvatar>
                                                 <Avatar src={row?.avatar} />
@@ -342,18 +351,15 @@ function Tables(props) {
                                             />
                                         </ListItem>
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell} width="11%">
+                                    <TableCell className={classes.tBodyCell}>
                                         {setPurposeChipColor(row?.purpose)}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell} width="15%">
-                                        <Highlighter
-                                            highlightClassName="YourHighlightClass"
-                                            searchWords={[params.searchKey]}
-                                            autoEscape={true}
-                                            textToHighlight={row?.result || ''}
-                                        />
+                                    <TableCell className={classes.tBodyCell}>
+                                        <span className={row?.isSuccess ? classes.rpDaGap : classes.rpChuaGap}>
+                                            {row?.isSuccess ? 'Đã gặp HT/HP' : 'Chưa gặp HT/HP'}
+                                        </span>
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell} width="19%">
+                                    <TableCell className={classes.tBodyCell}>
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
@@ -362,10 +368,7 @@ function Tables(props) {
                                         />
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>{truncateString(row?.comment?.content)}</TableCell> */}
-                                    <TableCell
-                                        className={classes.tBodyCell}
-                                        align="right" width="0.5%"
-                                    >
+                                    <TableCell className={classes.tBodyCell} align="right">
                                         <MenuOptions data={row} refreshAPI={refreshAPI} />
                                     </TableCell>
                                 </TableRow>

@@ -35,17 +35,6 @@ export const Consts = {
         reprName: {
             title: 'Principal Name',
         },
-        reprIsMale: {
-            title: 'Principal Gender',
-            male: {
-                lb: 'Male',
-                value: 'true',
-            },
-            female: {
-                lb: 'Female',
-                value: 'false',
-            },
-        },
         pic: {
             title: 'PIC',
         },
@@ -53,7 +42,13 @@ export const Consts = {
             title: 'Sales Purpose',
         },
         schlYear: {
-            title: 'Shool Year',
+            title: 'School Year',
         },
+        empty: {
+            title: 'N/A',
+        },
+        duration: {
+            title: 'Duration'
+        }
     },
 }

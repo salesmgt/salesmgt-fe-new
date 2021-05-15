@@ -333,11 +333,11 @@ function CreateReportsForm(props) {
         setTask(foundTask)
 
         setFormValue({
-            isSuccess: row.isSuccess,
-            description: row.description,
-            positivity: row.positivity,
-            difficulty: row.difficulty,
-            futurePlan: row.futurePlan,
+            isSuccess: row?.isSuccess,
+            description: row?.description,
+            positivity: row?.positivity,
+            difficulty: row?.difficulty,
+            futurePlan: row?.futurePlan,
         })
 
         // console.log('foundTask: ', foundTask);
@@ -366,14 +366,14 @@ function CreateReportsForm(props) {
                 // username: user.username,
                 date: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
                 // schoolYear: calculateSchoolYear(),
-                taskId: parseInt(task.id),
+                taskId: parseInt(task?.id),
                 // schoolName: task.schoolName,
                 // level: task.level,
-                isSuccess: formValue.isSuccess,
-                description: formValue.description,
-                positivity: formValue.positivity,
-                difficulty: formValue.difficulty,
-                futurePlan: formValue.futurePlan,
+                isSuccess: formValue?.isSuccess,
+                description: formValue?.description,
+                positivity: formValue?.positivity,
+                difficulty: formValue?.difficulty,
+                futurePlan: formValue?.futurePlan,
             }
             reports.push(report)
         } else {

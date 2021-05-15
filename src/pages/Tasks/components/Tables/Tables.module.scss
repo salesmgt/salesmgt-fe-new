@@ -87,7 +87,7 @@
   // width: 1000;
 }
 
-
+/*==================Task purpose chip==================*/
 .chipInactive {
   color: $grey-400;
   font-style: italic;
@@ -141,4 +141,22 @@
 .chipKyMoiInactive {
   @extend .chipKyMoi;
   @extend .chipInactive;
+}
+
+/*==================Task status chip==================*/
+.chipOnGoing {
+  background-color: $dark-info !important;
+  color: $common-white !important;
+}
+.chipSuccess {
+  background-color: $main-success !important;
+  color: $common-white !important;
+}
+.chipFailed {
+  background-color: $dark-error !important;
+  color: $common-white !important;
+}
+
+.iconNote {
+  color: $text-icon;
 }

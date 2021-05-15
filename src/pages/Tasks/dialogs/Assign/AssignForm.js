@@ -95,7 +95,7 @@ function AssignForm(props) {
 
     const typingTimeoutRef = useRef({})
 
-    console.log('assign form --- rowsState: ', rowsState);
+    // console.log('assign form --- rowsState: ', rowsState);
 
     const handleSubmit = () => {
         const array = []

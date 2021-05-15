@@ -31,8 +31,9 @@ import {
     ACTIVE_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
+import { useAuth } from '../../../../hooks/AuthContext';
 import * as Milk from '../../../../utils/Milk'
-import { milkNames } from '../../../../constants/Generals'
+import { milkNames, roleNames } from '../../../../constants/Generals'
 import { Consts } from '../../SchoolsConfig'
 import styles from './Filters.module.scss'
 
@@ -138,6 +139,8 @@ const MuiAccordionDetails = withStyles((theme) => ({
 
 function Filters(props) {
     const classes = useStyles()
+    const { operations, filters } = Consts
+    const { user } = useAuth()
 
     const { dists, schTypes, schEduLvls } = useApp()    //, schStatus, schScales
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
@@ -158,8 +161,6 @@ function Filters(props) {
         workingStatuses,
         setFilter,
     } = useSchool()
-
-    const { operations, filters } = Consts
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
     const [openImportDialog, setOpenImportDialog] = useState(false)
@@ -322,45 +323,47 @@ function Filters(props) {
                             onChange={handleSearch}
                         />
                     </Box>
-                    <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={(event) =>
-                                setAnchorEl(event.currentTarget)
-                            }
-                        // onClick={() => setOpenCreateDialog(true)}
-                        >
-                            <MdAdd fontSize="large" />
-                            {/* &nbsp;Create */}
-                        </Button>
+                    {user.roles[0] === roleNames.admin && (
+                        <Box className={classes.flexItem}>
+                            <Button
+                                className={classes.btn}
+                                variant="contained"
+                                color="secondary"
+                                onClick={(event) =>
+                                    setAnchorEl(event.currentTarget)
+                                }
+                            // onClick={() => setOpenCreateDialog(true)}
+                            >
+                                <MdAdd fontSize="large" />
+                                {/* &nbsp;Create */}
+                            </Button>
 
-                        <Menu
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={() => setAnchorEl(null)}
-                        >
-                            <MenuItem onClick={() => handleOpenCreateDialog()}>
-                                <MdCreate style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.create}
-                            </MenuItem>
-                            <MenuItem onClick={() => handleOpenImportDialog()}>
-                                <FaFileImport style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.import}
-                            </MenuItem>
-                        </Menu>
+                            <Menu
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={() => setAnchorEl(null)}
+                            >
+                                <MenuItem onClick={() => handleOpenCreateDialog()}>
+                                    <MdCreate style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.create}
+                                </MenuItem>
+                                <MenuItem onClick={() => handleOpenImportDialog()}>
+                                    <FaFileImport style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.import}
+                                </MenuItem>
+                            </Menu>
 
-                        <CreateSchool
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                            refreshPage={props.refreshAPI}
-                        />
-                        <ImportFile
-                            open={openImportDialog}
-                            onClose={() => setOpenImportDialog(false)}
-                            refreshAPI={props.refreshAPI}
-                        />
-                    </Box>
+                            <CreateSchool
+                                open={openCreateDialog}
+                                onClose={() => setOpenCreateDialog(false)}
+                                refreshPage={props.refreshAPI}
+                            />
+                            <ImportFile
+                                open={openImportDialog}
+                                onClose={() => setOpenImportDialog(false)}
+                                refreshAPI={props.refreshAPI}
+                            />
+                        </Box>
+                    )}
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>

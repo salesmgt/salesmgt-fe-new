@@ -1,7 +1,7 @@
 export const Consts = {
     headers: {
         child1: 'School Detail',
-        child2: 'Target School Status',
+        child2: 'School Status',    //Target School Status
         child3: 'Principal Detail',
         child4: 'Salesman Note',
     },
@@ -32,7 +32,7 @@ export const Consts = {
             title: 'School Type',
         },
         salesStatus: {
-            title: 'Target School Status',
+            title: 'School Status',  //Target School Status
         },
         tel: {
             title: 'Tel',
@@ -41,7 +41,7 @@ export const Consts = {
             title: 'Description',
         },
         reprName: {
-            title: 'Name',
+            title: 'Full Name',
         },
         reprIsMale: {
             title: 'Gender',

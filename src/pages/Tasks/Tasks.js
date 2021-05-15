@@ -38,7 +38,7 @@ function Tasks() {
         )
             .then((res) => {
                 setData(res)
-                console.log("list tasks = ", res.list);
+                // console.log("list tasks = ", res.list);
             })
             .catch((error) => {
                 if (error.response) {
