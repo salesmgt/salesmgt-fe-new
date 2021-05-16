@@ -20,8 +20,8 @@ function Task() {
     // console.log('location = ', location);
 
     // location?.state?.tabNo must be dynamic according to task, not only a fixed number
-    const [tabValue, setTabValue] = useState(0)
-    // const [tabValue, setTabValue] = useState(location?.state?.tabNo ? location?.state?.tabNo : 0)
+    // const [tabValue, setTabValue] = useState(0)
+    const [tabValue, setTabValue] = useState(location?.state?.tabNo ? location?.state?.tabNo : 0)
 
     const stateData = location?.state?.data
     const [task, setTask] = useState(stateData?.model)

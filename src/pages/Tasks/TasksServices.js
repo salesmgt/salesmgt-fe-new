@@ -59,8 +59,8 @@ export async function getTask(taskId) {
     return data
 }
 
-export async function updateStatus(schoolId, task) {
-    const response = await Api.patch(`/schools/${schoolId}`, task)
+export async function updateStatus(schoolId, schoolStatus) {
+    const response = await Api.patch(`/schools/${schoolId}`, schoolStatus)
     // const data = await response.data
     return response
 }
@@ -174,7 +174,7 @@ export async function createServices(service) {
     return response
 }
 
-export async function updateMOU(serviceId, service) {
+export async function updateService(serviceId, service) {
     const response = await Api.put(`/services/${serviceId}`, service)
     // const data = await response.data
     return response

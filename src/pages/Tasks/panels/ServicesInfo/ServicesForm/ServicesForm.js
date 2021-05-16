@@ -78,12 +78,11 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 })
 
 function ServicesForm(props) {
-    const { open, onClose, memoDets, setMemoDets, refreshPage } = props
+    const { open, onClose, service, setService, refreshPage } = props
     const { headers, operations, fields } = Consts
     const styles = useStyles()
 
     const { user } = useAuth()
-
     const history = useHistory()
 
     const [notify, setNotify] = useState({
@@ -93,11 +92,11 @@ function ServicesForm(props) {
     })
 
     const defaultValues = {
-        id: memoDets?.id,
-        duration: memoDets?.duration,
-        revenueCriteria: memoDets?.revenueCriteria,
-        service: memoDets?.service,
-        note: memoDets?.note,
+        id: service?.id,
+        duration: service?.duration,
+        revenueCriteria: service?.revenueCriteria,
+        service: service?.service,
+        note: service?.note,
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -107,26 +106,26 @@ function ServicesForm(props) {
 
     useEffect(() => {
         reset({
-            id: memoDets?.id,
-            duration: memoDets?.duration,
-            revenueCriteria: memoDets?.revenueCriteria,
-            service: memoDets?.service,
-            note: memoDets?.note,
+            id: service?.id,
+            duration: service?.duration,
+            revenueCriteria: service?.revenueCriteria,
+            service: service?.service,
+            note: service?.note,
         })
-    }, [memoDets])
+    }, [service])
 
     const onSubmit = (data) => {
         const model = {
             ...data,
-            // date: moment(memoDets?.date).format('YYYY-MM-DD'),
-            date: memoDets?.date,
-            taskId: memoDets?.taskId,
+            // date: moment(service?.date).format('YYYY-MM-DD'),
+            date: service?.date,
+            taskId: service?.taskId,
         }
 
-        TasksServices.updateMOU(data?.id, model)
+        TasksServices.updateService(data?.id, model)
             .then((res) => {
-                refreshPage(memoDets?.taskId)
-                setMemoDets(model)
+                refreshPage(service?.taskId)
+                setService(model)
                 setNotify({
                     isOpen: true,
                     message: 'Updated Successfully',
@@ -363,12 +362,12 @@ function ServicesForm(props) {
                                 onClick={() => {
                                     reset({
                                         errors: false,
-                                        id: memoDets?.id,
-                                        duration: memoDets?.duration,
+                                        id: service?.id,
+                                        duration: service?.duration,
                                         revenueCriteria:
-                                            memoDets?.revenueCriteria,
-                                        service: memoDets?.service,
-                                        note: memoDets?.note,
+                                            service?.revenueCriteria,
+                                        service: service?.service,
+                                        note: service?.note,
                                     })
                                     onClose()
                                 }}
@@ -413,7 +412,7 @@ function ServicesForm(props) {
                                     className={classes.row}
                                 >
                                     <Typography color="inherit">
-                                        {`${memoDets?.duration} ${fields.duration.adornment}`}
+                                        {`${service?.duration} ${fields.duration.adornment}`}
                                     </Typography>
                                 </Grid>
 
@@ -441,7 +440,7 @@ function ServicesForm(props) {
                                     className={classes.row}
                                 >
                                     <Typography color="inherit">
-                                        {memoDets?.service}
+                                        {service?.service}
                                     </Typography>
                                 </Grid>
 
@@ -469,7 +468,7 @@ function ServicesForm(props) {
                                     className={classes.row}
                                 >
                                     <Typography color="inherit">
-                                        {memoDets?.revenueCriteria}
+                                        {service?.revenueCriteria}
                                     </Typography>
                                 </Grid>
 

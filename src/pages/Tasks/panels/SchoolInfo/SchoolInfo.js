@@ -14,7 +14,6 @@ import {
     FormControlLabel,
     Radio,
 } from '@material-ui/core'
-import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './SchoolInfoConfig'
 import { useForm, Controller } from 'react-hook-form'
@@ -79,6 +78,8 @@ function SchoolInfo(props) {
     const { task, refreshPage } = props
     const { headers, operations, fields } = Consts
     const styles = useStyles()
+
+    console.log('SchoolInfo - task: ', task);
 
     const { user } = useAuth()
     const { schStatus } = useApp()
@@ -206,7 +207,7 @@ function SchoolInfo(props) {
 
     //     switch (currStatus) {
     //         case statusNames.lead:
-    //             // console.log(task?.memorandums)
+    //             // console.log(task?.services)
 
     //             if (newStatus === statusNames.lead) {
     //                 console.log('lead to lead')
@@ -215,7 +216,7 @@ function SchoolInfo(props) {
     //             }
     //             if (newStatus === statusNames.customer) {
     //                 console.log('lead to cust')
-    //                 if (task?.memorandums) {
+    //                 if (task?.services) {
     //                     // return console.log('yes')
     //                     return (isOK = true)
     //                 } else {
@@ -231,7 +232,7 @@ function SchoolInfo(props) {
 
     //             break
     //         case statusNames.customer:
-    //             // console.log(task?.memorandums)
+    //             // console.log(task?.services)
 
     //             if (newStatus === statusNames.lead) {
     //                 console.log('cust to lead')
@@ -251,11 +252,11 @@ function SchoolInfo(props) {
 
     //             break
     //         case statusNames.pending:
-    //             // console.log(task?.memorandums)
+    //             // console.log(task?.services)
     //             if (user.roles[0] !== roleNames.salesman) {
     //                 if (newStatus === statusNames.lead) {
     //                     console.log('pending to lead')
-    //                     if (task?.memorandums) {
+    //                     if (task?.services) {
     //                         // return console.log('no')
     //                         return (isOK = false)
     //                     } else {
@@ -360,7 +361,7 @@ function SchoolInfo(props) {
                     refreshPage(task?.id)
                     setNotify({
                         isOpen: true,
-                        message: 'Updated Successfully',
+                        message: "Updated school's status successfully",
                         type: 'success',
                     })
                 })
@@ -374,7 +375,7 @@ function SchoolInfo(props) {
                     }
                     setNotify({
                         isOpen: true,
-                        message: 'Update Unsuccessful',
+                        message: "Updated school's status unsuccessful",
                         type: 'error',
                     })
                 })
@@ -401,7 +402,7 @@ function SchoolInfo(props) {
 
         switch (task?.schoolStatus) {
             case statusNames.lead:
-                // console.log(task?.memorandums)
+                // console.log(task?.services)
 
                 if (data.schoolStatus === statusNames.lead) {
                     // console.log('lead to lead')
@@ -411,7 +412,7 @@ function SchoolInfo(props) {
                 if (data.schoolStatus === statusNames.customer) {
                     // console.log('lead to cust')
                     //   need config
-                    // if (task?.memorandums) {
+                    // if (task?.services) {
                     //     // return console.log('yes')
                     //     allowUpdate()
                     // } else {
@@ -425,10 +426,10 @@ function SchoolInfo(props) {
                     // return console.log('yes')
                     allowUpdate()
                 }
-
                 break
+
             case statusNames.customer:
-                // console.log(task?.memorandums)
+                // console.log(task?.services)
 
                 if (data.schoolStatus === statusNames.lead) {
                     // console.log('cust to lead')
@@ -448,12 +449,12 @@ function SchoolInfo(props) {
 
                 break
             case statusNames.pending:
-                // console.log(task?.memorandums)
+                // console.log(task?.services)
 
                 if (user.roles[0] !== roleNames.salesman) {
                     if (data.schoolStatus === statusNames.lead) {
                         // console.log('pending to lead')
-                        if (task?.memorandums) {
+                        if (task?.services) {
                             // return console.log('no')
                             preventUpdate()
                         } else {
@@ -463,7 +464,7 @@ function SchoolInfo(props) {
                     }
                     if (data.schoolStatus === statusNames.customer) {
                         // console.log('pending to cust')
-                        if (task?.memorandums) {
+                        if (task?.services) {
                             // return console.log('yes')
                             allowUpdate()
                         } else {
@@ -493,7 +494,6 @@ function SchoolInfo(props) {
                         preventUpdate()
                     }
                 }
-
                 break
             default:
                 break
@@ -519,7 +519,7 @@ function SchoolInfo(props) {
 
                         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                             <Grid container spacing={0} className={classes.rowx}>
-                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -527,7 +527,7 @@ function SchoolInfo(props) {
                                         {fields.name.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.level} {task?.schoolName}
                                     </Typography>
@@ -537,7 +537,7 @@ function SchoolInfo(props) {
 
                         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                             <Grid container spacing={0} className={classes.rowx}>
-                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -545,7 +545,7 @@ function SchoolInfo(props) {
                                         {fields.addr.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.schoolAddress}
                                     </Typography>
@@ -555,7 +555,7 @@ function SchoolInfo(props) {
 
                         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                             <Grid container spacing={0} className={classes.rowx}>
-                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -563,7 +563,7 @@ function SchoolInfo(props) {
                                         {fields.dist.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.district}
                                     </Typography>
@@ -573,7 +573,7 @@ function SchoolInfo(props) {
 
                         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                             <Grid container spacing={0} className={classes.rowx}>
-                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                     <Typography
                                         color="inherit"
                                         className={classes.title}
@@ -581,7 +581,7 @@ function SchoolInfo(props) {
                                         {fields.type.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.schoolType}
                                     </Typography>
@@ -591,12 +591,12 @@ function SchoolInfo(props) {
 
                         {/* <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                             <Grid container spacing={0} className={classes.rowx}>
-                                <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                     <Typography color="inherit" className={classes.title}>
                                         {fields.scale.title}
                                     </Typography>
                                 </Grid>
-                                {/.* <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                {/.* <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {task?.schoolScale}
                                     </Typography>
@@ -607,34 +607,15 @@ function SchoolInfo(props) {
                 </Grid>
 
                 {/* School status Sector */}
-                {user.roles[0] !== roleNames.salesman ||
-                    (user.roles[0] === roleNames.salesman &&
-                        user.username === task?.username) ? (
+                {/* {user.roles[0] !== roleNames.salesman || */} {/**Ko cho Manager/Supervisor đổi status */}
+                {(user.roles[0] === roleNames.salesman && user.username === task?.username) && (
                     <>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.content}
-                        >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                             <form noValidate
                             // onSubmit={handleSubmit(onSubmit)}
                             >
-                                <Grid
-                                    container
-                                    spacing={0}
-                                    className={classes.wrapper}
-                                >
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={4}
-                                        lg={3}
-                                        className={classes.row}
-                                    >
+                                <Grid container spacing={0} className={classes.wrapper}>
+                                    <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
                                         <Typography
                                             color="inherit"
                                             className={classes.header}
@@ -643,7 +624,7 @@ function SchoolInfo(props) {
                                         </Typography>
                                     </Grid>
 
-                                    <Grid item xs={12} sm={12} md={7} lg={5}
+                                    <Grid item xs={12} sm={12} md={9} lg={8}
                                         className={classes.statusCbZone}
                                     >
                                         <Controller
@@ -657,9 +638,7 @@ function SchoolInfo(props) {
                                                             'schoolStatus',
                                                             e.target.value
                                                         )
-                                                        statusSubmit(
-                                                            onStatusSubmit
-                                                        )()
+                                                        statusSubmit(onStatusSubmit)()
                                                     }}
                                                     MenuProps={MenuProps}
                                                     disableUnderline
@@ -720,47 +699,27 @@ function SchoolInfo(props) {
                             refreshPage={refreshPage}
                         />
                     </>
-                ) : (
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                        className={classes.content}
-                    >
-                        <Grid container spacing={0} className={classes.wrapper}>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={4}
-                                lg={3}
-                                className={classes.row}
-                            >
-                                <Typography
-                                    color="inherit"
-                                    className={classes.header}
-                                >
-                                    {headers.child2}
-                                </Typography>
-                            </Grid>
-
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={7}
-                                lg={5}
-                                className={classes.statusTxtZone}
-                            >
-                                <Typography color="inherit">
-                                    {task?.schoolStatus}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Grid>
                 )}
+                {/* : (
+                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
+                            <Grid container spacing={0} className={classes.wrapper}>
+                                    <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
+                                            <Typography
+                                                    color="inherit"
+                                                    className={classes.header}
+                                                >
+                                                    {headers.child2}
+                                                </Typography>
+                                            </Grid>
+
+                                            <Grid item xs={12} sm={12} md={9} lg={8} className={classes.statusTxtZone}>
+                                                <Typography color="inherit">
+                                                    {task?.schoolStatus}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                )} */}
 
                 {/* Principal detail Sector */}
                 {task?.schoolStatus !== statusNames.pending ? (
@@ -780,7 +739,7 @@ function SchoolInfo(props) {
 
                                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                     <Grid container spacing={0} className={classes.rowx}>
-                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                             <Typography
                                                 color="inherit"
                                                 className={classes.title}
@@ -788,7 +747,7 @@ function SchoolInfo(props) {
                                                 {fields.reprName.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                             <Typography color="inherit">
                                                 {task?.reprName
                                                     ? (`${task?.reprIsMale ? 'Mr. ' : 'Ms. '} ${task?.reprName}`)
@@ -800,7 +759,7 @@ function SchoolInfo(props) {
 
                                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                     <Grid container spacing={0} className={classes.rowx}>
-                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                             <Typography
                                                 color="inherit"
                                                 className={classes.title}
@@ -808,7 +767,7 @@ function SchoolInfo(props) {
                                                 {fields.reprPhone.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                             <Typography color="inherit">
                                                 {task?.reprPhone
                                                     ? task?.reprPhone
@@ -820,7 +779,7 @@ function SchoolInfo(props) {
 
                                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                     <Grid container spacing={0} className={classes.rowx}>
-                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                             <Typography
                                                 color="inherit"
                                                 className={classes.title}
@@ -828,7 +787,7 @@ function SchoolInfo(props) {
                                                 {fields.reprEmail.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={12} sm={12} md={7} lg={5} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                             <Typography color="inherit">
                                                 {task?.reprEmail
                                                     ? task?.reprEmail
@@ -840,32 +799,14 @@ function SchoolInfo(props) {
                             </Grid>
                         </Grid>
                     ) : (
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.content}
-                        >
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                             <form
                                 onSubmit={reprSubmit(onReprSubmit)}
                                 noValidate
                             >
                                 {/* Principal Detail */}
-                                <Grid
-                                    container
-                                    spacing={0}
-                                    className={classes.wrapper}
-                                >
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={4}
-                                        lg={3}
-                                        className={classes.row}
-                                    >
+                                <Grid container spacing={0} className={classes.wrapper}>
+                                    <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
                                         <Typography
                                             color="inherit"
                                             className={classes.header}
@@ -874,14 +815,7 @@ function SchoolInfo(props) {
                                         </Typography>
                                     </Grid>
                                     {/* Detail */}
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={9} lg={8} className={classes.row}>
                                         <Grid container spacing={0}>
                                             <Grid
                                                 item
@@ -1115,14 +1049,7 @@ function SchoolInfo(props) {
                                     spacing={0}
                                     className={classes.rowx}
                                 >
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={4}
-                                        lg={3}
-                                        className={classes.rowx}
-                                    >
+                                    <Grid item xs={12} sm={12} md={3} lg={3} className={classes.rowx}>
                                         <Typography
                                             color="inherit"
                                             className={classes.title}
@@ -1130,14 +1057,7 @@ function SchoolInfo(props) {
                                             {fields.reprName.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.rowx}
-                                    >
+                                    <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                         <Typography color="inherit">
                                             {task?.reprName
                                                 ? (`${task?.reprIsMale ? 'Mr. ' : 'Ms. '} ${task?.reprName}`)
@@ -1164,7 +1084,7 @@ function SchoolInfo(props) {
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={4}
+                                        md={3}
                                         lg={3}
                                         className={classes.rowx}
                                     >
@@ -1175,14 +1095,7 @@ function SchoolInfo(props) {
                                             {fields.reprPhone.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.rowx}
-                                    >
+                                    <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                         <Typography color="inherit">
                                             {task?.reprPhone
                                                 ? task?.reprPhone
@@ -1196,7 +1109,7 @@ function SchoolInfo(props) {
                                 className={classes.row}
                             >
                                 <Grid container spacing={0} className={classes.rowx}>
-                                    <Grid item xs={12} sm={12} md={4} lg={3}
+                                    <Grid item xs={12} sm={12} md={3} lg={3}
                                         className={classes.rowx}
                                     >
                                         <Typography
@@ -1206,14 +1119,7 @@ function SchoolInfo(props) {
                                             {fields.reprEmail.title}
                                         </Typography>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={7}
-                                        lg={5}
-                                        className={classes.rowx}
-                                    >
+                                    <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                         <Typography color="inherit">
                                             {task?.reprEmail
                                                 ? task?.reprEmail

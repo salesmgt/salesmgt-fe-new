@@ -137,7 +137,7 @@ function Timelines() {
                                                 <Link
                                                     to={{
                                                         pathname: `${newUrl}/tasks/${item?.taskId}`,
-                                                        state: { openTimeline: true } // chỗ này cần tính toán xíu vì có trang tabNo=3, có trang tabNo=2
+                                                        state: { tabNo: 2 } // chỗ này cần tính toán xíu vì có trang tabNo=3, có trang tabNo=2
                                                     }}
                                                     className={classes.linkCard}
                                                 >

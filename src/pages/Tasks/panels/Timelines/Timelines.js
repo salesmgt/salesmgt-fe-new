@@ -22,7 +22,7 @@ import { MdDescription } from 'react-icons/md';
 import { IoPersonAddSharp } from 'react-icons/io5'
 import { FaHandshake } from 'react-icons/fa'
 import { Consts } from './TimelinesConfig'  // timeline
-import { purposeNames, taskStatusNames } from '../../../../constants/Generals'
+import { purposeNames, serviceStatusNames, taskStatusNames } from '../../../../constants/Generals'
 import { getTimeline } from '../../TasksServices';
 import { Loading } from '../../../../components';
 import classes from './Timelines.module.scss'
@@ -39,12 +39,15 @@ function Timelines(props) {
     const taskId = url.substring(url.lastIndexOf('/') + 1)
     const [timeline, setTimeline] = useState(null);
 
+    console.log('cannot get task id from: ', url);
+    console.log('taskId: ', taskId);
+
     let isMounted = true
     useEffect(() => {
         getTimeline(taskId).then(res => {
             if (isMounted) {
                 setTimeline(res)
-                // console.log('TaskDetail - getTimeline: ', res);
+                console.log('TaskDetail - getTimeline: ', res);
             }
         }).catch((error) => {
             if (error.response) {
@@ -94,15 +97,26 @@ function Timelines(props) {
         }
     }
 
-    const setResultChipColor = (result) => {
-        if (result === true) {
-            return <Chip label='Đã gặp HT/HP' className={classes.chipSuccess} />
-        } else if (result === false) {
-            return <Chip label='Chưa gặp HT/HP' className={classes.chipFailed} />
+    const setServiceStatusChipColor = (status) => {
+        switch (status) {
+            case serviceStatusNames.approved:
+                return <Chip label={status} className={classes.chipApproved} />
+            case serviceStatusNames.rejected:
+                return <Chip label={status} className={classes.chipRejected} />
+            case serviceStatusNames.pending:
+                return <Chip label={status} className={classes.chipPending} />
+            default:
+                break;
         }
     }
 
-    // console.log('timeline: ', timeline);
+    // const setResultChipColor = (result) => {
+    //     if (result === true) {
+    //         return <Chip label='Đã gặp HT/HP' className={classes.chipSuccess} />
+    //     } else if (result === false) {
+    //         return <Chip label='Chưa gặp HT/HP' className={classes.chipFailed} />
+    //     }
+    // }
 
     return (
         <div className={classes.panel}>
@@ -195,7 +209,7 @@ function Timelines(props) {
                                                             to={{
                                                                 pathname: `${newUrl}/reports/${item?.id}`
                                                             }}
-                                                            onClick={() => console.log(item.taskId)}
+                                                            onClick={() => console.log(taskId)}
                                                             className={classes.linkCard}
                                                         >
                                                             <div className={item?.isSuccess ? classes.tlnContentSuccess : classes.tlnContentFailed}>
@@ -224,14 +238,24 @@ function Timelines(props) {
                                             {item?.type === 'service' && (
                                                 <TimelineItem>
                                                     <TimelineOppositeContent>
-                                                        <div className={classes.tlnContent}>
-                                                            <Typography variant="subtitle1">
-                                                                {labels.services} <strong> {item?.services.join(', ')} </strong>
-                                                            </Typography>
-                                                            <Typography variant="subtitle2" color="textSecondary">
-                                                                <b>{labels.duration}</b> {item?.duration}
-                                                            </Typography>
-                                                        </div>
+                                                        <Link
+                                                            to={{ pathname: `${newUrl}/services/${item?.id}` }}
+                                                            onClick={() => console.log(taskId)}
+                                                            className={classes.linkCard}
+                                                        >
+                                                            <div className={classes.tlnContent}>
+                                                                <Typography variant="subtitle1">
+                                                                    {/* {labels.services} <strong> {item?.services.join(', ')} </strong> */}
+                                                                    {labels.services} <strong> {item?.service} </strong>
+                                                                </Typography>
+                                                                <Typography variant="subtitle2" color="textSecondary">
+                                                                    <b>{labels.duration} </b>
+                                                                    {parseDateToString(item?.startDate, 'DD-MM-YYYY')}  ➜ &nbsp;
+                                                                {parseDateToString(item?.endDate, 'DD-MM-YYYY')}
+                                                                </Typography>
+                                                                {setServiceStatusChipColor(item?.status)}
+                                                            </div>
+                                                        </Link>
                                                     </TimelineOppositeContent>
                                                     <TimelineSeparator>
                                                         <TimelineDot className={classes.ternary}>
@@ -240,14 +264,34 @@ function Timelines(props) {
                                                         {/* <TimelineConnector className={classes.ternaryTail} /> */}
                                                     </TimelineSeparator>
                                                     <TimelineContent>
-                                                        <div className={classes.tlnOpsContent}>
-                                                            <Typography variant="body1">
-                                                                <strong>{item?.date}</strong>
-                                                            </Typography>
-                                                            <Typography variant="subtitle2" color="textSecondary">
-                                                                {labels.schoolYear} <em>{item?.schoolYear}</em>
-                                                            </Typography>
-                                                        </div>
+                                                        {item?.approvedDate ? (
+                                                            <div className={classes.tlnOpsContent}>
+                                                                <Typography variant="body1">
+                                                                    {item?.status === serviceStatusNames.approved && (
+                                                                        <>
+                                                                            {labels.approvedOn} <strong style={{ color: "#4caf50" }}>{parseDateToString(item?.approveDate, 'DD-MM-YYYY')}</strong>
+                                                                        </>
+                                                                    )}
+                                                                    {item?.status === serviceStatusNames.rejected && (
+                                                                        <>
+                                                                            {labels.rejectedOn} <strong style={{ color: "#ee3e38" }}>{parseDateToString(item?.approveDate, 'DD-MM-YYYY')}</strong>
+                                                                        </>
+                                                                    )}
+                                                                </Typography>
+                                                                <Typography variant="subtitle2" color="textSecondary">
+                                                                    {labels.submitOn} <em>{parseDateToString(item?.date, 'DD-MM-YYYY')}</em>
+                                                                </Typography>
+                                                            </div>
+                                                        ) : (
+                                                            <div className={classes.tlnOpsContent}>
+                                                                <Typography variant="body1">
+                                                                    <strong>{parseDateToString(item?.date, 'DD-MM-YYYY')}</strong>
+                                                                </Typography>
+                                                                <Typography variant="subtitle2" color="textSecondary">
+                                                                    <em>{labels.pending}</em>
+                                                                </Typography>
+                                                            </div>
+                                                        )}
                                                     </TimelineContent>
                                                 </TimelineItem>
                                             )}
@@ -263,7 +307,7 @@ function Timelines(props) {
                 </Grid>
                 {/* Another Sector */}
             </Grid>
-        </div>
+        </div >
     )
 }
 

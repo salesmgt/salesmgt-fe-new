@@ -16,7 +16,7 @@ export const Consts = {
         remove: 'Remove',
         ok: 'OK, I understood',
         yes: 'OK',
-        showCreate: 'Memorandum of Contract',
+        showCreate: 'Propose a Service?',
         filter: 'Filters',
         search: {
             placeholder: 'Search...',
@@ -48,10 +48,10 @@ export const Consts = {
             label: 'Purposes',
             options: { none: 'None' },
         },
-        // For MOU
+        // For Services
         duration: {
             title: 'Duaration',
-            adornment: 'Month(s)',
+            // adornment: 'Month(s)',
         },
         term: {
             title: 'Contract Term',
@@ -62,38 +62,47 @@ export const Consts = {
         },
         service: {
             title: 'Services',
-            svc1: {
-                lb: 'ESL',
-                value: 'ESL',
-            },
-            svc2: {
-                lb: 'SEL',
-                value: 'SEL',
-            },
-            svc3: {
-                lb: 'Toán khoa',
-                value: 'Toán khoa',
-            },
-            svc4: {
-                lb: 'Stem',
-                value: 'Stem',
-            },
+            // svc1: {
+            //     lb: 'ESL',
+            //     value: 'ESL',
+            // },
+            // svc2: {
+            //     lb: 'SEL',
+            //     value: 'SEL',
+            // },
+            // svc3: {
+            //     lb: 'Toán khoa',
+            //     value: 'Toán khoa',
+            // },
+            // svc4: {
+            //     lb: 'Stem',
+            //     value: 'Stem',
+            // },
         },
-        revenue: {
-            title: ' Revenue Criteria',
-            rev1: {
-                lb: 'Học sinh',
-                value: 'Học sinh',
-            },
-            rev2: {
-                lb: 'Tiết',
-                value: 'Tiết',
-            },
-        },
+        // revenue: {
+        //     title: ' Revenue Criteria',
+        //     rev1: {
+        //         lb: 'Học sinh',
+        //         value: 'Học sinh',
+        //     },
+        //     rev2: {
+        //         lb: 'Tiết',
+        //         value: 'Tiết',
+        //     },
+        // },
         note: {
             title: 'Note',
         },
-        // End for MOU
+        classNo: {
+            title: 'No. of applied classes',
+            helper: 'The minimum number of classes is 1, maximum is 100'
+        },
+        price: {
+            title: 'Price floor',
+            adornment: 'VND/period(s)',
+            helper: 'The lowest accepted value is 100.000 VND, maximum is 5.000.000 VND'
+        },
+        // End for Services
     },
     messages: {
         notFound: 'No records found.',
@@ -154,12 +163,8 @@ export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
 export const updateStatusMessage = () => {
     return (
         <>
-            If you want to update this status, please process to create a
-            <strong>
-                {' '}
-                <em>Memorandum of Contract</em>
-            </strong>
-            .
+            If you want to update this status, please propose a
+            <strong><em> Service</em></strong> in the form below.
         </>
     )
 }

@@ -11,6 +11,10 @@ export const Consts = {
         endDate: 'End date:',
         status: 'Status: ',
         result: 'Result:',
+        pending: 'Pending for approval',
+        approvedOn: 'Approved on ',
+        rejectedOn: 'Rejected on ',
+        submitOn: 'Submited on '
     },
 }
 

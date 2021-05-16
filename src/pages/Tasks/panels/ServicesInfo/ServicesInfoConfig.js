@@ -1,15 +1,15 @@
 export const Consts = {
     headers: {
-        child1: 'MOU List',
-        child2: 'MOU Detail',
+        child1: 'Services List',
+        child2: 'Service Detail',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
         view: 'View More',
-        empty: 'MOU is empty.',
+        empty: 'Service is empty.',
         restriction: 'What are you looking for?',
-        noMOU: `Don't have any MOU yet.`,
+        noServices: `Don't have any services yet.`,
     },
     fields: {
         duration: {

@@ -1,0 +1,44 @@
+@import '../../../../styles/Variables.module.scss';
+
+.panel {
+    height: auto;
+    .action {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1rem 0.5rem;
+        .submit {
+            color: $common-white;
+            background-color: $main-info;
+            &:hover {
+                background-color: $dark-info;
+            }
+            &:disabled {
+                background-color: $divider;
+            }
+        }
+    }
+    .content {
+        padding: 0.75rem;
+        .wrapper {
+            padding: 0.75rem;
+            border: 1px solid $divider;
+            border-radius: $default-radius;
+        }
+        .row {
+            padding: 0.5rem;
+        }
+        .rowx {
+            padding: 0rem 0.5rem;
+        }
+        .rowy {
+            padding: 0.5rem 0rem;
+        }
+        .header {
+            text-transform: uppercase;
+        }
+        .title {
+            font-weight: 600;
+            color: $secondary-text;
+        }
+    }
+}

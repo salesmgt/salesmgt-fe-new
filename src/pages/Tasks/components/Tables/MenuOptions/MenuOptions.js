@@ -36,7 +36,7 @@ function MenuOptions(props) {
     const [open, setOpen] = useState(false)
     const [openAssign, setOpenAssign] = useState(false)
     const [openUnassign, setOpenUnassign] = useState(false)
-    const [openMOU, setOpenMOU] = useState(false)
+    const [openServices, setOpenServices] = useState(false)
 
     const [rows, setRows] = useState([data])
 
@@ -75,8 +75,8 @@ function MenuOptions(props) {
         setAnchorEl(null)
     }
 
-    const handleOpenMOU = () => {
-        setOpenMOU(true)
+    const handleOpenServices = () => {
+        setOpenServices(true)
         setAnchorEl(null)
     }
 
@@ -130,12 +130,12 @@ function MenuOptions(props) {
         }
     }
 
-    const renderMOUDialog = () => {
+    const renderServicesDialog = () => {
         return (
             <>
                 <CreateServices
-                    open={openMOU}
-                    onClose={() => setOpenMOU(false)}
+                    open={openServices}
+                    onClose={() => setOpenServices(false)}
                     refreshPage={refreshAPI}
                     taskId={data?.id}
                     schoolId={data?.schoolId}
@@ -192,15 +192,15 @@ function MenuOptions(props) {
 
                 {user.roles[0] === roleNames.salesman && data.schoolStatus !== statusNames.pending && (
                     <div>
-                        <MenuItem onClick={handleOpenMOU}>
+                        <MenuItem onClick={handleOpenServices}>
                             <ListItemIcon className={classes.itemIcon}>
                                 <MdNoteAdd fontSize="large" />
                             </ListItemIcon>
                             <ListItemText className={classes.itemText}>
-                                {menuItems.mou.title}
+                                {menuItems.services.title}
                             </ListItemText>
                         </MenuItem>
-                        {renderMOUDialog()}
+                        {renderServicesDialog()}
                     </div>
                 )}
                 {user.roles[0] !== roleNames.salesman && (

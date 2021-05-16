@@ -16,6 +16,9 @@ export const FILTER_DATE_RANGE = 'FILTER_DATE_RANGE'
 export const FILTER_ACTIVE = 'FILTER_ACTIVE'
 export const FILTER_ROLE = 'FILTER_ROLE'
 
+export const FILTER_SERVICE_STATUS = 'FILTER_SERVICE_STATUS'
+export const FILTER_SERVICE_TYPE = 'FILTER_SERVICE_TYPE'
+
 //===========================Search field===========================
 export const ENTER_SEARCH_KEYWORD = 'ENTER_SEARCH_KEYWORD'
 

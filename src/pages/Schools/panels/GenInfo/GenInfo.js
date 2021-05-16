@@ -515,7 +515,7 @@ function GenInfo(props) {
                                         {fields.name.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.educationalLevel} {school?.name}
                                     </Typography>
@@ -533,7 +533,7 @@ function GenInfo(props) {
                                         {fields.addr.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.address}
                                     </Typography>
@@ -551,7 +551,7 @@ function GenInfo(props) {
                                         {fields.dist.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.district}
                                     </Typography>
@@ -569,7 +569,7 @@ function GenInfo(props) {
                                         {fields.type.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.type}
                                     </Typography>
@@ -601,7 +601,7 @@ function GenInfo(props) {
                                         {fields.reprName.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.reprName
                                             ? (`${school?.reprIsMale ? 'Mr. ' : 'Ms. '} ${school?.reprName}`)
@@ -621,7 +621,7 @@ function GenInfo(props) {
                                         {fields.reprPhone.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.reprPhone
                                             ? school?.reprPhone
@@ -641,7 +641,7 @@ function GenInfo(props) {
                                         {fields.reprEmail.title}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={8} lg={8} className={classes.rowx}>
+                                <Grid item xs={12} sm={12} md={9} lg={8} className={classes.rowx}>
                                     <Typography color="inherit">
                                         {school?.reprEmail
                                             ? school?.reprEmail

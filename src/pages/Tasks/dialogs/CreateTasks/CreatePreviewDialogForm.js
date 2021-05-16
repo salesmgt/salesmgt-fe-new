@@ -173,6 +173,10 @@ function CreatePreviewDialogForm(props) {
                 return <Chip label={status} className={classes.chipLead} />
             case statusNames.customer:
                 return <Chip label={status} className={classes.chipCustomer} />
+            // case statusNames.ngungHT:
+            //     return <Chip label={status} className={classes.chipCustomer} />
+            // case statusNames.potential:  // tiem nang
+            //     return <Chip label={status} className={classes.chipCustomer} />
             default:
                 break
             // return <Chip label={status} />

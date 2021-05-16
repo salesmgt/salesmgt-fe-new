@@ -15,13 +15,16 @@ export { default as Profiles } from './Profiles/Profiles'
 export { default as Reports } from './Reports/Reports'
 export { default as Report } from './Reports/Report'
 
-// export { default as Salesmen } from './Salesmen/Salesmen'
-// export { default as Salesman } from './Salesmen/Salesman'
+export { default as Salesmen } from './Salesmen/Salesmen'
+export { default as Salesman } from './Salesmen/Salesman'
 
 export { default as Schools } from './Schools/Schools'
 export { default as School } from './Schools/School'
 
 export { default as Tasks } from './Tasks/Tasks'
 export { default as Task } from './Tasks/Task'
+
+export { default as Services } from './Services/Services'
+export { default as Service } from './Services/Service'
 
 export { default as WorkPlans } from './WorkPlans/WorkPlans'

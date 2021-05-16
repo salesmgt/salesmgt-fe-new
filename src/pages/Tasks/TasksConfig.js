@@ -111,7 +111,7 @@ export const Consts = {
         remove: {
             title: 'Remove',
         },
-        mou: {
+        services: {
             title: 'Add Services',
         },
         assign: {

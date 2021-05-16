@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
     Grid,
@@ -17,11 +17,12 @@ import { serviceNames } from '../../../../constants/Generals'
 import ServicesForm from './ServicesForm/ServicesForm'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames } from '../../../../constants/Generals'
+import { useTask } from '../../hooks/TaskContext';
 import classes from './ServicesInfo.module.scss'
 
 function ServicesInfo(props) {
     const { task, refreshPage } = props
-    const memos = task?.memorandums
+    const services = task?.services
 
     const [tabValue, setTabValue] = useState(0)
     const [open, setOpen] = useState(false)
@@ -29,50 +30,67 @@ function ServicesInfo(props) {
     const { headers, operations, fields } = Consts
 
     const { user } = useAuth()
+    const { serviceTypes } = useTask()
 
-    const [memoDets, setMemoDets] = useState(null)
+    const [service, setService] = useState(null)
 
-    const filteredMemos = (services) => {
-        switch (services) {
+    const filteredServices = (serviceTypes) => {
+        console.log(serviceTypes);
+        switch (serviceTypes) {
             case serviceNames.svc1:
-                return memos.filter(
-                    (memo) => memo.service === serviceNames.svc1
+                return services.filter(
+                    (aService) => aService.serviceType === serviceNames.svc1
                 )
             case serviceNames.svc2:
-                return memos.filter(
-                    (memo) => memo.service === serviceNames.svc2
+                return services.filter(
+                    (aService) => aService.serviceType === serviceNames.svc2
                 )
             case serviceNames.svc3:
-                return memos.filter(
-                    (memo) => memo.service === serviceNames.svc3
+                return services.filter(
+                    (aService) => aService.serviceType === serviceNames.svc3
                 )
             case serviceNames.svc4:
-                return memos.filter(
-                    (memo) => memo.service === serviceNames.svc4
+                return services.filter(
+                    (aService) => aService.serviceType === serviceNames.svc4
                 )
             default:
                 break
         }
     }
 
+    // const services = [
+    //     serviceNames.svc1,
+    //     serviceNames.svc2,
+    //     serviceNames.svc3,
+    //     serviceNames.svc4,
+    // ]
+    // List này giờ get từ API chứ ko set cứng phía FE nữa
+    // useEffect(() => {
+    //     getServiceTypes().then((res) => {
+    //         setServiceTypes(res)
+    //         // console.log("list tasks = ", res.list);
+    //     }).catch((error) => {
+    //         if (error.response) {
+    //             console.log(error)
+    //             history.push({
+    //                 pathname: '/errors',
+    //                 state: { error: error.response.status },
+    //             })
+    //         }
+    //     })
+    // }, []);
+
     if (!task) {
         return <Loading />
     }
 
-    if (!memos) {
+    if (!services) {
         return <NotFound title={operations.empty} />
     }
 
     const handleChangeTab = (event, value) => {
         setTabValue(value)
     }
-
-    const services = [
-        serviceNames.svc1,
-        serviceNames.svc2,
-        serviceNames.svc3,
-        serviceNames.svc4,
-    ]
 
     return (
         <div className={classes.panel}>
@@ -120,7 +138,7 @@ function ServicesInfo(props) {
                                         onChange={handleChangeTab}
                                         className={classes.tabs}
                                     >
-                                        {services.map((service, index) => (
+                                        {serviceTypes.map((service, index) => (
                                             <Tab key={index} label={service} />
                                         ))}
                                     </Tabs>
@@ -135,12 +153,12 @@ function ServicesInfo(props) {
                                 >
                                     {tabValue === 0 && (
                                         <>
-                                            {filteredMemos(serviceNames.svc1)
+                                            {filteredServices(serviceNames.svc1)
                                                 .length !== 0 ? (
                                                 <>
-                                                    {filteredMemos(
+                                                    {filteredServices(
                                                         serviceNames.svc1
-                                                    ).map((memo, index) => (
+                                                    ).map((aService, index) => (
                                                         <Card
                                                             className={
                                                                 classes.card
@@ -186,7 +204,7 @@ function ServicesInfo(props) {
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    memo?.service
+                                                                                    aService?.service
                                                                                 }
                                                                             </Typography>
                                                                         </Grid>
@@ -216,7 +234,7 @@ function ServicesInfo(props) {
                                                                                     .date
                                                                                     .tittle
                                                                                     } ${moment(
-                                                                                        memo?.date
+                                                                                        aService?.date
                                                                                     ).format(
                                                                                         'DD/MM/YYYY'
                                                                                     )}`}
@@ -235,7 +253,7 @@ function ServicesInfo(props) {
                                                                         variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.note
+                                                                            aService?.note
                                                                         }
                                                                     </Typography>
                                                                 </div>
@@ -252,8 +270,8 @@ function ServicesInfo(props) {
                                                                         setOpen(
                                                                             true
                                                                         )
-                                                                        setMemoDets(
-                                                                            memo
+                                                                        setService(
+                                                                            aService
                                                                         )
                                                                     }}
                                                                 >
@@ -269,28 +287,28 @@ function ServicesInfo(props) {
                                                         onClose={() =>
                                                             setOpen(false)
                                                         }
-                                                        memoDets={memoDets}
+                                                        service={service}
                                                         refreshPage={
                                                             refreshPage
                                                         }
-                                                        setMemoDets={
-                                                            setMemoDets
+                                                        setService={
+                                                            setService
                                                         }
                                                     />
                                                 </>
                                             ) : (
                                                 <div
                                                     className={
-                                                        classes.noMOUZone
+                                                        classes.noServicesZone
                                                     }
                                                 >
                                                     <Typography
                                                         color="inherit"
                                                         className={
-                                                            classes.noMOU
+                                                            classes.noServices
                                                         }
                                                     >
-                                                        {operations.noMOU}
+                                                        {operations.noServices}
                                                     </Typography>
                                                 </div>
                                             )}
@@ -298,12 +316,12 @@ function ServicesInfo(props) {
                                     )}
                                     {tabValue === 1 && (
                                         <>
-                                            {filteredMemos(serviceNames.svc2)
+                                            {filteredServices(serviceNames.svc2)
                                                 .length !== 0 ? (
                                                 <>
-                                                    {filteredMemos(
+                                                    {filteredServices(
                                                         serviceNames.svc2
-                                                    ).map((memo, index) => (
+                                                    ).map((aService, index) => (
                                                         <Card
                                                             className={
                                                                 classes.card
@@ -349,7 +367,7 @@ function ServicesInfo(props) {
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    memo?.service
+                                                                                    aService?.service
                                                                                 }
                                                                             </Typography>
                                                                         </Grid>
@@ -379,7 +397,7 @@ function ServicesInfo(props) {
                                                                                     .date
                                                                                     .tittle
                                                                                     } ${moment(
-                                                                                        memo?.date
+                                                                                        aService?.date
                                                                                     ).format(
                                                                                         'DD/MM/YYYY'
                                                                                     )}`}
@@ -398,7 +416,7 @@ function ServicesInfo(props) {
                                                                         variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.note
+                                                                            aService?.note
                                                                         }
                                                                     </Typography>
                                                                 </div>
@@ -415,8 +433,8 @@ function ServicesInfo(props) {
                                                                         setOpen(
                                                                             true
                                                                         )
-                                                                        setMemoDets(
-                                                                            memo
+                                                                        setService(
+                                                                            aService
                                                                         )
                                                                     }}
                                                                 >
@@ -432,28 +450,28 @@ function ServicesInfo(props) {
                                                         onClose={() =>
                                                             setOpen(false)
                                                         }
-                                                        memoDets={memoDets}
+                                                        service={service}
                                                         refreshPage={
                                                             refreshPage
                                                         }
-                                                        setMemoDets={
-                                                            setMemoDets
+                                                        setService={
+                                                            setService
                                                         }
                                                     />
                                                 </>
                                             ) : (
                                                 <div
                                                     className={
-                                                        classes.noMOUZone
+                                                        classes.noServicesZone
                                                     }
                                                 >
                                                     <Typography
                                                         color="inherit"
                                                         className={
-                                                            classes.noMOU
+                                                            classes.noServices
                                                         }
                                                     >
-                                                        {operations.noMOU}
+                                                        {operations.noServices}
                                                     </Typography>
                                                 </div>
                                             )}
@@ -461,12 +479,12 @@ function ServicesInfo(props) {
                                     )}
                                     {tabValue === 2 && (
                                         <>
-                                            {filteredMemos(serviceNames.svc3)
+                                            {filteredServices(serviceNames.svc3)
                                                 .length !== 0 ? (
                                                 <>
-                                                    {filteredMemos(
+                                                    {filteredServices(
                                                         serviceNames.svc3
-                                                    ).map((memo, index) => (
+                                                    ).map((aService, index) => (
                                                         <Card
                                                             className={
                                                                 classes.card
@@ -512,7 +530,7 @@ function ServicesInfo(props) {
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    memo?.service
+                                                                                    aService?.service
                                                                                 }
                                                                             </Typography>
                                                                         </Grid>
@@ -542,7 +560,7 @@ function ServicesInfo(props) {
                                                                                     .date
                                                                                     .tittle
                                                                                     } ${moment(
-                                                                                        memo?.date
+                                                                                        aService?.date
                                                                                     ).format(
                                                                                         'DD/MM/YYYY'
                                                                                     )}`}
@@ -561,7 +579,7 @@ function ServicesInfo(props) {
                                                                         variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.note
+                                                                            aService?.note
                                                                         }
                                                                     </Typography>
                                                                 </div>
@@ -578,8 +596,8 @@ function ServicesInfo(props) {
                                                                         setOpen(
                                                                             true
                                                                         )
-                                                                        setMemoDets(
-                                                                            memo
+                                                                        setService(
+                                                                            aService
                                                                         )
                                                                     }}
                                                                 >
@@ -595,28 +613,28 @@ function ServicesInfo(props) {
                                                         onClose={() =>
                                                             setOpen(false)
                                                         }
-                                                        memoDets={memoDets}
+                                                        service={service}
                                                         refreshPage={
                                                             refreshPage
                                                         }
-                                                        setMemoDets={
-                                                            setMemoDets
+                                                        setService={
+                                                            setService
                                                         }
                                                     />
                                                 </>
                                             ) : (
                                                 <div
                                                     className={
-                                                        classes.noMOUZone
+                                                        classes.noServicesZone
                                                     }
                                                 >
                                                     <Typography
                                                         color="inherit"
                                                         className={
-                                                            classes.noMOU
+                                                            classes.noServices
                                                         }
                                                     >
-                                                        {operations.noMOU}
+                                                        {operations.noServices}
                                                     </Typography>
                                                 </div>
                                             )}
@@ -624,12 +642,12 @@ function ServicesInfo(props) {
                                     )}
                                     {tabValue === 3 && (
                                         <>
-                                            {filteredMemos(serviceNames.svc4)
+                                            {filteredServices(serviceNames.svc4)
                                                 .length !== 0 ? (
                                                 <>
-                                                    {filteredMemos(
+                                                    {filteredServices(
                                                         serviceNames.svc4
-                                                    ).map((memo, index) => (
+                                                    ).map((aService, index) => (
                                                         <Card
                                                             className={
                                                                 classes.card
@@ -675,7 +693,7 @@ function ServicesInfo(props) {
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    memo?.service
+                                                                                    aService?.service
                                                                                 }
                                                                             </Typography>
                                                                         </Grid>
@@ -705,7 +723,7 @@ function ServicesInfo(props) {
                                                                                     .date
                                                                                     .tittle
                                                                                     } ${moment(
-                                                                                        memo?.date
+                                                                                        aService?.date
                                                                                     ).format(
                                                                                         'DD/MM/YYYY'
                                                                                     )}`}
@@ -724,7 +742,7 @@ function ServicesInfo(props) {
                                                                         variant="body1"
                                                                     >
                                                                         {
-                                                                            memo?.note
+                                                                            aService?.note
                                                                         }
                                                                     </Typography>
                                                                 </div>
@@ -741,8 +759,8 @@ function ServicesInfo(props) {
                                                                         setOpen(
                                                                             true
                                                                         )
-                                                                        setMemoDets(
-                                                                            memo
+                                                                        setService(
+                                                                            aService
                                                                         )
                                                                     }}
                                                                 >
@@ -758,28 +776,28 @@ function ServicesInfo(props) {
                                                         onClose={() =>
                                                             setOpen(false)
                                                         }
-                                                        memoDets={memoDets}
+                                                        service={service}
                                                         refreshPage={
                                                             refreshPage
                                                         }
-                                                        setMemoDets={
-                                                            setMemoDets
+                                                        setService={
+                                                            setService
                                                         }
                                                     />
                                                 </>
                                             ) : (
                                                 <div
                                                     className={
-                                                        classes.noMOUZone
+                                                        classes.noServicesZone
                                                     }
                                                 >
                                                     <Typography
                                                         color="inherit"
                                                         className={
-                                                            classes.noMOU
+                                                            classes.noServices
                                                         }
                                                     >
-                                                        {operations.noMOU}
+                                                        {operations.noServices}
                                                     </Typography>
                                                 </div>
                                             )}

@@ -162,6 +162,20 @@
   margin-left: 0.5rem;
 }
 
+//=======================Service Status chips=======================
+.chipPending {
+  background-color: $dark-info !important;
+  color: $common-white !important;
+}
+.chipApproved {
+  background-color: $main-success !important;
+  color: $common-white !important;
+}
+.chipRejected {
+  background-color: $dark-error !important;
+  color: $common-white !important;
+}
+
 .rpDaGap {
   color: $main-success;
   margin-left: 0.5rem;

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Grid, Typography, Icon, Avatar, Chip } from '@material-ui/core'
-import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { Loading } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import classes from './AssignInfo.module.scss'

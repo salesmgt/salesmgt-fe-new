@@ -20,6 +20,7 @@ import {
     ASSIGNED_FILTER
 } from '../../../constants/Filters'
 import { roleNames } from '../../../constants/Generals'
+import { getServiceTypes } from '../TasksServices';
 
 const TaskContext = createContext()
 
@@ -198,6 +199,7 @@ function useTaskProvider() {
 
     // APIs
     const [PICs, setPICs] = useState([])
+    const [serviceTypes, setServiceTypes] = useState([])
     // const [schoolYears, setSchoolYears] = useState([])
     // const [districts, setDistricts] = useState([])
     // const [schoolTypes, setSchoolTypes] = useState([])
@@ -224,6 +226,20 @@ function useTaskProvider() {
         getListPICs()
         // return () => setPICs([])
     }, [])
+
+    useEffect(() => {
+        getServiceTypes().then((res) => {
+            setServiceTypes(res)
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }, []);
 
     //================Parse object "params" --> query-string================
     //........
@@ -264,6 +280,7 @@ function useTaskProvider() {
         assignedStatuses,
         setFilter,
         getListPICs,
+        serviceTypes
     }
 }
 

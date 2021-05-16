@@ -26,14 +26,14 @@ export const serviceNames = {
     svc1: 'ESL',
     svc2: 'SEL',
     svc3: 'Toán khoa',
-    svc4: 'Stem',
+    svc4: 'Steam',
 }
 
 export const serviceStatusNames = {
-    // notStart: '',    // chỉ cần null là đc rồi chứ nhỉ? khỏi cần 1 status riêng cho nó
-    pending: 'Pending',
-    approved: 'Approved',
-    rejected: 'Rejected',
+    pending: 'pending',
+    approved: 'approved',
+    rejected: 'rejected',
+    // notStart: '',    // chỉ cần null là đc rồi chứ nhỉ? khỏi cần 1 status riêng cho nó   ==> Bỏ
 }
 
 export const purposeNames = {

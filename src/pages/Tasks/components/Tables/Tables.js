@@ -416,20 +416,24 @@ function Tables(props) {
                                             {setPurposeChipColor(row?.purpose)}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
-                                            <Highlighter
-                                                highlightClassName="YourHighlightClass"
-                                                searchWords={[params.searchKey]}
-                                                autoEscape={true}
-                                                textToHighlight={parseDateToString(row?.assignDate, 'DD-MM-yyyy') || '07-05-2021'}
-                                            />
+                                            {row?.assignDate && (
+                                                <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[params.searchKey]}
+                                                    autoEscape={true}
+                                                    textToHighlight={parseDateToString(row?.assignDate, 'DD-MM-yyyy') || '07-05-2021'}
+                                                />
+                                            )}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
-                                            <Highlighter
-                                                highlightClassName="YourHighlightClass"
-                                                searchWords={[params.searchKey]}
-                                                autoEscape={true}
-                                                textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || '30-09-2021'}
-                                            />
+                                            {row?.endDate && (
+                                                <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[params.searchKey]}
+                                                    autoEscape={true}
+                                                    textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || '30-09-2021'}
+                                                />
+                                            )}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
                                             {setTaskStatusChipColor(row?.purpose)}
