@@ -105,6 +105,9 @@ function Profiles() {
     })
 
     const [expanded, setExpanded] = useState(false)
+    // const [address, setAddress] = useState('');
+    const [latitude, setLatitude] = useState(0.0);
+    const [longitude, setLongitude] = useState(0.0);
 
     const pwdValues = { oldPassword: '', newPassword: '', confirmPassword: '' }
 
@@ -112,10 +115,11 @@ function Profiles() {
 
     const phoneValues = { phone: '' }
 
-    const addrValues = { address: '' }
-    // const [address, setAddress] = useState('');
-    const [latitude, setLatitude] = useState(0.0);
-    const [longitude, setLongitude] = useState(0.0);
+    const addrValues = {
+        address: '',
+        latitude: latitude,
+        longitude: longitude,
+    }
 
     const {
         handleSubmit: pwdSubmit,
@@ -286,7 +290,12 @@ function Profiles() {
     }
 
     const saveAvatarToDb = (url) => {
-        ProfilesServices.updateGeneral(user.username, 'avatar', url)
+        const model = {
+            attribute: 'avatar',
+            value: url,
+        }
+
+        ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
             })
@@ -344,7 +353,12 @@ function Profiles() {
     }
 
     const onEmailSubmit = (data) => {
-        ProfilesServices.updateGeneral(user.username, 'email', data.email)
+        const model = {
+            attribute: 'email',
+            value: data?.email,
+        }
+
+        ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
                 setNotify({
@@ -372,7 +386,12 @@ function Profiles() {
     }
 
     const onPhoneSubmit = (data) => {
-        ProfilesServices.updateGeneral(user.username, 'phone', data.phone)
+        const model = {
+            attribute: 'phone',
+            value: data?.phone,
+        }
+
+        ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
                 setNotify({
@@ -400,10 +419,18 @@ function Profiles() {
     }
 
     const onAddrSubmit = (data) => {
-        console.log('address data: ', data);
+        // console.log('---------Profile nè---------');
+        // console.log('address nè: ', data?.address);
+        // console.log(`[latitude, longitude] = [${latitude}, ${longitude}]`);
 
-        // Ở đây sẽ ko chỉ mỗi address nữa mà còn cả [lat,long] cũng bị đổi
-        ProfilesServices.updateGeneral(user.username, 'address', data.address)
+        const model = {
+            attribute: 'address',
+            value: data?.address,
+            latitude: latitude,
+            longitude: longitude,
+        }
+
+        ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
                 setNotify({
@@ -411,7 +438,7 @@ function Profiles() {
                     message: 'Updated Successfully',
                     type: 'success',
                 })
-                addrReset({ address: '' })
+                addrReset(addrValues)
             })
             .catch((error) => {
                 if (error.response) {

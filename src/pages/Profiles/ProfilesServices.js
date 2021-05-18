@@ -7,15 +7,21 @@ export async function getProfile(username) {
     return data
 }
 
-export async function updateGeneral(username, attribute, value) {
-    const response = await Api.patch(`/users/${username}`, {
-        attribute: attribute,
-        value: value,
-    })
+export async function updateGeneral(username, value) {
+    const response = await Api.patch(`/users/${username}`, value)
     const data = await response.data
 
     return data
 }
+// export async function updateGeneral(username, attribute, value) {
+//     const response = await Api.patch(`/users/${username}`, {
+//         attribute: attribute,
+//         value: value,
+//     })
+//     const data = await response.data
+
+//     return data
+// }
 
 export async function updateAccount(username, newPassword, oldPassword) {
     const response = await Api.post(`/users/${username}`, {

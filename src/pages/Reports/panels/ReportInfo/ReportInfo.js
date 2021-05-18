@@ -208,7 +208,7 @@ function RepInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     const createNotify = (value) => {

@@ -147,9 +147,9 @@ function GenInfo(props) {
     }
 
     const onSubmit = (data) => {
-        console.log('---------GenInfo nè---------');
-        console.log('address nè: ', data?.address);
-        console.log(`[${latitude}, ${longitude}]`);
+        // console.log('---------GenInfo nè---------');
+        // console.log('address nè: ', data?.address);
+        // console.log(`[${latitude}, ${longitude}]`);
 
         const model = {
             ...data,

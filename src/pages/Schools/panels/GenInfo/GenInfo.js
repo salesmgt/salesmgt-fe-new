@@ -200,7 +200,7 @@ function GenInfo(props) {
                     })
                 }
             })
-            alert(JSON.stringify(model))
+            // alert(JSON.stringify(model))
         }
     }
 
