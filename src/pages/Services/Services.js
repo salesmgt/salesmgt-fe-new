@@ -5,10 +5,13 @@ import { columns } from './ServicesConfig'
 import { useService } from './hooks/ServiceContext'
 import { getServices } from './ServicesServices'
 import { Loading } from '../../components'
+import { useAuth } from '../../hooks/AuthContext'
+import { roleNames } from '../../constants/Generals';
 import classes from './Services.module.scss'
 
 function Services() {
     const history = useHistory()
+    const { user } = useAuth()
 
     const { params } = useService()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -19,10 +22,11 @@ function Services() {
     const refreshPage = (
         page = 0,
         limit = 10,
-        column = 'id',
-        direction = 'asc',
+        column = 'submitDate',
+        direction = 'desc',
         searchKey,
-        listFilters
+        listFilters,
+        picUsername
     ) => {
         getServices(
             page,
@@ -30,7 +34,8 @@ function Services() {
             column,
             direction,
             searchKey,
-            listFilters
+            listFilters,
+            picUsername
         )
             .then((res) => {
                 if (isMounted) {
@@ -51,7 +56,11 @@ function Services() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        refreshPage(page, limit, column, direction, searchKey, listFilters)
+        if (user.roles[0] === roleNames.salesman) {
+            refreshPage(page, limit, column, direction, searchKey, listFilters, user.username)
+        } else {
+            refreshPage(page, limit, column, direction, searchKey, listFilters,)
+        }
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             isMounted = false

@@ -3,8 +3,8 @@ import Api from '../../services/Api'
 export async function getServices(
     page = 0,
     limit = 10,
-    column = 'id',
-    direction = 'asc',
+    column = 'submitDate',
+    direction = 'desc',
     searchKey = undefined,
     filters = undefined
 ) {
@@ -28,11 +28,11 @@ export async function getServices(
     return response
 }
 
-export async function getService(serviceId) {
-    const response = await Api.get(`/services/${serviceId}`)
-    const data = await response.data
-    return data
-}
+// export async function getService(serviceId) {
+//     const response = await Api.get(`/services/${serviceId}`, serviceId)
+//     const data = await response.data
+//     return data
+// }
 
 export async function insertService(service) {
     const response = await Api.post('/services/', service)
@@ -50,6 +50,18 @@ export async function getServiceTypes() {
     const response = await Api.get('/serviceTypes')
     const data = await response.data
     return data
+}
+
+export async function approveServices(serviceId) {
+    const response = await Api.patch(`/services/approved/${serviceId}`, serviceId)
+    // const data = await response.data
+    return response
+}
+
+export async function rejectServices(serviceId) {
+    const response = await Api.patch(`/services/rejected/${serviceId}`, serviceId)
+    // const data = await response.data
+    return response
 }
 
 // export async function getTimeline(serviceId) {

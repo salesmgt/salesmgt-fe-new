@@ -217,7 +217,7 @@ function Profiles() {
         if (!file) {
             setNotify({
                 isOpen: true,
-                message: 'Update Unsuccessful',
+                message: 'Updated failed',
                 type: 'error',
             })
             return false
@@ -226,7 +226,7 @@ function Profiles() {
         if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
             setNotify({
                 isOpen: true,
-                message: 'Update Unsuccessful',
+                message: 'Updated failed',
                 type: 'error',
             })
             return false
@@ -336,7 +336,7 @@ function Profiles() {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -364,7 +364,7 @@ function Profiles() {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -392,7 +392,7 @@ function Profiles() {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -423,7 +423,7 @@ function Profiles() {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })

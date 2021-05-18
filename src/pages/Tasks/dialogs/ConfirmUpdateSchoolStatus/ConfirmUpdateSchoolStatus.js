@@ -11,10 +11,9 @@ import {
     IconButton,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md';
-import { Consts, confirmUnassignMsg } from '../DialogConfig'
-import { unassign } from '../../TasksServices'
-import { useTask } from '../../hooks/TaskContext'
-import classes from './ConfirmUnassign.module.scss'
+import { Consts, confirmUpdateSchoolStatus } from '../DialogConfig'
+import { updateStatus } from '../../TasksServices'
+import classes from './ConfirmUpdateSchoolStatus.module.scss'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -43,42 +42,42 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     );
 });
 
-function ConfirmUnassign(props) {
-    const { open, onClose, data, refreshAPI, setNotify } = props
+function ConfirmUpdateSchoolStatus(props) {
+    const { open, onClose, data, selectedStatus, refreshAPI, setNotify } = props
     const { headers, operations } = Consts
-    const { params } = useTask()
-    const { listFilters, page, limit, column, direction, searchKey } = params
 
-    const handleOK = () => {
-        unassign(data?.id).then(res => {
-            refreshAPI(page, limit, column, direction, searchKey, listFilters);
-            setNotify({
-                isOpen: true,
-                message: 'Unassigned successfully',
-                type: 'success'
+    const allowUpdate = () => {
+        updateStatus(data?.schoolId, selectedStatus)
+            .then((res) => {
+                refreshAPI(data?.id)
+                setNotify({
+                    isOpen: true,
+                    message: "Updated school's status successfully",
+                    type: 'success',
+                })
+                onClose()
             })
-            onClose();
-        }).catch(error => {
-            setNotify({
-                isOpen: false,
-                message: 'Unassigned failed',
-                type: 'error',
+            .catch((error) => {
+                setNotify({
+                    isOpen: true,
+                    message: "Updated school's status failed",
+                    type: 'error',
+                })
             })
-        })
     }
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitleWithIconClose onClose={onClose}>{headers.confirmUnassign}</DialogTitleWithIconClose>
+            <DialogTitleWithIconClose onClose={onClose}>{headers.confirmUpdate}</DialogTitleWithIconClose>
             {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
-                    {confirmUnassignMsg(data?.fullName, data?.level, data?.schoolName)}
+                    {confirmUpdateSchoolStatus(data?.level, data?.schoolName, data?.schoolStatus, selectedStatus)}
                 </DialogContentText>
             </DialogContent>
             {/* <Divider /> */}
             <DialogActions>
-                <Button className={classes.btnOK} onClick={handleOK} autoFocus>
+                <Button className={classes.btnOK} onClick={allowUpdate} autoFocus>
                     {operations.save}
                 </Button>
                 <Button onClick={onClose}>
@@ -89,4 +88,4 @@ function ConfirmUnassign(props) {
     )
 }
 
-export default React.memo(ConfirmUnassign)
+export default React.memo(ConfirmUpdateSchoolStatus)

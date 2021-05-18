@@ -1,10 +1,11 @@
 export const columns = [
-    { key: 'no', name: 'No', sortable: false, width: '2%' },
-    { key: 'serviceType', name: 'Service Type', sortable: true, width: '20%' },
-    { key: 'name', name: 'School Name', sortable: true, width: '25%' },
+    { key: 'no', name: 'No', sortable: false, width: '1%' },
+    { key: 'serviceType', name: 'Service Type', sortable: true, width: '18%' },
+    { key: 'name', name: 'School Name', sortable: false, width: '23%' },
     { key: 'duration', name: 'Duration', sortable: false, width: '25%' },
-    { key: 'status', name: 'Status', sortable: true, width: '20%' },    // Pending, Approved, Rejected
-    { key: '', name: '', sortable: false, width: '2%' },
+    { key: 'status', name: 'Status', sortable: true, width: '15%' },    // Pending, Approved, Rejected
+    { key: 'approveDate', name: 'Approved Date', sortable: true, width: '17%' },
+    { key: '', name: '', sortable: false, width: '1%' },
 ]
 
 export const detailPageConsts = {
@@ -12,7 +13,7 @@ export const detailPageConsts = {
         back: 'Services',
     },
     tabNames: {
-        tab1: 'General Info',
+        tab1: 'Service Info',
     },
     operations: {
         notFound: 'Service Not Found',

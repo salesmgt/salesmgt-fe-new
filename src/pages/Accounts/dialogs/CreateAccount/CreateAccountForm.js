@@ -231,7 +231,7 @@ function CreateAccountForm(props) {
                     }
                     setNotify({
                         isOpen: true,
-                        message: 'Create Unsuccessful',
+                        message: 'Created failed',
                         type: 'error',
                     })
                 }

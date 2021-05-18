@@ -43,7 +43,7 @@
 }
 
 .tlnContent {
-    padding: 0.5rem 1rem 0.5rem 0.7rem;
+    padding: 0.5rem 0.7rem;
     margin-bottom: 0.5rem;
     border-radius: $default-radius;
     box-shadow: 0 4px 6px -6px $common-black;
@@ -76,6 +76,22 @@
 .tlnContentFailed {
     @extend .tlnContent;
     border-left: solid 5px $main-error;
+}
+
+.tlnServiceContent {
+  padding: 0.6rem 1rem 0.6rem 0.7rem;
+  margin-bottom: 0.5rem;
+  border-radius: $default-radius;
+  box-shadow: 0 4px 6px -6px $common-black;
+  background-color: $grey-100;
+}
+.tlnServiceAppproved {
+  @extend .tlnServiceContent;
+  border-right: 5px solid $main-success;
+}
+.tlnServiceRejected {
+  @extend .tlnServiceContent;
+  border-right: 5px solid $main-error;
 }
 
 /*==================Task purpose chip==================*/
@@ -163,15 +179,18 @@
 }
 
 //=======================Service Status chips=======================
-.chipPending {
-  background-color: $dark-info !important;
-  color: $common-white !important;
-}
+// .chipPending {   // Pending thì ko hiện lên nên ko cần chip
+//   margin-top: 0.7rem;
+//   background-color: $dark-info !important;
+//   color: $common-white !important;
+// }
 .chipApproved {
+  margin-top: 0.7rem;
   background-color: $main-success !important;
   color: $common-white !important;
 }
 .chipRejected {
+  margin-top: 0.7rem;
   background-color: $dark-error !important;
   color: $common-white !important;
 }

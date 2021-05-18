@@ -1,20 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Typography, Icon, Avatar, Chip } from '@material-ui/core'
 import { Loading } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
-import classes from './AssignInfo.module.scss'
-import { useLocation } from 'react-router'
 import { purposeNames } from '../../../../constants/Generals'
+import { getTask } from '../../../Tasks/TasksServices';
+import { parseDateToString } from '../../../../utils/DateTimes';
+import classes from './AssignInfo.module.scss'
 
 function AssignInfo(props) {
     const { report } = props
     const { headers, fields } = Consts
 
-    // const location = useLocation()
-    // console.log("location Report's: ", location);
     // console.log('report: ', report);
 
-    if (!report) {
+    const [taskDetail, setTaskDetail] = useState(null);
+    useEffect(() => {
+        getTask(report?.taskId).then(res => {
+            console.log('task of the report: ', res);
+            setTaskDetail(res)
+        }).catch(error => {
+            console.log(error.response.data.message);
+        })
+    }, []);
+
+    if (!report || !taskDetail) {
         return <Loading />
     }
 
@@ -210,7 +219,9 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        01/06/2021 &nbsp; ➜ &nbsp; 30/09/2021
+                                        {parseDateToString(taskDetail?.assignDate, 'DD-MM-YYYY')}
+                                        &nbsp; ➜ &nbsp;
+                                        {parseDateToString(taskDetail?.endDate, 'DD-MM-YYYY')}
                                     </Typography>
                                 </Grid>
                             </Grid>

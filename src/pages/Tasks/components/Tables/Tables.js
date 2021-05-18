@@ -30,7 +30,7 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { Consts } from '../../TasksConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { getColumns } from '../../TasksConfig'
-import { roleNames, purposeNames, taskStatusNames } from '../../../../constants/Generals'
+import { roleNames, purposeNames, taskStatusNames, taskResultNames } from '../../../../constants/Generals'
 import SortableTableHeaders from './SortableTableHeaders'
 import Highlighter from 'react-highlight-words'
 // import { Pagination } from '@material-ui/lab';
@@ -251,19 +251,41 @@ function Tables(props) {
         }
     }
 
-    const setTaskStatusChipColor = (status) => {
-        switch (status) {
-            case taskStatusNames.ongoing:
-                return <Chip label={status} className={classes.chipOnGoing} />
-            case taskStatusNames.success:
-                return <Chip label={status} className={classes.chipSuccess} />
-            case taskStatusNames.failed:
-                return <Chip label={status} className={classes.chipFailed} />
+    const setTaskStatusChipColor = (result, endDate) => {
+        const today = new Date()
+        const deadline = new Date(endDate)
+        switch (result) {
+            case taskResultNames.successful:
+                return <Chip label={taskStatusNames.success} className={classes.chipSuccess} />
+            case taskResultNames.tbd:
+                if (today <= deadline)
+                    return <Chip label={taskStatusNames.ongoing} className={classes.chipOnGoing} />
+                else
+                    return <Chip label={taskStatusNames.failed} className={classes.chipFailed} />
             default:
-                return <Chip label={status} /> // #5c21f3
+                break   // ko hiện gì
+            // return <Chip label={status} /> // #5c21f3
         }
     }
     //=================================================================================
+
+    const setEndDateColor = (endDate, result) => {
+        const today = new Date()
+        const deadline = new Date(endDate)
+        // const deadline = new Date('2021-05-17')
+        const countToDeadline = Math.round((deadline.getTime() - today.getTime()) / (1000 * 3600 * 24))
+        // console.log('countToDeadline = ', countToDeadline);
+
+        if (result === taskResultNames.successful) {
+            return '#4caf50'    // 'successEndDate'
+        } else if (countToDeadline > 15) {
+            return '#1976d2'    // 'safeEndDate'
+        } else if (0 <= countToDeadline <= 15) {
+            return '#ff9800'    // 'warningEndDate'
+        } else {
+            return '#fc2718'    // 'overtimeEndDate'
+        }
+    }
 
     return (
         <div className={classes.wrapper}>
@@ -427,16 +449,18 @@ function Tables(props) {
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
                                             {row?.endDate && (
-                                                <Highlighter
-                                                    highlightClassName="YourHighlightClass"
-                                                    searchWords={[params.searchKey]}
-                                                    autoEscape={true}
-                                                    textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || '30-09-2021'}
-                                                />
+                                                <strong style={{ color: setEndDateColor(row?.endDate, row?.result) }}>
+                                                    <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}
+                                                        textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || '30-09-2021'}
+                                                    />
+                                                </strong>
                                             )}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
-                                            {setTaskStatusChipColor(row?.purpose)}
+                                            {setTaskStatusChipColor(row?.result, row?.endDate)}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell} align="right">
                                             <MenuOptions

@@ -105,38 +105,38 @@ function Chips(props) {
 
         if (!handleChipsRemoved) return
 
-        dispatch({
-            type: ReducerActions.FILTER_DISTRICT,
-            payload: { filterType: DISTRICT_FILTER, filterValue: '' },
-        })
-        dispatch({
-            type: ReducerActions.FILTER_SCHOOL_TYPE,
-            payload: { filterType: TYPE_FILTER, filterValue: '' },
-        })
-        dispatch({
-            type: ReducerActions.FILTER_SCHOOL_LEVEL,
-            payload: { filterType: LEVEL_FILTER, filterValue: '' },
-        })
+        // dispatch({
+        //     type: ReducerActions.FILTER_DISTRICT,
+        //     payload: { filterType: DISTRICT_FILTER, filterValue: '' },
+        // })
+        // dispatch({
+        //     type: ReducerActions.FILTER_SCHOOL_TYPE,
+        //     payload: { filterType: TYPE_FILTER, filterValue: '' },
+        // })
+        // dispatch({
+        //     type: ReducerActions.FILTER_SCHOOL_LEVEL,
+        //     payload: { filterType: LEVEL_FILTER, filterValue: '' },
+        // })
         // dispatch({
         //     type: ReducerActions.FILTER_SCHOOL_SCALE,
         //     payload: { filterType: SCALE_FILTER, filterValue: '' },
         // })
-        dispatch({
-            type: ReducerActions.FILTER_SCHOOL_STATUS,
-            payload: { filterType: STATUS_FILTER, filterValue: '' },
-        })
-        dispatch({
-            type: ReducerActions.FILTER_ACTIVE,
-            payload: { filterType: ACTIVE_FILTER, filterValue: null },
-        })
+        // dispatch({
+        //     type: ReducerActions.FILTER_SCHOOL_STATUS,
+        //     payload: { filterType: STATUS_FILTER, filterValue: '' },
+        // })
+        // dispatch({
+        //     type: ReducerActions.FILTER_ACTIVE,
+        //     payload: { filterType: ACTIVE_FILTER, filterValue: null },
+        // })
 
         const removedFilters = [
-            DISTRICT_FILTER,
-            TYPE_FILTER,
-            LEVEL_FILTER,
-            // SCALE_FILTER,
-            STATUS_FILTER,
-            ACTIVE_FILTER
+            // DISTRICT_FILTER,
+            // TYPE_FILTER,
+            // LEVEL_FILTER,
+            // // SCALE_FILTER,
+            // STATUS_FILTER,
+            // ACTIVE_FILTER
         ]
 
         handleChipsRemoved(removedFilters)
@@ -156,13 +156,13 @@ function Chips(props) {
         <div>
             {handleShowClearAllButton() !== 5 && (
                 <div className={classes.root}>
-                    <Button
+                    {/* <Button
                         size="small"
                         className={classes.btnClear}
                         onClick={handleClearAllChips}
                     >
                         Clear all
-                    </Button>
+                    </Button> */}
                     <ul className={classes.ul}>
                         {chips.map((chip) => {
                             return (

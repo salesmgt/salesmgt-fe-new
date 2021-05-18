@@ -39,7 +39,7 @@ function Timelines() {
         getTimeline(schoolId).then(res => {
             if (isMounted) {
                 setTimeline(res)
-                console.log('SchoolDetail - getTimeline: ', res);
+                // console.log('SchoolDetail - getTimeline: ', res);
             }
         }).catch((error) => {
             if (error.response) {
@@ -115,12 +115,12 @@ function Timelines() {
                             </Typography>
                         </Grid>
                         {/* Detail */}
-                        <Grid item xs={12} sm={12} md={10} lg={9} className={classes.row}>
+                        <Grid item xs={12} sm={12} md={10} lg={8} className={classes.row}>
                             {timeline.length > 0 ? (
-                                <Timeline>
+                                <Timeline className={classes.timeline}>
                                     {timeline.map((item, index) =>
                                         <TimelineItem key={index}>
-                                            <TimelineOppositeContent>
+                                            <TimelineOppositeContent className={classes.tlnLeft}>
                                                 <div className={classes.tlnOpsContent}>
                                                     <Typography variant="body1">
                                                         <strong>{item?.schoolYear}</strong>
@@ -133,11 +133,11 @@ function Timelines() {
                                                     className={item !== timeline.slice(-1).pop() ? classes.primaryTail : classes.secondaryTail}
                                                 />
                                             </TimelineSeparator>
-                                            <TimelineContent>
+                                            <TimelineContent className={classes.tlnRight}>
                                                 <Link
                                                     to={{
                                                         pathname: `${newUrl}/tasks/${item?.taskId}`,
-                                                        state: { tabNo: 2 } // chỗ này cần tính toán xíu vì có trang tabNo=3, có trang tabNo=2
+                                                        state: { tabNo: 2 }
                                                     }}
                                                     className={classes.linkCard}
                                                 >

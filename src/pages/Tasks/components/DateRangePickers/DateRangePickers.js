@@ -28,8 +28,8 @@ function DateRangePickers(props) {
     // } = useReport()
 
     const handleChange = (newDuration) => {
-        console.log('handleDurationChange: ', handleDurationChange);
-        console.log('newDuration: ', newDuration);
+        // console.log('handleDurationChange: ', handleDurationChange);
+        // console.log('newDuration: ', newDuration);
 
         setDuration(newDuration)
         handleDurationChange(newDuration)

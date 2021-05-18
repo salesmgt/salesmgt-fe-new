@@ -58,8 +58,8 @@ function useTaskProvider() {
         searchKey: '',
         page: 0,
         limit: 10,
-        column: 'id',
-        direction: 'asc',
+        column: 'assignDate',
+        direction: 'desc',
     })
 
     // Paging

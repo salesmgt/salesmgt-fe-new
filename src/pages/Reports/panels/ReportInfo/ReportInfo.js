@@ -203,7 +203,7 @@ function RepInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -257,7 +257,7 @@ function RepInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -324,8 +324,8 @@ function RepInfo(props) {
                                             item
                                             xs={12}
                                             sm={12}
-                                            md={12}
-                                            lg={12}
+                                            md={7}
+                                            lg={7}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -419,6 +419,8 @@ function RepInfo(props) {
                                                         variant="outlined"
                                                         required
                                                         fullWidth
+                                                        multiline
+                                                        rows={3}
                                                         value={value}
                                                         onChange={onChange}
                                                         error={
@@ -808,18 +810,8 @@ function RepInfo(props) {
                         (user.roles[0] !== roleNames.salesman &&
                             user.username === report?.username) ? (
                         <Grid container spacing={0} className={classes.wrapper}>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={12}
-                                md={12}
-                                lg={12}
-                                className={classes.row}
-                            >
-                                <Typography
-                                    color="inherit"
-                                    className={classes.header}
-                                >
+                            <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
+                                <Typography color="inherit" className={classes.header}>
                                     {headers.child2}
                                 </Typography>
                             </Grid>
@@ -828,8 +820,8 @@ function RepInfo(props) {
                                 item
                                 xs={12}
                                 sm={12}
-                                md={12}
-                                lg={12}
+                                md={9}
+                                lg={8}
                                 className={classes.row}
                             >
                                 <Grid
@@ -841,8 +833,8 @@ function RepInfo(props) {
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={8}
-                                        lg={6}
+                                        md={9}
+                                        lg={9}
                                         className={classes.row}
                                     >
                                         {/* <Typography color="inherit"> */}
@@ -859,7 +851,7 @@ function RepInfo(props) {
                                                     variant="outlined"
                                                     fullWidth
                                                     multiline
-                                                    rows={5}
+                                                    rows={4}
                                                     disabled
                                                     InputProps={{
                                                         classes: {

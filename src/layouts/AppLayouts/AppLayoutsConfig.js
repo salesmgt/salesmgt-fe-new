@@ -77,7 +77,7 @@ export function getMenuItems(role) {
         case roleNames.supervisor:
             return [dashboards, schools, tasks, reports, salesmen, workPlans]
         case roleNames.salesman:
-            return [dashboards, tasks, reports, workPlans]
+            return [dashboards, tasks, reports, services, workPlans]
         default:
             break
     }

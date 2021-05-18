@@ -23,9 +23,10 @@ import {
 import { useService } from '../../hooks/ServiceContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
-import { serviceNames, serviceStatusNames } from '../../../../constants/Generals'
+import { serviceStatusNames } from '../../../../constants/Generals'
 import { Consts } from '../../ServicesConfig'
 import Highlighter from 'react-highlight-words'
+import { parseDateToString } from '../../../../utils/DateTimes';
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
@@ -250,9 +251,7 @@ function Tables(props) {
                                     key={row?.id}
                                     className={classes.tBodyRow}
                                 >
-                                    <TableCell className={classes.tableCell}
-                                    // align="center"
-                                    >
+                                    <TableCell className={classes.tableCell} align='center'>
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
@@ -271,7 +270,8 @@ function Tables(props) {
                                                     searchWords={[params.searchKey]}
                                                     autoEscape={true}
                                                     textToHighlight={
-                                                        `${row?.educationalLevel} ${row?.name}`
+                                                        row?.schoolName
+                                                        // `${row?.educationalLevel} ${row?.schoolName}`
                                                     }
                                                 />
                                             }
@@ -284,10 +284,14 @@ function Tables(props) {
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {/**Duration 1 cái progress bar ở đây */}
-                                        {row?.startDate} {row?.endDate}
+                                        {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                        {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {setServiceStatusChipColor(row?.status)}
+                                    </TableCell>
+                                    <TableCell className={classes.tBodyCell}>
+                                        {row?.approveDate ? parseDateToString(row?.approveDate, 'DD-MM-YYYY') : ''}
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}

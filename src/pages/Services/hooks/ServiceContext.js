@@ -35,8 +35,8 @@ function useServiceProvider() {
         searchKey: '',
         page: 0,
         limit: 10,
-        column: 'id',
-        direction: 'asc',
+        column: 'submitDate',
+        direction: 'desc',
     })
 
     // Paging
@@ -96,7 +96,6 @@ function useServiceProvider() {
     useEffect(() => {
         getServiceTypes().then(res => {
             setServiceTypes(res);
-            console.log('filter list serviceTypes: ', res);
         }).catch((error) => {
             if (error.response) {
                 console.log(error)

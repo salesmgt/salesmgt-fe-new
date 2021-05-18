@@ -21,8 +21,8 @@ function Tasks() {
     function onGetTasks(
         page = 0,
         limit = 10,
-        column = 'id',
-        direction = 'asc',
+        column = 'assignDate',
+        direction = 'desc',
         searchKey,
         listFilters,
         pic

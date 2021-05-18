@@ -165,6 +165,15 @@ export const roleRoutes = {
             ),
         },
         { path: 'reports/:id', component: () => <Report /> },
+        {
+            path: 'services',
+            component: () => (
+                <ServiceProvider>
+                    <Services />
+                </ServiceProvider>
+            ),
+        },
+        { path: 'services/:id', component: () => <Service /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
 }

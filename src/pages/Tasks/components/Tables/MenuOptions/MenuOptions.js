@@ -139,7 +139,7 @@ function MenuOptions(props) {
                     refreshPage={refreshAPI}
                     taskId={data?.id}
                     schoolId={data?.schoolId}
-                    schoolName={data?.schoolName}
+                    schoolName={`${data?.level} ${data?.schoolName}`}
                     schoolStatus={data?.schoolStatus}
                     setNotify={setNotify}
                 />

@@ -68,7 +68,7 @@ function ConfirmRemove(props) {
                 console.log(error)
                 setNotify({
                     isOpen: false,
-                    message: 'Removed unsuccessfully',
+                    message: 'Removed failed',
                     type: 'error',
                 })
             }

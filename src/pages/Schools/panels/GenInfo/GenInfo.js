@@ -195,7 +195,7 @@ function GenInfo(props) {
                     })
                     setNotify({
                         isOpen: true,
-                        message: 'Update Unsuccessful',
+                        message: 'Updated failed',
                         type: 'error',
                     })
                 }

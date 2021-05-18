@@ -17,13 +17,14 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
-import { milkNames } from '../../../../constants/Generals'
+import { milkNames, purposeNames } from '../../../../constants/Generals'
 import { Snackbars, Loading, NotFound } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames, statusNames } from '../../../../constants/Generals'
 import * as TasksServices from '../../TasksServices'
 import { getPurpsByStatus, handleMatchPurps } from '../../../../utils/Sortings'
+import { parseDateToString } from '../../../../utils/DateTimes';
 import classes from './AssignInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -151,12 +152,29 @@ function AssignInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
 
         // alert(JSON.stringify(model))
+    }
+
+    const setPurposeChipColor = (purpose) => {
+        switch (purpose) {
+            case purposeNames.purp1:
+                return <Chip label={purpose} className={classes.chipSalesMoi} />
+            case purposeNames.purp2:
+                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            case purposeNames.purp3:
+                return <Chip label={purpose} className={classes.chipChamSoc} />
+            case purposeNames.purp4:
+                return <Chip label={purpose} className={classes.chipTaiKy} />
+            case purposeNames.purp5:
+                return <Chip label={purpose} className={classes.chipKyMoi} />
+            default:
+                return <Chip label={purpose} /> // #5c21f3
+        }
     }
 
     return (
@@ -699,6 +717,44 @@ function AssignInfo(props) {
                                     </Grid>
                                 </Grid>
 
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid
+                                        container
+                                        spacing={0}
+                                        className={classes.rowx}
+                                    >
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={4}
+                                            lg={3}
+                                            className={classes.rowx}
+                                        >
+                                            <Typography
+                                                color="inherit"
+                                                className={classes.title}
+                                            >
+                                                {fields.duration.title}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={8}
+                                            lg={6}
+                                            className={classes.rowx}
+                                        >
+                                            <Typography color="inherit">
+                                                {parseDateToString(task?.assignDate, 'DD-MM-YYYY')}
+                                                &nbsp; ➜ &nbsp;
+                                                {parseDateToString(task?.endDate, 'DD-MM-YYYY')}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+
                                 <Grid
                                     item
                                     xs={12}
@@ -736,7 +792,7 @@ function AssignInfo(props) {
                                             className={classes.rowx}
                                         >
                                             <Typography color="inherit">
-                                                {task?.purpose}
+                                                {setPurposeChipColor(task?.purpose)}
                                             </Typography>
                                         </Grid>
                                     </Grid>

@@ -52,6 +52,9 @@ export const Consts = {
         schlYear: {
             title: 'Shool Year',
         },
+        duration: {
+            title: 'Duration',
+        },
         note: {
             title: 'Manager Note',
             hasNote: 'Last note by',

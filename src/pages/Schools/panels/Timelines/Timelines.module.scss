@@ -18,6 +18,10 @@
     }
 }
 
+.timeline {
+  max-width: 40rem;
+}
+
 .primaryTail {
   background-color: $main-primary !important;
 }
@@ -25,8 +29,11 @@
   background-color: $main-secondary !important
 }
 
-.tlnOpsContent {
-  padding-top: 0.2rem;
+.tlnLeft {
+  max-width: 11rem;
+  .tlnOpsContent {
+    padding-top: 0.2rem;
+  }  
 }
 
 .linkCard {

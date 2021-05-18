@@ -16,6 +16,13 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
+// Đây là gtrị nhận lên từ BE
+export const taskResultNames = {
+    tbd: 'TBD',
+    successful: 'successful',
+}
+
+// Đây là các tên tự đặt phía FE
 export const taskStatusNames = {
     ongoing: 'Ongoing',
     success: 'Successful',

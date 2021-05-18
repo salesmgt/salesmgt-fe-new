@@ -7,8 +7,9 @@ export const Consts = {
         cannot: 'Cannot Remove',
         // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
-        createServices: 'Create Services for',
-        confirmCreateTask: 'Confirm Create Tasks'
+        createServices: 'Propose Services for',
+        confirmCreateTask: 'Confirm Create Tasks',
+        confirmUpdate: 'Confirm Update School Status'
     },
     operations: {
         cancel: 'Cancel',
@@ -61,7 +62,7 @@ export const Consts = {
             tittle: 'Created date:',
         },
         service: {
-            title: 'Services',
+            title: 'Service types *',
             // svc1: {
             //     lb: 'ESL',
             //     value: 'ESL',
@@ -95,12 +96,12 @@ export const Consts = {
         },
         classNo: {
             title: 'No. of applied classes',
-            helper: 'The minimum number of classes is 1, maximum is 100'
+            helper: 'Accept value between [1-100]'
         },
         price: {
             title: 'Price floor',
-            adornment: 'VND/period(s)',
-            helper: 'The lowest accepted value is 100.000 VND, maximum is 5.000.000 VND'
+            adornment: 'VND/period',
+            helper: '100.000VND - 5.000.000VND'
         },
         // End for Services
     },
@@ -165,6 +166,17 @@ export const updateStatusMessage = () => {
         <>
             If you want to update this status, please propose a
             <strong><em> Service</em></strong> in the form below.
+        </>
+    )
+}
+export const confirmUpdateSchoolStatus = (schoolLevel, schoolName, currentStatus, newStatus) => {
+    return (
+        <>
+            Do you really want to update status of
+            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            from <strong>{currentStatus}</strong> to <strong>{newStatus}</strong>?
+            <br /><br />
+            This process cannot be undone.
         </>
     )
 }

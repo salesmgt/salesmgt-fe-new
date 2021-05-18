@@ -29,6 +29,7 @@
         "mui-pickers-v3": "npm:@material-ui/pickers@^3.3.10",
         "mui-pickers-v4": "npm:@material-ui/pickers@^4.0.0-alpha.12",
         "node-sass": "^5.0.0",
+        "notistack": "^1.0.7",
         "query-string": "^7.0.0",
         "react": "^17.0.1",
         "react-big-calendar": "^0.33.2",

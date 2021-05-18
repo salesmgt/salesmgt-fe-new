@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     Button,
@@ -29,8 +29,12 @@ import { Snackbars } from '../../../../components'
 import { Consts, updateStatusMessage } from '../DialogConfig'
 import * as TasksServices from '../../TasksServices'
 import { useTask } from '../../hooks/TaskContext'
-import { DURATION_RGX } from '../../../../utils/Regex'
-import DateRangePickers from '../../components/DateRangePickers/DateRangePickers';
+import { useAuth } from '../../../../hooks/AuthContext'
+import { useApp } from '../../../../hooks/AppContext'
+import DateRangePickers from '../../components/DateRangePickers/DateRangePickers'
+import { app as FirebaseApp } from '../../../../services/firebase'
+import { parseDateToString } from '../../../../utils/DateTimes';
+
 import classes from './UpdateSchStatus.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -79,6 +83,8 @@ function UpdateSchStatus(props) {
     const { open, onClose, resetStatus, task, currStatus, refreshPage } = props
     const { headers, operations, fields } = Consts
 
+    const { user } = useAuth()
+    const { userInfo } = useApp()
     const history = useHistory()
     const { serviceTypes } = useTask()
 
@@ -106,7 +112,7 @@ function UpdateSchStatus(props) {
     const confirmWatch = watch('showCreate')
 
     const allowUpdate = () => {
-        console.log('allow aupdate nè');
+        // console.log('allow aupdate nè');
 
         TasksServices.updateStatus(task?.schoolId, currStatus)
             .then((res) => {
@@ -127,20 +133,54 @@ function UpdateSchStatus(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: "Updated school's status unsuccessful",
+                    message: "Updated school's status failed",
                     type: 'error',
                 })
             })
     }
 
+    const [listManagers, setListManagers] = useState([])
+    const getListManagers = () => {
+        TasksServices.getListManagers().then((res) =>
+            setListManagers(res.list)
+        )
+    }
+    useEffect(getListManagers, []);
+
+    // Coi xem chỗ này còn lỗi ko
+    // console.log('listManagers: ', listManagers)
+    const createNotify = (value) => {
+        if (listManagers && listManagers?.length > 0) {
+            new Promise((resolve, reject) => {
+                // listManagers.map((mng) => {
+                FirebaseApp.database()
+                    .ref('notify')
+                    .child(listManagers[0]?.username)
+                    .push({
+                        avatar: userInfo?.avatar ? userInfo?.avatar : '',
+                        actor: user?.username,
+                        type: 'service',
+                        timestamp: moment(new Date()).format(
+                            'YYYY-MM-DD HH:mm:ss'
+                        ),
+                        content: 'Salesman has just proposed a service.',
+                        uid: task?.id,
+                        isSeen: false,
+                    })
+                // })
+            })
+        }
+    }
+
     const onSubmit = (data) => {
-        console.log('vo ko???');
+        // console.log('vo ko???');
         const model = {
             ...data,
             taskId: task?.id,
-            startDate: data?.duration[0] ? moment(data?.duration[0]).format('YYYY-MM-DD HH:mm:ss') : null,
-            endDate: data?.duration[1] ? moment(data?.duration[1]).format('YYYY-MM-DD HH:mm:ss')
-                : moment(new Date(new Date().getFullYear(), 8, 30)).format('YYYY-MM-DD HH:mm:ss'),
+            submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss') : null,
+            endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
+                : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
             serviceType: data?.serviceType ? data?.serviceType : '',
             classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
             pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0')
@@ -148,19 +188,21 @@ function UpdateSchStatus(props) {
         delete model.showCreate
         delete model.duration
 
-        console.log('service model = ', model);
+        // getListManagers()
+        console.log('listManagers: ', listManagers)
 
         TasksServices.createServices(model)
             .then((res) => {
-                console.log('create service ', res);
                 setNotify({
                     isOpen: true,
                     message: 'Proposed a service successfully',
                     type: 'success',
                 })
-                reset({
-                    showCreate: false,
-                })
+
+                // Send notification by Firebase
+                createNotify(data)
+
+                reset({ showCreate: false })
 
                 allowUpdate()
                 onClose()
@@ -175,12 +217,12 @@ function UpdateSchStatus(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Proposed a service unsuccessful',
+                    message: 'Proposed a service failed',
                     type: 'error',
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     return (
@@ -216,15 +258,13 @@ function UpdateSchStatus(props) {
                             {confirmWatch && (
                                 <Grid container spacing={2} className={classes.wrapper}>
                                     <Grid item xs={5} sm={5} md={5} lg={5}>
-                                        <InputLabel>
-                                            {fields.service.title}
-                                        </InputLabel>
+                                        <InputLabel>{fields.service.title}</InputLabel>
                                         <Controller
                                             name="serviceType"
                                             control={control}
-                                            // defaultValue={
-                                            //     fields.service.svc1.value
-                                            // }
+                                            defaultValue={
+                                                fields.service.svc1.value
+                                            }
                                             render={({ value, onChange }) => (
                                                 <RadioGroup value={value} onChange={onChange}>
                                                     {serviceTypes.map(service => (

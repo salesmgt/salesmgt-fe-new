@@ -118,6 +118,29 @@ function Timelines(props) {
     //     }
     // }
 
+    const renderTimelineReport = (item) => {
+        return (
+            <div className={item?.isSuccess ? classes.tlnContentSuccess : classes.tlnContentFailed}>
+                <div className={classes.tlnContentChild}>
+                    <Typography variant="subtitle1">
+                        {item?.reportDescription}
+                    </Typography>
+                    {/* {setPurposeChipColor(task?.purpose)} */}
+                </div>
+                <div className={classes.tlnContentChild}>
+                    <Typography variant="subtitle2" color="textSecondary">
+                        <b>{labels.result}</b>
+                        {item?.isSuccess
+                            ? <span className={classes.rpDaGap}>Đã gặp HT/HP</span>
+                            : <span className={classes.rpChuaGap}>Chưa gặp HT/HP</span>
+                        }
+                        {/* {setResultChipColor(item?.isSuccess)} */}
+                    </Typography>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className={classes.panel}>
             <Grid container spacing={0} className={classes.body}>
@@ -171,13 +194,12 @@ function Timelines(props) {
                                                         <b>{labels.endDate}</b> {task?.endDate}
                                                     </Typography>
                                                 </div> */}
-                                                    <div className={classes.tlnContentChild}>
+                                                    {/* <div className={classes.tlnContentChild}>
                                                         <Typography variant="subtitle2" color="textSecondary">
                                                             <b>{labels.status} </b>
-                                                            {setTaskStatusChipColor('Successful')}
-                                                            {/* {setTaskStatusChipColor(task?.status)} */}
+                                                            {setTaskStatusChipColor(task?.status)}
                                                         </Typography>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </TimelineContent>
                                         </TimelineItem>
@@ -205,32 +227,17 @@ function Timelines(props) {
                                                         <TimelineConnector className={classes.primaryTail} />
                                                     </TimelineSeparator>
                                                     <TimelineContent>
-                                                        <Link
-                                                            to={{
-                                                                pathname: `${newUrl}/reports/${item?.id}`
-                                                            }}
-                                                            onClick={() => console.log(taskId)}
-                                                            className={classes.linkCard}
-                                                        >
-                                                            <div className={item?.isSuccess ? classes.tlnContentSuccess : classes.tlnContentFailed}>
-                                                                <div className={classes.tlnContentChild}>
-                                                                    <Typography variant="subtitle1">
-                                                                        {item?.reportDescription}
-                                                                    </Typography>
-                                                                    {/* {setPurposeChipColor(task?.purpose)} */}
-                                                                </div>
-                                                                <div className={classes.tlnContentChild}>
-                                                                    <Typography variant="subtitle2" color="textSecondary">
-                                                                        <b>{labels.result}</b>
-                                                                        {item?.isSuccess
-                                                                            ? <span className={classes.rpDaGap}>Đã gặp HT/HP</span>
-                                                                            : <span className={classes.rpChuaGap}>Chưa gặp HT/HP</span>
-                                                                        }
-                                                                        {/* {setResultChipColor(item?.isSuccess)} */}
-                                                                    </Typography>
-                                                                </div>
-                                                            </div>
-                                                        </Link>
+                                                        {task?.username ? (
+                                                            <Link
+                                                                to={{
+                                                                    pathname: `${newUrl}/reports/${item?.id}`
+                                                                }}
+                                                                onClick={() => console.log(taskId)}
+                                                                className={classes.linkCard}
+                                                            >
+                                                                {renderTimelineReport(item)}
+                                                            </Link>
+                                                        ) : renderTimelineReport(item)}
                                                     </TimelineContent>
                                                 </TimelineItem>
                                             )}
@@ -243,15 +250,19 @@ function Timelines(props) {
                                                             onClick={() => console.log(taskId)}
                                                             className={classes.linkCard}
                                                         >
-                                                            <div className={classes.tlnContent}>
+                                                            <div
+                                                                className={
+                                                                    item?.status === serviceStatusNames.approved
+                                                                        ? classes.tlnServiceAppproved : classes.tlnServiceRejected}
+                                                            >
                                                                 <Typography variant="subtitle1">
                                                                     {/* {labels.services} <strong> {item?.services.join(', ')} </strong> */}
                                                                     {labels.services} <strong> {item?.service} </strong>
                                                                 </Typography>
                                                                 <Typography variant="subtitle2" color="textSecondary">
                                                                     <b>{labels.duration} </b>
-                                                                    {parseDateToString(item?.startDate, 'DD-MM-YYYY')}  ➜ &nbsp;
-                                                                {parseDateToString(item?.endDate, 'DD-MM-YYYY')}
+                                                                    {parseDateToString(item?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                                    {parseDateToString(item?.endDate, 'DD-MM-YYYY')}
                                                                 </Typography>
                                                                 {setServiceStatusChipColor(item?.status)}
                                                             </div>
@@ -269,12 +280,12 @@ function Timelines(props) {
                                                                 <Typography variant="body1">
                                                                     {item?.status === serviceStatusNames.approved && (
                                                                         <>
-                                                                            {labels.approvedOn} <strong style={{ color: "#4caf50" }}>{parseDateToString(item?.approveDate, 'DD-MM-YYYY')}</strong>
+                                                                            {labels.approvedOn} <strong style={{ color: "#4caf50" }}>{parseDateToString(item?.approvedDate, 'DD-MM-YYYY')}</strong>
                                                                         </>
                                                                     )}
                                                                     {item?.status === serviceStatusNames.rejected && (
                                                                         <>
-                                                                            {labels.rejectedOn} <strong style={{ color: "#ee3e38" }}>{parseDateToString(item?.approveDate, 'DD-MM-YYYY')}</strong>
+                                                                            {labels.rejectedOn} <strong style={{ color: "#ee3e38" }}>{parseDateToString(item?.approvedDate, 'DD-MM-YYYY')}</strong>
                                                                         </>
                                                                     )}
                                                                 </Typography>

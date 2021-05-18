@@ -114,7 +114,7 @@ function RepInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })

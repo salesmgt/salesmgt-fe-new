@@ -10,7 +10,7 @@ const columns = [
     // { key: 'schoolYear', name: 'School Year', sortable: true },
     { key: 'assignDate', name: 'Assign Date', sortable: true, width1: '14%', width2: '18%' },
     { key: 'endDate', name: 'Deadline', sortable: true, width1: '14%', width2: '18%' },   // Due Date
-    { key: 'status', name: 'Task Status', sortable: true, width1: '14%', width2: '18%' },    // Ongoing, success, failed, not started
+    { key: 'result', name: 'Task Status', sortable: false, width1: '14%', width2: '18%' },    // TBD, Successful, Failed =/= task status (Ongoing, not started, finished)
     { key: '', name: '', sortable: false, width1: '1%', width2: '1%' },
 ]
 
@@ -39,8 +39,8 @@ export const taskConsts = {
     tabNames: {
         tab1: 'School Info',
         tab2: 'Assign Info',
-        tab3: 'Services Info',
-        tab4: 'Timeline',
+        tab3: 'Timeline',
+        // tab3: 'Services Info',
     },
     operations: {
         notFound: 'Task Not Found',
@@ -112,7 +112,7 @@ export const Consts = {
             title: 'Remove',
         },
         services: {
-            title: 'Add Services',
+            title: 'Propose Services',
         },
         assign: {
             title: 'Assign',

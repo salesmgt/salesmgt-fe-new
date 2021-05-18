@@ -4,8 +4,8 @@ import { ApiConfig as Api } from '../../services'
 export async function getTasks(
     page = 0,
     limit = 10,
-    column = 'id',
-    direction = 'asc',
+    column = 'assignDate',
+    direction = 'desc',
     searchKey = undefined,
     filters = undefined,
     pic

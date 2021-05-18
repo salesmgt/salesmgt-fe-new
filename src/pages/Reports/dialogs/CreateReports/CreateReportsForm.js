@@ -394,13 +394,13 @@ function CreateReportsForm(props) {
                 } else if (String(data).includes('already submitted')) {
                     setNotify({
                         isOpen: true,
-                        message: `Created unsuccessfully. ${data} today.`,
+                        message: `Created failed. ${data} today.`,
                         type: 'error',
                     })
                 } else {
                     setNotify({
                         isOpen: true,
-                        message: 'Created unsuccessfully.',
+                        message: 'Created failed.',
                         type: 'error',
                     })
                 }
@@ -418,7 +418,7 @@ function CreateReportsForm(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Created unsuccessfully.',
+                    message: 'Created failed.',
                     type: 'error',
                 })
                 handleCloseDialog()
@@ -461,7 +461,7 @@ function CreateReportsForm(props) {
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={12} md={12} lg={5}>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Grid item xs={12} sm={8} md={7} lg={12}>
                                     <Autocomplete
                                         autoComplete
                                         autoSelect
@@ -543,7 +543,7 @@ function CreateReportsForm(props) {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Grid item xs={12} sm={8} md={6} lg={8}>
                                     <FormControl variant="outlined" fullWidth required>
                                         <InputLabel id="isSuccess-label">{fields.isSuccess.label}</InputLabel>
                                         <Select

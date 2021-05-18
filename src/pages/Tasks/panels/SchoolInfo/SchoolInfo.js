@@ -27,6 +27,7 @@ import { roleNames, statusNames } from '../../../../constants/Generals'
 import * as TasksServices from '../../TasksServices'
 import { PHONE_RGX } from '../../../../utils/Regex'
 import UpdateSchStatus from '../../dialogs/UpdateSchStatus/UpdateSchStatus'
+import ConfirmUpdateSchoolStatus from '../../dialogs/ConfirmUpdateSchoolStatus/ConfirmUpdateSchoolStatus'
 import classes from './SchoolInfo.module.scss'
 
 const reprSchema = yup.object().shape({
@@ -90,6 +91,7 @@ function SchoolInfo(props) {
     const [currStatus, setCurrStatus] = useState(task?.schoolStatus)
 
     const [open, setOpen] = useState(false)
+    const [openConfirmNgungHT, setOpenConfirmNgungHT] = useState(false)
 
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -194,7 +196,7 @@ function SchoolInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -336,7 +338,7 @@ function SchoolInfo(props) {
         //             }
         //             setNotify({
         //                 isOpen: true,
-        //                 message: 'Update Unsuccessful',
+        //                 message: 'Updated failed',
         //                 type: 'error',
         //             })
         //         })
@@ -375,7 +377,7 @@ function SchoolInfo(props) {
                     }
                     setNotify({
                         isOpen: true,
-                        message: "Updated school's status unsuccessful",
+                        message: "Updated school's status failed",
                         type: 'error',
                     })
                 })
@@ -400,15 +402,20 @@ function SchoolInfo(props) {
             setOpen(true)
         }
 
+        // const confirmUpdateToNgungHT = () => {
+        //     setOpenConfirmNgungHT(true)
+        // }
+
         switch (task?.schoolStatus) {
             case statusNames.lead:
                 // console.log(task?.services)
 
-                if (data.schoolStatus === statusNames.lead) {
-                    // console.log('lead to lead')
-                    // return console.log('yes')
-                    allowUpdate()
-                }
+                // Ko có tác dụng gì vì useState() đã chặn rồi
+                // if (data.schoolStatus === statusNames.lead) {
+                //     // console.log('lead to lead')
+                //     // return console.log('yes')
+                //     allowUpdate()
+                // }
                 if (data.schoolStatus === statusNames.customer) {
                     // console.log('lead to cust')
                     //   need config
@@ -425,75 +432,82 @@ function SchoolInfo(props) {
                     // console.log('lead to pending')
                     // return console.log('yes')
                     allowUpdate()
+
+                    // open the confirm dialog before updating
+                    // confirmUpdateToNgungHT()
+                    // setOpenConfirmNgungHT(true)  // nó ko cho update trực tiếp ở đây
                 }
                 break
 
             case statusNames.customer:
                 // console.log(task?.services)
-
                 if (data.schoolStatus === statusNames.lead) {
                     // console.log('cust to lead')
                     // return console.log('no')
                     preventUpdate()
                 }
-                if (data.schoolStatus === statusNames.customer) {
-                    // console.log('cust to cust')
-                    // return console.log('yes')
-                    allowUpdate()
-                }
+                // Ko có tác dụng gì vì useState() đã chặn rồi
+                // if (data.schoolStatus === statusNames.customer) {
+                //     // console.log('cust to cust')
+                //     // return console.log('yes')
+                //     allowUpdate()
+                // }
                 if (data.schoolStatus === statusNames.pending) {
                     // console.log('cust to pending')
                     // return console.log('yes')
                     allowUpdate()
-                }
 
+                    // open the confirm dialog before updating
+                    // confirmUpdateToNgungHT()
+                }
                 break
-            case statusNames.pending:
-                // console.log(task?.services)
 
-                if (user.roles[0] !== roleNames.salesman) {
-                    if (data.schoolStatus === statusNames.lead) {
-                        // console.log('pending to lead')
-                        if (task?.services) {
-                            // return console.log('no')
-                            preventUpdate()
-                        } else {
-                            // return console.log('yes')
-                            allowUpdate()
-                        }
-                    }
-                    if (data.schoolStatus === statusNames.customer) {
-                        // console.log('pending to cust')
-                        if (task?.services) {
-                            // return console.log('yes')
-                            allowUpdate()
-                        } else {
-                            // return console.log('no')
-                            preventUpdate()
-                        }
-                    }
-                    if (data.schoolStatus === statusNames.pending) {
-                        // console.log('pending to pending')
-                        // return console.log('yes')
-                        allowUpdate()
-                    }
-                } else {
-                    if (data.schoolStatus === statusNames.lead) {
-                        // console.log('pending to lead')
-                        // return console.log('no')
-                        preventUpdate()
-                    }
-                    if (data.schoolStatus === statusNames.customer) {
-                        // console.log('pending to cust')
-                        // return console.log('no')
-                        preventUpdate()
-                    }
-                    if (data.schoolStatus === statusNames.pending) {
-                        // console.log('pending to pending')
-                        // return console.log('no')
-                        preventUpdate()
-                    }
+            case statusNames.pending:    // ko tác động đc các trường đã NgưngHT. Sau này làm sau.
+                // // console.log(task?.services)
+
+                // if (user.roles[0] !== roleNames.salesman) {
+                //     if (data.schoolStatus === statusNames.lead) {
+                //         // console.log('pending to lead')
+                //         if (task?.services) {
+                //             // return console.log('no')
+                //             preventUpdate()
+                //         } else {
+                //             // return console.log('yes')
+                //             allowUpdate()
+                //         }
+                //     }
+                //     if (data.schoolStatus === statusNames.customer) {
+                //         // console.log('pending to cust')
+                //         if (task?.services) {
+                //             // return console.log('yes')
+                //             allowUpdate()
+                //         } else {
+                //             // return console.log('no')
+                //             preventUpdate()
+                //         }
+                //     }
+                //     if (data.schoolStatus === statusNames.pending) {
+                //         // console.log('pending to pending')
+                //         // return console.log('yes')
+                //         allowUpdate()
+                //     }
+                // } else {
+                if (data.schoolStatus === statusNames.lead) {
+                    // console.log('pending to lead')
+                    // return console.log('no')
+                    preventUpdate()
                 }
+                if (data.schoolStatus === statusNames.customer) {
+                    // console.log('pending to cust')
+                    // return console.log('no')
+                    preventUpdate()
+                }
+                //     if (data.schoolStatus === statusNames.pending) {
+                //         // console.log('pending to pending')
+                //         // return console.log('no')
+                //         preventUpdate()
+                //     }
+                // }
                 break
             default:
                 break
@@ -698,6 +712,17 @@ function SchoolInfo(props) {
                             currStatus={currStatus}
                             refreshPage={refreshPage}
                         />
+                        <ConfirmUpdateSchoolStatus
+                            open={openConfirmNgungHT}
+                            onClose={() => {
+                                resetStatus()
+                                setOpenConfirmNgungHT(false)
+                            }}
+                            data={task}
+                            selectedStatus={currStatus}
+                            refreshAPI={refreshPage}
+                            setNotify={setNotify}
+                        />
                     </>
                 )}
                 {/* : (
@@ -821,8 +846,8 @@ function SchoolInfo(props) {
                                                 item
                                                 xs={12}
                                                 sm={12}
-                                                md={12}
-                                                lg={12}
+                                                md={6}
+                                                lg={6}
                                                 className={classes.row}
                                             >
                                                 {/* <Controller
@@ -950,8 +975,8 @@ function SchoolInfo(props) {
                                                 item
                                                 xs={12}
                                                 sm={12}
-                                                md={12}
-                                                lg={12}
+                                                md={6}
+                                                lg={6}
                                                 className={classes.row}
                                             >
                                                 <Controller
