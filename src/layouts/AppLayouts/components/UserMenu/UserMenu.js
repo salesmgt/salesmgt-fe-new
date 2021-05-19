@@ -16,7 +16,7 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { useAccount } from '../../../../pages/Accounts/hooks/AccountContext'
 import { useReport } from '../../../../pages/Reports/hooks/ReportContext'
 import { useSchool } from '../../../../pages/Schools/hooks/SchoolContext'
-import { useTarget } from '../../../../pages/Targets/hooks/TargetContext'
+import { useTask } from '../../../../pages/Tasks/hooks/TaskContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { userMenuItems as items } from '../../AppLayoutsConfig'
 import { cookieNames } from '../../../../constants/Generals'
@@ -30,7 +30,7 @@ function UserMenu() {
     const { setFilter: setAccountFilter } = useAccount()
     const { setFilter: setReportFilter } = useReport()
     const { setFilter: setSchoolFilter } = useSchool()
-    const { setFilter: setTargetFilter } = useTarget()
+    const { setFilter: setTaskFilter } = useTask()
 
     const { url } = useRouteMatch()
 
@@ -61,15 +61,15 @@ function UserMenu() {
         // setSchoolFilter(FilterTypes.SCALE_FILTER, '')
         setSchoolFilter(FilterTypes.STATUS_FILTER, '')
         setSchoolFilter(FilterTypes.ACTIVE_FILTER, null)
-        setTargetFilter(FilterTypes.SCHOOL_YEAR_FILTER, '')
-        setTargetFilter(FilterTypes.DISTRICT_FILTER, '')
-        setTargetFilter(FilterTypes.TYPE_FILTER, '')
-        setTargetFilter(FilterTypes.LEVEL_FILTER, '')
-        // setTargetFilter(FilterTypes.SCALE_FILTER, '')
-        setTargetFilter(FilterTypes.PIC_FILTER, null)
-        setTargetFilter(FilterTypes.PURPOSE_FILTER, '')
-        setTargetFilter(FilterTypes.STATUS_FILTER, '')
-        setTargetFilter(FilterTypes.ASSIGNED_FILTER, null)
+        setTaskFilter(FilterTypes.SCHOOL_YEAR_FILTER, '')
+        setTaskFilter(FilterTypes.DISTRICT_FILTER, '')
+        setTaskFilter(FilterTypes.TYPE_FILTER, '')
+        setTaskFilter(FilterTypes.LEVEL_FILTER, '')
+        // setTaskFilter(FilterTypes.SCALE_FILTER, '')
+        setTaskFilter(FilterTypes.PIC_FILTER, null)
+        setTaskFilter(FilterTypes.PURPOSE_FILTER, '')
+        setTaskFilter(FilterTypes.STATUS_FILTER, '')
+        setTaskFilter(FilterTypes.ASSIGNED_FILTER, null)
     }
 
     return (

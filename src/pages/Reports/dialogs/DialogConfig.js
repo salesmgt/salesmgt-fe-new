@@ -15,18 +15,18 @@ export const Consts = {
         ok: 'OK, I understood',
     },
     fields: {
-        schoolName: {
-            name: 'targetName',
-            label: 'Target School Name',
+        task: {
+            name: 'task',
+            label: 'School Name',
         },
         level: {
             name: 'level',
         },
         id: {
-            name: 'targetId',
+            name: 'taskId',
         },
-        result: {
-            name: 'result',
+        isSuccess: {
+            name: 'isSuccess',
             label: 'Result',
         },
         description: {
@@ -53,7 +53,7 @@ export const columns = [
 ]
 
 // Form "Create Reports" keys
-export const RESULT = 'result'
+export const IS_SUCCESS = 'isSuccess'
 export const DESCRIPTION = 'description'
 export const POSITIVITY = 'positivity'
 export const DIFFICULTY = 'difficulty'

@@ -253,6 +253,6 @@ export default React.memo(DetailLayouts)
 
 DetailLayouts.defaultProps = {
     tabValue: 0,
-    handleChangeTab: () => {},
+    handleChangeTab: () => { },
     isStatus: false,
 }

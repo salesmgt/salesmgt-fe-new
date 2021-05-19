@@ -3,18 +3,24 @@ import {
     Dashboards,
     Account,
     Accounts,
-    Target,
-    Targets,
+    Task,
+    Tasks,
     WorkPlans,
     School,
     Schools,
     Report,
     Reports,
+    Services,
+    Service,
+    Salesman,
+    Salesmen
 } from '../pages'
 import AccountProvider from '../pages/Accounts/hooks/AccountContext'
 import ReportProvider from '../pages/Reports/hooks/ReportContext'
 import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
-import TargetProvider from '../pages/Targets/hooks/TargetContext'
+import TaskProvider from '../pages/Tasks/hooks/TaskContext'
+import ServiceProvider from '../pages/Services/hooks/ServiceContext'
+import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
 
 export const defaultRoutes = {
     ADMIN: { route: '/apps/accounts' },
@@ -56,14 +62,14 @@ export const roleRoutes = {
         },
         { path: 'schools/:id', component: () => <School /> },
         {
-            path: 'targets',
+            path: 'tasks',
             component: () => (
-                <TargetProvider>
-                    <Targets />
-                </TargetProvider>
+                <TaskProvider>
+                    <Tasks />
+                </TaskProvider>
             ),
         },
-        { path: 'targets/:id', component: () => <Target /> },
+        { path: 'tasks/:id', component: () => <Task /> },
         {
             path: 'reports',
             component: () => (
@@ -73,6 +79,24 @@ export const roleRoutes = {
             ),
         },
         { path: 'reports/:id', component: () => <Report /> },
+        {
+            path: 'services',
+            component: () => (
+                <ServiceProvider>
+                    <Services />
+                </ServiceProvider>
+            ),
+        },
+        { path: 'services/:id', component: () => <Service /> },
+        {
+            path: 'salesmen',
+            component: () => (
+                <SalesmanProvider>
+                    <Salesmen />
+                </SalesmanProvider>
+            ),
+        },
+        { path: 'salesmen/:id', component: () => <Salesman /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
     'SALES SUPERVISOR': [
@@ -87,14 +111,14 @@ export const roleRoutes = {
         },
         { path: 'schools/:id', component: () => <School /> },
         {
-            path: 'targets',
+            path: 'tasks',
             component: () => (
-                <TargetProvider>
-                    <Targets />
-                </TargetProvider>
+                <TaskProvider>
+                    <Tasks />
+                </TaskProvider>
             ),
         },
-        { path: 'targets/:id', component: () => <Target /> },
+        { path: 'tasks/:id', component: () => <Task /> },
         {
             path: 'reports',
             component: () => (
@@ -104,21 +128,33 @@ export const roleRoutes = {
             ),
         },
         { path: 'reports/:id', component: () => <Report /> },
+        {
+            path: 'salesmen',
+            component: () => (
+                <SalesmanProvider>
+                    <Salesmen />
+                </SalesmanProvider>
+            ),
+        },
+        { path: 'salesmen/:id', component: () => <Salesman /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
     SALESMAN: [
         { path: 'dashboards', component: () => <Dashboards /> },
         {
-            path: 'targets',
+            path: 'tasks',
             component: () => (
-                <TargetProvider>
-                    <Targets />
-                </TargetProvider>
+                <TaskProvider>
+                    <Tasks />
+                </TaskProvider>
             ),
         },
         {
-            path: 'targets/:id',
-            component: () => <Target />,
+            path: 'tasks/:id', component: () => (
+                <TaskProvider>
+                    <Task />
+                </TaskProvider>
+            )
         },
         {
             path: 'reports',
@@ -129,6 +165,15 @@ export const roleRoutes = {
             ),
         },
         { path: 'reports/:id', component: () => <Report /> },
+        {
+            path: 'services',
+            component: () => (
+                <ServiceProvider>
+                    <Services />
+                </ServiceProvider>
+            ),
+        },
+        { path: 'services/:id', component: () => <Service /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
 }

@@ -31,7 +31,7 @@ function Snackbars(props) {
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             onClose={handleClose}
         >
-            <Alert severity={notify.type} onClose={handleClose}>
+            <Alert severity={notify.type} onClose={handleClose} variant="filled">
                 {notify.message}
             </Alert>
         </Snackbar>

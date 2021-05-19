@@ -35,7 +35,7 @@ const clientSchema = yup.object().shape({
         .string()
         .required('Phone is required')
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, 'Incorrect entry'),
+        .matches(PHONE_RGX, 'Phone number is in wrong format (03|5|7|9xxxxxxxx)'),
     // address: yup.string().trim().required('Address is required'),
 })
 
@@ -147,9 +147,9 @@ function GenInfo(props) {
     }
 
     const onSubmit = (data) => {
-        console.log('---------GenInfo nè---------');
-        console.log('address nè: ', data?.address);
-        console.log(`[${latitude}, ${longitude}]`);
+        // console.log('---------GenInfo nè---------');
+        // console.log('address nè: ', data?.address);
+        // console.log(`[${latitude}, ${longitude}]`);
 
         const model = {
             ...data,
@@ -184,7 +184,7 @@ function GenInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })

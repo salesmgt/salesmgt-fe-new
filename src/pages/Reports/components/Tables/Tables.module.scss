@@ -57,6 +57,7 @@
   flex-shrink: 0;
 }
 
+// ==================== Purpose chips ====================
 .chipSalesMoi {
   background-color: $clarity !important;
   color: $common-white !important;
@@ -80,4 +81,23 @@
 .chipKyMoi {
   background-color: $creative !important;
   color: $common-white !important;
+}
+
+// ==================== Report's result chips ====================
+// .chipSuccess {
+//     background-color: $main-success !important;
+//     color: $common-white !important;
+// }
+// .chipFailed {
+//     background-color: $dark-error !important;
+//     color: $common-white !important;
+// }
+
+.rpDaGap {
+  color: $main-success;
+  font-weight: 500;
+}
+.rpChuaGap {
+  color: $main-error;
+  font-weight: 500;
 }

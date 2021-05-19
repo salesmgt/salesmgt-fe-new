@@ -130,7 +130,7 @@ const MuiAccordionDetails = withStyles((theme) => ({
 function Filters(props) {
     const classes = useStyles()
 
-    //Use states which have been declared in the TargetSchoolContext
+    //Use states which have been declared in the AccountContext
     const {
         params,
         dispatchParams,
@@ -281,8 +281,8 @@ function Filters(props) {
                                             {workingStatus === null
                                                 ? `${filters.workingStatus.options.all}`
                                                 : workingStatus
-                                                ? `${filters.workingStatus.options.active}`
-                                                : `${filters.workingStatus.options.inactive}`}
+                                                    ? `${filters.workingStatus.options.active}`
+                                                    : `${filters.workingStatus.options.inactive}`}
                                         </MenuItem>
                                     ))}
                                 </Select>

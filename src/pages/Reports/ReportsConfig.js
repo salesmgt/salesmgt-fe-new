@@ -1,13 +1,13 @@
 export const columns = [
-    { key: 'no', name: 'No', sortable: false },
-    { key: 'date', name: 'Date', sortable: true },
-    { key: 'targetSchool.school.name', name: 'School Name', sortable: true }, // SchoolName - primary, District - secondary
-    { key: 'targetSchool.user.fullName', name: 'PIC', sortable: true },
-    { key: 'targetSchool.targetPurpose.name', name: 'Purpose', sortable: true }, // Purpose - primary
-    { key: 'result', name: 'Result', sortable: true },
-    { key: 'description', name: 'Description', sortable: true }, // truncate 30 kí tự thôi
+    { key: 'no', name: 'No', sortable: false, width: '0%' },
+    { key: 'date', name: 'Date', sortable: true, width: '10%' },
+    { key: 'task.school.name', name: 'School Name', sortable: true, width: '20%' }, // SchoolName - primary, District - secondary
+    { key: 'task.user.fullName', name: 'PIC', sortable: true, width: '20%' },
+    { key: 'task.purpose.name', name: 'Purpose', sortable: true, width: '12%' }, // Purpose - primary
+    { key: 'isSuccess', name: 'Result', sortable: true, width: '13%' },
+    { key: 'description', name: 'Description', sortable: true, width: '25%' }, // truncate 30 kí tự thôi
     // { key: "comment", name: 'Comment', sortable: false }, // truncate 30 kí tự thôi
-    { key: '', name: '', sortable: false },
+    { key: '', name: '', sortable: false, width: '0%' },
 ]
 
 export const rpConsts = {

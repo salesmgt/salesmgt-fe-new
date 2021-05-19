@@ -1,7 +1,7 @@
 export const Consts = {
     headers: {
         child1: 'School Detail',
-        child2: 'Contact Detail',
+        child2: 'Principal Detail',
     },
     operations: {
         cancel: 'Cancel',
@@ -37,6 +37,19 @@ export const Consts = {
         },
         tel: {
             title: 'Tel',
+        },
+        empty: {
+            title: 'N/A',
+        },
+        // Principal        
+        reprName: {
+            title: 'Full Name',
+        },
+        reprEmail: {
+            title: 'Email',
+        },
+        reprPhone: {
+            title: 'Phone Number',
         },
     },
 }

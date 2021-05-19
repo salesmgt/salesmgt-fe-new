@@ -28,7 +28,7 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, 'Incorrect entry'),
+        .matches(PHONE_RGX, { message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)', excludeEmptyString: true }),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
@@ -45,7 +45,7 @@ function RepInfo(props) {
     })
 
     const defaultValues = {
-        id: school?.id,
+        id: school?.schoolId,
         reprName: school?.reprName ? school?.reprName : '',
         reprIsMale: String(school?.reprIsMale)
             ? String(school?.reprIsMale)
@@ -60,15 +60,7 @@ function RepInfo(props) {
     })
 
     useEffect(() => {
-        reset({
-            id: school?.id,
-            reprName: school?.reprName ? school?.reprName : '',
-            reprIsMale: String(school?.reprIsMale)
-                ? String(school?.reprIsMale)
-                : String(true),
-            reprPhone: school?.reprPhone ? school?.reprPhone : '',
-            reprEmail: school?.reprEmail ? school?.reprEmail : '',
-        })
+        reset(defaultValues)
     }, [school])
 
     if (!school) {
@@ -78,11 +70,16 @@ function RepInfo(props) {
     const onSubmit = (data) => {
         const model = {
             ...data,
-            reprIsMale: data.reprIsMale === 'true' ? true : false,
+            reprPhone: data?.reprPhone ? data?.reprPhone : null,
+            reprEmail: data?.reprEmail ? data?.reprEmail : null,
+            reprIsMale: data?.reprIsMale === 'true' ? true : false,
 
+            id: school?.schoolId,
             name: school?.name,
             address: school?.address,
             district: school?.district,
+            latitude: school?.latitude ? school?.latitude : 0.0,
+            longitude: school?.longitude ? school?.longitude : 0.0,
 
             educationalLevel: school?.educationalLevel,
             type: school?.type,
@@ -94,6 +91,9 @@ function RepInfo(props) {
 
             active: school?.active,
         }
+
+        // console.log('data.id: ', data.id);
+        // console.log('model: ', model);
 
         SchoolsServices.updateSchool(data.id, model)
             .then((res) => {
@@ -114,7 +114,7 @@ function RepInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Update Unsuccessful',
+                    message: 'Updated failed',
                     type: 'error',
                 })
             })
@@ -157,19 +157,12 @@ function RepInfo(props) {
                                 item
                                 xs={12}
                                 sm={12}
-                                md={7}
-                                lg={5}
+                                md={9}
+                                lg={8}
                                 className={classes.row}
                             >
                                 <Grid container spacing={0}>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
                                         <Controller
                                             name="id"
                                             control={control}
@@ -204,14 +197,7 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                         <InputLabel>
                                             {fields.reprIsMale.title}
                                         </InputLabel>
@@ -251,14 +237,7 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                         <Controller
                                             name="reprPhone"
                                             control={control}
@@ -267,7 +246,7 @@ function RepInfo(props) {
                                                     label={fields.phone.title}
                                                     variant="outlined"
                                                     // required
-                                                    fullWidth
+                                                    // fullWidth
                                                     value={value}
                                                     onChange={onChange}
                                                     error={!!errors.reprPhone}
@@ -280,14 +259,7 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.row}
-                                    >
+                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
                                         <Controller
                                             name="reprEmail"
                                             control={control}

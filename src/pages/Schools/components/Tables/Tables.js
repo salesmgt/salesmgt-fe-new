@@ -253,7 +253,7 @@ function Tables(props) {
                         {rows?.length > 0 ? (
                             rows.map((row, index) => (
                                 <TableRow
-                                    key={row?.id}
+                                    key={row?.schoolId}
                                     className={classes.tBodyRow}
                                 >
                                     <TableCell

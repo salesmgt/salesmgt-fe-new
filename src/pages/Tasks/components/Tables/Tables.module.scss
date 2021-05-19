@@ -1,0 +1,175 @@
+@import '../../../../styles/Variables.module.scss';
+
+.wrapper {
+  // height: 92%;
+  overflow-y: auto;
+  // height: 80vh; //100%
+  // max-height: 80vh;
+  border-radius: $default-radius;
+  background-color: $common-white;
+}
+
+.container {
+  height: 70.2vh; // 100%
+  overflow-y: auto;
+  // border-radius: $default-radius;
+  // background-color: $common-white;
+  // overflow-x: 'auto'  !important
+}
+
+.table {
+  // width: 440;
+  // min-width: 200px;
+  // height: 100%;
+  // height: fit-content;
+  // max-height: 10rem;
+  // overflow-x: scroll;
+  // overflow-y: scroll;
+  padding: 0;
+
+  .tHead {
+    // sticky-header: true;
+    // border-radius: 8px !important;
+    height: 3rem !important;
+    // position: relative;
+    // top: 0;
+  }
+
+  .tHeadCell {
+    background-color: $light-primary; // !important
+    color: $common-white;
+    font-weight: bold;
+    font-size: large;
+    // text-align: center;
+  }
+
+  .tBody {
+    .tBodyRow {
+      height: 50;
+    }
+
+    .tBodyCell {
+      padding: 0.1rem 1rem
+    }
+    // .tBodyCell:first-child {
+    //   position: sticky;
+    //   left: 0;
+    //   // z-index: 100 !important;  // sao nó ko nhận cái này ta???
+    // }
+    // .tCellPrimaryText {  // .tCellSchoolName
+    //   @extend .tBodyCell;
+    //   font-size: 1rem !important;
+    // }
+
+    .noRecord {
+      color: gray !important;
+      font-style: italic;
+      font-size: 1.3em
+    }
+
+    .picName {
+      font-size: 0.875rem !important;
+
+    }
+  }
+}
+
+.sortLabel {
+  color: #ffffff; 
+}
+.sortLabel.active {
+      color: #ffffff; 
+}
+
+.paging {
+  // display: flex;
+  flex-shrink: 0;
+  // width: 1000;
+}
+
+/*==================Task purpose chip==================*/
+.chipInactive {
+  color: $grey-400;
+  font-style: italic;
+  text-decoration: line-through $grey-400;
+  opacity: 0.2 !important;
+}
+.chipSalesMoi {
+  background-color: $clarity !important;
+  color: $common-white !important;
+}
+.chipSalesMoiInactive {
+  @extend .chipSalesMoi;
+  @extend .chipInactive;
+}
+.chipTheoDoi {
+  background-color: $energy !important;
+  color: $common-white !important;
+}
+.chipTheoDoiInactive {
+  @extend .chipTheoDoi;
+  @extend .chipInactive;
+}
+// .chipTiemNang {
+//   background-color: $trust !important;
+//   color: $common-white !important;
+// }
+// .chipTiemNangInactive {
+//   @extend .chipTiemNang;
+//   @extend .chipInactive;
+// }
+.chipChamSoc {
+  background-color: $compassion !important;
+  color: $common-white !important;
+}
+.chipChamSocInactive {
+  @extend .chipChamSoc;
+  @extend .chipInactive;
+}
+.chipTaiKy {
+  background-color: $memory !important;
+  color: $common-white !important;
+}
+.chipTaiKyInactive {
+  @extend .chipTaiKy;
+  @extend .chipInactive;
+}
+.chipKyMoi {
+  background-color: $creative !important;
+  color: $common-white !important;
+}
+.chipKyMoiInactive {
+  @extend .chipKyMoi;
+  @extend .chipInactive;
+}
+
+/*==================Task status chip==================*/
+.chipOnGoing {
+  background-color: $dark-info !important;
+  color: $common-white !important;
+}
+.chipSuccess {
+  background-color: $main-success !important;
+  color: $common-white !important;
+}
+.chipFailed {
+  background-color: $dark-error !important;
+  color: $common-white !important;
+}
+
+.iconNote {
+  color: $text-icon;
+}
+
+// .successEndDate {
+//   color: $main-success;
+// }
+// .safeEndDate {
+//   color: $dark-info;
+// }
+// .warningEndDate {
+//   color: $main-warning;
+// }
+// .overtimeEndDate {
+//   color: $dark-error;
+// }

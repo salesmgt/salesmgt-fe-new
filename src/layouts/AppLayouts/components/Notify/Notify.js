@@ -39,11 +39,11 @@ function Notify(props) {
                     state: { id: noti?.uid },
                 })
                 break
-            case 'memorandum':
+            case 'service':
                 onUpdate(e, noti)
                 setNotiState({
-                    pathname: `${url}/target-schools/${noti?.uid}`,
-                    state: { targetId: noti?.uid },
+                    pathname: `${url}/tasks/${noti?.uid}`,
+                    state: { taskId: noti?.uid },
                 })
                 break
             default:
@@ -87,17 +87,17 @@ function Notify(props) {
                             item.type !== 'Welcome'
                                 ? item.type === 'report'
                                     ? {
-                                          borderLeft:
-                                              '5px solid rgba(255, 99, 132, 1)',
-                                      }
+                                        borderLeft:
+                                            '5px solid rgba(255, 99, 132, 1)',
+                                    }
                                     : {
-                                          borderLeft:
-                                              '5px solid rgba(54, 162, 235, 1)',
-                                      }
+                                        borderLeft:
+                                            '5px solid rgba(54, 162, 235, 1)',
+                                    }
                                 : {
-                                      borderLeft:
-                                          '5px solid rgba(255, 206, 86, 1)',
-                                  }
+                                    borderLeft:
+                                        '5px solid rgba(255, 206, 86, 1)',
+                                }
                         }
                     >
                         <CardHeader

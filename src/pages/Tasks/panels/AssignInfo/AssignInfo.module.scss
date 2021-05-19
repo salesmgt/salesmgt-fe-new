@@ -1,0 +1,106 @@
+@import '../../../../styles/Variables.module.scss';
+
+.panel {
+    height: auto;
+    .action {
+        display: flex;
+        justify-content: flex-end;
+        // padding: 0.75rem 1rem;
+        padding: 0.75rem 0.5rem;
+        .submit {
+            color: $common-white;
+            background-color: $main-info;
+            &:hover {
+                background-color: $dark-info;
+            }
+            &:disabled {
+                background-color: $divider;
+            }
+        }
+    }
+    .content {
+        padding: 0.75rem;
+        .wrapper {
+            padding: 0.75rem;
+            border: 1px solid $divider;
+            border-radius: $default-radius;
+        }
+        .row {
+            padding: 0.5rem;
+        }
+        .rowx {
+            padding: 0rem 0.5rem;
+            @media (max-width: $md) {
+                padding: 0.25rem 0.5rem;
+            }
+        }
+        .rowy {
+            padding: 0.5rem 0rem;
+        }
+        .header {
+            text-transform: uppercase;
+        }
+        .title {
+            font-weight: 600;
+            color: $secondary-text;
+        }
+        .genderZone {
+            display: flex;
+            flex-direction: row;
+            .gender {
+                margin-right: 0.5rem;
+            }
+        }
+        .user {
+            display: flex;
+            flex-direction: row;
+            .info {
+                display: flex;
+                margin: 0rem 0.4rem;
+                flex-direction: column;
+                .fullName {
+                    font-weight: 500;
+                    display: flex;
+                }
+                .username {
+                    font-size: 0.875rem;
+                    color: $secondary-text;
+                }
+            }
+            .avatar {
+                @media (min-width: $md) {
+                    margin: 0rem 0.4rem;
+                }
+            }
+        }
+    }
+    .notFound {
+        width: 100%;
+    }
+    .purpWarning {
+        color: $main-error;
+        border-color: $main-error;
+        margin-left: 1rem;
+    }
+}
+
+.chipSalesMoi {
+    background-color: $clarity !important;
+    color: $common-white !important;
+}
+.chipTheoDoi {
+    background-color: $energy !important;
+    color: $common-white !important;
+}
+.chipChamSoc {
+    background-color: $compassion !important;
+    color: $common-white !important;
+}
+.chipTaiKy {
+    background-color: $memory !important;
+    color: $common-white !important;
+}
+.chipKyMoi {
+    background-color: $creative !important;
+    color: $common-white !important;
+}

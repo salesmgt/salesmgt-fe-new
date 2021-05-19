@@ -16,11 +16,31 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
+// Đây là gtrị nhận lên từ BE
+export const taskResultNames = {
+    tbd: 'TBD',
+    successful: 'successful',
+}
+
+// Đây là các tên tự đặt phía FE
+export const taskStatusNames = {
+    ongoing: 'Ongoing',
+    success: 'Successful',
+    failed: 'Failed',
+}
+
 export const serviceNames = {
     svc1: 'ESL',
     svc2: 'SEL',
     svc3: 'Toán khoa',
-    svc4: 'Stem',
+    svc4: 'Steam',
+}
+
+export const serviceStatusNames = {
+    pending: 'pending',
+    approved: 'approved',
+    rejected: 'rejected',
+    // notStart: '',    // chỉ cần null là đc rồi chứ nhỉ? khỏi cần 1 status riêng cho nó   ==> Bỏ
 }
 
 export const purposeNames = {

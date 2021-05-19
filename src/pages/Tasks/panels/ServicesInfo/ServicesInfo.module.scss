@@ -1,0 +1,78 @@
+@import '../../../../styles/Variables.module.scss';
+
+.panel {
+    height: auto;
+    .tabs {
+        border-right: 1px solid $divider;
+        height: 22.5rem;
+    }
+    .body {
+        border: 1px solid $divider;
+        border-radius: $default-radius;
+    }
+    .wrapper {
+        padding: 0.75rem;
+    }
+    // .content {
+    //     padding: 0.75rem;
+    // }
+
+    // .row {
+    //     padding: 1rem;
+    // }
+    // .rowx {
+    //     padding: 0rem 0.5rem;
+    //     @media (max-width: $md) {
+    //         padding: 0.25rem 0.5rem;
+    //     }
+    // }
+    // .rowy {
+    //     padding: 0.5rem 0rem;
+    // }
+    .header {
+        text-transform: uppercase;
+    }
+    // .title {
+    //     font-weight: 600;
+    //     color: $secondary-text;
+    // }
+    .card {
+        margin: 0.75rem;
+    }
+    .cardCntHeader {
+        padding: 0.5rem 0rem;
+    }
+    .cardCntBody {
+        padding: 0.5rem 0rem;
+    }
+
+    .cardSubtitle1 {
+        font-weight: 500 !important;
+    }
+    .cardSubtitle2 {
+        display: flex;
+        justify-content: flex-end;
+        // font-size: 1rem !important;
+        // font-weight: 400 !important;
+        color: $secondary-text;
+    }
+    .cardAct {
+        display: flex;
+        justify-content: flex-end;
+    }
+    // .leftSector {
+    // }
+    .rightSector {
+        height: 22.5rem;
+        overflow-y: auto;
+    }
+    .noServicesZone {
+        margin: 0.5rem 1rem;
+        .noServices {
+            font-style: italic;
+        }
+    }
+    .notFound {
+        width: 100%;
+    }
+}

@@ -174,7 +174,7 @@ const MuiAccordionDetails = withStyles(() => ({
 function Filters(props) {
     const classes = useStyles()
     const { operations, filters } = Consts
-    const { setTargetId, refreshAPI } = props
+    const { setTaskId, refreshAPI } = props
 
     const { user } = useAuth()
     const { dists, schYears, salesPurps } = useApp()
@@ -343,7 +343,7 @@ function Filters(props) {
             type: ReducerActions.ENTER_SEARCH_KEYWORD,
             payload: keyword,
         })
-        setTargetId(0)
+        setTaskId(0)
     }
     // console.log('Filters.js --- searchKey: ', searchKey);
 
@@ -356,7 +356,7 @@ function Filters(props) {
         // handleSearch('')
     }
 
-    // When React router redirects to this screen while containing targetID and PIC's username,
+    // When React router redirects to this screen while containing taskId and PIC's username,
     // it will filter all reports of this school which is assigned to this PIC
     useEffect(() => {
         if (picUsername) {
@@ -381,7 +381,7 @@ function Filters(props) {
             switch (removedFilter) {
                 case PIC_FILTER:
                     setFilter(PIC_FILTER, null)
-                    setTargetId(0)
+                    setTaskId(0)
                     count++
                     break
                 case DISTRICT_FILTER:
