@@ -3,9 +3,10 @@ import * as Cookies from '../utils/Cookies'
 import { cookieNames } from '../constants/Generals'
 
 const instance = axios.create({
-    baseURL: 'http://salesmgt.us-east-2.elasticbeanstalk.com/',
-    // 'http://192.168.1.108:5000',
-    // 'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com',  // old
+    baseURL:
+        // 'http://salesmgt.us-east-2.elasticbeanstalk.com/',
+        // 'http://192.168.1.108:5000',
+        'http://majorsalesmanagement-env.eba-t3fgyvme.ap-southeast-1.elasticbeanstalk.com', // old
     headers: {
         'Content-type': 'application/json',
         'Access-Control-Allow-Origin': '*',
