@@ -99,9 +99,12 @@ function UpdateSchStatus(props) {
         // id: memoDets?.id,
         startDate: null,
         endDate: new Date(new Date().getFullYear(), 8, 30),
-        serviceType: '',
+        serviceType: serviceNames.svc1,
+        classNumber: 0,
+        studentNumber: 0,
+        slotNumber: 0,
+        pricePerSlot: 100000.0,
         note: '',
-        classNumber: '',
         showCreate: false,
     }
 
@@ -184,17 +187,19 @@ function UpdateSchStatus(props) {
     }
 
     const onSubmit = (data) => {
-        // console.log('vo ko???');
         const model = {
             ...data,
             taskId: task?.id,
             submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
-            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss') : null,
+            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
+                : parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
             endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
                 : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
             serviceType: data?.serviceType ? data?.serviceType : '',
             classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
-            pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0')
+            studentNumber: parseInt(data?.studentNumber ? data?.studentNumber : '0', 10),
+            slotNumber: parseInt(data?.slotNumber ? data?.slotNumber : '0', 10),
+            pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0'),
         }
         delete model.showCreate
         delete model.duration

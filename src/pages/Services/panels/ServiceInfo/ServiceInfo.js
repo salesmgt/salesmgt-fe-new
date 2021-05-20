@@ -8,15 +8,14 @@ import {
     ClickAwayListener,
     Divider,
     Grid,
-    Icon,
-    IconButton,
+    // Icon,
+    // IconButton,
     List,
     ListItem,
     ListItemAvatar,
     ListItemIcon,
     ListItemText,
     makeStyles,
-    Popper,
     TextField,
     Tooltip,
     Typography,
@@ -32,6 +31,8 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IoInformationCircleSharp } from 'react-icons/io5'
+import RejectService from '../../dialogs/RejectService/RejectService';
+import ConfirmApprove from '../../dialogs/ConfirmApprove/ConfirmApprove';
 import classes from './ServiceInfo.module.scss'
 
 const serviceSchema = yup.object().shape({
@@ -79,6 +80,7 @@ function ServiceInfo(props) {
     // const [anchorEl, setAnchorEl] = React.useState(null);
     const [openInfoTooltip, setOpenInfoTooltip] = useState(false);
     const [openRejectDialog, setOpenRejectDialog] = useState(false);
+    const [openApproveDialog, setOpenApproveDialog] = useState(false);
 
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -230,28 +232,52 @@ function ServiceInfo(props) {
         return <Loading />
     }
 
-    const handleApprove = () => {
-        approveServices(service?.id).then((res) => {
-            refreshPage(service?.id)
-            setNotify({
-                isOpen: true,
-                message: 'Approved service successfully',
-                type: 'success',
-            })
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error)
-                history.push({
-                    pathname: '/errors',
-                    state: { error: error.response.status },
-                })
-            }
-            setNotify({
-                isOpen: true,
-                message: 'Approved service failed',
-                type: 'error',
-            })
-        })
+    // const handleApprove = () => {
+    //     approveServices(service?.id).then((res) => {
+    //         refreshPage(service?.id)
+    //         setNotify({
+    //             isOpen: true,
+    //             message: 'Approved service successfully',
+    //             type: 'success',
+    //         })
+    //     }).catch((error) => {
+    //         if (error.response) {
+    //             console.log(error)
+    //             history.push({
+    //                 pathname: '/errors',
+    //                 state: { error: error.response.status },
+    //             })
+    //         }
+    //         setNotify({
+    //             isOpen: true,
+    //             message: 'Approved service failed',
+    //             type: 'error',
+    //         })
+    //     })
+    // }
+
+    const renderApproveDialog = () => {
+        return (
+            <ConfirmApprove
+                open={openApproveDialog}
+                onClose={() => setOpenApproveDialog(false)}
+                service={service}
+                refreshPage={refreshPage}
+                setNotify={setNotify}
+            />
+        )
+    }
+
+    const renderRejectDialog = () => {
+        return (
+            <RejectService
+                open={openRejectDialog}
+                onClose={() => setOpenRejectDialog(false)}
+                service={service}
+                refreshPage={refreshPage}
+                setNotify={setNotify}
+            />
+        )
     }
 
     const checkCriteria = (criteria, standardValue, service) => {
@@ -404,7 +430,7 @@ function ServiceInfo(props) {
                                                     <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
                                                         <Typography color="inherit">
                                                             {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                                    {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
+                                                            {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
                                                         </Typography>
                                                     </Grid>
                                                 </Grid>
@@ -603,17 +629,19 @@ function ServiceInfo(props) {
                                                 <Button
                                                     className={classes.btnApprove}
                                                     variant="contained"
-                                                    onClick={handleApprove}
+                                                    onClick={() => { setOpenApproveDialog(true) }}
                                                 >
                                                     {operations.approve}
                                                 </Button>
+                                                {renderApproveDialog()}
                                                 <Button
                                                     className={classes.btnReject}
                                                     variant="contained"
-                                                    onClick={() => {/**open dialog để nhập lý do */ }}
+                                                    onClick={() => { setOpenRejectDialog(true) }}
                                                 >
                                                     {operations.reject}
                                                 </Button>
+                                                {renderRejectDialog()}
                                             </Grid>
                                         )}
                                     </Grid>
@@ -687,56 +715,6 @@ function ServiceInfo(props) {
                                         </Grid>
                                     </Grid>
 
-                                    {/* {user.roles[0] === roleNames.manager && service?.rejectedReason ? (
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            <form onSubmit={handleReasonSubmit(onReasonSubmit)} noValidate>
-                                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
-                                                    <Grid container spacing={0} className={classes.rowx}>
-                                                        <Grid item xs={12} sm={4} md={4} lg={4} className={classes.rowx}>
-                                                            <Typography color="inherit" className={classes.title}>
-                                                                {fields.rejectedReason.title}
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                            <Controller
-                                                                name="rejectedReason"
-                                                                control={reasonControl}
-                                                                render={({ value, onChange }) => (
-                                                                    <TextField
-                                                                        variant="outlined"
-                                                                        fullWidth
-                                                                        multiline
-                                                                        rows={3}
-                                                                        value={value}
-                                                                        onChange={onChange}
-                                                                        placeholder={fields.rejectedReason.placeholder}
-                                                                    // disabled={service?.status !== serviceStatusNames.pending}
-                                                                    // InputProps={{
-                                                                    //     classes: {
-                                                                    //         root: styles.inputRoot,
-                                                                    //         disabled: styles.disabled,
-                                                                    //     },
-                                                                    // }}
-                                                                    />
-                                                                )}
-                                                            />
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
-
-                                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.action}>
-                                                    <Button
-                                                        type="submit"
-                                                        disabled={!reasonState.isDirty}
-                                                        className={classes.btnApprove}
-                                                        variant="contained"
-                                                    >
-                                                        {operations.save}
-                                                    </Button>
-                                                </Grid>
-                                            </form>
-                                        </Grid>
-                                    ) : ( */}
                                     {service?.rejectedReason && (
                                         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                             <Grid container spacing={0} className={classes.rowx}>
@@ -746,7 +724,6 @@ function ServiceInfo(props) {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                    {/* {service?.rejectedReason ? ( */}
                                                     <TextField
                                                         variant="outlined"
                                                         fullWidth
@@ -762,9 +739,6 @@ function ServiceInfo(props) {
                                                             },
                                                         }}
                                                     />
-                                                    {/* ) : (
-                                                    <span>{fields.rejectedReason.noReason}</span>
-                                                )} */}
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -786,18 +760,7 @@ function ServiceInfo(props) {
                                                 </Typography>
                                             </Box>
                                             <Box>
-                                                {/* <IconButton
-                                            className={classes.iconInfo}
-                                            onClick={(event) => handleOpenCriteriaInfo(event)}
-                                        >
-                                            <IoInformationCircleSharp />
-                                        </IconButton>
-                                        <Popper open={openInfoPopover} anchorEl={anchorEl}>
-                                            {getCriteriaInfo(service?.educationLevel, '')}
-                                        </Popper> */}
-
-
-                                                {/*Thích cách này nhưng ko hiểu sao bị mất icon */}
+                                                {/*Ko hiểu sao icon này lúc ẩn lúc hiện */}
                                                 <ClickAwayListener onClickAway={() => setOpenInfoTooltip(false)}>
                                                     <Tooltip
                                                         interactive
@@ -811,11 +774,13 @@ function ServiceInfo(props) {
                                                     // PopperProps={{ disablePortal: true }}
                                                     >
                                                         {/* <Button onClick={() => setOpenInfoTooltip(true)}> */}
-                                                        <IconButton className={classes.iconInfo}
+                                                        {/* <IconButton className={classes.iconInfo}
                                                             onClick={() => setOpenInfoTooltip(true)}
-                                                        >
-                                                            <IoInformationCircleSharp />
-                                                        </IconButton>
+                                                        > */}
+                                                        <div onClick={() => setOpenInfoTooltip(true)}>
+                                                            <IoInformationCircleSharp className={classes.iconInfo} />
+                                                        </div>
+                                                        {/* </IconButton> */}
                                                         {/* </Button> */}
                                                     </Tooltip>
                                                 </ClickAwayListener>

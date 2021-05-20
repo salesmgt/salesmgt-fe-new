@@ -263,8 +263,8 @@ function Tables(props) {
                 else
                     return <Chip label={taskStatusNames.failed} className={classes.chipFailed} />
             default:
-                break   // ko hiện gì
-            // return <Chip label={status} /> // #5c21f3
+                return <Chip label={result} /> // #5c21f3
+            // break   // ko hiện gì
         }
     }
     //=================================================================================

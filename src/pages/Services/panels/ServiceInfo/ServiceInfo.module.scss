@@ -65,11 +65,14 @@
 }
 
 .iconInfo {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.35rem;
+    height: 1.35rem;
     color: $text-icon;
     padding: 0;
     margin: 0;
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .tooltipRightInfo {

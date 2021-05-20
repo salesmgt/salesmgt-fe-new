@@ -60,7 +60,7 @@ export async function approveServices(serviceId) {
 }
 
 export async function rejectServices(serviceId, rejectReason) {
-    const response = await Api.patch(`/services/rejected/${serviceId}`, rejectReason)
+    const response = await Api.patch(`/services/rejected/${serviceId}?reason=${rejectReason}`)
     // const data = await response.data
     return response
 }
