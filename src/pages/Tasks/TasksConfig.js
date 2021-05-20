@@ -112,7 +112,7 @@ export const Consts = {
             title: 'Remove',
         },
         services: {
-            title: 'Propose Services',
+            title: 'Submit Services',
         },
         assign: {
             title: 'Assign',

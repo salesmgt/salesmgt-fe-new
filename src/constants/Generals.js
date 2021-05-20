@@ -16,6 +16,15 @@ export const statusNames = {
     pending: 'Ngưng hợp tác',
 }
 
+export const schoolLevelNames = {
+    th: 'Tiểu học',
+    thcs: 'THCS',
+    thpt: 'THPT',
+    th_thcs: 'Tiểu học - THCS',
+    thcs_thpt: 'THCS - THPT',
+    th_thcs_thpt: 'Tiểu học - THCS - THPT'
+}
+
 // Đây là gtrị nhận lên từ BE
 export const taskResultNames = {
     tbd: 'TBD',
@@ -32,8 +41,8 @@ export const taskStatusNames = {
 export const serviceNames = {
     svc1: 'ESL',
     svc2: 'SEL',
-    svc3: 'Toán khoa',
-    svc4: 'Steam',
+    svc3: 'Toán Khoa',
+    svc4: 'STEAM',
 }
 
 export const serviceStatusNames = {

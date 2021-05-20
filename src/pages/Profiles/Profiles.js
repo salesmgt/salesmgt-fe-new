@@ -27,6 +27,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 // import * as Cookies from '../../utils/Cookies'
 import { useAuth } from '../../hooks/AuthContext'
+import { useApp } from '../../hooks/AppContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
@@ -90,6 +91,7 @@ const serverSchema = [
 
 function Profiles() {
     const { user } = useAuth()
+    const { setUserInfo } = useApp()
     const { headers, operations, fields } = Consts
 
     const location = useLocation()
@@ -174,6 +176,7 @@ function Profiles() {
                 .then((data) => {
                     if (isMounted) {
                         setData(data)
+                        setUserInfo(data)
                     }
                 })
                 .catch((error) => {

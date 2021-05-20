@@ -74,14 +74,17 @@
 
 //=======================Service Status chips=======================
 .chipPending {
+  text-transform: capitalize;
   background-color: $dark-info !important;
   color: $common-white !important;
 }
 .chipApproved {
+  text-transform: capitalize;
   background-color: $main-success !important;
   color: $common-white !important;
 }
 .chipRejected {
+  text-transform: capitalize;
   background-color: $dark-error !important;
   color: $common-white !important;
 }

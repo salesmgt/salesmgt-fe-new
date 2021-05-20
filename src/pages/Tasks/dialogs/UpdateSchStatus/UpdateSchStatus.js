@@ -36,6 +36,7 @@ import { app as FirebaseApp } from '../../../../services/firebase'
 import { parseDateToString } from '../../../../utils/DateTimes';
 
 import classes from './UpdateSchStatus.module.scss'
+import { schoolLevelNames, serviceNames } from '../../../../constants/Generals'
 
 const clientSchema = yup.object().shape({
     // duration: yup
@@ -111,6 +112,24 @@ function UpdateSchStatus(props) {
 
     const confirmWatch = watch('showCreate')
 
+    const [listManagers, setListManagers] = useState([])
+    const getListManagers = () => {
+        TasksServices.getListManagers().then((res) =>
+            setListManagers(res.list)
+        )
+    }
+    useEffect(getListManagers, []);
+
+    const customiseServiceList = (schoolLevel) => {
+        const customServiceTypes = [...serviceTypes]
+
+        if (schoolLevel !== schoolLevelNames.th) {
+            customServiceTypes.splice(customServiceTypes.indexOf(serviceNames.svc3), 1)
+        }
+        return customServiceTypes;
+    }
+    const customServiceTypes = customiseServiceList(task?.level)
+
     const allowUpdate = () => {
         // console.log('allow aupdate nè');
 
@@ -139,14 +158,6 @@ function UpdateSchStatus(props) {
             })
     }
 
-    const [listManagers, setListManagers] = useState([])
-    const getListManagers = () => {
-        TasksServices.getListManagers().then((res) =>
-            setListManagers(res.list)
-        )
-    }
-    useEffect(getListManagers, []);
-
     // Coi xem chỗ này còn lỗi ko
     // console.log('listManagers: ', listManagers)
     const createNotify = (value) => {
@@ -163,7 +174,7 @@ function UpdateSchStatus(props) {
                         timestamp: moment(new Date()).format(
                             'YYYY-MM-DD HH:mm:ss'
                         ),
-                        content: 'Salesman has just proposed a service.',
+                        content: 'Salesman has just submitd a service.',
                         uid: task?.id,
                         isSeen: false,
                     })
@@ -189,13 +200,13 @@ function UpdateSchStatus(props) {
         delete model.duration
 
         // getListManagers()
-        console.log('listManagers: ', listManagers)
+        // console.log('listManagers: ', listManagers)
 
         TasksServices.createServices(model)
             .then((res) => {
                 setNotify({
                     isOpen: true,
-                    message: 'Proposed a service successfully',
+                    message: 'Submitd a service successfully',
                     type: 'success',
                 })
 
@@ -217,7 +228,7 @@ function UpdateSchStatus(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Proposed a service failed',
+                    message: 'Submitd a service failed',
                     type: 'error',
                 })
             })
@@ -262,12 +273,12 @@ function UpdateSchStatus(props) {
                                         <Controller
                                             name="serviceType"
                                             control={control}
-                                            defaultValue={
-                                                fields.service.svc1.value
-                                            }
+                                            // defaultValue={
+                                            //     fields.service.svc1.value
+                                            // }
                                             render={({ value, onChange }) => (
                                                 <RadioGroup value={value} onChange={onChange}>
-                                                    {serviceTypes.map(service => (
+                                                    {customServiceTypes.map(service => (
                                                         <FormControlLabel
                                                             control={<Radio />}
                                                             label={service}

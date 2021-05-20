@@ -121,20 +121,17 @@ function School() {
     }
 
     return (
-        <>
-            {/* {user.roles[0] === roleNames.admin && ( */}
-            <DetailLayouts
-                linkBack={linkNames.back}
-                header={`${school?.educationalLevel} ${school?.name}`}
-                subHeader={getSubHeader(user.roles[0])}
-                isStatus={true}
-                tabs={getTabNames(user.roles[0])}
-                tabValue={tabValue}
-                handleChangeTab={handleChangeTab}
-            >
-                {getTabs(user.roles[0], tabValue)}
-            </DetailLayouts>
-        </>
+        <DetailLayouts
+            linkBack={linkNames.back}
+            header={`${school?.educationalLevel} ${school?.name}`}
+            subHeader={getSubHeader(user.roles[0])}
+            isStatus={true}
+            tabs={getTabNames(user.roles[0])}
+            tabValue={tabValue}
+            handleChangeTab={handleChangeTab}
+        >
+            {getTabs(user.roles[0], tabValue)}
+        </DetailLayouts>
     )
 }
 

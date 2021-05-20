@@ -146,7 +146,7 @@ function CreateAccountForm(props) {
                 .child(user.username)
                 .push({
                     avatar:
-                        'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Fcong-ty-co-phan-major-education-59313d53b549b_rs.jpg?alt=media&token=166886c5-e210-443a-b262-675ac8ff836b',
+                        'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Fmajor-logo.png?alt=media&token=64f5c1ee-2428-4b99-b803-51a45422cdc1',
                     actor: 'System',
                     type: 'Welcome',
                     content: 'Welcome to Sales Department of Major Education!',

@@ -171,7 +171,7 @@ function CreateSchoolForm(props) {
                     // const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
                     district = tmp1.substring(tmp1.lastIndexOf(', ') + 1).trim()
                     // district = tmp2.substring(2)
-                    console.log('district nè: ', district);
+                    // console.log('district nè: ', district);
                     setAddressErr('')
                     if (!district || district.includes('Hồ Chí Minh')) {
                         setAddressErr('Please input exactly address')

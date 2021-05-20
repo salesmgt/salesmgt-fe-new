@@ -5,10 +5,12 @@ import { columns } from './SchoolsConfig'
 import { useSchool } from './hooks/SchoolContext'
 import * as SchoolsServices from './SchoolsServices'
 import { Loading } from '../../components'
+import { useAuth } from '../../hooks/AuthContext'
 import classes from './Schools.module.scss'
 
 function Schools() {
     const history = useHistory()
+    const { user } = useAuth()
 
     const { params } = useSchool()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -22,7 +24,8 @@ function Schools() {
         column = 'schoolId',
         direction = 'asc',
         searchKey,
-        listFilters
+        listFilters,
+        userRole
     ) => {
         SchoolsServices.getSchools(
             page,
@@ -30,7 +33,8 @@ function Schools() {
             column,
             direction,
             searchKey,
-            listFilters
+            listFilters,
+            userRole
         )
             .then((res) => {
                 if (isMounted) {
@@ -51,7 +55,7 @@ function Schools() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        refreshPage(page, limit, column, direction, searchKey, listFilters)
+        refreshPage(page, limit, column, direction, searchKey, listFilters, user.roles[0])
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             isMounted = false

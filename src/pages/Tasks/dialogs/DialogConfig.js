@@ -7,7 +7,7 @@ export const Consts = {
         cannot: 'Cannot Remove',
         // child1: 'Preview: ',
         updateStatus: 'Confirm Update Status',
-        createServices: 'Propose Services for',
+        createServices: 'Submit Services for',
         confirmCreateTask: 'Confirm Create Tasks',
         confirmUpdate: 'Confirm Update School Status'
     },
@@ -17,7 +17,7 @@ export const Consts = {
         remove: 'Remove',
         ok: 'OK, I understood',
         yes: 'OK',
-        showCreate: 'Propose a Service?',
+        showCreate: 'Submit a Service?',
         filter: 'Filters',
         search: {
             placeholder: 'Search...',
@@ -54,10 +54,10 @@ export const Consts = {
             title: 'Duaration',
             // adornment: 'Month(s)',
         },
-        term: {
-            title: 'Contract Term',
-            titleReq: 'Contract Term *',
-        },
+        // term: {
+        //     title: 'Contract Term',
+        //     titleReq: 'Contract Term *',
+        // },
         date: {
             tittle: 'Created date:',
         },
@@ -164,7 +164,7 @@ export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
 export const updateStatusMessage = () => {
     return (
         <>
-            If you want to update this status, please propose a
+            If you want to update this status, please submit a
             <strong><em> Service</em></strong> in the form below.
         </>
     )

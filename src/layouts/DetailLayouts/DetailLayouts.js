@@ -115,87 +115,87 @@ function DetailLayouts(props) {
             <div className={classes.container}>
                 <div className={classes.content}>
                     <div className={classes.header}>
-                        <Animation
+                        {/* <Animation
                             animation="transition.slideRightIn"
                             delay={300}
+                        > */}
+                        <Typography
+                            className={classes.nav}
+                            component={Button}
+                            onClick={() => {
+                                if (history.location.state) {
+                                    history.goBack()
+                                } else {
+                                    history.push(
+                                        defaultRoutes[user.roles[0]].route
+                                    )
+                                }
+                            }}
                         >
-                            <Typography
-                                className={classes.nav}
-                                component={Button}
-                                onClick={() => {
-                                    if (history.location.state) {
-                                        history.goBack()
-                                    } else {
-                                        history.push(
-                                            defaultRoutes[user.roles[0]].route
-                                        )
-                                    }
-                                }}
-                            >
-                                <Icon className={classes.icon}>
-                                    <MdArrowBack />
-                                </Icon>
-                                <span className={classes.text}>{linkBack}</span>
-                            </Typography>
-                        </Animation>
+                            <Icon className={classes.icon}>
+                                <MdArrowBack />
+                            </Icon>
+                            <span className={classes.text}>{linkBack}</span>
+                        </Typography>
+                        {/* </Animation> */}
                         <div className={classes.headerInfo}>
                             {avatar &&
                                 (checkAvatar ? (
-                                    <Animation
-                                        animation="transition.expandIn"
-                                        delay={300}
-                                    >
-                                        <Avatar
-                                            src={avatar}
-                                            alt="avatar"
-                                            className={classes.infoAvatar}
-                                        />
-                                    </Animation>
+                                    // <Animation
+                                    //     animation="transition.expandIn"
+                                    //     delay={300}
+                                    // >
+                                    <Avatar
+                                        src={avatar}
+                                        alt="avatar"
+                                        className={classes.infoAvatar}
+                                    />
+                                    // </Animation>
                                 ) : (
-                                    <Animation
-                                        animation="transition.expandIn"
-                                        delay={300}
-                                    >
-                                        <Avatar className={classes.infoAvatar}>
-                                            <Typography
-                                                className={classes.avatarTxt}
-                                            >
-                                                {avatar}
-                                            </Typography>
-                                        </Avatar>
-                                    </Animation>
+                                    // <Animation
+                                    //     animation="transition.expandIn"
+                                    //     delay={300}
+                                    // >
+                                    <Avatar className={classes.infoAvatar}>
+                                        <Typography
+                                            className={classes.avatarTxt}
+                                        >
+                                            {avatar}
+                                        </Typography>
+                                    </Avatar>
+                                    // </Animation>
                                 ))}
                             <div className={classes.infoBasic}>
-                                <Animation
+                                {/* <Animation
                                     animation="transition.slideLeftIn"
                                     delay={300}
+                                > */}
+                                <Typography
+                                    // variant="h5"
+                                    className={classes.basicMain}
                                 >
-                                    <Typography
-                                        // variant="h5"
-                                        className={classes.basicMain}
-                                    >
-                                        {header}
-                                    </Typography>
-                                </Animation>
+                                    {header}
+                                </Typography>
+                                {/* </Animation> */}
 
                                 {isStatus ? (
-                                    <Animation
-                                        animation="transition.slideLeftIn"
-                                        delay={300}
-                                    >
-                                        <>{getChipsByStatus(subHeader)}</>
-                                    </Animation>
+                                    // <Animation
+                                    //     animation="transition.slideLeftIn"
+                                    //     delay={300}
+                                    // >
+                                    <>{getChipsByStatus(subHeader)}</>
+                                    // </Animation>
                                 ) : (
-                                    <Animation
-                                        animation="transition.slideLeftIn"
-                                        delay={300}
+                                    // <Animation
+                                    //     animation="transition.slideLeftIn"
+                                    //     delay={300}
+                                    // >
+                                    <Typography
+                                        className={classes.basicSub}
                                     >
-                                        <Typography
-                                            className={classes.basicSub}
-                                        >
-                                            {subHeader}
-                                        </Typography>
-                                    </Animation>
+                                        {subHeader}
+                                    </Typography>
+                                    // </Animation>
                                 )}
                             </div>
                         </div>

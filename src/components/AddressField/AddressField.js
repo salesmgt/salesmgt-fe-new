@@ -104,7 +104,7 @@ export default function AddressField(props) {
 
         if (inputValue === '') {
             setOptions(value ? [value] : []);
-            console.log('Address = ', value);
+            // console.log('Address = ', value);
 
             return undefined;
         }
@@ -122,7 +122,7 @@ export default function AddressField(props) {
                     newOptions = [...newOptions, ...results];
                 }
 
-                console.log('Address = ', value);
+                // console.log('Address = ', value);
                 setOptions(newOptions);
 
                 // Xử lý convert address qua [lat, long] rồi gửi xuống Back-end

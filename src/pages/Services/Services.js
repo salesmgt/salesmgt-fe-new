@@ -59,7 +59,7 @@ function Services() {
         if (user.roles[0] === roleNames.salesman) {
             refreshPage(page, limit, column, direction, searchKey, listFilters, user.username)
         } else {
-            refreshPage(page, limit, column, direction, searchKey, listFilters,)
+            refreshPage(page, limit, column, direction, searchKey, listFilters)
         }
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
