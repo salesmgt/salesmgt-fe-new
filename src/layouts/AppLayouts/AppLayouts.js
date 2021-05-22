@@ -24,6 +24,7 @@ import {
     ListItemText,
     withStyles,
     Typography,
+    Tooltip,
 } from '@material-ui/core'
 import useToggle from '../../hooks/useToggle'
 import { getMenuItems } from './AppLayoutsConfig'
@@ -208,13 +209,15 @@ function AppLayouts() {
                     )}
                 >
                     <Toolbar className={classes.toolbar}>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuBtn}
-                            onClick={setOpen}
-                        >
-                            <MdMenu />
-                        </IconButton>
+                        <Tooltip title="Open Menu">
+                            <IconButton
+                                edge="start"
+                                className={classes.menuBtn}
+                                onClick={setOpen}
+                            >
+                                <MdMenu />
+                            </IconButton>
+                        </Tooltip>
 
                         <div className={classes.grow} />
 
@@ -223,11 +226,13 @@ function AppLayouts() {
                         </Typography>
 
                         {/* Remember to set badge content */}
-                        <IconButton onClick={handleNotifMenuOpen}>
-                            <StyledBadge badgeContent={badge} max={5}>
-                                <MdNotifications />
-                            </StyledBadge>
-                        </IconButton>
+                        <Tooltip title={`${badge} new notifications`}>
+                            <IconButton onClick={handleNotifMenuOpen}>
+                                <StyledBadge badgeContent={badge} max={5}>
+                                    <MdNotifications />
+                                </StyledBadge>
+                            </IconButton>
+                        </Tooltip>
 
                         {/* <IconButton
                             edge="end"
@@ -290,9 +295,11 @@ function AppLayouts() {
                                         handleSelectedItem(item.path)
                                     }
                                 >
-                                    <ListItemIcon className={classes.menuIcon}>
-                                        {item.icon}
-                                    </ListItemIcon>
+                                    <Tooltip title={item?.title}>
+                                        <ListItemIcon className={classes.menuIcon}>
+                                            {item.icon}
+                                        </ListItemIcon>
+                                    </Tooltip>
                                     <ListItemText
                                         disableTypography
                                         primary={
@@ -300,7 +307,7 @@ function AppLayouts() {
                                                 variant="h6"
                                                 className={classes.menuText}
                                             >
-                                                {item.title}
+                                                {item?.title}
                                             </Typography>
                                         }
                                     />
@@ -309,12 +316,15 @@ function AppLayouts() {
                         })}
                     </List>
                     <div className={classes.drawerFooter}>
-                        <IconButton
-                            onClick={setOpen}
-                            className={classes.chevron}
-                        >
-                            <MdChevronLeft />
-                        </IconButton>
+                        <Tooltip title={open ? 'Collapse' : 'Expand'}>
+                            <IconButton
+                                onClick={setOpen}
+                                className={classes.chevron}
+                            >
+                                <MdChevronLeft />
+                            </IconButton>
+
+                        </Tooltip>
                     </div>
                 </Drawer>
             </IconContext.Provider>

@@ -21,5 +21,14 @@
 }
 
 .suggestions {
-    margin: 0 0.5rem 0.25rem 0;
+    margin: 0.2rem 0.25rem 0 0 !important;
+    // padding: 0 !important;
+}
+.txtEstimate {
+    font-weight: 500;
+}
+.txtRevenue {
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: $main-success;
 }

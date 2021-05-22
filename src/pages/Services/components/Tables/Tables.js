@@ -141,13 +141,17 @@ function SortableTableHeaders(props) {
                         align={col.key === 'no' ? 'center' : 'left'}
                         width={col.width}
                     >
-                        <MuiTableSortLabel
-                            active={column === col.key}
-                            direction={column === col.key ? direction : 'asc'}
-                            onClick={() => createSortHandler(col, direction)}
-                        >
-                            {col.name}
-                        </MuiTableSortLabel>
+                        {col?.sortable ? (
+                            <MuiTableSortLabel
+                                active={column === col.key}
+                                direction={column === col.key ? direction : 'asc'}
+                                onClick={() => createSortHandler(col, direction)}
+                            >
+                                {col.name}
+                            </MuiTableSortLabel>
+                        ) :
+                            col.name
+                        }
                     </TableCell>
                 ))}
             </TableRow>
@@ -338,7 +342,7 @@ function Tables(props) {
                                         {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {setServiceStatusChipColor(row?.status)}
+                                        {row?.status && setServiceStatusChipColor(row?.status)}
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>
                                         {row?.approveDate ? parseDateToString(row?.approveDate, 'DD-MM-YYYY') : ''}

@@ -17,6 +17,7 @@ import {
     ListItemText,
     Button,
     InputAdornment,
+    Tooltip,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import {
@@ -505,26 +506,30 @@ function Filters(props) {
                     {user.roles[0] !== roleNames.salesman && (
                         <>
                             <Box className={classes.flexItem}>
-                                <Button
-                                    className={classes.btn}
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleOpenCreateDialog}
-                                >
-                                    <MdAdd fontSize="large" />
-                                    {/* &nbsp;{operations.create} */}
-                                </Button>
+                                <Tooltip title={operations.create}>
+                                    <Button
+                                        className={classes.btn}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleOpenCreateDialog}
+                                    >
+                                        <MdAdd fontSize="large" />
+                                    </Button>
+                                </Tooltip>
                                 {renderCreateTaskDialog()}
                             </Box>
                             <Box className={classes.flexItem}>
-                                <Button
-                                    className={classes.btn}
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleOpenAssignDialog}
-                                >
-                                    <MdPersonAdd fontSize="large" />
-                                </Button>
+                                <Tooltip title={operations.assign}>
+                                    <Button
+                                        className={classes.btn}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleOpenAssignDialog}
+                                    >
+                                        <MdPersonAdd fontSize="large" />
+                                    </Button>
+
+                                </Tooltip>
                                 {renderAssignDialog()}
                             </Box>
                         </>

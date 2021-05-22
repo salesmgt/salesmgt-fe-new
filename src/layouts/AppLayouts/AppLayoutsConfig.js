@@ -11,8 +11,7 @@ import {
     MdExitToApp,
     MdAssignmentInd,
 } from 'react-icons/md'
-import { ImTarget } from 'react-icons/im'
-import { FaSchool, FaHandshake } from 'react-icons/fa'
+import { FaSchool, FaHandshake, FaTasks } from 'react-icons/fa'
 import { roleNames } from '../../constants/Generals'
 
 const menuItems = [
@@ -29,7 +28,7 @@ const menuItems = [
     {
         title: 'Tasks',
         path: 'tasks',
-        icon: <ImTarget />,
+        icon: <FaTasks />,
     },
     {
         title: 'Work Plans',

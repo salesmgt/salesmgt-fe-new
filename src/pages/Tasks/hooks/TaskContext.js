@@ -17,7 +17,8 @@ import {
     PIC_FILTER,
     SCHOOL_YEAR_FILTER,
     STATUS_FILTER,
-    ASSIGNED_FILTER
+    ASSIGNED_FILTER,
+    SERVICE_TYPE_FILTER
 } from '../../../constants/Filters'
 import { roleNames } from '../../../constants/Generals'
 import { getServiceTypes } from '../TasksServices';

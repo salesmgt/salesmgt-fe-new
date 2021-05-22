@@ -583,7 +583,8 @@ function RepInfo(props) {
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
-                                            {setResultChipColor(report?.isSuccess)}
+                                            {(report?.isSuccess === true || report?.isSuccess === false)
+                                                && setResultChipColor(report?.isSuccess)}
                                         </Typography>
                                     </Grid>
                                 </Grid>

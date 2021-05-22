@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
     Button,
     TextField,
@@ -22,14 +22,23 @@ import {
     IconButton,
     Popover,
     Badge,
+    Tooltip,
+    Card,
+    CardContent,
+    CardMedia,
+    Collapse,
+    Box,
 } from '@material-ui/core'
 import { MdAccountCircle, MdClose } from 'react-icons/md'
 import { BiEdit } from 'react-icons/bi'
+import { ImSad } from 'react-icons/im';
 import { Autocomplete } from '@material-ui/lab'
 import { useTask } from '../../hooks/TaskContext'
-import { Consts, columns } from '../DialogConfig'
+import { Consts, columnsTableAssign } from '../DialogConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
-import { assignMulti } from '../../TasksServices'
+import { assignMulti, suggestSalesmen } from '../../TasksServices'
+import { useHistory } from 'react-router'
+import { Alert, AlertTitle } from '@material-ui/lab'
 import classes from './Assign.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuItemSelected: {},
     autoComplete: {
-        width: 260,
+        width: 280,
         marginLeft: '0.5rem',
     },
     itemPIC: {
@@ -82,10 +91,14 @@ const useStyles = makeStyles((theme) => ({
 
 function AssignForm(props) {
     const styles = useStyles()
-    const { onClose, refreshAPI } = props
-    const [rowsState, setRowsState] = React.useState(props.rows)
+    const { onClose, rows, setRows, refreshAPI, setNotify } = props
     const { operations } = Consts
-    const [object, setObject] = React.useState(null)
+    const history = useHistory()
+    const [openAlert, setOpenAlert] = React.useState(true)
+
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [rowsState, setRowsState] = useState(rows)
+    const [object, setObject] = useState(null)
 
     const { PICs, getListPICs, params } = useTask()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -94,6 +107,45 @@ function AssignForm(props) {
     const [PIC, setPIC] = useState(null)
 
     const typingTimeoutRef = useRef({})
+
+    const [listSuggestions, setListSuggestions] = useState([]);
+    const getSchoolIds = () => {
+        console.log('Assign Form --- listSchools: ', rows);
+        let schoolIds = []
+        rows.forEach(task => {
+            schoolIds.push(task?.schoolId)
+            console.log('list ids = ', schoolIds);
+        });
+        return schoolIds
+    }
+
+    // let isMounted = true
+    useEffect(() => {
+        const listSchoolIds = [...getSchoolIds()]
+        console.log('useEffect------list ids = ', listSchoolIds);
+
+        suggestSalesmen(listSchoolIds).then(data => {
+            // if (isMounted) {
+            setListSuggestions(data?.list)
+            // }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+
+        // return () => {
+        //     isMounted = false
+        // };
+    }, []);
+
+    // if (!listSuggestions) {
+    //     return <Loading />
+    // }
 
     // console.log('assign form --- rowsState: ', rowsState);
 
@@ -105,18 +157,27 @@ function AssignForm(props) {
         })
         // console.log(array)
         assignMulti(array).then((res) => {
-            props.setNotify({
+            setNotify({
                 isOpen: true,
                 message: 'Assigned successfully',
                 type: 'success',
             })
-            props.setRows([])
+            setRows([])
             refreshAPI(page, limit, column, direction, searchKey, listFilters)
 
-            onClose()
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                setNotify({
+                    isOpen: true,
+                    message: 'Assigned successfully',
+                    type: 'success',
+                })
+            }
         })
+
+        onClose()
     }
-    const [anchorEl, setAnchorEl] = React.useState(null)
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget)
@@ -167,7 +228,7 @@ function AssignForm(props) {
     }
     const onBlur = (e, row) => {
         if (e.target.value?.length > 250) {
-            props.setNotify({
+            setNotify({
                 isOpen: true,
                 message: 'Note length is shorter than 250 letters',
                 type: 'warning',
@@ -186,22 +247,21 @@ function AssignForm(props) {
         // console.log(array)
         setRowsState(array)
     }
+
     return (
         <>
             <DialogContent className={classes.wrapper}>
-                <Grid container spacing={4}>
+                <Grid container spacing={2}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                         <Grid container>
-                            <Grid item xs={12} sm={7} md={6} lg={5}>
+                            <Grid item xs={12} sm={4} md={4} lg={4} style={{ border: '1px solid grey' }}>
                                 <Autocomplete
                                     autoComplete
                                     autoSelect
                                     autoHighlight
                                     clearOnEscape
                                     options={PICs ? PICs : []}
-                                    getOptionLabel={(pic) =>
-                                        pic.fullName ? pic.fullName : ''
-                                    }
+                                    getOptionLabel={(pic) => pic?.fullName ? pic.fullName : ''}
                                     value={PIC}
                                     renderInput={(params) => (
                                         <TextField
@@ -259,6 +319,77 @@ function AssignForm(props) {
                                     }
                                 />
                             </Grid>
+
+                            <Grid item xs={12} sm={8} md={8} lg={8} style={{ border: '1px solid grey' }}>
+                                <Box display="flex">
+                                    <Box flexGrow={1}>
+                                        <Typography variant="overline">Salesman Suggestions</Typography>
+                                    </Box>
+                                    <Box flexShrink={1}>
+                                        <Button variant="outlined" size="small"
+                                            disabled={openAlert}
+                                            onClick={() => { setOpenAlert(true) }}
+                                        >
+                                            Suggest me
+                                        </Button>
+                                    </Box>
+                                </Box>
+                                {(listSuggestions || listSuggestions?.length > 0) ? (
+                                    <div className={classes.cardContainer}>
+                                        {listSuggestions.map(salesman => (
+                                            <Card className={classes.quickCard}>
+                                                <CardMedia
+                                                    className={classes.quickCardAvatar}
+                                                    image={salesman?.avatar}
+                                                // title="Live from space album cover"
+                                                />
+                                                <div className={classes.details}>
+                                                    <CardContent className={classes.content}>
+                                                        <Typography component="h5" variant="h5">
+                                                            Live From Space
+                                                </Typography>
+                                                        <Typography variant="subtitle1" color="textSecondary">
+                                                            Mac Miller
+                                                </Typography>
+                                                    </CardContent>
+                                                    {/* <div className={classes.controls}>
+                                                <IconButton aria-label="previous">
+                                                    {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+                                                </IconButton>
+                                                <IconButton aria-label="play/pause">
+                                                    <PlayArrowIcon className={classes.playIcon} />
+                                                </IconButton>
+                                                <IconButton aria-label="next">
+                                                    {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+                                                </IconButton>
+                                            </div> */}
+                                                </div>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className={classes.alertContainer}>
+                                        <Collapse in={openAlert}>
+                                            <Alert
+                                                severity="warning" icon={<ImSad />}
+                                                action={
+                                                    <IconButton
+                                                        color="inherit"
+                                                        size="small"
+                                                        onClick={() => { setOpenAlert(false) }}
+                                                    >
+                                                        <MdClose fontSize="inherit" />
+                                                    </IconButton>
+                                                }
+                                            >
+                                                <AlertTitle>Sorry!</AlertTitle>
+                                            No salesman suggested in this case. <br />
+                                                <i><b>Reason: </b>The distance between selected schools are too far.</i>
+                                            </Alert>
+                                        </Collapse>
+                                    </div>
+                                )}
+                            </Grid>
                         </Grid>
                     </Grid>
 
@@ -277,17 +408,14 @@ function AssignForm(props) {
                             >
                                 <TableHead>
                                     <TableRow className={classes.tHead}>
-                                        {columns.map((col) => (
+                                        {columnsTableAssign.map((col) => (
                                             <TableCell
-                                                key={col}
+                                                key={col.key}
                                                 className={classes.tHeadCell}
-                                                align={
-                                                    col === 'no'
-                                                        ? 'center'
-                                                        : 'left'
-                                                }
+                                                align={col.align}
+                                                width={col.width}
                                             >
-                                                {col}
+                                                {col.name}
                                             </TableCell>
                                         ))}
                                     </TableRow>
@@ -295,16 +423,8 @@ function AssignForm(props) {
                                 <TableBody className={classes.tBody}>
                                     {rowsState.map((row, index) => (
                                         <TableRow key={row.id}>
-                                            <TableCell
-                                                align="center"
-                                                width="5%"
-                                            >
-                                                {index + 1}
-                                            </TableCell>
-                                            <TableCell
-                                                width="30%"
-                                                className={classes.tBodyCell}
-                                            >
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell className={classes.tBodyCell}>
                                                 <ListItemText
                                                     primary={`${row.level} ${row.schoolName}`}
                                                     secondary={row.district}
@@ -316,11 +436,7 @@ function AssignForm(props) {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell
-                                                align="center"
-                                                width="30%"
-                                                className={classes.tBodyCell}
-                                            >
+                                            <TableCell className={classes.tBodyCell}>
                                                 {PIC ? (
                                                     <ListItem
                                                         className={
@@ -351,24 +467,20 @@ function AssignForm(props) {
                                                     ''
                                                 )}
                                             </TableCell>
-                                            <TableCell
-                                                align="center"
-                                                width="40%"
-                                                className={classes.tBodyCell}
-                                            >
-                                                <IconButton
-                                                    onClick={(e) =>
-                                                        handleClick(e, row)
-                                                    }
-                                                >
-                                                    <Badge
-                                                        invisible={!row.note}
-                                                        color="secondary"
-                                                        variant="dot"
+                                            <TableCell className={classes.tBodyCell}>
+                                                <Tooltip title="Note">
+                                                    <IconButton
+                                                        onClick={(e) => handleClick(e, row)}
                                                     >
-                                                        <BiEdit />
-                                                    </Badge>
-                                                </IconButton>
+                                                        <Badge
+                                                            invisible={!row.note}
+                                                            color="secondary"
+                                                            variant="dot"
+                                                        >
+                                                            <BiEdit />
+                                                        </Badge>
+                                                    </IconButton>
+                                                </Tooltip>
                                                 <Popover
                                                     open={open}
                                                     onClose={handleClose}
@@ -389,15 +501,11 @@ function AssignForm(props) {
                                                         onChange={(e) =>
                                                             setObject({
                                                                 ...object,
-                                                                note:
-                                                                    e.target
-                                                                        .value,
+                                                                note: e.target.value,
                                                             })
                                                         }
                                                         value={
-                                                            object?.note
-                                                                ? object?.note
-                                                                : ''
+                                                            object?.note ? object?.note : ''
                                                         }
                                                         multiline
                                                         autoFocus
@@ -408,13 +516,11 @@ function AssignForm(props) {
                                                 </Popover>
                                             </TableCell>
                                             <TableCell>
-                                                <IconButton
-                                                    onClick={(e) =>
-                                                        handleOnRemove(e, row)
-                                                    }
-                                                >
-                                                    <MdClose />
-                                                </IconButton>
+                                                <Tooltip title="Remove">
+                                                    <IconButton onClick={(e) => handleOnRemove(e, row)}>
+                                                        <MdClose />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -424,7 +530,7 @@ function AssignForm(props) {
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions className="">
+            <DialogActions>
                 <Button
                     type="submit"
                     onClick={handleSubmit}

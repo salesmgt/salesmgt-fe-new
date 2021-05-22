@@ -44,6 +44,7 @@ function DateRangePickers(props) {
                 endText={filters.dateRange.titleTo}
                 // clearable
                 disableFuture
+                allowSameDateSelection
                 showToolbar
                 minDate={new Date('2010-01-01')}
                 inputFormat='dd/MM/yyyy'

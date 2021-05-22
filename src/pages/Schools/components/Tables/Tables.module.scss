@@ -72,31 +72,36 @@
   flex-shrink: 0;
 }
 
-.chipInactive {
-  color: $grey-400;
-  font-style: italic;
-  text-decoration: line-through $grey-400;
-  opacity: 0.2 !important;
-}
+// .chipInactive {
+//   color: $grey-400;
+//   font-style: italic;
+//   text-decoration: line-through $grey-400;
+//   opacity: 0.2 !important;
+// }
 
 .chipLead {
   background-color: $trust !important;
   color: $common-white !important;
 }
-.chipLeadInactive {
-  @extend .chipLead;
-  @extend .chipInactive;
-}
+// .chipLeadInactive {
+//   @extend .chipLead;
+//   @extend .chipInactive;
+// }
 
 .chipCustomer {
   background-color: $clarity !important;
   color: $common-white !important;
 }
-.chipCustomerInactive {
-  @extend .chipCustomer;
-  @extend .chipInactive;
-}
+// .chipCustomerInactive {
+//   @extend .chipCustomer;
+//   @extend .chipInactive;
+// }
 
 .itemText {
   font-size: 0.875rem !important;
+}
+
+.iconTimeline {
+  font-size: 1.65rem;
+  // color: $text-icon !important;
 }

@@ -48,12 +48,17 @@ function Assign(props) {
     //     message: '',
     //     type: '',
     // })
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth component="form" className={classes.dialog}>
             <DialogTitleWithIconClose onClose={onClose}>
                 {headers.assign}
             </DialogTitleWithIconClose>
-            <AssignForm onClose={onClose} setNotify={setNotify} rows={rows} setRows={setRows} refreshAPI={refreshAPI} />
+            <AssignForm
+                onClose={onClose} setNotify={setNotify}
+                rows={rows} setRows={setRows}
+                refreshAPI={refreshAPI}
+            />
         </Dialog>
     )
 }

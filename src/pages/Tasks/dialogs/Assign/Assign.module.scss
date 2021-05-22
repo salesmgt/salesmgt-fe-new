@@ -26,7 +26,6 @@
       color: $common-white;
       font-weight: bold;
       font-size: larger;
-       text-align: center !important;
     }
     .tHeadCellNo {
         @extend .tHeadCell;
@@ -50,11 +49,8 @@
     // }
 
     .tBody {
-      
-        .tBodyCell {
-          
-        padding: 0.1rem 1rem;
-        justify-content: center !important;
+      .tBodyCell {         
+      padding: 0 0.5rem;
     }
     }
   }
@@ -79,5 +75,13 @@
 .tBodyRow{
     cursor: pointer;
     text-decoration-line: line-through;
-    
-  }
+}
+
+.cardContainer {
+
+}
+
+.alertContainer {
+  width: fit-content;
+  padding: 0;
+}

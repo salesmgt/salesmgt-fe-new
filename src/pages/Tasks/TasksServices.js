@@ -142,6 +142,14 @@ export async function createTasks(listTasks) {
     return data
 }
 
+//===================== Assign Salesmen to Tasks =====================
+// Get list suggested Salesman in feature assign
+export async function suggestSalesmen(listSchoolId) {
+    const response = await Api.post('/schools/suggestion', listSchoolId)
+    const data = await response.data
+    return data
+}
+
 export async function assignMulti(list) {
     const response = await Api.put(`/tasks/mutiple-assign`, list)
     const data = await response.data

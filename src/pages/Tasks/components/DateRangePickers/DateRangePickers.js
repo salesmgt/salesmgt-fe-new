@@ -16,9 +16,9 @@ import DateFnsAdapter from 'mui-pickers-v4/adapter/date-fns'
 
 function DateRangePickers(props) {
     // const classes = useStyles()
-    const [duration, setDuration] = useState([null, null]);
+    const { dateRange, handleDateRangeChange, textFieldVariant } = props
+    const [duration, setDuration] = useState(dateRange);    //[null, null]
 
-    const { handleDurationChange } = props
     // const { filters } = Consts
 
     // const {
@@ -28,11 +28,11 @@ function DateRangePickers(props) {
     // } = useReport()
 
     const handleChange = (newDuration) => {
-        // console.log('handleDurationChange: ', handleDurationChange);
-        // console.log('newDuration: ', newDuration);
+        // console.log('handleDateRangeChange: ', handleDateRangeChange);
+        console.log('newDuration: ', newDuration);
 
         setDuration(newDuration)
-        handleDurationChange(newDuration)
+        handleDateRangeChange(newDuration)
 
 
         // setDateRange(newDate)
@@ -48,25 +48,22 @@ function DateRangePickers(props) {
                 endText='To'
                 // clearable
                 showToolbar
-                minDate={new Date('2010-01-01')}
+                minDate={new Date()}
                 inputFormat='dd/MM/yyyy'
                 value={duration}
                 onChange={(newRange) => handleChange(newRange)}
-                // onChange={(newRange) => {
-                //     setDuration(newRange)
-                //     console.log('new duration: ', newRange);
-                // }}
+                // allowSameDateSelection
                 renderInput={(startProps, endProps) => (
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
                             <FormControl fullWidth>
-                                <TextField {...startProps} variant="outlined" fullWidth />
+                                <TextField {...startProps} variant={textFieldVariant} fullWidth value={duration[0]} />
                             </FormControl>
                         </Grid>
                         {/* <Box sx={{ mx: 2 }}> to </Box> */}
                         <Grid item xs={12} sm={6} md={6} lg={6}>
                             <FormControl fullWidth>
-                                <TextField {...endProps} variant="outlined" fullWidth />
+                                <TextField {...endProps} variant={textFieldVariant} fullWidth value={duration[1]} />
                             </FormControl>
                         </Grid>
                     </Grid>

@@ -710,7 +710,7 @@ function ServiceInfo(props) {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                {setServiceStatusChipColor(service?.status)}
+                                                {service?.status && setServiceStatusChipColor(service?.status)}
                                             </Grid>
                                         </Grid>
                                     </Grid>

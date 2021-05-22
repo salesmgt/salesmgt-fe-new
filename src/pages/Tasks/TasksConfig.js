@@ -53,8 +53,8 @@ export const Consts = {
         search: {
             placeholder: 'Search...',
         },
-        // create: 'Create',
-        // assign: 'Assign',
+        create: 'Create Tasks',
+        assign: 'Assign Tasks',
     },
     filters: {
         pic: {

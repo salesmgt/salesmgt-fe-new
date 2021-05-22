@@ -6,6 +6,7 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    Tooltip,
 } from '@material-ui/core'
 import {
     MdDelete,
@@ -148,9 +149,11 @@ function MenuOptions(props) {
 
     return (
         <div>
-            <IconButton color="primary" onClick={handleOpenMenu}>
-                <MdMoreVert />
-            </IconButton>
+            <Tooltip title="Actions">
+                <IconButton color="primary" onClick={handleOpenMenu}>
+                    <MdMoreVert />
+                </IconButton>
+            </Tooltip>
             <Menu
                 anchorEl={anchorEl}
                 keepMounted

@@ -19,6 +19,7 @@ import {
     Radio,
     InputLabel,
     InputAdornment,
+    Divider,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import moment from 'moment'
@@ -34,7 +35,7 @@ import { useApp } from '../../../../hooks/AppContext'
 import DateRangePickers from '../../components/DateRangePickers/DateRangePickers'
 import { app as FirebaseApp } from '../../../../services/firebase'
 import { parseDateToString } from '../../../../utils/DateTimes';
-
+import { suggestPrice } from '../../utils/Suggestions';
 import classes from './UpdateSchStatus.module.scss'
 import { schoolLevelNames, serviceNames } from '../../../../constants/Generals'
 
@@ -46,8 +47,31 @@ const clientSchema = yup.object().shape({
     //     .min(1, 'Duartion must be at least 1 digit')
     //     .max(2, 'Duartion must be at most 2 digits')
     //     .matches(DURATION_RGX, 'Invalid entry'),
+    classNumber: yup.number()
+        .integer('Number of classes must be an integer')
+        .min(1, 'Minimum 1 class')
+        .max(100, 'Maximum 100 classes')
+        .required('Number of classes is required'),
+    studentNumber: yup.number()
+        .integer('Number of students must be an integer')
+        .min(1, 'Minimum 1 student')
+        .max(100, 'Maximum 100 students')
+        .required('Number of students is required'),
+    slotNumber: yup.number()
+        .integer('Number of periods must be an integer')
+        .min(1, 'Minimum 1 period')
+        .required('Total number of periods is required'),
+    pricePerSlot: yup
+        .number('Price floor must be a number')
+        .min(100000, 'Minimum price is 100.000VND')
+        .max(5000000, 'Maximum price is 5.000.000VND')
+        .required(),
     note: yup.string().trim(),
 })
+
+const currencyFormatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency', currency: 'VND',
+});
 
 const stylesTitle = (theme) => ({
     root: {
@@ -89,6 +113,8 @@ function UpdateSchStatus(props) {
     const history = useHistory()
     const { serviceTypes } = useTask()
 
+    const [priceSuggestions, setPriceSuggestions] = useState([]);
+
     const [notify, setNotify] = useState({
         isOpen: false,
         message: '',
@@ -97,8 +123,8 @@ function UpdateSchStatus(props) {
 
     const defaultValues = {
         // id: memoDets?.id,
-        startDate: null,
-        endDate: new Date(new Date().getFullYear(), 8, 30),
+        startDate: new Date(),
+        endDate: new Date(new Date().getFullYear(new Date().getFullYear() + 1)),
         serviceType: serviceNames.svc1,
         classNumber: 0,
         studentNumber: 0,
@@ -194,8 +220,8 @@ function UpdateSchStatus(props) {
             startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
                 : parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
             endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
-                : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
-            serviceType: data?.serviceType ? data?.serviceType : '',
+                : parseDateToString(new Date(new Date().getFullYear(new Date().getFullYear() + 1)), 'YYYY-MM-DD HH:mm:ss'),
+            serviceType: data?.serviceType ? data?.serviceType : serviceNames.svc1,
             classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
             studentNumber: parseInt(data?.studentNumber ? data?.studentNumber : '0', 10),
             slotNumber: parseInt(data?.slotNumber ? data?.slotNumber : '0', 10),
@@ -272,108 +298,177 @@ function UpdateSchStatus(props) {
                             </div>
 
                             {confirmWatch && (
-                                <Grid container spacing={2} className={classes.wrapper}>
-                                    <Grid item xs={5} sm={5} md={5} lg={5}>
-                                        <InputLabel>{fields.service.title}</InputLabel>
-                                        <Controller
-                                            name="serviceType"
-                                            control={control}
-                                            // defaultValue={
-                                            //     fields.service.svc1.value
-                                            // }
-                                            render={({ value, onChange }) => (
-                                                <RadioGroup value={value} onChange={onChange}>
-                                                    {customServiceTypes.map(service => (
-                                                        <FormControlLabel
-                                                            control={<Radio />}
-                                                            label={service}
-                                                            value={service}
-                                                        />
-                                                    ))}
-                                                </RadioGroup>
-                                            )}
-                                        />
-                                    </Grid>
+                                <>
+                                    <Divider style={{ marginBottom: '1.1rem' }} />
+                                    <Grid container spacing={2} className={classes.wrapper}>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <InputLabel>{fields.service.title}</InputLabel>
+                                            <Controller
+                                                name="serviceType"
+                                                control={control}
+                                                render={({ value, onChange }) => (
+                                                    <RadioGroup value={value} onChange={onChange} row>
+                                                        <Grid container xs={12} sm={12} md={12} lg={12}>
+                                                            {customServiceTypes.map(service => (
+                                                                <Grid item xs={3} sm={3} md={3} lg={3} key={service}>
+                                                                    <FormControlLabel
+                                                                        control={<Radio />}
+                                                                        label={service}
+                                                                        value={service}
+                                                                    />
+                                                                </Grid>
+                                                            ))}
+                                                        </Grid>
+                                                    </RadioGroup>
+                                                )}
+                                            />
+                                        </Grid>
 
-                                    <Grid item xs={7} sm={7} md={7} lg={7}>
-                                        <Controller
-                                            name="duration"
-                                            control={control}
-                                            defaultValue={[new Date(), new Date() + 365]}
-                                            render={({ value, onChange }) => (
-                                                <>
-                                                    <InputLabel>Duration *</InputLabel>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <Controller
+                                                name="duration"
+                                                control={control}
+                                                defaultValue={[new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1))]}
+                                                render={({ value, onChange }) => (
                                                     <DateRangePickers
                                                         // handleDateRangeChange={handleDurationChange}
-                                                        handleDurationChange={onChange}
+                                                        dateRange={value}
+                                                        handleDateRangeChange={onChange}
+                                                        textFieldVariant="outlined"
                                                     />
-                                                </>
-                                            )}
-                                        />
-                                    </Grid>
+                                                )}
+                                            />
+                                            {/* <InputLabel>Duration *</InputLabel> */}
+                                        </Grid>
 
-                                    <Grid item xs={7} sm={6} md={6} lg={6}>
-                                        <Controller
-                                            name="classNumber"
-                                            control={control}
-                                            // defaultValue=''
-                                            render={({ value, onChange }) => (
-                                                <TextField
-                                                    label={fields.classNo.title}
-                                                    variant="outlined"
-                                                    type="number"
-                                                    required
-                                                    fullWidth
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    InputProps={{
-                                                        inputProps: { min: 1, max: 100 },
-                                                    }}
-                                                    error={!!errors.classNumber}
-                                                    helperText={errors?.classNumber ?
-                                                        errors?.classNumber?.message
-                                                        : fields.classNo.helper
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                    </Grid>
+                                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                                            <Controller
+                                                name="classNumber"
+                                                control={control}
+                                                render={({ value, onChange }) => (
+                                                    <TextField
+                                                        label={fields.classNo.title}
+                                                        variant="outlined"
+                                                        type="number"
+                                                        required
+                                                        fullWidth
+                                                        value={value}
+                                                        onChange={onChange}
+                                                        InputProps={{
+                                                            inputProps: { min: 1, max: 100 },
+                                                        }}
+                                                        error={!!errors.classNumber}
+                                                        helperText={errors?.classNumber ?
+                                                            errors?.classNumber?.message
+                                                            : fields.classNo.helper
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                        </Grid>
 
-                                    <Grid item xs={7} sm={6} md={6} lg={6}>
-                                        <Controller
-                                            name="pricePerSlot"
-                                            control={control}
-                                            // defaultValue=''
-                                            render={({ value, onChange }) => (
-                                                <TextField
-                                                    label={fields.price.title}
-                                                    variant="outlined"
-                                                    type="number"
-                                                    required
-                                                    fullWidth
-                                                    // autoFocus
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                {fields.price.adornment}
-                                                            </InputAdornment>
-                                                        ),
-                                                        inputProps: { min: 100000, max: 5000000 },
-                                                    }}
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    error={!!errors.pricePerSlot}
-                                                    helperText={errors?.pricePerSlot ?
-                                                        errors?.pricePerSlot?.message
-                                                        : fields.price.helper
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                    </Grid>
+                                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                                            <Controller
+                                                name="studentNumber"
+                                                control={control}
+                                                render={({ value, onChange }) => (
+                                                    <TextField
+                                                        label={fields.studentNumber.title}
+                                                        variant="outlined"
+                                                        type="number"
+                                                        required
+                                                        fullWidth
+                                                        value={value}
+                                                        onChange={onChange}
+                                                        InputProps={{
+                                                            inputProps: { min: 1, max: 100 },
+                                                        }}
+                                                        error={!!errors.studentNumber}
+                                                        helperText={errors?.studentNumber ?
+                                                            errors?.studentNumber?.message
+                                                            : fields.studentNumber.helper
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                        </Grid>
 
-                                    {/**Giờ bỏ cái này, ko dùng đến nữa */}
-                                    {/* <Grid item xs={12} sm={12} md={12} lg={12}>
+                                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                                            <Controller
+                                                name="slotNumber"
+                                                control={control}
+                                                render={({ value, onChange }) => (
+                                                    <TextField
+                                                        label={fields.slotNumber.title}
+                                                        variant="outlined"
+                                                        type="number"
+                                                        required
+                                                        fullWidth
+                                                        value={value}
+                                                        onChange={onChange}
+                                                        InputProps={{
+                                                            inputProps: { min: 0 },
+                                                        }}
+                                                    // error={!!errors.slotNumber}
+                                                    // helperText={errors?.slotNumber?.message}
+                                                    />
+                                                )}
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                                            <Controller
+                                                name="pricePerSlot"
+                                                control={control}
+                                                render={({ value, onChange }) => (
+                                                    <Grid container>
+                                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                            <TextField
+                                                                label={fields.price.title}
+                                                                variant="outlined"
+                                                                type="number"
+                                                                required
+                                                                fullWidth
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            {fields.price.adornment}
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                    inputProps: { min: 1, max: 5000000 },
+                                                                }}
+                                                                value={value}
+                                                                onChange={(e) => {
+                                                                    onChange(e.target.value)
+                                                                    suggestPrice(Number(e.target.value), setPriceSuggestions)
+                                                                }}
+                                                                error={!!errors.pricePerSlot}
+                                                                helperText={errors?.pricePerSlot ?
+                                                                    errors?.pricePerSlot?.message
+                                                                    : fields.price.helper
+                                                                }
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                            {priceSuggestions.map(suggestion => (
+                                                                <Button variant="outlined" size="small" color="secondary"
+                                                                    onClick={(e) => {
+                                                                        console.log('suggestedPrice = ', suggestion);
+                                                                        onChange(suggestion)
+                                                                    }}
+                                                                    className={classes.suggestions}
+                                                                >
+                                                                    {new Intl.NumberFormat('vi-VN').format(suggestion)}
+                                                                </Button>
+                                                            ))}
+                                                        </Grid>
+                                                    </Grid>
+                                                )}
+                                            />
+                                        </Grid>
+
+                                        {/**Giờ bỏ cái này, ko dùng đến nữa */}
+                                        {/* <Grid item xs={12} sm={12} md={12} lg={12}>
                                         <InputLabel>
                                             {fields.revenue.title}
                                         </InputLabel>
@@ -416,29 +511,30 @@ function UpdateSchStatus(props) {
                                         />
                                     </Grid> */}
 
-                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                        <Controller
-                                            name="note"
-                                            control={control}
-                                            defaultValue=""
-                                            render={({ value, onChange }) => (
-                                                <TextField
-                                                    label={fields.note.title}
-                                                    variant="outlined"
-                                                    fullWidth
-                                                    multiline
-                                                    rows={4}
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    error={!!errors.note}
-                                                    helperText={
-                                                        errors?.note?.message
-                                                    }
-                                                />
-                                            )}
-                                        />
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <Controller
+                                                name="note"
+                                                control={control}
+                                                defaultValue=""
+                                                render={({ value, onChange }) => (
+                                                    <TextField
+                                                        label={fields.note.title}
+                                                        variant="outlined"
+                                                        fullWidth
+                                                        multiline
+                                                        rows={4}
+                                                        value={value}
+                                                        onChange={onChange}
+                                                        error={!!errors.note}
+                                                        helperText={
+                                                            errors?.note?.message
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                </Grid>
+                                </>
                             )}
                         </form>
                     </DialogContentText>

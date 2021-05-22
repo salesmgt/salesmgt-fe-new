@@ -70,7 +70,7 @@ export const milkNames = {
     eduLvls: 'eduLvls',
     types: 'types',
     // scales: 'scales',
-    status: 'status',
+    status: 'status',   // schoolStatus
     roles: 'roles',
     schYears: 'schYears',
     salesPurps: 'salesPurps',

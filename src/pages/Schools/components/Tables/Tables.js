@@ -9,10 +9,14 @@ import {
     TableCell,
     TablePagination,
     IconButton,
-    Chip,
     TableSortLabel,
     withStyles,
     ListItemText,
+    Chip,
+    Badge,
+    Box,
+    Tooltip,
+    Icon,
 } from '@material-ui/core'
 import {
     MdFirstPage,
@@ -20,10 +24,12 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
+import { FcTimeline } from 'react-icons/fc';
 import { useSchool } from '../../hooks/SchoolContext'
+import { useAuth } from '../../../../hooks/AuthContext';
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
-import { statusNames } from '../../../../constants/Generals'
+import { roleNames, statusNames } from '../../../../constants/Generals'
 import { Consts } from '../../SchoolsConfig'
 import Highlighter from 'react-highlight-words'
 // import PropTypes from 'prop-types'
@@ -137,13 +143,17 @@ function SortableTableHeaders(props) {
                         align={col.key === 'no' ? 'center' : 'left'}
                         width={col.width}
                     >
-                        <MuiTableSortLabel
-                            active={column === col.key}
-                            direction={column === col.key ? direction : 'asc'}
-                            onClick={() => createSortHandler(col, direction)}
-                        >
-                            {col.name}
-                        </MuiTableSortLabel>
+                        {col?.sortable ? (
+                            <MuiTableSortLabel
+                                active={column === col.key}
+                                direction={column === col.key ? direction : 'asc'}
+                                onClick={() => createSortHandler(col, direction)}
+                            >
+                                {col.name}
+                            </MuiTableSortLabel>
+                        ) :
+                            col.name
+                        }
                     </TableCell>
                 ))}
             </TableRow>
@@ -162,6 +172,7 @@ function SortableTableHeaders(props) {
 function Tables(props) {
     const { columns, rows, totalRecord, totalPage } = props
     const { messages } = Consts
+    const { user } = useAuth()
 
     const {
         params,
@@ -214,24 +225,25 @@ function Tables(props) {
         }
     }
 
-    // const setStatusChipColor = (status, isActive) => {
-    //     // if (isActive) {
-    //         switch (status) {
-    //             case statusNames.lead:
-    //                 // return <Chip label={status} className={classes.chipLead} />
-    //                 return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
-    //             case statusNames.customer:
-    //                 // return <Chip label={status} className={classes.chipCustomer} />
-    //                 return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
-    //             default:
-    //                 // #5c21f3
-    //                 // return <Chip label={status} />
-    //                 return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
-    //         }
-    //     // } else {
-    //     //     return <Chip label={statusNames.pending} />
-    //     // }
-    // }
+    const setStatusChipColor = (status) => {
+        // if (isActive) {
+        switch (status) {
+            case statusNames.lead:
+                return <Chip label={status} className={classes.chipLead} />
+            // return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipLead : classes.chipLeadInactive} />
+            case statusNames.customer:
+                return <Chip label={status} className={classes.chipCustomer} />
+            // return <Chip label={status} disabled={!isActive} className={isActive ? classes.chipCustomer : classes.chipCustomerInactive} />
+            case statusNames.pending:   // #5c21f3
+                return <Chip label={status} />
+            // return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+            default:
+                break
+        }
+        // } else {
+        //     return <Chip label={statusNames.pending} />
+        // }
+    }
 
     return (
         <div className={classes.wrapper}>
@@ -305,34 +317,48 @@ function Tables(props) {
                                             }}
                                         />
                                     </TableCell>
-                                    <TableCell
-                                        className={
-                                            row?.active
-                                                ? classes.tBodyCell
-                                                : classes.tCellInactive
-                                        }
-                                    >
-                                        <>
-                                            {row?.reprName
-                                                ? row?.reprIsMale
-                                                    ? 'Mr. '
-                                                    : 'Ms. '
-                                                : ''}
-                                            <Highlighter
-                                                highlightClassName="YourHighlightClass"
-                                                searchWords={[params.searchKey]}
-                                                autoEscape={true}
-                                                textToHighlight={
-                                                    row?.reprName
-                                                        ? row?.reprName
-                                                        : ''
-                                                }
-                                            />
-                                        </>
-                                    </TableCell>
-                                    {/* <TableCell className={classes.tBodyCell}>
-                                        {setStatusChipColor(row?.status, row?.active)}
-                                    </TableCell> */}
+                                    {user.roles[0] === roleNames.admin ? (
+                                        <TableCell
+                                            className={
+                                                row?.active
+                                                    ? classes.tBodyCell
+                                                    : classes.tCellInactive
+                                            }
+                                        >
+                                            <>
+                                                {row?.reprName
+                                                    ? row?.reprIsMale
+                                                        ? 'Mr. '
+                                                        : 'Ms. '
+                                                    : ''}
+                                                <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[params.searchKey]}
+                                                    autoEscape={true}
+                                                    textToHighlight={
+                                                        row?.reprName
+                                                            ? row?.reprName
+                                                            : ''
+                                                    }
+                                                />
+                                            </>
+                                        </TableCell>
+                                    ) : (
+                                        <TableCell className={classes.tBodyCell}>
+                                            <Box display="flex">
+                                                <Box p={1}>{row?.status && setStatusChipColor(row?.status, row?.active)}</Box>
+                                                <Box p={1}>
+                                                    {row?.hasTimeline && (
+                                                        <Tooltip title="View timeline in detail" placement="top">
+                                                            <Icon>
+                                                                <FcTimeline className={classes.iconTimeline} />
+                                                            </Icon>
+                                                        </Tooltip>
+                                                    )}
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
+                                    )}
                                     <TableCell
                                         className={classes.tBodyCell}
                                         align="right"

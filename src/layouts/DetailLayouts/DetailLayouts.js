@@ -123,13 +123,13 @@ function DetailLayouts(props) {
                             className={classes.nav}
                             component={Button}
                             onClick={() => {
-                                if (history.location.state) {
-                                    history.goBack()
-                                } else {
-                                    history.push(
-                                        defaultRoutes[user.roles[0]].route
-                                    )
-                                }
+                                // if (history.location.state) {
+                                history.goBack()
+                                // } else {
+                                //     history.push(
+                                //         defaultRoutes[user.roles[0]].route
+                                //     )
+                                // }
                             }}
                         >
                             <Icon className={classes.icon}>

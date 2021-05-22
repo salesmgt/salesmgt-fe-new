@@ -96,7 +96,14 @@ export const Consts = {
         },
         classNo: {
             title: 'No. of applied classes',
-            helper: 'Accept value between [1-100]'
+            helper: 'Min: 1 class.  Max: 100 classes'
+        },
+        studentNumber: {
+            title: 'Students per classes',
+            helper: 'Min: 1 student.  Max: 100 students'
+        },
+        slotNumber: {
+            title: 'Total periods',
         },
         price: {
             title: 'Price floor',
@@ -110,7 +117,14 @@ export const Consts = {
     }
 }
 
-export const columns = ['#', 'School Name', 'PIC', 'Note', '']
+// export const columnsTableAssign = ['#', 'School Name', 'PIC', 'Note', '']
+export const columnsTableAssign = [
+    { key: 'no', name: 'No', width: '1%', align: 'center' },
+    { key: 'schoolName', name: 'School Name', width: '30%', align: 'left' },
+    { key: 'pic', name: 'PIC', width: '35%', align: 'left' },
+    { key: 'note', name: 'Note', width: '25%', align: 'left' },
+    { key: '', name: '', width: '1%', align: 'left' },
+]
 
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     return (

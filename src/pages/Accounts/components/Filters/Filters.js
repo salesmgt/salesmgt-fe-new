@@ -12,6 +12,7 @@ import {
     MenuItem,
     FormControl,
     Button,
+    Tooltip,
 } from '@material-ui/core'
 import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
@@ -238,15 +239,16 @@ function Filters(props) {
                         />
                     </Box>
                     <Box className={classes.flexItem}>
-                        <Button
-                            className={classes.btn}
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => setOpenCreateDialog(true)}
-                        >
-                            <MdAdd fontSize="large" />
-                            {/* &nbsp;{operations.create} */}
-                        </Button>
+                        <Tooltip title={operations.create}>
+                            <Button
+                                className={classes.btn}
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => setOpenCreateDialog(true)}
+                            >
+                                <MdAdd fontSize="large" />
+                            </Button>
+                        </Tooltip>
                         <CreateAccount
                             open={openCreateDialog}
                             onClose={() => setOpenCreateDialog(false)}
