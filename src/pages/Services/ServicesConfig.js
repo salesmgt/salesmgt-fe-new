@@ -1,10 +1,11 @@
 export const columns = [
     { key: 'no', name: 'No', sortable: false, width: '1%' },
-    { key: 'serviceType', name: 'Service Type', sortable: true, width: '18%' },
-    { key: 'name', name: 'School Name', sortable: false, width: '23%' },
+    { key: 'serviceType', name: 'Service Type', sortable: true, width: '15%' },
+    { key: 'task.school.schoolId', name: 'School Name', sortable: true, width: '23%' },
+    { key: 'task.user.username', name: 'PIC', sortable: true, width: '23%' },
     { key: 'duration', name: 'Duration', sortable: false, width: '25%' },
-    { key: 'status', name: 'Status', sortable: true, width: '15%' },    // Pending, Approved, Rejected
-    { key: 'approveDate', name: 'Approved Date', sortable: true, width: '17%' },
+    { key: 'status', name: 'Status', sortable: true, width: '12%' },    // Pending, Approved, Rejected
+    // { key: 'approveDate', name: 'Approved Date', sortable: true, width: '17%' },
     { key: '', name: '', sortable: false, width: '1%' },
 ]
 

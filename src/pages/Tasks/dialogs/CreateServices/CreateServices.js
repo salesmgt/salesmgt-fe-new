@@ -45,6 +45,7 @@ function ServicesForm(props) {
         taskId,
         schoolId,
         schoolName,
+        schoolLevel,
         schoolStatus,
         // setNotify,
     } = props
@@ -53,13 +54,14 @@ function ServicesForm(props) {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="xs">
             <DialogTitleWithIconClose onClose={onClose}>
-                {`${headers.createServices} ${schoolName}`}
+                {`${headers.createServices} ${schoolLevel} ${schoolName}`}
             </DialogTitleWithIconClose>
             <CreateServicesForm
                 onClose={onClose}
                 // setNotify={setNotify}
                 taskId={taskId}
                 schoolId={schoolId}
+                schoolLevel={schoolLevel}
                 schoolStatus={schoolStatus}
                 schoolName={schoolName}
                 refreshPage={refreshPage}

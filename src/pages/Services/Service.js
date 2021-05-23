@@ -19,36 +19,36 @@ function Service() {
 
     const [exist, setExist] = useState(true)
 
-    // let isMounted = true
-    // const refreshPage = (serviceId) => {
-    //     getService(serviceId)
-    //         .then((data) => {
-    //             if (isMounted) {
-    //                 setService(data)
-    //                 // console.log('serviceInfo: ', data);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 if (error.response.status === 403) {
-    //                     setExist(false)
-    //                 } else {
-    //                     history.push({
-    //                         pathname: '/errors',
-    //                         state: { error: error.response.status },
-    //                     })
-    //                 }
-    //             }
-    //         })
-    // }
+    let isMounted = true
+    const refreshPage = (serviceId) => {
+        getService(serviceId)
+            .then((data) => {
+                if (isMounted) {
+                    setService(data)
+                    console.log('serviceInfo: ', data);
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    if (error.response.status === 403) {
+                        setExist(false)
+                    } else {
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
+                }
+            })
+    }
 
-    // useEffect(() => {
-    //     refreshPage(id)
-    //     return () => {
-    //         isMounted = false
-    //     }
-    // }, [])
+    useEffect(() => {
+        refreshPage(id)
+        return () => {
+            isMounted = false
+        }
+    }, [])
 
     if (!service) {
         if (!exist) {
@@ -63,21 +63,17 @@ function Service() {
     }
 
     return (
-        <>
-            {/* {user.roles[0] === roleNames.admin && ( */}
-            <DetailLayouts
-                linkBack={linkNames.back}
-                header={`${service?.serviceType} for ${service?.name}`}
-                subHeader={service?.status}
-                isStatus={true}
-                tabs={[tabNames.tab1]}
-                tabValue={tabValue}
-                handleChangeTab={handleChangeTab}
-            >
-                <ServiceInfo service={service} />
-                {/* refreshPage={refreshPage} */}
-            </DetailLayouts>
-        </>
+        <DetailLayouts
+            linkBack={linkNames.back}
+            header={`${service?.serviceType} for ${service?.educationLevel} ${service?.schoolName}`}
+            subHeader={service?.status}
+            isStatus={true}
+            tabs={[tabNames.tab1]}
+            tabValue={tabValue}
+            handleChangeTab={handleChangeTab}
+        >
+            <ServiceInfo service={service} refreshPage={refreshPage} />
+        </DetailLayouts>
     )
 }
 

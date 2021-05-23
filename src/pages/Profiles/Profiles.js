@@ -26,6 +26,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../../hooks/AuthContext'
+import { useApp } from '../../hooks/AppContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
@@ -97,6 +98,7 @@ function Profiles() {
     const { headers, operations, fields, messages } = Consts
 
     const { enqueueSnackbar } = useSnackbar()
+    const { setUserInfo } = useApp()
 
     const location = useLocation()
     const history = useHistory()
@@ -174,6 +176,7 @@ function Profiles() {
                 .then((data) => {
                     if (isMounted) {
                         setData(data)
+                        setUserInfo(data)
                     }
                 })
                 .catch((error) => {

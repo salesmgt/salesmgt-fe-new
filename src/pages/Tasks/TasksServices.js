@@ -8,12 +8,12 @@ export async function getTasks(
     direction = 'desc',
     searchKey = undefined,
     filters = undefined,
-    pic
+    picUsername
 ) {
     let url = `/tasks?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
 
     url = searchKey ? url.concat(`&key=${searchKey}`) : url
-    url = pic ? url.concat(`&username=${pic}`) : url
+    url = picUsername ? url.concat(`&username=${picUsername}`) : url
 
     // Tiền xử lý 9 filters
     if (filters) {
@@ -106,7 +106,7 @@ export async function getSchoolsForTasks(
     filters
 ) {
     // Đây là url đúng nhưng chưa có. Để đây sau này dùng, DO NOT REMOVE!!!
-    let url = `/schools/targets-creating?schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
+    let url = `/schools/targets-creating?active=true&schoolYear=${schoolYear}&page=${page}&limit=${limit}&column=${column}&direction=${direction}`
 
     // let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}&active=true`
     url = searchKey ? url.concat(`&key=${searchKey}`) : url

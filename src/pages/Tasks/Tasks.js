@@ -25,7 +25,7 @@ function Tasks() {
         direction = 'desc',
         searchKey,
         listFilters,
-        pic
+        picUsername
     ) {
         TasksServices.getTasks(
             page,
@@ -34,7 +34,7 @@ function Tasks() {
             direction,
             searchKey,
             listFilters,
-            pic
+            picUsername
         )
             .then((res) => {
                 setData(res)

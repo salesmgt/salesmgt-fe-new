@@ -36,7 +36,7 @@ import Highlighter from 'react-highlight-words'
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
 import { Snackbars } from '../../../../components'
-import { parseDateToString } from '../../../../utils/DateTimes';
+import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes';
 import classes from './Tables.module.scss'
 
 // Customize component TablePagination
@@ -263,17 +263,18 @@ function Tables(props) {
                 else
                     return <Chip label={taskStatusNames.failed} className={classes.chipFailed} />
             default:
-                break   // ko hiện gì
-            // return <Chip label={status} /> // #5c21f3
+                return <Chip label={result} /> // #5c21f3
+            // break   // ko hiện gì
         }
     }
     //=================================================================================
 
     const setEndDateColor = (endDate, result) => {
-        const today = new Date()
-        const deadline = new Date(endDate)
+        // const today = new Date()
+        // const deadline = new Date(endDate)
         // const deadline = new Date('2021-05-17')
-        const countToDeadline = Math.round((deadline.getTime() - today.getTime()) / (1000 * 3600 * 24))
+        // const countToDeadline = Math.round((deadline.getTime() - today.getTime()) / (1000 * 3600 * 24))
+        const countToDeadline = calculateDatesGap(new Date(), new Date(endDate), 'D')
         // console.log('countToDeadline = ', countToDeadline);
 
         if (result === taskResultNames.successful) {

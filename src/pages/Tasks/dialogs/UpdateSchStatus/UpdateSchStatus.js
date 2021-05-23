@@ -35,6 +35,7 @@ import { app as FirebaseApp } from '../../../../services/firebase'
 import { parseDateToString } from '../../../../utils/DateTimes'
 import { useSnackbar } from 'notistack'
 import classes from './UpdateSchStatus.module.scss'
+import { schoolLevelNames, serviceNames } from '../../../../constants/Generals'
 
 const clientSchema = yup.object().shape({
     // duration: yup
@@ -99,9 +100,12 @@ function UpdateSchStatus(props) {
         // id: memoDets?.id,
         startDate: null,
         endDate: new Date(new Date().getFullYear(), 8, 30),
-        serviceType: '',
+        serviceType: serviceNames.svc1,
+        classNumber: 0,
+        studentNumber: 0,
+        slotNumber: 0,
+        pricePerSlot: 100000.0,
         note: '',
-        classNumber: '',
         showCreate: false,
     }
 
@@ -111,6 +115,24 @@ function UpdateSchStatus(props) {
     })
 
     const confirmWatch = watch('showCreate')
+
+    const [listManagers, setListManagers] = useState([])
+    const getListManagers = () => {
+        TasksServices.getListManagers().then((res) =>
+            setListManagers(res.list)
+        )
+    }
+    useEffect(getListManagers, []);
+
+    const customiseServiceList = (schoolLevel) => {
+        const customServiceTypes = [...serviceTypes]
+
+        if (schoolLevel !== schoolLevelNames.th) {
+            customServiceTypes.splice(customServiceTypes.indexOf(serviceNames.svc3), 1)
+        }
+        return customServiceTypes;
+    }
+    const customServiceTypes = customiseServiceList(task?.level)
 
     const allowUpdate = () => {
         // console.log('allow aupdate nè');
@@ -145,12 +167,6 @@ function UpdateSchStatus(props) {
             })
     }
 
-    const [listManagers, setListManagers] = useState([])
-    const getListManagers = () => {
-        TasksServices.getListManagers().then((res) => setListManagers(res.list))
-    }
-    useEffect(getListManagers, [])
-
     // Coi xem chỗ này còn lỗi ko
     // console.log('listManagers: ', listManagers)
     const createNotify = (value) => {
@@ -167,7 +183,7 @@ function UpdateSchStatus(props) {
                         timestamp: moment(new Date()).format(
                             'YYYY-MM-DD HH:mm:ss'
                         ),
-                        content: 'Salesman has just proposed a service.',
+                        content: 'Salesman has just submitd a service.',
                         uid: task?.id,
                         isSeen: false,
                     })
@@ -177,34 +193,25 @@ function UpdateSchStatus(props) {
     }
 
     const onSubmit = (data) => {
-        // console.log('vo ko???');
         const model = {
             ...data,
             taskId: task?.id,
             submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
-            startDate: data?.duration[0]
-                ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
-                : null,
-            endDate: data?.duration[1]
-                ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
-                : parseDateToString(
-                      new Date(new Date().getFullYear(), 8, 30),
-                      'YYYY-MM-DD HH:mm:ss'
-                  ),
+            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
+                : parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+            endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
+                : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
             serviceType: data?.serviceType ? data?.serviceType : '',
-            classNumber: parseInt(
-                data?.classNumber ? data?.classNumber : '0',
-                10
-            ),
-            pricePerSlot: parseFloat(
-                data?.pricePerSlot ? data?.pricePerSlot : '0.0'
-            ),
+            classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
+            studentNumber: parseInt(data?.studentNumber ? data?.studentNumber : '0', 10),
+            slotNumber: parseInt(data?.slotNumber ? data?.slotNumber : '0', 10),
+            pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0'),
         }
         delete model.showCreate
         delete model.duration
 
         // getListManagers()
-        console.log('listManagers: ', listManagers)
+        // console.log('listManagers: ', listManagers)
 
         TasksServices.createServices(model)
             .then((res) => {
@@ -294,21 +301,14 @@ function UpdateSchStatus(props) {
                                             //     fields.service.svc1.value
                                             // }
                                             render={({ value, onChange }) => (
-                                                <RadioGroup
-                                                    value={value}
-                                                    onChange={onChange}
-                                                >
-                                                    {serviceTypes.map(
-                                                        (service) => (
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                                label={service}
-                                                                value={service}
-                                                            />
-                                                        )
-                                                    )}
+                                                <RadioGroup value={value} onChange={onChange}>
+                                                    {customServiceTypes.map(service => (
+                                                        <FormControlLabel
+                                                            control={<Radio />}
+                                                            label={service}
+                                                            value={service}
+                                                        />
+                                                    ))}
                                                 </RadioGroup>
                                             )}
                                         />

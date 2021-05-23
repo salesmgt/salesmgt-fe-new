@@ -132,18 +132,17 @@ function MenuOptions(props) {
 
     const renderServicesDialog = () => {
         return (
-            <>
-                <CreateServices
-                    open={openServices}
-                    onClose={() => setOpenServices(false)}
-                    refreshPage={refreshAPI}
-                    taskId={data?.id}
-                    schoolId={data?.schoolId}
-                    schoolName={`${data?.level} ${data?.schoolName}`}
-                    schoolStatus={data?.schoolStatus}
-                    setNotify={setNotify}
-                />
-            </>
+            <CreateServices
+                open={openServices}
+                onClose={() => setOpenServices(false)}
+                refreshPage={refreshAPI}
+                taskId={data?.id}
+                schoolId={data?.schoolId}
+                schoolLevel={data?.level}
+                schoolName={data?.schoolName}
+                schoolStatus={data?.schoolStatus}
+                setNotify={setNotify}
+            />
         )
     }
 

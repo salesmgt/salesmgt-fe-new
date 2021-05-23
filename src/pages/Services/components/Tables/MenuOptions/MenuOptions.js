@@ -18,7 +18,6 @@ function MenuOptions(props) {
     const { menuItems } = Consts
 
     const { params } = useService()
-
     const { url } = useRouteMatch()
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -52,7 +51,7 @@ function MenuOptions(props) {
                     onClick={handleCloseMenus}
                     component={Link}
                     to={{
-                        pathname: `${url}/${data.id}`,
+                        pathname: `${url}/${data?.id}`,
                         state: { data: stateData },
                     }}
                 >

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import {
     TableContainer,
     Table,
@@ -13,6 +13,9 @@ import {
     TableSortLabel,
     withStyles,
     ListItemText,
+    Avatar,
+    ListItemAvatar,
+    ListItem,
 } from '@material-ui/core'
 import {
     MdFirstPage,
@@ -160,7 +163,22 @@ function SortableTableHeaders(props) {
 // }
 
 // Customize component Table
+
+const useStyles = makeStyles(() => ({
+    itemPIC: {
+        padding: 0,
+        margin: 0,
+    },
+    itemTextPrimary: {
+        fontSize: '0.875rem',
+    },
+    itemTextSecondary: {
+        fontSize: '0.8rem',
+    },
+}))
+
 function Tables(props) {
+    const styles = useStyles()
     const { columns, rows, totalRecord, totalPage } = props
     const { messages } = Consts
 
@@ -265,15 +283,15 @@ function Tables(props) {
                                     <TableCell className={classes.tBodyCell}>
                                         <ListItemText
                                             primary={
-                                                <Highlighter
-                                                    highlightClassName="YourHighlightClass"
-                                                    searchWords={[params.searchKey]}
-                                                    autoEscape={true}
-                                                    textToHighlight={
-                                                        row?.schoolName
-                                                        // `${row?.educationalLevel} ${row?.schoolName}`
-                                                    }
-                                                />
+                                                <>
+                                                    {row?.educationLevel} {' '}
+                                                    <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[params.searchKey]}
+                                                        autoEscape={true}
+                                                        textToHighlight={row?.schoolName}
+                                                    />
+                                                </>
                                             }
                                             secondary={row?.district}
                                             classes={{
@@ -281,6 +299,38 @@ function Tables(props) {
                                                 secondary: classes.itemText,
                                             }}
                                         />
+                                    </TableCell>
+                                    <TableCell>
+                                        {row?.fullName && (
+                                            <ListItem className={classes.itemPIC}>
+                                                <ListItemAvatar>
+                                                    <Avatar src={row?.avatar} />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    className={classes.picName}
+                                                    primary={
+                                                        <Highlighter
+                                                            highlightClassName="YourHighlightClass"
+                                                            searchWords={[params.searchKey]}
+                                                            autoEscape={true}
+                                                            textToHighlight={row?.fullName || ''}
+                                                        />
+                                                    }
+                                                    secondary={
+                                                        <Highlighter
+                                                            highlightClassName="YourHighlightClass"
+                                                            searchWords={[params.searchKey]}
+                                                            autoEscape={true}
+                                                            textToHighlight={row?.username || ''}
+                                                        />
+                                                    }
+                                                    classes={{
+                                                        primary: styles.itemTextPrimary,
+                                                        secondary: styles.itemTextSecondary,
+                                                    }}
+                                                />
+                                            </ListItem>
+                                        )}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {/**Duration 1 cái progress bar ở đây */}
@@ -290,9 +340,9 @@ function Tables(props) {
                                     <TableCell className={classes.tBodyCell}>
                                         {setServiceStatusChipColor(row?.status)}
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
+                                    {/* <TableCell className={classes.tBodyCell}>
                                         {row?.approveDate ? parseDateToString(row?.approveDate, 'DD-MM-YYYY') : ''}
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell
                                         className={classes.tBodyCell}
                                         align="right"

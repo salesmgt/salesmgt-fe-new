@@ -1,3 +1,4 @@
+import { roleNames } from '../../constants/Generals'
 import Api from '../../services/Api'
 
 export async function getSchools(
@@ -6,7 +7,8 @@ export async function getSchools(
     column = 'schoolId',
     direction = 'asc',
     searchKey = undefined,
-    filters = undefined
+    filters = undefined,
+    userRole
 ) {
     let url = `/schools?page=${page}&limit=${limit}&column=${column}&direction=${direction}`
 
@@ -28,10 +30,14 @@ export async function getSchools(
         url = filters['status'].filterValue
             ? url.concat(`&status=${filters['status'].filterValue}`)
             : url
-        url =
-            filters['isActive'].filterValue !== null
-                ? url.concat(`&active=${filters['isActive'].filterValue}`)
-                : url
+        if (userRole === roleNames.admin) {
+            url =
+                filters['isActive'].filterValue !== null
+                    ? url.concat(`&active=${filters['isActive'].filterValue}`)
+                    : url
+        } else {
+            url = url.concat('&active=true')
+        }
     }
 
     // console.log('url = ', url)

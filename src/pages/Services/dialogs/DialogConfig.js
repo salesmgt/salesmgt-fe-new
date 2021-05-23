@@ -1,93 +1,34 @@
 export const Consts = {
     headers: {
-        child1: 'Create School',
-        child2: 'Import File',
+        reject: 'Confirm Reject Service',
+        approve: 'Confirm Approve Service',
     },
     operations: {
         cancel: 'Cancel',
-        save: 'Save',
-        WithData: 'With Representative',
+        reject: 'Reject',
+        approve: 'Approve',
     },
     fields: {
-        name: {
-            title: 'School Name',
+        rejectedReason: {
+            label: 'Rejected reason',
+            placeholder: 'The reason I rejected this service is...?'
         },
-        addr: {
-            title: 'Address',
+        serviceType: {
+            title: 'Service type',
         },
-        dist: {
-            title: 'District',
-        },
-        status: {
-            title: 'School Active',
-        },
-        eduLvl: {
-            title: 'Educational Level',
-        },
-        // scale: {
-        //     title: 'School Scale',
-        // },
-        type: {
-            title: 'School Type',
-        },
-        salesStatus: {
-            title: 'School Status',
-        },
-        des: {
-            title: 'Description',
-        },
-        tel: {
-            title: 'Tel',
-        },
-        repName: {
-            title: 'Full Name',
-        },
-        repGender: {
-            title: 'Gender',
-            male: {
-                lb: 'Male',
-                value: 'true',
-            },
-            female: {
-                lb: 'Female',
-                value: 'false',
-            },
-        },
-        repEmail: {
-            title: 'Email',
-        },
-        repPhone: {
-            title: 'Phone Number',
+        schoolName: {
+            title: 'School name',
         },
     },
+}
 
-    excel: {
-        name: 'Tên trường',
-        educationalLevel: 'Cấp học',
-        phone: 'SĐT trường',
-        district: 'Quận/Huyện',
-        address: 'Địa chỉ (tồn tại duy nhất)',
-        reprName: 'Hiệu trưởng/Hiệu phó',
-        isMale: 'Giới tính',
-        reprPhone: 'SĐT HT/HP',
-        reprEmail: 'Email HT/HP',
-        type: 'Loại hình',
-        // scale: 'Quy mô',
-        status: 'Tình trạng',
-        description: 'Thông tin chi tiết',
-        isMaleValue: 'Nam',
-    },
-    contentText1:
-        'To import file to this system, please select a file in your device. The system only accepts ',
-    fileFormat: ' xlsx, xls, csv ',
-    contentText2: 'file format.',
-    contentLink: 'to download an import sample file.',
-    linkText: 'Click here ',
-    alertText: 'Total rows will be inserted  — ',
-    alertType: {
-        warning: 'Warning',
-        success: 'Checked',
-        error: 'Error',
-    },
-    refFile: 'documents/Import_Sample.xlsx'
+export const confirmMessage = (schoolLevel, schoolName, serviceType) => {
+    return (
+        <>
+            Do you really want to approve service <strong>{serviceType}</strong> of school
+            <strong><em> {schoolLevel} {schoolName} </em></strong>?
+            <br />
+            This process cannot be undone.
+        </>
+    )
 }

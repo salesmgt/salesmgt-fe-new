@@ -312,19 +312,12 @@ function RepInfo(props) {
                                     item
                                     xs={12}
                                     sm={12}
-                                    md={8}
-                                    lg={6}
+                                    md={9}
+                                    lg={8}
                                     className={classes.row}
                                 >
                                     <Grid container spacing={0}>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={7}
-                                            lg={7}
-                                            className={classes.row}
-                                        >
+                                        <Grid item xs={12} sm={12} md={6} lg={6} className={classes.row}>
                                             <Controller
                                                 name="id"
                                                 control={rpControl}
@@ -417,12 +410,7 @@ function RepInfo(props) {
                                             </FormControl>
                                         </Grid>
 
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
+                                        <Grid item xs={12} sm={12} md={10} lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -454,12 +442,7 @@ function RepInfo(props) {
                                             />
                                         </Grid>
 
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
+                                        <Grid item xs={12} sm={12} md={10} lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -487,12 +470,7 @@ function RepInfo(props) {
                                             />
                                         </Grid>
 
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
+                                        <Grid item xs={12} sm={12} md={10} lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -522,12 +500,7 @@ function RepInfo(props) {
                                             />
                                         </Grid>
 
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
+                                        <Grid item xs={12} sm={12} md={10} lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -557,14 +530,7 @@ function RepInfo(props) {
                                             />
                                         </Grid>
                                         {/* Action */}
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
-                                            className={classes.action}
-                                        >
+                                        <Grid item xs={12} sm={12} md={10} lg={10} className={classes.action}>
                                             <Button
                                                 className={classes.submit}
                                                 // variant="contained"
@@ -863,8 +829,8 @@ function RepInfo(props) {
                                         item
                                         xs={12}
                                         sm={12}
-                                        md={9}
-                                        lg={9}
+                                        md={10}
+                                        lg={10}
                                         className={classes.row}
                                     >
                                         {/* <Typography color="inherit"> */}
@@ -927,19 +893,12 @@ function RepInfo(props) {
                                     item
                                     xs={12}
                                     sm={12}
-                                    md={8}
-                                    lg={6}
+                                    md={9}
+                                    lg={8}
                                     className={classes.row}
                                 >
                                     <Grid container spacing={0}>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
-                                            className={classes.row}
-                                        >
+                                        <Grid item xs={12} sm={12} md={10} lg={10} className={classes.row}>
                                             <Controller
                                                 name="id"
                                                 control={cmtControl}
@@ -985,14 +944,7 @@ function RepInfo(props) {
                                             />
                                         </Grid>
                                         {/* Action */}
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={12}
-                                            lg={12}
-                                            className={classes.action}
-                                        >
+                                        <Grid item xs={12} sm={12} md={10} lg={10} className={classes.action}>
                                             <Button
                                                 className={classes.submit}
                                                 variant="contained"
