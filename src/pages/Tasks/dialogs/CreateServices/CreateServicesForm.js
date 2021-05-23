@@ -22,10 +22,11 @@ import { DURATION_RGX } from '../../../../utils/Regex'
 import { serviceNames, statusNames } from '../../../../constants/Generals'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
-import { useTask } from '../../hooks/TaskContext';
+import { useTask } from '../../hooks/TaskContext'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import { parseDateToString } from '../../../../utils/DateTimes';
-import DateRangePickers from '../../components/DateRangePickers/DateRangePickers';
+import { parseDateToString } from '../../../../utils/DateTimes'
+import DateRangePickers from '../../components/DateRangePickers/DateRangePickers'
+import { useSnackbar } from 'notistack'
 import classes from './CreateServices.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -42,7 +43,7 @@ const clientSchema = yup.object().shape({
 function CreateServicesForm(props) {
     const {
         onClose,
-        setNotify,
+        // setNotify,
         taskId,
         schoolId,
         // schoolName,
@@ -50,11 +51,15 @@ function CreateServicesForm(props) {
         refreshPage,
     } = props
 
-    const { operations, fields } = Consts
+    const { operations, fields, messages } = Consts
 
     const { user } = useAuth()
     const { userInfo } = useApp()
+
+    const { enqueueSnackbar } = useSnackbar()
+
     const history = useHistory()
+
     const { serviceTypes, params } = useTask()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
@@ -64,7 +69,7 @@ function CreateServicesForm(props) {
         endDate: new Date(new Date().getFullYear(), 8, 30),
         serviceType: '',
         note: '',
-        classNumber: ''
+        classNumber: '',
     }
 
     const { control, errors, handleSubmit, formState, reset } = useForm({
@@ -74,11 +79,9 @@ function CreateServicesForm(props) {
 
     const [listManagers, setListManagers] = useState([])
     const getListManagers = () => {
-        TasksServices.getListManagers().then((res) =>
-            setListManagers(res.list)
-        )
+        TasksServices.getListManagers().then((res) => setListManagers(res.list))
     }
-    useEffect(getListManagers, []);
+    useEffect(getListManagers, [])
 
     // useEffect(() => {
     //     TasksServices.getListManagers().then((res) =>
@@ -89,7 +92,7 @@ function CreateServicesForm(props) {
     // ko gọi ngoài này nữa vì mỗi lần form này bị re-render, nó sẽ gọi lại API. Chết mất!
 
     // Coi xem chỗ này còn lỗi ko
-    console.log('listManagers: ', listManagers)
+
     const createNotify = (value) => {
         if (listManagers && listManagers?.length > 0) {
             new Promise((resolve, reject) => {
@@ -118,12 +121,23 @@ function CreateServicesForm(props) {
             ...data,
             taskId: taskId,
             submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
-            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss') : null,
-            endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
-                : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
+            startDate: data?.duration[0]
+                ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
+                : null,
+            endDate: data?.duration[1]
+                ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
+                : parseDateToString(
+                      new Date(new Date().getFullYear(), 8, 30),
+                      'YYYY-MM-DD HH:mm:ss'
+                  ),
             serviceType: data?.serviceType ? data?.serviceType : '',
-            classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
-            pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0')
+            classNumber: parseInt(
+                data?.classNumber ? data?.classNumber : '0',
+                10
+            ),
+            pricePerSlot: parseFloat(
+                data?.pricePerSlot ? data?.pricePerSlot : '0.0'
+            ),
         }
         delete model.duration
 
@@ -140,10 +154,13 @@ function CreateServicesForm(props) {
             if (status === statusNames.lead) {
                 TasksServices.updateStatus(schoolId, statusModel)
                     .then((res) => {
-                        setNotify({
-                            isOpen: true,
-                            message: "Updated School's status successfully",
-                            type: 'success',
+                        // setNotify({
+                        //     isOpen: true,
+                        //     message: "Updated School's status successfully",
+                        //     type: 'success',
+                        // })
+                        enqueueSnackbar(messages.updatedSuccess, {
+                            variant: 'success',
                         })
                     })
                     .catch((error) => {
@@ -154,10 +171,13 @@ function CreateServicesForm(props) {
                                 state: { error: error.response.status },
                             })
                         }
-                        setNotify({
-                            isOpen: true,
-                            message: "Updated School's status failed",
-                            type: 'error',
+                        // setNotify({
+                        //     isOpen: true,
+                        //     message: "Updated School's status failed",
+                        //     type: 'error',
+                        // })
+                        enqueueSnackbar(messages.updatedError, {
+                            variant: 'error',
                         })
                     })
             }
@@ -166,12 +186,23 @@ function CreateServicesForm(props) {
         TasksServices.createServices(model)
             .then((res) => {
                 updateStatus2Cust(schoolStatus)
-                refreshPage(page, limit, column, direction, searchKey, listFilters, user.username)
+                refreshPage(
+                    page,
+                    limit,
+                    column,
+                    direction,
+                    searchKey,
+                    listFilters,
+                    user.username
+                )
                 // Notify by Snackbars
-                setNotify({
-                    isOpen: true,
-                    message: 'Proposed a service successfully',
-                    type: 'success',
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Proposed a service successfully',
+                //     type: 'success',
+                // })
+                enqueueSnackbar(messages.createdSuccess, {
+                    variant: 'success',
                 })
 
                 // Send notification by Firebase
@@ -187,10 +218,13 @@ function CreateServicesForm(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Proposed a service failed',
-                    type: 'error',
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Proposed a service failed',
+                //     type: 'error',
+                // })
+                enqueueSnackbar(messages.createdError, {
+                    variant: 'error',
                 })
             })
 
@@ -200,8 +234,9 @@ function CreateServicesForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form noValidate
-                // onSubmit={handleSubmit(onSubmit)}
+                <form
+                    noValidate
+                    // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={10} md={9} lg={9}>
@@ -226,8 +261,12 @@ function CreateServicesForm(props) {
                                 name="serviceType"
                                 control={control}
                                 render={({ value, onChange }) => (
-                                    <RadioGroup value={value} onChange={onChange} row>
-                                        {serviceTypes.map(service => (
+                                    <RadioGroup
+                                        value={value}
+                                        onChange={onChange}
+                                        row
+                                    >
+                                        {serviceTypes.map((service) => (
                                             <FormControlLabel
                                                 key={service}
                                                 control={<Radio />}
@@ -258,9 +297,10 @@ function CreateServicesForm(props) {
                                             inputProps: { min: 1, max: 100 },
                                         }}
                                         error={!!errors.classNumber}
-                                        helperText={errors?.classNumber ?
-                                            errors?.classNumber?.message
-                                            : fields.classNo.helper
+                                        helperText={
+                                            errors?.classNumber
+                                                ? errors?.classNumber?.message
+                                                : fields.classNo.helper
                                         }
                                     />
                                 )}
@@ -286,14 +326,18 @@ function CreateServicesForm(props) {
                                                     {fields.price.adornment}
                                                 </InputAdornment>
                                             ),
-                                            inputProps: { min: 100000, max: 5000000 },
+                                            inputProps: {
+                                                min: 100000,
+                                                max: 5000000,
+                                            },
                                         }}
                                         value={value}
                                         onChange={onChange}
                                         error={!!errors.pricePerSlot}
-                                        helperText={errors?.pricePerSlot ?
-                                            errors?.pricePerSlot?.message
-                                            : fields.price.helper
+                                        helperText={
+                                            errors?.pricePerSlot
+                                                ? errors?.pricePerSlot?.message
+                                                : fields.price.helper
                                         }
                                     />
                                 )}

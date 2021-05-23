@@ -76,7 +76,7 @@ function School() {
             case roleNames.supervisor:
                 return [tabNames.tab1, tabNames.tab3]
             default:
-                break;
+                break
         }
     }
 
@@ -86,25 +86,45 @@ function School() {
                 //[tabNames.tab1, tabNames.tab2]
                 switch (tabValue) {
                     case 0:
-                        return <GenInfo school={school} refreshPage={refreshPage} userRole={role} />
+                        return (
+                            <GenInfo
+                                school={school}
+                                refreshPage={refreshPage}
+                                userRole={role}
+                            />
+                        )
                     case 1:
-                        return <RepInfo school={school} refreshPage={refreshPage} />
+                        return (
+                            <RepInfo
+                                school={school}
+                                refreshPage={refreshPage}
+                            />
+                        )
                     default:
-                        break;
+                        break
                 }
-            case roleNames.manager:
+                break
+            // case roleNames.manager:
+            //     break
             case roleNames.supervisor:
                 //[tabNames.tab1, tabNames.tab3]
                 switch (tabValue) {
                     case 0:
-                        return <GenInfo school={school} refreshPage={refreshPage} userRole={role} />
+                        return (
+                            <GenInfo
+                                school={school}
+                                refreshPage={refreshPage}
+                                userRole={role}
+                            />
+                        )
                     case 1:
-                        return <Timelines />;
+                        return <Timelines />
                     default:
-                        break;
+                        break
                 }
+                break
             default:
-                break;
+                break
         }
     }
 
@@ -112,11 +132,11 @@ function School() {
         switch (role) {
             case roleNames.admin:
                 return school?.active ? 'Active' : 'Inactive'
-            case roleNames.manager:
+            // case roleNames.manager:
             case roleNames.supervisor:
                 return school?.status
             default:
-                break;
+                break
         }
     }
 

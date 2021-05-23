@@ -9,7 +9,7 @@ export const Consts = {
         updateStatus: 'Confirm Update Status',
         createServices: 'Propose Services for',
         confirmCreateTask: 'Confirm Create Tasks',
-        confirmUpdate: 'Confirm Update School Status'
+        confirmUpdate: 'Confirm Update School Status',
     },
     operations: {
         cancel: 'Cancel',
@@ -22,6 +22,17 @@ export const Consts = {
         search: {
             placeholder: 'Search...',
         },
+    },
+    messages: {
+        createdInfo: '',
+        createdSuccess: 'Created Successfully',
+        createdError: 'Created Failed',
+        createdwarning: '',
+        updatedInfo: '',
+        updatedSuccess: 'Updated Successfully',
+        updatedError: 'Updated Failed',
+        updatedwarning: '',
+        notFound: 'No records found.',
     },
     filters: {
         district: {
@@ -96,18 +107,15 @@ export const Consts = {
         },
         classNo: {
             title: 'No. of applied classes',
-            helper: 'Accept value between [1-100]'
+            helper: 'Accept value between [1-100]',
         },
         price: {
             title: 'Price floor',
             adornment: 'VND/period',
-            helper: '100.000VND - 5.000.000VND'
+            helper: '100.000VND - 5.000.000VND',
         },
         // End for Services
     },
-    messages: {
-        notFound: 'No records found.',
-    }
 }
 
 export const columns = ['#', 'School Name', 'PIC', 'Note', '']
@@ -140,7 +148,8 @@ export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
                 </em>
             </strong>
             ?
-            <br /><br />
+            <br />
+            <br />
             This process cannot be undone.
         </>
     )
@@ -165,17 +174,32 @@ export const updateStatusMessage = () => {
     return (
         <>
             If you want to update this status, please propose a
-            <strong><em> Service</em></strong> in the form below.
+            <strong>
+                <em> Service</em>
+            </strong>{' '}
+            in the form below.
         </>
     )
 }
-export const confirmUpdateSchoolStatus = (schoolLevel, schoolName, currentStatus, newStatus) => {
+export const confirmUpdateSchoolStatus = (
+    schoolLevel,
+    schoolName,
+    currentStatus,
+    newStatus
+) => {
     return (
         <>
             Do you really want to update status of
-            <strong><em> {schoolLevel} {schoolName} </em></strong>
-            from <strong>{currentStatus}</strong> to <strong>{newStatus}</strong>?
-            <br /><br />
+            <strong>
+                <em>
+                    {' '}
+                    {schoolLevel} {schoolName}{' '}
+                </em>
+            </strong>
+            from <strong>{currentStatus}</strong> to{' '}
+            <strong>{newStatus}</strong>?
+            <br />
+            <br />
             This process cannot be undone.
         </>
     )
@@ -183,7 +207,10 @@ export const confirmUpdateSchoolStatus = (schoolLevel, schoolName, currentStatus
 export const schoolYearSubTitle = (schoolYear) => {
     return (
         <>
-            <b><i>School Year: </i></b>&nbsp;{schoolYear}
+            <b>
+                <i>School Year: </i>
+            </b>
+            &nbsp;{schoolYear}
         </>
     )
 }

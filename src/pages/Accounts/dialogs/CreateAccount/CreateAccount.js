@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Dialog,
     IconButton,
@@ -9,7 +9,6 @@ import {
 import { MdClose } from 'react-icons/md'
 import { Consts } from '../DialogConfig'
 import CreateAccountForm from './CreateAccountForm'
-import { Snackbars } from '../../../../components'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -43,22 +42,17 @@ function CreateAccount(props) {
 
     const { headers } = Consts
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
-
     return (
         <>
             <Dialog open={open} onClose={onClose} maxWidth="xs">
                 <DialogTitleWithIconClose onClose={onClose}>
                     {headers.child1}
                 </DialogTitleWithIconClose>
-                <CreateAccountForm onClose={onClose} setNotify={setNotify} refreshPage={refreshPage} />
+                <CreateAccountForm
+                    onClose={onClose}
+                    refreshPage={refreshPage}
+                />
             </Dialog>
-            
-            <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )
 }

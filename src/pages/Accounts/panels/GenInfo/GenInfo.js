@@ -21,13 +21,14 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useApp } from '../../../../hooks/AppContext'
-import { Snackbars, Loading, AddressField } from '../../../../components'
+import { Loading, AddressField } from '../../../../components'
 import { Consts } from './GenInfoConfig'
 import * as AccountsServices from '../../AccountsServices'
 import { roleNames } from '../../../../constants/Generals'
 import { PHONE_RGX } from '../../../../utils/Regex'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
+import { useSnackbar } from 'notistack'
 import classes from './GenInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -35,8 +36,11 @@ const clientSchema = yup.object().shape({
         .string()
         .required('Phone is required')
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, 'Phone number is in wrong format (03|5|7|9xxxxxxxx)'),
-    // address: yup.string().trim().required('Address is required'),
+        .matches(
+            PHONE_RGX,
+            'Phone number is in wrong format (03|5|7|9xxxxxxxx)'
+        ),
+    address: yup.string().trim().required('Address is required'),
 })
 
 const ITEM_HEIGHT = 120
@@ -80,24 +84,18 @@ const useStyles = makeStyles((theme) => ({
 
 function GenInfo(props) {
     const { account, refreshPage } = props
-    const { headers, operations, fields } = Consts
+    const { headers, operations, fields, messages } = Consts
     const styles = useStyles()
 
-    const history = useHistory()
+    const { enqueueSnackbar } = useSnackbar()
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
-    const [isClicked, setIsClicked] = useState(false);
+    const history = useHistory()
 
     const { roles } = useApp()
     const bakRoles = roles ? roles : Milk.getMilk(milkNames.roles)
 
-    // const [address, setAddress] = useState('');
-    const [latitude, setLatitude] = useState(0.0);
-    const [longitude, setLongitude] = useState(0.0);
+    const [latitude, setLatitude] = useState(0.0)
+    const [longitude, setLongitude] = useState(0.0)
 
     const defaultValues = {
         username: account?.username,
@@ -147,10 +145,6 @@ function GenInfo(props) {
     }
 
     const onSubmit = (data) => {
-        // console.log('---------GenInfo nè---------');
-        // console.log('address nè: ', data?.address);
-        // console.log(`[${latitude}, ${longitude}]`);
-
         const model = {
             ...data,
             fullName: account?.fullName,
@@ -168,11 +162,8 @@ function GenInfo(props) {
         AccountsServices.updateAccount(data?.username, model)
             .then((res) => {
                 refreshPage(data.username)
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
+
+                enqueueSnackbar(messages.success, { variant: 'success' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -182,11 +173,8 @@ function GenInfo(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+
+                enqueueSnackbar(messages.error, { variant: 'error' })
             })
 
         // alert(JSON.stringify(model))
@@ -196,20 +184,51 @@ function GenInfo(props) {
         <div className={classes.panel}>
             <Grid container spacing={0} className={classes.body}>
                 {/* Content Sector */}
-                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    className={classes.content}
+                >
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                         {/* Account Detail*/}
                         <Grid container spacing={0} className={classes.wrapper}>
-                            <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
-                                <Typography color="inherit" className={classes.header}>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={3}
+                                lg={3}
+                                className={classes.row}
+                            >
+                                <Typography
+                                    color="inherit"
+                                    className={classes.header}
+                                >
                                     {headers.child1}
                                 </Typography>
                             </Grid>
                             {/* Detail */}
-                            <Grid item xs={12} sm={12} md={9} lg={8} className={classes.row}>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                md={9}
+                                lg={8}
+                                className={classes.row}
+                            >
                                 <Grid container spacing={0}>
                                     {/* Detail */}
-                                    <Grid item xs={12} sm={5} md={5} lg={5} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={5}
+                                        md={5}
+                                        lg={5}
+                                        className={classes.row}
+                                    >
                                         <Controller
                                             name="username"
                                             control={control}
@@ -235,8 +254,17 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={5} md={5} lg={5} className={classes.row}>
-                                        <Controller name="email" control={control}
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={5}
+                                        md={5}
+                                        lg={5}
+                                        className={classes.row}
+                                    >
+                                        <Controller
+                                            name="email"
+                                            control={control}
                                             render={({ value }) => (
                                                 <TextField
                                                     label={fields.email.title}
@@ -257,7 +285,14 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={4} md={4} lg={4} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={4}
+                                        md={4}
+                                        lg={4}
+                                        className={classes.row}
+                                    >
                                         <Controller
                                             name="phone"
                                             control={control}
@@ -278,46 +313,40 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
                                         <Controller
                                             name="address"
                                             control={control}
-                                            render={({ value, onChange }) => {
-                                                if (!isClicked) {
-                                                    return (
-                                                        <TextField
-                                                            label={fields.addr.title}
-                                                            variant="outlined"
-                                                            required
-                                                            fullWidth
-                                                            value={value}
-                                                            onClick={() => setIsClicked(true)}
-                                                            error={!!errors.phone}
-                                                            helperText={
-                                                                errors?.phone?.message
-                                                            }
-                                                        />
-                                                    )
-                                                }
-                                                if (isClicked) {
-                                                    return (
-                                                        <AddressField
-                                                            setLatitude={setLatitude}
-                                                            setLongitude={setLongitude}
-                                                            inputValue={value} setInputValue={onChange}
-                                                            onBlur={() => setIsClicked(false)}
-                                                        // error={!!errors.address}
-                                                        // helperText={
-                                                        //     errors?.address?.message
-                                                        // }
-                                                        />
-                                                    )
-                                                }
-                                            }}
+                                            render={({ value, onChange }) => (
+                                                <AddressField
+                                                    setLatitude={setLatitude}
+                                                    setLongitude={setLongitude}
+                                                    inputValue={value}
+                                                    setInputValue={onChange}
+                                                    error={!!errors.address}
+                                                    helperText={
+                                                        errors?.address?.message
+                                                    }
+                                                />
+                                            )}
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={5} md={5} lg={5} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={5}
+                                        md={5}
+                                        lg={5}
+                                        className={classes.row}
+                                    >
                                         <InputLabel>
                                             {fields.isMale.title}
                                         </InputLabel>
@@ -357,7 +386,14 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={4} md={4} lg={4} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={4}
+                                        md={4}
+                                        lg={4}
+                                        className={classes.row}
+                                    >
                                         <MuiPickersUtilsProvider
                                             utils={DateFnsUtils}
                                         >
@@ -383,7 +419,14 @@ function GenInfo(props) {
                                         </MuiPickersUtilsProvider>
                                     </Grid>
 
-                                    <Grid item xs={12} sm={5} md={5} lg={5} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={5}
+                                        md={5}
+                                        lg={5}
+                                        className={classes.row}
+                                    >
                                         <InputLabel>
                                             {fields.roles.title}
                                         </InputLabel>
@@ -402,8 +445,7 @@ function GenInfo(props) {
                                                             key={role}
                                                             value={role}
                                                             classes={{
-                                                                root:
-                                                                    styles.menuItemRoot,
+                                                                root: styles.menuItemRoot,
                                                                 selected:
                                                                     styles.menuItemSelected,
                                                             }}
@@ -416,7 +458,14 @@ function GenInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={4} md={4} lg={4} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={4}
+                                        md={4}
+                                        lg={4}
+                                        className={classes.row}
+                                    >
                                         <InputLabel>
                                             {fields.status.title}
                                         </InputLabel>
@@ -436,7 +485,14 @@ function GenInfo(props) {
                                         />
                                     </Grid>
                                     {/* Action */}
-                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.action}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.action}
+                                    >
                                         <Button
                                             className={classes.submit}
                                             variant="contained"
@@ -454,7 +510,6 @@ function GenInfo(props) {
                 </Grid>
                 {/* Another Sector */}
             </Grid>
-            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

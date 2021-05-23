@@ -25,7 +25,6 @@ import moment from 'moment'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Snackbars } from '../../../../components'
 import { Consts, updateStatusMessage } from '../DialogConfig'
 import * as TasksServices from '../../TasksServices'
 import { useTask } from '../../hooks/TaskContext'
@@ -33,8 +32,8 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import DateRangePickers from '../../components/DateRangePickers/DateRangePickers'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import { parseDateToString } from '../../../../utils/DateTimes';
-
+import { parseDateToString } from '../../../../utils/DateTimes'
+import { useSnackbar } from 'notistack'
 import classes from './UpdateSchStatus.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -81,18 +80,20 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 
 function UpdateSchStatus(props) {
     const { open, onClose, resetStatus, task, currStatus, refreshPage } = props
-    const { headers, operations, fields } = Consts
+    const { headers, operations, fields, messages } = Consts
+
+    const { enqueueSnackbar } = useSnackbar()
 
     const { user } = useAuth()
     const { userInfo } = useApp()
     const history = useHistory()
     const { serviceTypes } = useTask()
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
+    // const [notify, setNotify] = useState({
+    //     isOpen: false,
+    //     message: '',
+    //     type: '',
+    // })
 
     const defaultValues = {
         // id: memoDets?.id,
@@ -117,11 +118,13 @@ function UpdateSchStatus(props) {
         TasksServices.updateStatus(task?.schoolId, currStatus)
             .then((res) => {
                 refreshPage(task?.id)
-                setNotify({
-                    isOpen: true,
-                    message: "Updated school's status successfully",
-                    type: 'success',
-                })
+                // setNotify({
+                //     isOpen: true,
+                //     message: "Updated school's status successfully",
+                //     type: 'success',
+                // })
+
+                enqueueSnackbar(messages.updatedSuccess, { variant: 'success' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -131,21 +134,22 @@ function UpdateSchStatus(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: "Updated school's status failed",
-                    type: 'error',
+                // setNotify({
+                //     isOpen: true,
+                //     message: "Updated school's status failed",
+                //     type: 'error',
+                // })
+                enqueueSnackbar(messages.updatedError, {
+                    variant: 'error',
                 })
             })
     }
 
     const [listManagers, setListManagers] = useState([])
     const getListManagers = () => {
-        TasksServices.getListManagers().then((res) =>
-            setListManagers(res.list)
-        )
+        TasksServices.getListManagers().then((res) => setListManagers(res.list))
     }
-    useEffect(getListManagers, []);
+    useEffect(getListManagers, [])
 
     // Coi xem chỗ này còn lỗi ko
     // console.log('listManagers: ', listManagers)
@@ -178,12 +182,23 @@ function UpdateSchStatus(props) {
             ...data,
             taskId: task?.id,
             submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
-            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss') : null,
-            endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
-                : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
+            startDate: data?.duration[0]
+                ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
+                : null,
+            endDate: data?.duration[1]
+                ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
+                : parseDateToString(
+                      new Date(new Date().getFullYear(), 8, 30),
+                      'YYYY-MM-DD HH:mm:ss'
+                  ),
             serviceType: data?.serviceType ? data?.serviceType : '',
-            classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
-            pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0')
+            classNumber: parseInt(
+                data?.classNumber ? data?.classNumber : '0',
+                10
+            ),
+            pricePerSlot: parseFloat(
+                data?.pricePerSlot ? data?.pricePerSlot : '0.0'
+            ),
         }
         delete model.showCreate
         delete model.duration
@@ -193,10 +208,14 @@ function UpdateSchStatus(props) {
 
         TasksServices.createServices(model)
             .then((res) => {
-                setNotify({
-                    isOpen: true,
-                    message: 'Proposed a service successfully',
-                    type: 'success',
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Proposed a service successfully',
+                //     type: 'success',
+                // })
+
+                enqueueSnackbar(messages.createdSuccess, {
+                    variant: 'success',
                 })
 
                 // Send notification by Firebase
@@ -215,10 +234,13 @@ function UpdateSchStatus(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Proposed a service failed',
-                    type: 'error',
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Proposed a service failed',
+                //     type: 'error',
+                // })
+                enqueueSnackbar(messages.createdError, {
+                    variant: 'error',
                 })
             })
 
@@ -256,24 +278,37 @@ function UpdateSchStatus(props) {
                             </div>
 
                             {confirmWatch && (
-                                <Grid container spacing={2} className={classes.wrapper}>
+                                <Grid
+                                    container
+                                    spacing={2}
+                                    className={classes.wrapper}
+                                >
                                     <Grid item xs={5} sm={5} md={5} lg={5}>
-                                        <InputLabel>{fields.service.title}</InputLabel>
+                                        <InputLabel>
+                                            {fields.service.title}
+                                        </InputLabel>
                                         <Controller
                                             name="serviceType"
                                             control={control}
-                                            defaultValue={
-                                                fields.service.svc1.value
-                                            }
+                                            // defaultValue={
+                                            //     fields.service.svc1.value
+                                            // }
                                             render={({ value, onChange }) => (
-                                                <RadioGroup value={value} onChange={onChange}>
-                                                    {serviceTypes.map(service => (
-                                                        <FormControlLabel
-                                                            control={<Radio />}
-                                                            label={service}
-                                                            value={service}
-                                                        />
-                                                    ))}
+                                                <RadioGroup
+                                                    value={value}
+                                                    onChange={onChange}
+                                                >
+                                                    {serviceTypes.map(
+                                                        (service) => (
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Radio />
+                                                                }
+                                                                label={service}
+                                                                value={service}
+                                                            />
+                                                        )
+                                                    )}
                                                 </RadioGroup>
                                             )}
                                         />
@@ -283,13 +318,20 @@ function UpdateSchStatus(props) {
                                         <Controller
                                             name="duration"
                                             control={control}
-                                            defaultValue={[new Date(), new Date() + 365]}
+                                            defaultValue={[
+                                                new Date(),
+                                                new Date() + 365,
+                                            ]}
                                             render={({ value, onChange }) => (
                                                 <>
-                                                    <InputLabel>Duration *</InputLabel>
+                                                    <InputLabel>
+                                                        Duration *
+                                                    </InputLabel>
                                                     <DateRangePickers
                                                         // handleDateRangeChange={handleDurationChange}
-                                                        handleDurationChange={onChange}
+                                                        handleDurationChange={
+                                                            onChange
+                                                        }
                                                     />
                                                 </>
                                             )}
@@ -311,12 +353,19 @@ function UpdateSchStatus(props) {
                                                     value={value}
                                                     onChange={onChange}
                                                     InputProps={{
-                                                        inputProps: { min: 1, max: 100 },
+                                                        inputProps: {
+                                                            min: 1,
+                                                            max: 100,
+                                                        },
                                                     }}
                                                     error={!!errors.classNumber}
-                                                    helperText={errors?.classNumber ?
-                                                        errors?.classNumber?.message
-                                                        : fields.classNo.helper
+                                                    helperText={
+                                                        errors?.classNumber
+                                                            ? errors
+                                                                  ?.classNumber
+                                                                  ?.message
+                                                            : fields.classNo
+                                                                  .helper
                                                     }
                                                 />
                                             )}
@@ -339,17 +388,29 @@ function UpdateSchStatus(props) {
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position="end">
-                                                                {fields.price.adornment}
+                                                                {
+                                                                    fields.price
+                                                                        .adornment
+                                                                }
                                                             </InputAdornment>
                                                         ),
-                                                        inputProps: { min: 100000, max: 5000000 },
+                                                        inputProps: {
+                                                            min: 100000,
+                                                            max: 5000000,
+                                                        },
                                                     }}
                                                     value={value}
                                                     onChange={onChange}
-                                                    error={!!errors.pricePerSlot}
-                                                    helperText={errors?.pricePerSlot ?
-                                                        errors?.pricePerSlot?.message
-                                                        : fields.price.helper
+                                                    error={
+                                                        !!errors.pricePerSlot
+                                                    }
+                                                    helperText={
+                                                        errors?.pricePerSlot
+                                                            ? errors
+                                                                  ?.pricePerSlot
+                                                                  ?.message
+                                                            : fields.price
+                                                                  .helper
                                                     }
                                                 />
                                             )}
@@ -451,8 +512,6 @@ function UpdateSchStatus(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )
 }

@@ -3,25 +3,26 @@ import { Grid, Typography, Icon, Avatar, Chip } from '@material-ui/core'
 import { Loading } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import { purposeNames } from '../../../../constants/Generals'
-import { getTask } from '../../../Tasks/TasksServices';
-import { parseDateToString } from '../../../../utils/DateTimes';
+import { getTask } from '../../../Tasks/TasksServices'
+import { parseDateToString } from '../../../../utils/DateTimes'
 import classes from './AssignInfo.module.scss'
 
 function AssignInfo(props) {
     const { report } = props
     const { headers, fields } = Consts
 
-    // console.log('report: ', report);
+    const [taskDetail, setTaskDetail] = useState(null)
 
-    const [taskDetail, setTaskDetail] = useState(null);
     useEffect(() => {
-        getTask(report?.taskId).then(res => {
-            console.log('task of the report: ', res);
-            setTaskDetail(res)
-        }).catch(error => {
-            console.log(error.response.data.message);
-        })
-    }, []);
+        getTask(report?.taskId)
+            .then((res) => {
+                // console.log('task of the report: ', res)
+                setTaskDetail(res)
+            })
+            .catch((error) => {
+                console.log(error.response.data.message)
+            })
+    }, [])
 
     if (!report || !taskDetail) {
         return <Loading />
@@ -189,7 +190,14 @@ function AssignInfo(props) {
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={12}
+                            md={12}
+                            lg={12}
+                            className={classes.row}
+                        >
                             <Grid
                                 container
                                 spacing={0}
@@ -219,9 +227,15 @@ function AssignInfo(props) {
                                     className={classes.rowx}
                                 >
                                     <Typography color="inherit">
-                                        {parseDateToString(taskDetail?.assignDate, 'DD-MM-YYYY')}
+                                        {parseDateToString(
+                                            taskDetail?.assignDate,
+                                            'DD-MM-YYYY'
+                                        )}
                                         &nbsp; ➜ &nbsp;
-                                        {parseDateToString(taskDetail?.endDate, 'DD-MM-YYYY')}
+                                        {parseDateToString(
+                                            taskDetail?.endDate,
+                                            'DD-MM-YYYY'
+                                        )}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -467,9 +481,12 @@ function AssignInfo(props) {
                                 >
                                     <Typography color="inherit">
                                         {report?.reprName
-                                            ? (`${report?.reprIsMale ? 'Mr. ' : 'Ms. '} ${report?.reprName}`)
-                                            : fields.empty.title
-                                        }
+                                            ? `${
+                                                  report?.reprIsMale
+                                                      ? 'Mr. '
+                                                      : 'Ms. '
+                                              } ${report?.reprName}`
+                                            : fields.empty.title}
                                     </Typography>
                                 </Grid>
                             </Grid>
