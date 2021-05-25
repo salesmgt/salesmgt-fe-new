@@ -32,6 +32,7 @@ import { parseDateToString } from '../../../../utils/DateTimes';
 import { DateRangePickers } from '../../components';
 import { suggestPrice } from '../../../../utils/Suggestions';
 import { IoInformationCircleSharp } from 'react-icons/io5'
+import NumberFormat from 'react-number-format'
 import classes from './CreateServices.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -425,7 +426,44 @@ function CreateServicesForm(props) {
                                 render={({ value, onChange }) => (
                                     <Grid container>
                                         <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            {/* <NumberFormat
+                                                allowNegative={false}
+                                                // suffix="VND/period"
+                                                isNumericString={true}
+                                                thousandSeparator={true}
+                                                value={value}
+                                                onValueChange={onChange}
+                                                customInput={() => ( */}
                                             <TextField
+                                                label={fields.price.title}
+                                                variant="outlined"
+                                                type="number"
+                                                required
+                                                fullWidth
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {fields.price.adornment}
+                                                        </InputAdornment>
+                                                    ),
+                                                    inputProps: { min: 100000, max: 2000000 },
+                                                }}
+                                                value={value}
+                                                onChange={(e) => {
+                                                    onChange(e.target.value)
+                                                    suggestPrice(Number(e.target.value), setPriceSuggestions)
+                                                }}
+                                                error={!!errors.pricePerSlot}
+                                                helperText={errors?.pricePerSlot ?
+                                                    errors?.pricePerSlot?.message
+                                                    : fields.price.helper
+                                                }
+                                            />
+                                            {/* )}
+                                            /> */}
+
+
+                                            {/* <TextField
                                                 label={fields.price.title}
                                                 variant="outlined"
                                                 type="number"
@@ -452,7 +490,9 @@ function CreateServicesForm(props) {
                                                     errors?.pricePerSlot?.message
                                                     : fields.price.helper
                                                 }
-                                            />
+                                            /> */}
+
+
 
                                             {/* <CurrencyInput
                                                 decimalsLimit={2}
@@ -464,12 +504,13 @@ function CreateServicesForm(props) {
                                                 onValueChange={onChange} /> */}
                                         </Grid>
                                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            {priceSuggestions.map(suggestion => (
+                                            {priceSuggestions.map((suggestion, index) => (
                                                 <Button variant="outlined" size="small" color="secondary"
                                                     onClick={(e) => {
                                                         // console.log('suggestedPrice = ', suggestion);
                                                         onChange(suggestion)
                                                     }}
+                                                    key={index}
                                                     className={classes.suggestions}
                                                 >
                                                     {new Intl.NumberFormat('vi-VN').format(suggestion)}
