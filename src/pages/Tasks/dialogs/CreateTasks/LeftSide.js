@@ -36,7 +36,7 @@ function LeftSide(props) {
     const [tabIndex, setTabIndex] = useState(0)
     const [tabLabel, setTabLabel] = useState(schStatus[0])
 
-    const { params, dispatchParams, setFilter } = useTaskForm()
+    const { params, dispatchParams } = useTaskForm()    //, setFilter
     const { listFilters, page, limit, column, direction, searchKey } = params
 
     const onClose = () => setOpen(false)
@@ -46,7 +46,7 @@ function LeftSide(props) {
         const selectedStatus = schStatus[newTabIndex]
         setTabIndex(newTabIndex ? newTabIndex : 0);
         setTabLabel(selectedStatus ? selectedStatus : schStatus[0])
-        setFilter(STATUS_FILTER, selectedStatus ? selectedStatus : schStatus[0])
+        // setFilter(STATUS_FILTER, selectedStatus ? selectedStatus : schStatus[0])
         dispatchParams({
             type: FILTER_SCHOOL_STATUS,
             payload: {

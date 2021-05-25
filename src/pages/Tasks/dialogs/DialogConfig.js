@@ -1,3 +1,7 @@
+import { Grid, Typography } from "@material-ui/core";
+import { schoolLevelNames, serviceNames } from "../../../constants/Generals";
+import classes from './DialogConfig.module.scss';
+
 export const Consts = {
     headers: {
         create: 'Create Tasks',
@@ -6,10 +10,11 @@ export const Consts = {
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
         // child1: 'Preview: ',
-        updateStatus: 'Confirm Update Status',
-        createServices: 'Submit Services for',
+        updateStatus: 'Confirm Update Status',  // from 'Chưa HT' to 'Đang HT'
+        confirmUpdate: 'Confirm Update School Status',  // from 'Đang HT' to 'Ngưng HT'
+        createServices: 'Services for', //Submit 
         confirmCreateTask: 'Confirm Create Tasks',
-        confirmUpdate: 'Confirm Update School Status'
+        confirmCompleteTask: 'Confirm Complete Task'  // from 'Đang HT' to 'Ngưng HT'
     },
     operations: {
         cancel: 'Cancel',
@@ -96,20 +101,27 @@ export const Consts = {
         },
         classNo: {
             title: 'No. of applied classes',
+            adornment: 'classes',
             helper: 'Min: 1 class.  Max: 100 classes'
         },
         studentNumber: {
             title: 'Students per classes',
+            adornment: 'students/class',
             helper: 'Min: 1 student.  Max: 100 students'
         },
         slotNumber: {
-            title: 'Total periods',
+            title: 'Periods per week',
+            adornment: 'periods/week',
+            helper: 'Min: 1 period. Max: 10 periods'
         },
         price: {
             title: 'Price floor',
             adornment: 'VND/period',
-            helper: '100.000VND - 5.000.000VND'
+            helper: '100.000VND - 2.000.000VND'
         },
+        revenue: {
+            formula: 'Price floor * Periods per week * 4 weeks'
+        }
         // End for Services
     },
     messages: {
@@ -125,6 +137,176 @@ export const columnsTableAssign = [
     { key: 'note', name: 'Note', width: '25%', align: 'left' },
     { key: '', name: '', width: '1%', align: 'left' },
 ]
+
+const currencyFormatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency', currency: 'VND',
+});
+
+export const getCriteriaInfo = () => {
+    return (
+        <div className={classes.criInfoPanel}>
+            <Grid container spacing={2}>
+                <Grid item>
+                    <Typography variant="overline">Criteria description</Typography>
+                    <br />
+                    <Typography variant="caption" className={classes.txtCriInfoHeader}>
+                        1/ Price floor per period
+                    </Typography>
+                    <div className={classes.txtCriInfo}>
+                        <span className={classes.txtCriInfoHeader}>{serviceNames.svc1}:</span>
+                        <Grid container spacing={2}>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.th}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(700000)}/period</Grid>
+                            </Grid>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.thcs} &amp; {schoolLevelNames.thpt}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(800000)}/period</Grid>
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <p className={classes.txtCriInfo}>
+                        <span className={classes.txtCriInfoHeader}>{serviceNames.svc2}:</span>
+                        <Grid container spacing={2}>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.th}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(600000)}/period</Grid>
+                            </Grid>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.thcs} &amp; {schoolLevelNames.thpt}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(700000)}/period</Grid>
+                            </Grid>
+                        </Grid>
+                    </p>
+                    <p className={classes.txtCriInfo}>
+                        <span className={classes.txtCriInfoHeader}>{serviceNames.svc3}:</span>
+                        <Grid container spacing={2}>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.th}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(1500000)}/period</Grid>
+                            </Grid>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.thcs} &amp; {schoolLevelNames.thpt}:</Grid>
+                                <Grid item xs={12}> &nbsp; (N/A)</Grid>
+                            </Grid>
+                        </Grid>
+                    </p>
+                    <p className={classes.txtCriInfo}>
+                        <span className={classes.txtCriInfoHeader}>{serviceNames.svc4}:</span>
+                        <Grid container spacing={2}>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.th}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(1000000)}/period</Grid>
+                            </Grid>
+                            <Grid item container xs={6}>
+                                <Grid item xs={12}> - {schoolLevelNames.thcs} &amp; {schoolLevelNames.thpt}:</Grid>
+                                <Grid item xs={12}> &nbsp; {currencyFormatter.format(1800000)}/period</Grid>
+                            </Grid>
+                        </Grid>
+                    </p>
+                    <br />
+                    <Typography variant="caption" className={classes.txtCriInfoHeader}>
+                        2/ Number of periods per week
+                    </Typography>
+                    <div className={classes.txtCriInfo}>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc1}:</span>
+                                &emsp;2 periods/week
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc2}:</span>
+                                &emsp;1 period/week
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc3}:</span>
+                                &emsp;2 periods/week
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc4}:</span>
+                                &emsp;2 periods/week
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <br />
+                    <Typography variant="caption" className={classes.txtCriInfoHeader}>
+                        3/ Number of classes
+                    </Typography>
+                    <div className={classes.txtCriInfo}>
+                        <i>Number of classes applying this service</i>
+                        <br />
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc1}:</span>
+                                &emsp;≥ 8 classes
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc2}:</span>
+                                &emsp;≥ 8 classes
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc3}:</span>
+                                &emsp;≥ 2 classes
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc4}:</span>
+                                &emsp;≥ 2 classes
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <br />
+                    <Typography variant="caption" className={classes.txtCriInfoHeader}>
+                        4/ Average class size
+                    </Typography>
+                    <p className={classes.txtCriInfo}>
+                        <i>Average number of students per class:</i>
+                        <br /> &nbsp; &nbsp; &nbsp; <strong>≥ 40</strong> students
+                    </p>
+                    <br />
+                    <Typography variant="caption" className={classes.txtCriInfoHeader}>
+                        5/ Duration
+                    </Typography>
+                    <p className={classes.txtCriInfo}>
+                        <i>Amount of time the service takes effective:</i>
+                        <br /> &nbsp; &nbsp; &nbsp; <strong>≥ 7</strong> months
+                    </p>
+                    <br />
+                </Grid>
+                {/* <Divider style={{ color: 'white' }} /> */}
+                <hr style={{ width: '85%', height: '0%', textAlign: 'center', margin: '0 auto' }} />
+                <Grid item>
+                    <Typography variant="overline">Revenue estimation formula</Typography>
+                    <br />
+                    <div style={{ border: '1px solid', textAlign: 'center', margin: '0 0 0 0.35rem', padding: '0 0.5rem' }}>
+                        <p style={{ fontSize: '0.75rem', fontWeight: 100 }}>
+                            Revenue = <br />Price floor * Periods per week * 4 weeks
+                        </p>
+                    </div>
+                </Grid>
+            </Grid>
+        </div>
+    )
+}
 
 export const confirmMessage = (schoolLevel, schoolName, schoolYear) => {
     return (
@@ -175,14 +357,22 @@ export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
         </>
     )
 }
-export const updateStatusMessage = () => {
+export const confirmTaskCompleteMessage = () => {
     return (
         <>
-            If you want to update this status, please submit a
+            To complete this task, please submit a
             <strong><em> Service</em></strong> in the form below.
         </>
     )
 }
+// export const updateStatusMessage = () => {
+//     return (
+//         <>
+//             If you want to update this status, please submit a
+//             <strong><em> Service</em></strong> in the form below.
+//         </>
+//     )
+// }
 export const confirmUpdateSchoolStatus = (schoolLevel, schoolName, currentStatus, newStatus) => {
     return (
         <>

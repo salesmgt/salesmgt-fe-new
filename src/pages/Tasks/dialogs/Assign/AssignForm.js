@@ -28,17 +28,20 @@ import {
     CardMedia,
     Collapse,
     Box,
+    Icon,
 } from '@material-ui/core'
-import { MdAccountCircle, MdClose } from 'react-icons/md'
+import { MdAccountCircle, MdClose, MdLocationOn, MdRefresh } from 'react-icons/md'
 import { BiEdit } from 'react-icons/bi'
-import { ImSad } from 'react-icons/im';
-import { Autocomplete } from '@material-ui/lab'
+import { ImSad } from 'react-icons/im'
+import { Autocomplete, Rating } from '@material-ui/lab'
 import { useTask } from '../../hooks/TaskContext'
 import { Consts, columnsTableAssign } from '../DialogConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { assignMulti, suggestSalesmen } from '../../TasksServices'
 import { useHistory } from 'react-router'
 import { Alert, AlertTitle } from '@material-ui/lab'
+import SuggestionQuickView from '../SuggestionQuickView/SuggestionQuickView'
+import { Loading } from '../../../../components'
 import classes from './Assign.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -50,10 +53,6 @@ const useStyles = makeStyles((theme) => ({
     },
     option: {
         fontSize: '0.875rem',
-    },
-    lastOption: {
-        fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0',
     },
     root: {},
     menuItemRoot: {
@@ -67,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuItemSelected: {},
     autoComplete: {
-        width: 280,
+        width: 270,
         marginLeft: '0.5rem',
     },
     itemPIC: {
@@ -83,9 +82,15 @@ const useStyles = makeStyles((theme) => ({
     },
     itemTextPrimary: {
         fontSize: '0.875rem',
+        fontWeight: 600
     },
     itemTextSecondary: {
         fontSize: '0.8rem',
+        fontWeight: 500
+    },
+    itemTextPrimary2: {
+        fontSize: '0.9rem',
+        fontWeight: 600
     },
 }))
 
@@ -94,9 +99,12 @@ function AssignForm(props) {
     const { onClose, rows, setRows, refreshAPI, setNotify } = props
     const { operations } = Consts
     const history = useHistory()
-    const [openAlert, setOpenAlert] = React.useState(true)
+    const [openAlert, setOpenAlert] = useState(true)
 
-    const [anchorEl, setAnchorEl] = useState(null)
+    const [anchorElQuickViewPopover, setAnchorElQuickViewPopover] = useState(null);
+    const [clickedSalesman, setClickedSalesman] = useState(null);   // click to view popover
+
+    const [anchorElNotePopover, setAnchorElNotePopover] = useState(null)
     const [rowsState, setRowsState] = useState(rows)
     const [object, setObject] = useState(null)
 
@@ -105,29 +113,28 @@ function AssignForm(props) {
     const { user } = useAuth()
 
     const [PIC, setPIC] = useState(null)
-
     const typingTimeoutRef = useRef({})
 
-    const [listSuggestions, setListSuggestions] = useState([]);
-    const getSchoolIds = () => {
-        console.log('Assign Form --- listSchools: ', rows);
+    //=====================List suggested Salesmen=====================
+    const [listSuggestions, setListSuggestions] = useState(null);
+    const getSchoolIds = (listTasks) => {
+        console.log('Assign Form --- listSchools: ', listTasks);
         let schoolIds = []
-        rows.forEach(task => {
+        listTasks.forEach(task => {
             schoolIds.push(task?.schoolId)
             console.log('list ids = ', schoolIds);
         });
         return schoolIds
     }
 
-    // let isMounted = true
-    useEffect(() => {
-        const listSchoolIds = [...getSchoolIds()]
+    const getSuggestions = (listTasks) => {
+        const listSchoolIds = [...getSchoolIds(listTasks)]
         console.log('useEffect------list ids = ', listSchoolIds);
 
         suggestSalesmen(listSchoolIds).then(data => {
-            // if (isMounted) {
-            setListSuggestions(data?.list)
-            // }
+            if (isMounted) {
+                setListSuggestions(data)
+            }
         }).catch((error) => {
             if (error.response) {
                 console.log(error)
@@ -137,19 +144,26 @@ function AssignForm(props) {
                 })
             }
         })
+    }
 
-        // return () => {
-        //     isMounted = false
-        // };
+    let isMounted = true
+    useEffect(() => {
+        getSuggestions(rowsState)
+
+        return () => {
+            isMounted = false
+        };
     }, []);
 
-    // if (!listSuggestions) {
-    //     return <Loading />
-    // }
+    if (!listSuggestions) {
+        return <Loading />
+    }
 
-    // console.log('assign form --- rowsState: ', rowsState);
+    console.log('outside - rowsState: ', rowsState);
 
     const handleSubmit = () => {
+        console.log('handleSubmit() ----- rowsState: ', rowsState);
+
         const array = []
         rowsState.map((item) => {
             item = { ...item, username: PIC?.username }
@@ -170,8 +184,8 @@ function AssignForm(props) {
                 console.log(error)
                 setNotify({
                     isOpen: true,
-                    message: 'Assigned successfully',
-                    type: 'success',
+                    message: 'Assigned failed',
+                    type: 'error',
                 })
             }
         })
@@ -179,13 +193,15 @@ function AssignForm(props) {
         onClose()
     }
 
-    const handleClick = (event, row) => {
-        setAnchorEl(event.currentTarget)
+    const handleOpenNotePopover = (event, row) => {
+        setAnchorElNotePopover(event.currentTarget)
         setObject(row)
     }
+    const open = Boolean(anchorElNotePopover)
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    const handleOpenQuickViewPopover = (event, salesman) => {
+        setAnchorElQuickViewPopover(event.currentTarget)
+        setClickedSalesman(salesman)
     }
 
     const onSearchPICChange = (event) => {
@@ -204,9 +220,9 @@ function AssignForm(props) {
     }
 
     const handlePICChange = (event, newPIC) => {
+        console.log('selected PIC: ', newPIC);
         setPIC(newPIC)
     }
-    const open = Boolean(anchorEl)
 
     const handleOnRemove = (e, row) => {
         let newSelected = []
@@ -222,6 +238,8 @@ function AssignForm(props) {
             )
         }
         setRowsState(newSelected)
+        getSuggestions(newSelected)
+
         if (newSelected.length === 0) {
             onClose()
         }
@@ -248,13 +266,19 @@ function AssignForm(props) {
         setRowsState(array)
     }
 
+    const getShortName = (fullName) => {
+        const tmp1 = fullName.split(' ')
+        const shortName = [tmp1[tmp1.length - 2], tmp1[tmp1.length - 1]]
+        return shortName.join(' ')
+    }
+
     return (
         <>
             <DialogContent className={classes.wrapper}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                         <Grid container>
-                            <Grid item xs={12} sm={4} md={4} lg={4} style={{ border: '1px solid grey' }}>
+                            <Grid item xs={12} sm={4} md={4} lg={4}>
                                 <Autocomplete
                                     autoComplete
                                     autoSelect
@@ -320,55 +344,85 @@ function AssignForm(props) {
                                 />
                             </Grid>
 
-                            <Grid item xs={12} sm={8} md={8} lg={8} style={{ border: '1px solid grey' }}>
+                            <Grid item xs={12} sm={8} md={8} lg={8} className={classes.suggestionContainer}>
                                 <Box display="flex">
                                     <Box flexGrow={1}>
-                                        <Typography variant="overline">Salesman Suggestions</Typography>
+                                        <Typography variant="button" className={classes.suggestionTitle}>Salesman Suggestions</Typography>
                                     </Box>
-                                    <Box flexShrink={1}>
-                                        <Button variant="outlined" size="small"
-                                            disabled={openAlert}
-                                            onClick={() => { setOpenAlert(true) }}
-                                        >
-                                            Suggest me
-                                        </Button>
-                                    </Box>
+                                    {/* <Box flexShrink={1}>
+                                        <Tooltip title="Refresh suggestions">
+                                            <IconButton color="secondary" disabled={openAlert} onClick={() => { setOpenAlert(true) }}>
+                                                <Icon fontSize="small" className={classes.iconRefresh}><MdRefresh /></Icon>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Box> */}
                                 </Box>
-                                {(listSuggestions || listSuggestions?.length > 0) ? (
+                                {(listSuggestions && listSuggestions?.length > 0) ? (
                                     <div className={classes.cardContainer}>
-                                        {listSuggestions.map(salesman => (
-                                            <Card className={classes.quickCard}>
-                                                <CardMedia
-                                                    className={classes.quickCardAvatar}
-                                                    image={salesman?.avatar}
-                                                // title="Live from space album cover"
-                                                />
-                                                <div className={classes.details}>
+                                        {listSuggestions.map((salesman, index) => (
+                                            <div key={index}
+                                                className={classes.cardCover}
+                                                onClick={(e, clickedSalesman) => handleOpenQuickViewPopover(e, salesman)}
+                                            >
+                                                <Card className={classes.quickCard}>
+                                                    <CardMedia
+                                                        className={classes.quickCardAvatar}
+                                                        image={salesman?.avatar}
+                                                    />
                                                     <CardContent className={classes.content}>
-                                                        <Typography component="h5" variant="h5">
-                                                            Live From Space
-                                                </Typography>
-                                                        <Typography variant="subtitle1" color="textSecondary">
-                                                            Mac Miller
-                                                </Typography>
+                                                        <ListItem dense alignItems="flex-start" className={classes.listItem}>
+                                                            <ListItemText
+                                                                className={classes.listItemText}
+                                                                primary={getShortName(salesman?.fullName)}
+                                                                // primaryTypographyProps={{ paragraph: false }}
+                                                                secondary={salesman?.username}
+                                                                classes={{ primary: styles.itemTextPrimary2, secondary: styles.itemTextSecondary }}
+                                                            />
+                                                        </ListItem>
+                                                        <div className={classes.subInfo}>
+                                                            <div className={classes.starPoint}>
+                                                                {/* <Tooltip title="Priority points"> */}
+                                                                <Rating defaultValue={1} max={1} size="small" readOnly />
+                                                                {/* </Tooltip> */}
+                                                                <Typography className={classes.point}>{salesman?.point >= 10 ? 10 : salesman.point}</Typography>
+                                                            </div>
+                                                            <div className={classes.distancePoint}>
+                                                                <MdLocationOn className={classes.iconLocation} />
+                                                                <Typography className={classes.distance}>
+                                                                    {parseFloat(salesman?.distance).toFixed(1)}km
+                                                                </Typography>
+                                                            </div>
+
+                                                        </div>
                                                     </CardContent>
-                                                    {/* <div className={classes.controls}>
-                                                <IconButton aria-label="previous">
-                                                    {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
-                                                </IconButton>
-                                                <IconButton aria-label="play/pause">
-                                                    <PlayArrowIcon className={classes.playIcon} />
-                                                </IconButton>
-                                                <IconButton aria-label="next">
-                                                    {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
-                                                </IconButton>
-                                            </div> */}
-                                                </div>
-                                            </Card>
+                                                    {/* <div className={classes.details}>
+                                                        </div> */}
+                                                </Card>
+
+                                                {/* <SuggestionQuickView
+                                                    open={!!anchorElQuickViewPopover}
+                                                    anchorEl={anchorElQuickViewPopover}
+                                                    onClose={() => setAnchorElQuickViewPopover(null)}
+                                                    salesman={salesman}
+                                                /> */}
+                                            </div>
                                         ))}
+                                        <SuggestionQuickView
+                                            open={!!anchorElQuickViewPopover}
+                                            anchorEl={anchorElQuickViewPopover}
+                                            onClose={() => setAnchorElQuickViewPopover(null)}
+                                            salesman={clickedSalesman}
+                                            setSelectedSalesman={setPIC}
+                                        />
                                     </div>
                                 ) : (
                                     <div className={classes.alertContainer}>
+                                        {!openAlert && (
+                                            <Typography variant="body2" className={classes.noSalesman}>
+                                                <i>No salesman suggested in this case</i> <br />
+                                                <b>Reason: </b>The distance between selected schools are too far.
+                                            </Typography>
+                                        )}
                                         <Collapse in={openAlert}>
                                             <Alert
                                                 severity="warning" icon={<ImSad />}
@@ -376,13 +430,13 @@ function AssignForm(props) {
                                                     <IconButton
                                                         color="inherit"
                                                         size="small"
-                                                        onClick={() => { setOpenAlert(false) }}
+                                                        onClick={() => setOpenAlert(false)}
                                                     >
                                                         <MdClose fontSize="inherit" />
                                                     </IconButton>
                                                 }
                                             >
-                                                <AlertTitle>Sorry!</AlertTitle>
+                                                <AlertTitle>Whoosp...</AlertTitle>
                                             No salesman suggested in this case. <br />
                                                 <i><b>Reason: </b>The distance between selected schools are too far.</i>
                                             </Alert>
@@ -437,7 +491,7 @@ function AssignForm(props) {
                                                 />
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                {PIC ? (
+                                                {PIC && (
                                                     <ListItem
                                                         className={
                                                             classes.itemPIC
@@ -463,14 +517,12 @@ function AssignForm(props) {
                                                             }}
                                                         />
                                                     </ListItem>
-                                                ) : (
-                                                    ''
                                                 )}
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
                                                 <Tooltip title="Note">
                                                     <IconButton
-                                                        onClick={(e) => handleClick(e, row)}
+                                                        onClick={(e) => handleOpenNotePopover(e, row)}
                                                     >
                                                         <Badge
                                                             invisible={!row.note}
@@ -481,39 +533,6 @@ function AssignForm(props) {
                                                         </Badge>
                                                     </IconButton>
                                                 </Tooltip>
-                                                <Popover
-                                                    open={open}
-                                                    onClose={handleClose}
-                                                    anchorEl={anchorEl}
-                                                    anchorOrigin={{
-                                                        vertical: 'top',
-                                                        horizontal: 'right',
-                                                    }}
-                                                    transformOrigin={{
-                                                        vertical: 'top',
-                                                        horizontal: 'left',
-                                                    }}
-                                                >
-                                                    <TextField
-                                                        onBlur={(e) =>
-                                                            onBlur(e, object)
-                                                        }
-                                                        onChange={(e) =>
-                                                            setObject({
-                                                                ...object,
-                                                                note: e.target.value,
-                                                            })
-                                                        }
-                                                        value={
-                                                            object?.note ? object?.note : ''
-                                                        }
-                                                        multiline
-                                                        autoFocus
-                                                        rows={4}
-                                                        placeholder="Type note here"
-                                                        variant="outlined"
-                                                    />
-                                                </Popover>
                                             </TableCell>
                                             <TableCell>
                                                 <Tooltip title="Remove">
@@ -524,6 +543,39 @@ function AssignForm(props) {
                                             </TableCell>
                                         </TableRow>
                                     ))}
+                                    <Popover
+                                        open={open}
+                                        onClose={() => setAnchorElNotePopover(null)}
+                                        anchorEl={anchorElNotePopover}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'left',
+                                        }}
+                                    >
+                                        <TextField
+                                            onBlur={(e) =>
+                                                onBlur(e, object)
+                                            }
+                                            onChange={(e) =>
+                                                setObject({
+                                                    ...object,
+                                                    note: e.target.value,
+                                                })
+                                            }
+                                            value={
+                                                object?.note ? object?.note : ''
+                                            }
+                                            multiline
+                                            autoFocus
+                                            rows={4}
+                                            placeholder="Type note here"
+                                            variant="outlined"
+                                        />
+                                    </Popover>
                                 </TableBody>
                             </Table>
                         </TableContainer>

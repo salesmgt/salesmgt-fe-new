@@ -12,12 +12,16 @@ import {
     InputAdornment,
     InputLabel,
     Typography,
+    Tooltip,
+    Icon,
+    Box,
+    ClickAwayListener,
 } from '@material-ui/core'
 import moment from 'moment'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Consts } from '../DialogConfig'
+import { Consts, getCriteriaInfo } from '../DialogConfig'
 import * as TasksServices from '../../TasksServices'
 import { schoolLevelNames, serviceNames, statusNames } from '../../../../constants/Generals'
 import { useAuth } from '../../../../hooks/AuthContext'
@@ -25,8 +29,9 @@ import { useApp } from '../../../../hooks/AppContext'
 import { useTask } from '../../hooks/TaskContext';
 import { app as FirebaseApp } from '../../../../services/firebase'
 import { parseDateToString } from '../../../../utils/DateTimes';
-import DateRangePickers from '../../components/DateRangePickers/DateRangePickers';
-import { suggestPrice } from '../../utils/Suggestions';
+import { DateRangePickers } from '../../components';
+import { suggestPrice } from '../../../../utils/Suggestions';
+import { IoInformationCircleSharp } from 'react-icons/io5'
 import classes from './CreateServices.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -37,25 +42,26 @@ const clientSchema = yup.object().shape({
     // .min(1, 'Duartion must be at least 1 digit')
     // .max(2, 'Duartion must be at most 2 digits')
     // .matches(DURATION_RGX, 'Invalid entry'),
-    classNumber: yup.number()
+    classNumber: yup.number('Number of classes must be a number')
         .integer('Number of classes must be an integer')
         .min(1, 'Minimum 1 class')
         .max(100, 'Maximum 100 classes')
         .required('Number of classes is required'),
-    studentNumber: yup.number()
+    studentNumber: yup.number('Number of students must be a number')
         .integer('Number of students must be an integer')
         .min(1, 'Minimum 1 student')
         .max(100, 'Maximum 100 students')
         .required('Number of students is required'),
-    slotNumber: yup.number()
+    slotNumber: yup.number('Number of periods must be a number')
         .integer('Number of periods must be an integer')
         .min(1, 'Minimum 1 period')
-        .required('Total number of periods is required'),
+        .max(10, 'Maximum 10 periods')
+        .required('Number of periods is required'),
     pricePerSlot: yup
         .number('Price floor must be a number')
         .min(100000, 'Minimum price is 100.000VND')
-        .max(5000000, 'Maximum price is 5.000.000VND')
-        .required(),
+        .max(2000000, 'Maximum price is 2.000.000VND')
+        .required('Price floor is required'),
     note: yup.string().trim(),
 })
 
@@ -84,6 +90,7 @@ function CreateServicesForm(props) {
 
     const [listManagers, setListManagers] = useState([])
 
+    const [openInfoTooltip, setOpenInfoTooltip] = useState(false);
     const [priceSuggestions, setPriceSuggestions] = useState([]);
 
     const defaultValues = {
@@ -94,7 +101,7 @@ function CreateServicesForm(props) {
         classNumber: 0,
         studentNumber: 0,
         slotNumber: 0,
-        pricePerSlot: 100000.0,
+        pricePerSlot: 100000,
         note: '',
     }
 
@@ -253,7 +260,32 @@ function CreateServicesForm(props) {
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <InputLabel>{fields.service.title}</InputLabel>
+                            <Box display="flex" flexDirection="row">
+                                <Box flexGrow={1} display="flex" flexDirection="row">
+                                    <Tooltip title='Service "Toán Khoa" only available for schools which are "Tiểu học"' placement="right-end">
+                                        <InputLabel>{fields.service.title}</InputLabel>
+                                        {/* <div style={{
+                                             marginLeft: '0.7rem' }}><IoInformationCircleSharp className={classes.iconInfo} /></div> */}
+                                    </Tooltip>
+                                </Box>
+                                <Box>
+                                    <ClickAwayListener onClickAway={() => setOpenInfoTooltip(false)}>
+                                        <Tooltip
+                                            interactive
+                                            title={getCriteriaInfo()}
+                                            placement="bottom-end"
+                                            open={openInfoTooltip}
+                                            onClose={() => setOpenInfoTooltip(false)}
+                                            disableFocusListener
+                                            disableHoverListener  // disable cái này thì khi thả chuột ra ko bị close
+                                        >
+                                            <div onClick={() => setOpenInfoTooltip(true)}>
+                                                <IoInformationCircleSharp className={classes.iconInfo} />
+                                            </div>
+                                        </Tooltip>
+                                    </ClickAwayListener>
+                                </Box>
+                            </Box>
                             <Controller
                                 name="serviceType"
                                 control={control}
@@ -284,7 +316,9 @@ function CreateServicesForm(props) {
                                     <DateRangePickers
                                         dateRange={value}
                                         handleDateRangeChange={onChange}
-                                        textFieldVariant="outlined"
+                                        startLabel="Valid from"
+                                        endLabel="Valid until"
+                                        isFilter={false}
                                     />
                                 )}
                             />
@@ -305,6 +339,11 @@ function CreateServicesForm(props) {
                                         value={value}
                                         onChange={onChange}
                                         InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {fields.classNo.adornment}
+                                                </InputAdornment>
+                                            ),
                                             inputProps: { min: 1, max: 100 },
                                         }}
                                         error={!!errors.classNumber}
@@ -331,6 +370,11 @@ function CreateServicesForm(props) {
                                         value={value}
                                         onChange={onChange}
                                         InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {fields.studentNumber.adornment}
+                                                </InputAdornment>
+                                            ),
                                             inputProps: { min: 1, max: 100 },
                                         }}
                                         error={!!errors.studentNumber}
@@ -366,7 +410,7 @@ function CreateServicesForm(props) {
                                             {fields.price.adornment}
                                         </InputAdornment>
                                     ),
-                                    inputProps: { min: 1, max: 5000000 },
+                                    inputProps: { min: 1, max: 2000000 },
                                 }}
                                 error={!!errors.pricePerSlot}
                                 helperText={errors?.pricePerSlot ?
@@ -394,7 +438,7 @@ function CreateServicesForm(props) {
                                                             {fields.price.adornment}
                                                         </InputAdornment>
                                                     ),
-                                                    inputProps: { min: 1, max: 5000000 },
+                                                    inputProps: { min: 100000, max: 2000000 },
                                                 }}
                                                 value={value}
                                                 // value={new Intl.NumberFormat('vi-VN').format(value)}
@@ -423,7 +467,7 @@ function CreateServicesForm(props) {
                                             {priceSuggestions.map(suggestion => (
                                                 <Button variant="outlined" size="small" color="secondary"
                                                     onClick={(e) => {
-                                                        console.log('suggestedPrice = ', suggestion);
+                                                        // console.log('suggestedPrice = ', suggestion);
                                                         onChange(suggestion)
                                                     }}
                                                     className={classes.suggestions}
@@ -452,18 +496,35 @@ function CreateServicesForm(props) {
                                                 fullWidth
                                                 value={value}
                                                 onChange={(e) => onChange(e.target.value)}
-                                                InputProps={{ inputProps: { min: 0 } }}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {fields.slotNumber.adornment}
+                                                        </InputAdornment>
+                                                    ),
+                                                    inputProps: { min: 0, max: 10 }
+                                                }}
+                                                error={!!errors.slotNumber}
+                                                helperText={errors?.slotNumber ?
+                                                    errors?.slotNumber?.message
+                                                    : fields.slotNumber.helper
+                                                }
                                             // error={!!errors.slotNumber}
                                             // helperText={errors?.slotNumber?.message}
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            <Typography variant='body1'>
-                                                <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                            <Tooltip
+                                                title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                                arrow interactive
+                                            >
+                                                <Typography variant='body1'>
+                                                    <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
                                                 <span className={classes.txtRevenue}>
-                                                    ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber'))}
-                                                </span>
-                                            </Typography>
+                                                        ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
+                                                    </span>
+                                                </Typography>
+                                            </Tooltip>
                                         </Grid>
                                     </Grid>
                                 )}

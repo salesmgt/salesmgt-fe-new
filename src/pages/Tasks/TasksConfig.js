@@ -1,5 +1,5 @@
 // import { MdDelete, MdDescription, MdInfo, MdPersonAdd } from "react-icons/md"
-import { roleNames } from '../../constants/Generals'
+import { roleNames, taskStatusNames } from '../../constants/Generals'
 
 const columns = [
     { key: 'no', name: 'No', sortable: false, width1: '1%', width2: '1%' },
@@ -95,6 +95,15 @@ export const Consts = {
                 all: 'All',
                 assigned: 'Assigned',
                 notAssigned: 'Not assigned',
+            },
+        },
+        taskStatus: {
+            title: 'Task Status',
+            options: {
+                all: 'All',
+                ongoing: taskStatusNames.ongoing,
+                success: taskStatusNames.success,
+                failed: taskStatusNames.failed,
             },
         },
     },

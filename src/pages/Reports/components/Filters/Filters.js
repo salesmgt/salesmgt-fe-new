@@ -17,6 +17,7 @@ import {
     ListItemText,
     Avatar,
     Button,
+    Tooltip,
 } from '@material-ui/core'
 import {
     MdAccountCircle,
@@ -38,6 +39,7 @@ import {
     SCHOOL_YEAR_FILTER,
     PURPOSE_FILTER,
     DATE_RANGE_FILTER,
+    REPORT_RESULT_FILTER,
     // STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
@@ -75,10 +77,6 @@ const useStyles = makeStyles((theme) => ({
     },
     option: {
         fontSize: '0.875rem',
-    },
-    lastOption: {
-        fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0',
     },
     autoComplete: {
         width: 260,
@@ -214,6 +212,8 @@ function Filters(props) {
         // setDateRange,
         setFilter,
         getListPICs,
+        result,
+        reportResults,
     } = useReport()
 
     const [searchKey, setSearchKey] = useState(schoolName)
@@ -316,6 +316,18 @@ function Filters(props) {
         })
     }
 
+    const handleResultChange = (event) => {
+        const selectedResult = event?.target?.value
+        setFilter(REPORT_RESULT_FILTER, selectedResult)
+        dispatchParams({
+            type: ReducerActions.FILTER_REPORT_RESULT,
+            payload: {
+                filterType: REPORT_RESULT_FILTER,
+                filterValue: selectedResult,
+            },
+        })
+    }
+
     const handleDateRangeChange = (selectedDate) => {
         const fromDate = selectedDate[0]
             ? moment(selectedDate[0]).format('YYYY-MM-DD')
@@ -352,6 +364,7 @@ function Filters(props) {
         handleDistrictChange(null)
         handleSchoolYearChange(null)
         handlePurposeChange(null)
+        handleResultChange(null)
         handleDateRangeChange([null, null])
         // handleSearch('')
     }
@@ -394,6 +407,10 @@ function Filters(props) {
                     break
                 case PURPOSE_FILTER:
                     setFilter(PURPOSE_FILTER, '')
+                    count++
+                    break
+                case REPORT_RESULT_FILTER:
+                    setFilter(REPORT_RESULT_FILTER, null)
                     count++
                     break
                 case DATE_RANGE_FILTER:
@@ -471,15 +488,17 @@ function Filters(props) {
                     </Box>
                     {user?.roles[0] === roleNames.salesman && (
                         <Box className={classes.flexItem}>
-                            <Button
-                                className={classes.btn}
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => setOpenCreateDialog(true)}
-                            >
-                                <MdAdd fontSize="large" />
-                                {/* &nbsp;{operations.create} */}
-                            </Button>
+                            <Tooltip title="Create Reports">
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => setOpenCreateDialog(true)}
+                                >
+                                    <MdAdd fontSize="large" />
+                                    {/* &nbsp;{operations.create} */}
+                                </Button>
+                            </Tooltip>
                             <CreateReports
                                 open={openCreateDialog}
                                 onClose={() => setOpenCreateDialog(false)}
@@ -491,14 +510,7 @@ function Filters(props) {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={5}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>{filters.purpose.title}</InputLabel>
                                 <Select
@@ -534,14 +546,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={5}
-                            md={3}
-                            lg={3}
-                            className={classes.paddingTop}
-                        >
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>
                                     {filters.district.title}
@@ -579,15 +584,7 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={7} md={5} lg={4}>
-                            <DateRangePickers
-                                handleDateRangeChange={handleDateRangeChange}
-                            />
-                            {/* <FormControl className={classes.formControl}>
-                            </FormControl> */}
-                        </Grid>
-
-                        <Grid item xs={12} sm={4} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel>
                                     {filters.schoolYear.title}
@@ -619,6 +616,39 @@ function Filters(props) {
                                             }}
                                         >
                                             {year}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel>
+                                    {filters.result.title}
+                                </InputLabel>
+                                <Select
+                                    value={result === null ? '' : result}
+                                    onChange={handleResultChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    {reportResults?.map((result) => (
+                                        <MenuItem
+                                            key={result}
+                                            value={result}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {result === null
+                                                ? `${filters.result.options.all}`
+                                                : result
+                                                    ? `${filters.result.options.success}`
+                                                    : `${filters.result.options.failed}`
+                                            }
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -689,6 +719,14 @@ function Filters(props) {
                                     handlePICChange(event, newPIC)
                                 }
                             />
+                        </Grid>
+
+                        <Grid item xs={12} sm={7} md={5} lg={4}>
+                            <DateRangePickers
+                                handleDateRangeChange={handleDateRangeChange}
+                            />
+                            {/* <FormControl className={classes.formControl}>
+                            </FormControl> */}
                         </Grid>
 
                         {/* <Grid item xs={6} sm={6} md={4} lg={3}>

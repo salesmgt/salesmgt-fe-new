@@ -20,6 +20,9 @@ import {
     InputLabel,
     InputAdornment,
     Divider,
+    Tooltip,
+    ClickAwayListener,
+    Box,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import moment from 'moment'
@@ -27,45 +30,40 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Snackbars } from '../../../../components'
-import { Consts, updateStatusMessage } from '../DialogConfig'
+import { Consts, confirmTaskCompleteMessage, getCriteriaInfo } from '../DialogConfig'   // updateStatusMessage,
 import * as TasksServices from '../../TasksServices'
 import { useTask } from '../../hooks/TaskContext'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
-import DateRangePickers from '../../components/DateRangePickers/DateRangePickers'
+import { DateRangePickers } from '../../components'
 import { app as FirebaseApp } from '../../../../services/firebase'
 import { parseDateToString } from '../../../../utils/DateTimes';
-import { suggestPrice } from '../../utils/Suggestions';
-import classes from './UpdateSchStatus.module.scss'
+import { suggestPrice } from '../../../../utils/Suggestions';
 import { schoolLevelNames, serviceNames } from '../../../../constants/Generals'
+import { IoInformationCircleSharp } from 'react-icons/io5'
+import classes from './UpdateSchStatus.module.scss'
 
 const clientSchema = yup.object().shape({
-    // duration: yup
-    //     .string()
-    //     // .trim()
-    //     .required('Duartion is required')
-    //     .min(1, 'Duartion must be at least 1 digit')
-    //     .max(2, 'Duartion must be at most 2 digits')
-    //     .matches(DURATION_RGX, 'Invalid entry'),
-    classNumber: yup.number()
+    classNumber: yup.number('Number of classes must be a number')
         .integer('Number of classes must be an integer')
         .min(1, 'Minimum 1 class')
         .max(100, 'Maximum 100 classes')
         .required('Number of classes is required'),
-    studentNumber: yup.number()
+    studentNumber: yup.number('Number of students must be a number')
         .integer('Number of students must be an integer')
         .min(1, 'Minimum 1 student')
         .max(100, 'Maximum 100 students')
         .required('Number of students is required'),
-    slotNumber: yup.number()
+    slotNumber: yup.number('Number of periods must be a number')
         .integer('Number of periods must be an integer')
         .min(1, 'Minimum 1 period')
-        .required('Total number of periods is required'),
+        .max(10, 'Maximum 10 periods')
+        .required('Number of periods is required'),
     pricePerSlot: yup
         .number('Price floor must be a number')
         .min(100000, 'Minimum price is 100.000VND')
-        .max(5000000, 'Maximum price is 5.000.000VND')
-        .required(),
+        .max(2000000, 'Maximum price is 2.000.000VND')
+        .required('Price floor is required'),
     note: yup.string().trim(),
 })
 
@@ -113,6 +111,7 @@ function UpdateSchStatus(props) {
     const history = useHistory()
     const { serviceTypes } = useTask()
 
+    const [openInfoTooltip, setOpenInfoTooltip] = useState(false);
     const [priceSuggestions, setPriceSuggestions] = useState([]);
 
     const [notify, setNotify] = useState({
@@ -129,17 +128,25 @@ function UpdateSchStatus(props) {
         classNumber: 0,
         studentNumber: 0,
         slotNumber: 0,
-        pricePerSlot: 100000.0,
+        pricePerSlot: 100000,
         note: '',
-        showCreate: false,
+        // showCreate: false,
     }
 
-    const { control, errors, handleSubmit, formState, reset, watch } = useForm({
+    const {
+        control,
+        errors,
+        handleSubmit,
+        formState,
+        reset,
+        //watch,    // chưa hiểu sao đó mà Watch nó chặn nên getValue() ko lấy đc defaultValues của form
+        getValues
+    } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
 
-    const confirmWatch = watch('showCreate')
+    // const confirmWatch = watch('showCreate')
 
     const [listManagers, setListManagers] = useState([])
     const getListManagers = () => {
@@ -227,7 +234,7 @@ function UpdateSchStatus(props) {
             slotNumber: parseInt(data?.slotNumber ? data?.slotNumber : '0', 10),
             pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0'),
         }
-        delete model.showCreate
+        // delete model.showCreate
         delete model.duration
 
         // getListManagers()
@@ -244,7 +251,7 @@ function UpdateSchStatus(props) {
                 // Send notification by Firebase
                 createNotify(data)
 
-                reset({ showCreate: false })
+                // reset({ showCreate: false })
 
                 allowUpdate()
                 onClose()
@@ -271,17 +278,19 @@ function UpdateSchStatus(props) {
         <>
             <Dialog open={open} onClose={onClose} maxWidth="sm">
                 <DialogTitleWithIconClose onClose={onClose}>
-                    {headers.updateStatus}
+                    {headers.confirmCompleteTask}
                 </DialogTitleWithIconClose>
 
                 <DialogContent className={classes.dialogCont}>
-                    <DialogContentText className={classes.dialogText}>
-                        {/* If you want to update this status, please process to create
+                    <form noValidate>
+                        <DialogContentText className={classes.dialogText}>
+                            {/* If you want to update this status, please process to create
                     a Memorandum of Contract. */}
-                        {updateStatusMessage()}
+                            {/* {updateStatusMessage()} */}
+                            {confirmTaskCompleteMessage()}
+                            <Divider style={{ margin: '1.1rem 5rem' }} />
 
-                        <form noValidate>
-                            <div className={classes.showCreate}>
+                            {/* <div className={classes.showCreate}>
                                 <FormLabel>{operations.showCreate}</FormLabel>
                                 <Controller
                                     name="showCreate"
@@ -295,109 +304,201 @@ function UpdateSchStatus(props) {
                                         />
                                     )}
                                 />
-                            </div>
+                            </div> */}
 
-                            {confirmWatch && (
-                                <>
-                                    <Divider style={{ marginBottom: '1.1rem' }} />
-                                    <Grid container spacing={2} className={classes.wrapper}>
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            <InputLabel>{fields.service.title}</InputLabel>
-                                            <Controller
-                                                name="serviceType"
-                                                control={control}
-                                                render={({ value, onChange }) => (
-                                                    <RadioGroup value={value} onChange={onChange} row>
-                                                        <Grid container xs={12} sm={12} md={12} lg={12}>
-                                                            {customServiceTypes.map(service => (
-                                                                <Grid item xs={3} sm={3} md={3} lg={3} key={service}>
-                                                                    <FormControlLabel
-                                                                        control={<Radio />}
-                                                                        label={service}
-                                                                        value={service}
-                                                                    />
-                                                                </Grid>
-                                                            ))}
+                            {/* {confirmWatch && (
+                                <> */}
+                            {/* <Divider style={{ marginBottom: '1.1rem' }} /> */}
+                            <Grid container spacing={2} className={classes.wrapper}>
+                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Box display="flex" flexDirection="row">
+                                        <Box flexGrow={1} display="flex" flexDirection="row">
+                                            <Tooltip title='Service "Toán Khoa" only available for schools which are "Tiểu học"' placement="right-end">
+                                                <InputLabel>{fields.service.title}</InputLabel>
+                                                {/* <div style={{
+                                             marginLeft: '0.7rem' }}><IoInformationCircleSharp className={classes.iconInfo} /></div> */}
+                                            </Tooltip>
+                                        </Box>
+                                        <Box>
+                                            <ClickAwayListener onClickAway={() => setOpenInfoTooltip(false)}>
+                                                <Tooltip
+                                                    interactive
+                                                    title={getCriteriaInfo()}
+                                                    placement="bottom-end"
+                                                    open={openInfoTooltip}
+                                                    onClose={() => setOpenInfoTooltip(false)}
+                                                    disableFocusListener
+                                                    disableHoverListener  // disable cái này thì khi thả chuột ra ko bị close
+                                                >
+                                                    <div onClick={() => setOpenInfoTooltip(true)}>
+                                                        <IoInformationCircleSharp className={classes.iconInfo} />
+                                                    </div>
+                                                </Tooltip>
+                                            </ClickAwayListener>
+                                        </Box>
+                                    </Box>
+                                    <Controller
+                                        name="serviceType"
+                                        control={control}
+                                        render={({ value, onChange }) => (
+                                            <RadioGroup value={value} onChange={onChange} row>
+                                                <Grid container xs={12} sm={12} md={12} lg={12}>
+                                                    {customServiceTypes.map(service => (
+                                                        <Grid item xs={3} sm={3} md={3} lg={3} key={service}>
+                                                            <FormControlLabel
+                                                                control={<Radio />}
+                                                                label={service}
+                                                                value={service}
+                                                            />
                                                         </Grid>
-                                                    </RadioGroup>
-                                                )}
-                                            />
-                                        </Grid>
+                                                    ))}
+                                                </Grid>
+                                            </RadioGroup>
+                                        )}
+                                    />
+                                </Grid>
 
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            <Controller
-                                                name="duration"
-                                                control={control}
-                                                defaultValue={[new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1))]}
-                                                render={({ value, onChange }) => (
-                                                    <DateRangePickers
-                                                        // handleDateRangeChange={handleDurationChange}
-                                                        dateRange={value}
-                                                        handleDateRangeChange={onChange}
-                                                        textFieldVariant="outlined"
-                                                    />
-                                                )}
+                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Controller
+                                        name="duration"
+                                        control={control}
+                                        defaultValue={[new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1))]}
+                                        render={({ value, onChange }) => (
+                                            <DateRangePickers
+                                                dateRange={value}
+                                                handleDateRangeChange={onChange}
+                                                startLabel="Valid from"
+                                                endLabel="Valid until"
+                                                isFilter={false}
                                             />
-                                            {/* <InputLabel>Duration *</InputLabel> */}
-                                        </Grid>
+                                        )}
+                                    />
+                                    {/* <InputLabel>Duration *</InputLabel> */}
+                                </Grid>
 
-                                        <Grid item xs={7} sm={6} md={6} lg={6}>
-                                            <Controller
-                                                name="classNumber"
-                                                control={control}
-                                                render={({ value, onChange }) => (
+                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                    <Controller
+                                        name="classNumber"
+                                        control={control}
+                                        render={({ value, onChange }) => (
+                                            <TextField
+                                                label={fields.classNo.title}
+                                                variant="outlined"
+                                                type="number"
+                                                required
+                                                fullWidth
+                                                value={value}
+                                                onChange={onChange}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {fields.classNo.adornment}
+                                                        </InputAdornment>
+                                                    ),
+                                                    inputProps: { min: 1, max: 100 },
+                                                }}
+                                                error={!!errors.classNumber}
+                                                helperText={errors?.classNumber ?
+                                                    errors?.classNumber?.message
+                                                    : fields.classNo.helper
+                                                }
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                    <Controller
+                                        name="studentNumber"
+                                        control={control}
+                                        render={({ value, onChange }) => (
+                                            <TextField
+                                                label={fields.studentNumber.title}
+                                                variant="outlined"
+                                                type="number"
+                                                required
+                                                fullWidth
+                                                value={value}
+                                                onChange={onChange}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {fields.studentNumber.adornment}
+                                                        </InputAdornment>
+                                                    ),
+                                                    inputProps: { min: 1, max: 100 },
+                                                }}
+                                                error={!!errors.studentNumber}
+                                                helperText={errors?.studentNumber ?
+                                                    errors?.studentNumber?.message
+                                                    : fields.studentNumber.helper
+                                                }
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                    <Controller
+                                        name="pricePerSlot"
+                                        control={control}
+                                        render={({ value, onChange }) => (
+                                            <Grid container>
+                                                <Grid item xs={12} sm={12} md={12} lg={12}>
                                                     <TextField
-                                                        label={fields.classNo.title}
+                                                        label={fields.price.title}
                                                         variant="outlined"
                                                         type="number"
                                                         required
                                                         fullWidth
-                                                        value={value}
-                                                        onChange={onChange}
+                                                        // autoFocus
                                                         InputProps={{
-                                                            inputProps: { min: 1, max: 100 },
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    {fields.price.adornment}
+                                                                </InputAdornment>
+                                                            ),
+                                                            inputProps: { min: 100000, max: 2000000 },
                                                         }}
-                                                        error={!!errors.classNumber}
-                                                        helperText={errors?.classNumber ?
-                                                            errors?.classNumber?.message
-                                                            : fields.classNo.helper
+                                                        value={value}
+                                                        // value={new Intl.NumberFormat('vi-VN').format(value)}
+                                                        // onChange={onChange}
+                                                        onChange={(e) => {
+                                                            onChange(e.target.value)
+                                                            suggestPrice(Number(e.target.value), setPriceSuggestions)
+                                                        }}
+                                                        error={!!errors.pricePerSlot}
+                                                        helperText={errors?.pricePerSlot ?
+                                                            errors?.pricePerSlot?.message
+                                                            : fields.price.helper
                                                         }
                                                     />
-                                                )}
-                                            />
-                                        </Grid>
+                                                </Grid>
+                                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                    {priceSuggestions.map(suggestion => (
+                                                        <Button variant="outlined" size="small" color="secondary"
+                                                            onClick={(e) => {
+                                                                // console.log('suggestedPrice = ', suggestion);
+                                                                onChange(suggestion)
+                                                            }}
+                                                            className={classes.suggestions}
+                                                        >
+                                                            {new Intl.NumberFormat('vi-VN').format(suggestion)}
+                                                        </Button>
+                                                    ))}
+                                                </Grid>
+                                            </Grid>
+                                        )}
+                                    />
+                                </Grid>
 
-                                        <Grid item xs={7} sm={6} md={6} lg={6}>
-                                            <Controller
-                                                name="studentNumber"
-                                                control={control}
-                                                render={({ value, onChange }) => (
-                                                    <TextField
-                                                        label={fields.studentNumber.title}
-                                                        variant="outlined"
-                                                        type="number"
-                                                        required
-                                                        fullWidth
-                                                        value={value}
-                                                        onChange={onChange}
-                                                        InputProps={{
-                                                            inputProps: { min: 1, max: 100 },
-                                                        }}
-                                                        error={!!errors.studentNumber}
-                                                        helperText={errors?.studentNumber ?
-                                                            errors?.studentNumber?.message
-                                                            : fields.studentNumber.helper
-                                                        }
-                                                    />
-                                                )}
-                                            />
-                                        </Grid>
-
-                                        <Grid item xs={7} sm={6} md={6} lg={6}>
-                                            <Controller
-                                                name="slotNumber"
-                                                control={control}
-                                                render={({ value, onChange }) => (
+                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                    <Controller
+                                        name="slotNumber"
+                                        control={control}
+                                        render={({ value, onChange }) => (
+                                            <Grid container>
+                                                <Grid item xs={12} sm={12} md={12} lg={12}>
                                                     <TextField
                                                         label={fields.slotNumber.title}
                                                         variant="outlined"
@@ -405,70 +506,44 @@ function UpdateSchStatus(props) {
                                                         required
                                                         fullWidth
                                                         value={value}
-                                                        onChange={onChange}
+                                                        onChange={(e) => onChange(e.target.value)}
                                                         InputProps={{
-                                                            inputProps: { min: 0 },
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    {fields.slotNumber.adornment}
+                                                                </InputAdornment>
+                                                            ),
+                                                            inputProps: { min: 0, max: 10 }
                                                         }}
+                                                        error={!!errors.slotNumber}
+                                                        helperText={errors?.slotNumber ?
+                                                            errors?.slotNumber?.message
+                                                            : fields.slotNumber.helper
+                                                        }
                                                     // error={!!errors.slotNumber}
                                                     // helperText={errors?.slotNumber?.message}
                                                     />
-                                                )}
-                                            />
-                                        </Grid>
+                                                </Grid>
+                                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                    <Tooltip
+                                                        title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                                        arrow interactive
+                                                    >
+                                                        <Typography variant='body1'>
+                                                            <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                                                    <span className={classes.txtRevenue}>
+                                                                ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
+                                                            </span>
+                                                        </Typography>
+                                                    </Tooltip>
+                                                </Grid>
+                                            </Grid>
+                                        )}
+                                    />
+                                </Grid>
 
-                                        <Grid item xs={7} sm={6} md={6} lg={6}>
-                                            <Controller
-                                                name="pricePerSlot"
-                                                control={control}
-                                                render={({ value, onChange }) => (
-                                                    <Grid container>
-                                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                            <TextField
-                                                                label={fields.price.title}
-                                                                variant="outlined"
-                                                                type="number"
-                                                                required
-                                                                fullWidth
-                                                                InputProps={{
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            {fields.price.adornment}
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                    inputProps: { min: 1, max: 5000000 },
-                                                                }}
-                                                                value={value}
-                                                                onChange={(e) => {
-                                                                    onChange(e.target.value)
-                                                                    suggestPrice(Number(e.target.value), setPriceSuggestions)
-                                                                }}
-                                                                error={!!errors.pricePerSlot}
-                                                                helperText={errors?.pricePerSlot ?
-                                                                    errors?.pricePerSlot?.message
-                                                                    : fields.price.helper
-                                                                }
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                            {priceSuggestions.map(suggestion => (
-                                                                <Button variant="outlined" size="small" color="secondary"
-                                                                    onClick={(e) => {
-                                                                        console.log('suggestedPrice = ', suggestion);
-                                                                        onChange(suggestion)
-                                                                    }}
-                                                                    className={classes.suggestions}
-                                                                >
-                                                                    {new Intl.NumberFormat('vi-VN').format(suggestion)}
-                                                                </Button>
-                                                            ))}
-                                                        </Grid>
-                                                    </Grid>
-                                                )}
-                                            />
-                                        </Grid>
-
-                                        {/**Giờ bỏ cái này, ko dùng đến nữa */}
-                                        {/* <Grid item xs={12} sm={12} md={12} lg={12}>
+                                {/**Giờ bỏ cái này, ko dùng đến nữa */}
+                                {/* <Grid item xs={12} sm={12} md={12} lg={12}>
                                         <InputLabel>
                                             {fields.revenue.title}
                                         </InputLabel>
@@ -511,33 +586,31 @@ function UpdateSchStatus(props) {
                                         />
                                     </Grid> */}
 
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            <Controller
-                                                name="note"
-                                                control={control}
-                                                defaultValue=""
-                                                render={({ value, onChange }) => (
-                                                    <TextField
-                                                        label={fields.note.title}
-                                                        variant="outlined"
-                                                        fullWidth
-                                                        multiline
-                                                        rows={4}
-                                                        value={value}
-                                                        onChange={onChange}
-                                                        error={!!errors.note}
-                                                        helperText={
-                                                            errors?.note?.message
-                                                        }
-                                                    />
-                                                )}
+                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Controller
+                                        name="note"
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ value, onChange }) => (
+                                            <TextField
+                                                label={fields.note.title}
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={4}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!!errors.note}
+                                                helperText={errors?.note?.message}
                                             />
-                                        </Grid>
-                                    </Grid>
-                                </>
-                            )}
-                        </form>
-                    </DialogContentText>
+                                        )}
+                                    />
+                                </Grid>
+                            </Grid>
+                            {/* </>
+                            )} */}
+                        </DialogContentText>
+                    </form>
                 </DialogContent>
 
                 <DialogActions className={classes.dialogAct}>

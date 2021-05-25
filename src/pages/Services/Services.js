@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
-import { columns } from './ServicesConfig'
+import { getColumns } from './ServicesConfig'
 import { useService } from './hooks/ServiceContext'
 import { getServices } from './ServicesServices'
 import { Loading } from '../../components'
@@ -12,7 +12,7 @@ import classes from './Services.module.scss'
 function Services() {
     const history = useHistory()
     const { user } = useAuth()
-
+    const columns = getColumns(user.roles[0])
     const { params } = useService()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
@@ -40,7 +40,7 @@ function Services() {
             .then((res) => {
                 if (isMounted) {
                     setData(res.data)
-                    console.log('Services nè: ', res.data.list)
+                    // console.log('Services nè: ', res.data.list)
                 }
             })
             .catch((error) => {

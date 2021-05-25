@@ -30,7 +30,7 @@ function Task() {
             .then((data) => {
                 if (isMounted) {
                     setTask(data)
-                    console.log('task detail: ', task);
+                    // console.log('task detail: ', task);
                 }
             })
             .catch((error) => {

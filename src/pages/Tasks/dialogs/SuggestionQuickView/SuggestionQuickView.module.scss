@@ -1,0 +1,61 @@
+@import '../../../../styles/Variables.module.scss';
+
+.wrapper {
+    padding: 0.5rem 2rem 1rem !important; // top (right & left) bottom
+    height: 100%;
+    overflow-y: auto;
+}
+
+.container {
+//   height: 46vh; // 100%
+  height: fit-content;
+  max-height: 46vh;
+  overflow-y: auto;
+  border-radius: $default-radius;
+}
+
+.btnSave {    
+    color: $main-info !important;
+    &:hover {
+      color: $dark-info !important;
+    }
+    &:disabled {
+      color: $divider !important;
+    }
+}
+.icon{
+  float: right;
+  padding: 0.5% !important;
+}
+.popover{
+  padding: .3% !important;
+}
+.tBodyRow{
+  cursor: pointer;
+  text-decoration-line: line-through;
+}
+
+.iconDes {
+  text-align: center;
+  // justify-self: center;
+  align-self: center;
+  // border: 1px solid black;
+}
+
+.chipContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 1rem 0 0 0;
+  // border: 1px solid black;
+  
+  .chipReason {
+    margin-right: 0.25rem;
+  }
+}
+
+.txtCriInfoHeader {
+  font-weight: 500;
+  font-style: italic;
+}

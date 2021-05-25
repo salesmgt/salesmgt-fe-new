@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import { Avatar, Button, Chip } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import PropTypes from 'prop-types'
 import * as ReducerActions from '../../../../../constants/ActionTypes'
 import {
     PIC_FILTER,
     DISTRICT_FILTER,
     SCHOOL_YEAR_FILTER,
     PURPOSE_FILTER,
-    STATUS_FILTER,
+    // STATUS_FILTER,
     DATE_RANGE_FILTER,
+    REPORT_RESULT_FILTER,
 } from '../../../../../constants/Filters'
+import { Consts } from '../../../ReportsConfig'
+// import PropTypes from 'prop-types'
 // import classes from './Chips.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 function Chips(props) {
     const classes = useStyles()
     const { chips, dispatch, handleChipsRemoved } = props
+    const { filters } = Consts
 
     //================Generate chips according to filters================
     const [btnClearAll, setBtnClearAll] = useState(false)
@@ -52,14 +55,12 @@ function Chips(props) {
                     payload: { filterType: PIC_FILTER, filterValue: null },
                 })
                 break
-
             case DISTRICT_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_DISTRICT,
                     payload: { filterType: DISTRICT_FILTER, filterValue: '' },
                 })
                 break
-
             case SCHOOL_YEAR_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_YEAR,
@@ -69,21 +70,24 @@ function Chips(props) {
                     },
                 })
                 break
-
             case PURPOSE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_PURPOSE,
                     payload: { filterType: PURPOSE_FILTER, filterValue: '' },
                 })
                 break
-
-            case STATUS_FILTER:
+            // case STATUS_FILTER:
+            //     dispatch({
+            //         type: ReducerActions.FILTER_SCHOOL_STATUS,
+            //         payload: { filterType: STATUS_FILTER, filterValue: '' },
+            //     })
+            //     break
+            case REPORT_RESULT_FILTER:
                 dispatch({
-                    type: ReducerActions.FILTER_SCHOOL_STATUS,
-                    payload: { filterType: STATUS_FILTER, filterValue: '' },
+                    type: ReducerActions.FILTER_REPORT_RESULT,
+                    payload: { filterType: REPORT_RESULT_FILTER, filterValue: null },
                 })
                 break
-
             case DATE_RANGE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_DATE_RANGE,
@@ -142,13 +146,17 @@ function Chips(props) {
             type: ReducerActions.FILTER_SCHOOL_YEAR,
             payload: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
         })
-        dispatch({
-            type: ReducerActions.FILTER_SCHOOL_STATUS,
-            payload: { filterType: STATUS_FILTER, filterValue: '' },
-        })
+        // dispatch({
+        //     type: ReducerActions.FILTER_SCHOOL_STATUS,
+        //     payload: { filterType: STATUS_FILTER, filterValue: '' },
+        // })
         dispatch({
             type: ReducerActions.FILTER_PURPOSE,
             payload: { filterType: PURPOSE_FILTER, filterValue: '' },
+        })
+        dispatch({
+            type: ReducerActions.FILTER_REPORT_RESULT,
+            payload: { filterType: REPORT_RESULT_FILTER, filterValue: null },
         })
         dispatch({
             type: ReducerActions.FILTER_DATE_RANGE,
@@ -180,8 +188,9 @@ function Chips(props) {
             DISTRICT_FILTER,
             SCHOOL_YEAR_FILTER,
             PURPOSE_FILTER,
-            STATUS_FILTER,
+            // STATUS_FILTER,
             DATE_RANGE_FILTER,
+            REPORT_RESULT_FILTER
         ]
 
         handleChipsRemoved(removedFilters)
@@ -192,7 +201,8 @@ function Chips(props) {
         chips.forEach((chip) => {
             if (chip.filterValue === '' || chip.filterValue === null || chip.filterValue === undefined) {
                 count++
-            } else if (
+            }
+            else if (
                 chip.filterType === DATE_RANGE_FILTER &&
                 typeof chip.filterValue !== 'string'
             ) {
@@ -204,7 +214,7 @@ function Chips(props) {
     }
 
     const renderChips = (chip) => {
-        if (chip.filterType === PIC_FILTER) {
+        if (chip.filterType === PIC_FILTER && chip.filterValue) {
             return (
                 <Chip
                     label={chip.filterValue.fullName}
@@ -214,11 +224,22 @@ function Chips(props) {
                     color="secondary"
                 />
             )
-        } else if (chip.filterType === DATE_RANGE_FILTER) {
+        } else if (chip.filterType === DATE_RANGE_FILTER && chip.filterValue) {
             if (typeof chip.filterValue === 'string') {
                 return (
                     <Chip
                         label={chip.filterValue}
+                        onDelete={handleChipDelete(chip)}
+                        className={classes.chip}
+                        color="secondary"
+                    />
+                )
+            }
+        } else if (chip.filterType === REPORT_RESULT_FILTER) {
+            if (chip.filterValue !== null) {
+                return (
+                    <Chip
+                        label={chip.filterValue ? `${filters.result.options.success}` : `${filters.result.options.failed}`}
                         onDelete={handleChipDelete(chip)}
                         className={classes.chip}
                         color="secondary"
@@ -240,7 +261,7 @@ function Chips(props) {
 
     return (
         <div>
-            {handleShowClearAllButton() !== 5 && (
+            {handleShowClearAllButton() !== 6 && (
                 <div className={classes.root}>
                     <Button
                         size="small"
@@ -252,13 +273,58 @@ function Chips(props) {
                     <ul className={classes.ul}>
                         {chips.map((chip) => {
                             return (
-                                <div key={chip.filterType}>
-                                    {chip.filterValue && (
-                                        <li>
-                                            {renderChips(chip)}
-                                        </li>
+                                <li key={chip.filterType}>
+                                    {chip.filterType === PIC_FILTER && chip.filterValue &&
+                                        <Chip
+                                            label={chip.filterValue.fullName}
+                                            avatar={
+                                                <Avatar src={chip.filterValue.avatar} />
+                                            }
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                    {(chip.filterType === DATE_RANGE_FILTER
+                                        && chip.filterValue
+                                        && typeof chip.filterValue === 'string') && (
+                                            <Chip
+                                                label={chip.filterValue}
+                                                onDelete={handleChipDelete(chip)}
+                                                className={classes.chip}
+                                                color="secondary"
+                                            />
+                                        )
+                                    }
+                                    {(chip.filterType === REPORT_RESULT_FILTER && chip.filterValue !== null) && (
+                                        <Chip
+                                            label={chip.filterValue ? `${filters.result.options.success}` : `${filters.result.options.failed}`}
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
                                     )}
-                                </div>
+                                    {((chip.filterType !== PIC_FILTER)
+                                        && (chip.filterType !== DATE_RANGE_FILTER)
+                                        && (chip.filterType !== REPORT_RESULT_FILTER)
+                                        && chip.filterValue) && (
+                                            <Chip
+                                                label={chip.filterValue}
+                                                onDelete={handleChipDelete(chip)}
+                                                className={classes.chip}
+                                                color="secondary"
+                                            />
+                                        )
+                                    }
+                                </li>
+
+                                // <div key={chip.filterType}>
+                                //     {chip.filterValue && (
+                                //         <li>
+                                //             {renderChips(chip)}
+                                //         </li>
+                                //     )}
+                                // </div>
                             )
                         })}
                     </ul>

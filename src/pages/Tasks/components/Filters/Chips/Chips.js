@@ -11,7 +11,9 @@ import {
     PIC_FILTER,
     PURPOSE_FILTER,
     STATUS_FILTER,
-    ASSIGNED_FILTER
+    ASSIGNED_FILTER,
+    TASK_STATUS_FILTER,
+    // DATE_RANGE_FILTER,
 } from '../../../../../constants/Filters'
 import { Consts } from '../../../TasksConfig'
 // import PropTypes from 'prop-types'
@@ -64,63 +66,68 @@ function Chips(props) {
                     payload: { filterType: SCHOOL_YEAR_FILTER, filterValue: '' },
                 })
                 break
-
             case DISTRICT_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_DISTRICT,
                     payload: { filterType: DISTRICT_FILTER, filterValue: '' },
                 })
                 break
-
             case TYPE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_TYPE,
                     payload: { filterType: TYPE_FILTER, filterValue: '' },
                 })
                 break
-
             case LEVEL_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_LEVEL,
                     payload: { filterType: LEVEL_FILTER, filterValue: '' },
                 })
                 break
-
             // case SCALE_FILTER:
             //     dispatch({
             //         type: ReducerActions.FILTER_SCHOOL_SCALE,
             //         payload: { filterType: SCALE_FILTER, filterValue: '' },
             //     })
             //     break
-
             case PIC_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_PIC,
                     payload: { filterType: PIC_FILTER, filterValue: null },
                 })
                 break
-
             case PURPOSE_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_PURPOSE,
                     payload: { filterType: PURPOSE_FILTER, filterValue: '' },
                 })
                 break
-
             case STATUS_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_SCHOOL_STATUS,
                     payload: { filterType: STATUS_FILTER, filterValue: '' },
                 })
                 break
-
             case ASSIGNED_FILTER:
                 dispatch({
                     type: ReducerActions.FILTER_ASSIGNED,
                     payload: { filterType: ASSIGNED_FILTER, filterValue: null },
                 })
                 break
-
+            case TASK_STATUS_FILTER:
+                dispatch({
+                    type: ReducerActions.FILTER_TASK_STATUS,
+                    payload: { filterType: TASK_STATUS_FILTER, filterValue: '' },
+                })
+                break
+            // case DATE_RANGE_FILTER:
+            //     dispatch({
+            //         type: ReducerActions.FILTER_DATE_RANGE,
+            //         payload: {
+            //             filterType: DATE_RANGE_FILTER,
+            //             filterValue: [null, null],
+            //         },
+            //     })
             default:
                 break
         }
@@ -182,6 +189,17 @@ function Chips(props) {
             type: ReducerActions.FILTER_ASSIGNED,
             payload: { filterType: ASSIGNED_FILTER, filterValue: null },
         })
+        dispatch({
+            type: ReducerActions.FILTER_TASK_STATUS,
+            payload: { filterType: TASK_STATUS_FILTER, filterValue: '' },
+        })
+        // dispatch({
+        //     type: ReducerActions.FILTER_DATE_RANGE,
+        //     payload: {
+        //         filterType: DATE_RANGE_FILTER,
+        //         filterValue: [null, null],
+        //     },
+        // })
 
         const removedFilters = [
             SCHOOL_YEAR_FILTER,
@@ -193,6 +211,8 @@ function Chips(props) {
             PURPOSE_FILTER,
             STATUS_FILTER,
             ASSIGNED_FILTER,
+            TASK_STATUS_FILTER
+            // DATE_RANGE_FILTER,
         ]
 
         handleChipsRemoved(removedFilters)
@@ -204,6 +224,12 @@ function Chips(props) {
             if (chip.filterValue === '' || chip.filterValue === null || chip.filterValue === undefined) {
                 count++
             }
+            // else if (
+            //     chip.filterType === DATE_RANGE_FILTER &&
+            //     typeof chip.filterValue !== 'string'
+            // ) {
+            //     count++
+            // }
         })
         // if (count === 7) {
         //     setBtnClearAll(false)
@@ -214,9 +240,44 @@ function Chips(props) {
         return count
     }
 
+    // const renderChips = (chip) => {
+    //     if (chip.filterType === PIC_FILTER) {
+    //         return (
+    //             <Chip
+    //                 label={chip.filterValue.fullName}
+    //                 avatar={<Avatar src={chip.filterValue.avatar} />}
+    //                 onDelete={handleChipDelete(chip)}
+    //                 className={classes.chip}
+    //                 color="secondary"
+    //             />
+    //         )
+    //         // } else if (chip.filterType === DATE_RANGE_FILTER) {
+    //         //     if (typeof chip.filterValue === 'string') {
+    //         //         return (
+    //         //             <Chip
+    //         //                 label={chip.filterValue}
+    //         //                 onDelete={handleChipDelete(chip)}
+    //         //                 className={classes.chip}
+    //         //                 color="secondary"
+    //         //             />
+    //         //         )
+    //         //     }
+    //     } else {
+    //         // } else if (chip.filterType !== 'dateRange') {
+    //         return (
+    //             <Chip
+    //                 label={chip.filterValue}
+    //                 onDelete={handleChipDelete(chip)}
+    //                 className={classes.chip}
+    //                 color="secondary"
+    //             />
+    //         )
+    //     }
+    // }
+
     return (
         <div>
-            {handleShowClearAllButton() !== 8 && (
+            {handleShowClearAllButton() !== 9 && (
                 <div className={classes.root}>
                     {/* {(chips !== null && chips !== undefined) && */}
                     {/* {showClearAllButton(chipData)} */}
@@ -232,6 +293,13 @@ function Chips(props) {
                         {/* {generateChips(chips).map(chip => {})} */}
                         {chips.map((chip) => {
                             return (
+                                // <div key={chip.filterType}>
+                                //     {chip.filterValue && (
+                                //         <li>
+                                //             {renderChips(chip)}
+                                //         </li>
+                                //     )}
+                                // </div>
                                 <li key={chip.filterType}>
                                     {chip.filterType === PIC_FILTER && chip.filterValue &&
                                         <Chip

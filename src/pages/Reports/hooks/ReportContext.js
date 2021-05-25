@@ -15,6 +15,7 @@ import {
     // STATUS_FILTER,
     PURPOSE_FILTER,
     DATE_RANGE_FILTER,
+    REPORT_RESULT_FILTER,
 } from '../../../constants/Filters'
 import { roleNames } from '../../../constants/Generals'
 
@@ -31,6 +32,7 @@ let defaultFilters = {
     // status: { filterType: STATUS_FILTER, filterValue: '' },
     purpose: { filterType: PURPOSE_FILTER, filterValue: '' },
     dateRange: { filterType: DATE_RANGE_FILTER, filterValue: [null, null] },
+    result: { filterType: REPORT_RESULT_FILTER, filterValue: null },
 }
 
 function useReportProvider() {
@@ -102,6 +104,11 @@ function useReportProvider() {
             ? defaultFilters.dateRange.filterValue
             : [null, null]
     )
+    const [result, setResult] = useState(
+        defaultFilters.result.filterValue
+            ? defaultFilters.result.filterValue
+            : null
+    )
 
     // fix major BUG
     const setFilter = (key, value) => {
@@ -164,6 +171,13 @@ function useReportProvider() {
                 }
                 setDateRange(value)
                 break
+            case REPORT_RESULT_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    result: { filterType: REPORT_RESULT_FILTER, filterValue: value },
+                }
+                setResult(value)
+                break
             default:
                 break
         }
@@ -171,6 +185,7 @@ function useReportProvider() {
 
     // APIs
     const [PICs, setPICs] = useState([])
+    const reportResults = [null, true, false];
     // const [districts, setDistricts] = useState([])
     // const [schoolYears, setSchoolYears] = useState([])
     // const [schoolStatuses, setSchoolStatuses] = useState([])
@@ -178,9 +193,9 @@ function useReportProvider() {
     // Search field (do not have)
 
     // Get filters' data
-    
+
     const getListPICs = (fullName) => {
-        getPICs({active: true, fullName: fullName, role: roleNames.salesman}).then((data) => {
+        getPICs({ active: true, fullName: fullName, role: roleNames.salesman }).then((data) => {
             // console.log('list PICs: ', data)
             setPICs(data)
         }).catch((error) => {
@@ -248,9 +263,9 @@ function useReportProvider() {
 
     // useEffect(() => {
     //     getPICsFilter()
-        // getDistrictsFilter()
-        // getSchoolYearsFilter()
-        // getSchoolStatusesFilter()
+    // getDistrictsFilter()
+    // getSchoolYearsFilter()
+    // getSchoolStatusesFilter()
     // }, [])
 
     return {
@@ -282,6 +297,8 @@ function useReportProvider() {
         // setDateRange,
         setFilter,
         getListPICs,
+        result,
+        reportResults,
         // fromDate, setFromDate, toDate, setToDate
     }
 }

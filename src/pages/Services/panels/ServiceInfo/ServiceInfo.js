@@ -7,7 +7,9 @@ import {
     Chip,
     ClickAwayListener,
     Divider,
+    FormControlLabel,
     Grid,
+    InputAdornment,
     // Icon,
     // IconButton,
     List,
@@ -16,26 +18,54 @@ import {
     ListItemIcon,
     ListItemText,
     makeStyles,
+    Radio,
+    RadioGroup,
     TextField,
     Tooltip,
     Typography,
 } from '@material-ui/core'
 import { Snackbars, Loading, NotFound } from '../../../../components'
 import { Consts, getCriteria, getCriteriaInfo } from './ServiceInfoConfig'
-import { approveServices, updateService } from '../../ServicesServices'
+import { updateService } from '../../ServicesServices'
 import { useAuth } from '../../../../hooks/AuthContext';
 import { CheckMark, CrosskMark } from '../../../../assets/icons'
 import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes'
-import { roleNames, serviceStatusNames } from '../../../../constants/Generals'
+import { roleNames, schoolLevelNames, serviceNames, serviceStatusNames } from '../../../../constants/Generals'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IoInformationCircleSharp } from 'react-icons/io5'
 import RejectService from '../../dialogs/RejectService/RejectService';
 import ConfirmApprove from '../../dialogs/ConfirmApprove/ConfirmApprove';
+import { useService } from '../../hooks/ServiceContext'
+import { DateRangePickers } from '../../components';
+import { suggestPrice } from '../../../../utils/Suggestions';
 import classes from './ServiceInfo.module.scss'
 
 const serviceSchema = yup.object().shape({
+    classNumber: yup
+        .number('Number of classes must be a number')
+        .integer('Number of classes must be an integer')
+        .min(1, 'Minimum 1 class')
+        .max(100, 'Maximum 100 classes')
+        .required('Number of classes is required'),
+    studentNumber: yup
+        .number('Number of students must be a number')
+        .integer('Number of students must be an integer')
+        .min(1, 'Minimum 1 student')
+        .max(100, 'Maximum 100 students')
+        .required('Number of students is required'),
+    slotNumber: yup
+        .number('Number of periods must be a number')
+        .integer('Number of periods must be an integer')
+        .min(1, 'Minimum 1 period')
+        .max(10, 'Maximum 10 periods')
+        .required('Number of periods is required'),
+    pricePerSlot: yup
+        .number('Price floor must be a number')
+        .min(100000, 'Minimum price is 100.000VND')
+        .max(2000000, 'Maximum price is 2.000.000VND')
+        .required('Price floor is required'),
     note: yup.string().trim(),
 })
 // const reasonSchema = yup.object().shape({
@@ -75,6 +105,7 @@ function ServiceInfo(props) {
 
     const history = useHistory()
     const { user } = useAuth()
+    const { serviceTypes } = useService()
 
     // Popover Criteria Info
     // const [anchorEl, setAnchorEl] = React.useState(null);
@@ -88,6 +119,8 @@ function ServiceInfo(props) {
         type: '',
     })
 
+    const [priceSuggestions, setPriceSuggestions] = useState([]);
+
     const criteria = getCriteria(service?.serviceType, service?.educationLevel);
 
     // const handleOpenCriteriaInfo = (event) => {
@@ -98,8 +131,9 @@ function ServiceInfo(props) {
     const defaultValues = {
         id: service?.id,
         serviceType: service?.serviceType,
-        startDate: service?.startDate,
-        endDate: service?.endDate,
+        // startDate: service?.startDate,
+        // endDate: service?.endDate,
+        duration: [service?.startDate, service?.endDate],
         pricePerSlot: service?.pricePerSlot,
         classNumber: service?.classNumber,
         studentNumber: service?.studentNumber,
@@ -107,7 +141,7 @@ function ServiceInfo(props) {
         note: service?.note,
     }
 
-    const { control, handleSubmit, formState } = useForm({
+    const { control, handleSubmit, formState, errors, getValues } = useForm({
         resolver: yupResolver(serviceSchema),
         defaultValues: defaultValues,
     })
@@ -121,22 +155,49 @@ function ServiceInfo(props) {
     //     defaultValues: defaultReasonValues,
     // })
 
+    // const customiseServiceList = (schoolLevel) => {
+    //     const customServiceTypes = [...serviceTypes]
+
+    //     if (schoolLevel !== schoolLevelNames.th) {
+    //         customServiceTypes.splice(customServiceTypes.indexOf(serviceNames.svc3), 1)
+    //     }
+    //     return customServiceTypes;
+    // }
+    // const customServiceTypes = customiseServiceList(service?.educationLevel)
+
+    // console.log('startDate: ', service?.startDate)
+    // console.log('endDate: ', service?.endDate)
+
     const onSubmit = (data) => {
+        console.log('data ---- startDate: ', data?.startDate);
+        console.log('data ---- endDate: ', data?.endDate);
+
         const model = {
             // ...data,
             id: service?.id,
             taskId: service?.taskId,
+            serviceType: service?.serviceType,
             submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
-            startDate: service?.startDate ? parseDateToString(service?.startDate, 'YYYY-MM-DD HH:mm:ss') : null,
-            endDate: service?.endDate ? parseDateToString(service?.endDate, 'YYYY-MM-DD HH:mm:ss')
-                : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
-            serviceType: service?.serviceType ? service?.serviceType : '',
-            classNumber: parseInt(service?.classNumber ? service?.classNumber : '0', 10),
-            slotNumber: parseInt(service?.slotNumber ? service?.slotNumber : '0', 10),
-            studentNumber: parseInt(service?.studentNumber ? service?.studentNumber : '0', 10),
-            pricePerSlot: parseFloat(service?.pricePerSlot ? service?.pricePerSlot : '0.0'),
+            startDate: data?.duration[0] ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
+                : service?.startDate,    // parseDateToString(service?.startDate, 'YYYY-MM-DD HH:mm:ss'),
+            endDate: data?.duration[1] ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
+                : service?.endDate,     // parseDateToString(service?.endDate, 'YYYY-MM-DD HH:mm:ss'),
+            classNumber: data?.classNumber ? parseInt(data?.classNumber, 10) : service?.classNumber,
+            slotNumber: data?.slotNumber ? Number(data?.slotNumber) : service?.slotNumber,
+            studentNumber: data?.studentNumber ? Number(data?.studentNumber) : service?.studentNumber,
+            pricePerSlot: data?.pricePerSlot ? Number(data?.pricePerSlot) : service?.pricePerSlot,
             status: service?.status,
-            note: data?.note,
+            note: data?.note,    // Này lấy y nguyên từ note, ko thông qua chỉnh sửa thì ko cần phải ghi lại thế này
+
+            /**Do hồi trước không định cho sửa các thông tin khác của Service nên mới có những biến như phía dưới này  */
+            // startDate: service?.startDate ? parseDateToString(service?.startDate, 'YYYY-MM-DD HH:mm:ss') : null,
+            // endDate: service?.endDate ? parseDateToString(service?.endDate, 'YYYY-MM-DD HH:mm:ss')
+            //     : parseDateToString(new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss'),
+            // serviceType: service?.serviceType ? service?.serviceType : '',
+            // classNumber: parseInt(service?.classNumber ? service?.classNumber : '0', 10),
+            // slotNumber: parseInt(service?.slotNumber ? service?.slotNumber : '0', 10),
+            // studentNumber: parseInt(service?.studentNumber ? service?.studentNumber : '0', 10),
+            // pricePerSlot: parseFloat(service?.pricePerSlot ? service?.pricePerSlot : '0.0'),
         }
 
         updateService(service?.id, model)
@@ -144,7 +205,7 @@ function ServiceInfo(props) {
                 refreshPage(service?.id)
                 setNotify({
                     isOpen: true,
-                    message: 'Updated note successfully',
+                    message: 'Updated service successfully',
                     type: 'success',
                 })
             })
@@ -158,7 +219,7 @@ function ServiceInfo(props) {
                 }
                 setNotify({
                     isOpen: true,
-                    message: 'Updated note failed',
+                    message: 'Updated service failed',
                     type: 'error',
                 })
             })
@@ -167,6 +228,7 @@ function ServiceInfo(props) {
     }
 
     // Reject chỉ nhập lý do 1 lần duy nhất ban đầu, ko có thay đổi về sau nữa
+    // ===> Bỏ, ko cho sửa luôn
     // const onReasonSubmit = (data) => {
     //     console.log('submit service rejectedReason: ', data);
 
@@ -281,12 +343,16 @@ function ServiceInfo(props) {
     }
 
     const checkCriteria = (criteria, standardValue, service) => {
-        const { classNumber, studentNumber, pricePerSlot, startDate, endDate } = service
+        const { pricePerSlot, slotNumber, classNumber, studentNumber, startDate, endDate } = service
         const duration = calculateDatesGap(new Date(startDate), new Date(endDate), 'M')
 
         switch (criteria) {
             case 'price':
                 if (pricePerSlot >= standardValue)
+                    return true
+                else return false
+            case 'period':
+                if (slotNumber >= standardValue)
                     return true
                 else return false
             case 'class':
@@ -307,7 +373,7 @@ function ServiceInfo(props) {
     }
 
     const getTooltipTitle = (criteria, standardValue, service) => {
-        const { classNumber, studentNumber, pricePerSlot, startDate, endDate } = service
+        const { pricePerSlot, slotNumber, classNumber, studentNumber, startDate, endDate } = service
         const duration = calculateDatesGap(new Date(startDate), new Date(endDate), 'M')
 
         switch (criteria) {
@@ -321,6 +387,23 @@ function ServiceInfo(props) {
                         <Box p={1} className={classes.tooltipRightInfo}>
                             <Typography variant='caption'>Actual: </Typography>
                             <Typography variant='body2'>{currencyFormatter.format(pricePerSlot)}/period</Typography>
+                        </Box>
+                    </Box>
+                )
+            case 'period':
+                return (
+                    <Box display="flex">
+                        <Box p={1} flexGrow={1}>
+                            <Typography variant='caption'>Standard: </Typography>
+                            <Typography variant='body2'>{standardValue} periods/week</Typography>
+                        </Box>
+                        <Box p={1} className={classes.tooltipRightInfo}>
+                            <Typography variant='caption'>Actual: </Typography>
+                            {slotNumber <= 1 ? (
+                                <Typography variant='body2'>{slotNumber} period/week</Typography>
+                            ) : (
+                                <Typography variant='body2'>{slotNumber} periods/week</Typography>
+                            )}
                         </Box>
                     </Box>
                 )
@@ -396,7 +479,8 @@ function ServiceInfo(props) {
                                         {headers.child1}
                                     </Typography>
                                 </Grid>
-                                {user.roles[0] === roleNames.salesman ? (
+                                {/**Salesman edit Service của mình (khi chưa đc Approve/Reject) */}
+                                {user.roles[0] === roleNames.salesman && user.username === service?.username ? (
                                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                                         <Grid item container xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                             <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
@@ -428,10 +512,24 @@ function ServiceInfo(props) {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                        <Typography color="inherit">
-                                                            {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                                            {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
-                                                        </Typography>
+                                                        {service?.status === serviceStatusNames.pending ? (
+                                                            <Controller
+                                                                name="duration"
+                                                                control={control}
+                                                                defaultValue={[service?.startDate, service?.endDate]}
+                                                                render={({ value, onChange }) => (
+                                                                    <DateRangePickers
+                                                                        dateRange={value}
+                                                                        handleDateRangeChange={onChange}
+                                                                    />
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <Typography color="inherit">
+                                                                {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                                {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
+                                                            </Typography>
+                                                        )}
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -447,9 +545,87 @@ function ServiceInfo(props) {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                        <Typography color="inherit">
-                                                            {service?.classNumber} {fields.classNo.suffix}
+                                                        {service?.status === serviceStatusNames.pending ? (
+                                                            <Controller
+                                                                name="classNumber"
+                                                                control={control}
+                                                                render={({ value, onChange }) => (
+                                                                    <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                        <TextField
+                                                                            // label={fields.classNo.title}
+                                                                            variant="outlined"
+                                                                            type="number"
+                                                                            required
+                                                                            fullWidth
+                                                                            value={value}
+                                                                            onChange={onChange}
+                                                                            InputProps={{
+                                                                                endAdornment: (
+                                                                                    <InputAdornment position="end">
+                                                                                        {fields.classNo.adornment}
+                                                                                    </InputAdornment>
+                                                                                ),
+                                                                                inputProps: { min: 1, max: 100 },
+                                                                            }}
+                                                                            error={!!errors?.classNumber}
+                                                                            helperText={errors?.classNumber?.message}
+                                                                        />
+                                                                    </Grid>
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <Typography color="inherit">
+                                                                {service?.classNumber} {fields.classNo.adornment}
+                                                            </Typography>
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+
+                                            <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                                <Grid container spacing={0} className={classes.rowx}>
+                                                    <Grid item xs={12} sm={4} md={4} lg={4} className={classes.rowx}>
+                                                        <Typography
+                                                            color="inherit"
+                                                            className={classes.title}
+                                                        >
+                                                            {fields.studentNumber.title}
                                                         </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
+                                                        {service?.status === serviceStatusNames.pending ? (
+                                                            <Controller
+                                                                name="studentNumber"
+                                                                control={control}
+                                                                render={({ value, onChange }) => (
+                                                                    <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                        <TextField
+                                                                            // label={fields.studentNumber.title}
+                                                                            variant="outlined"
+                                                                            type="number"
+                                                                            required
+                                                                            fullWidth
+                                                                            value={value}
+                                                                            onChange={onChange}
+                                                                            InputProps={{
+                                                                                endAdornment: (
+                                                                                    <InputAdornment position="end">
+                                                                                        {fields.studentNumber.adornment}
+                                                                                    </InputAdornment>
+                                                                                ),
+                                                                                inputProps: { min: 1, max: 100 },
+                                                                            }}
+                                                                            error={!!errors?.studentNumber}
+                                                                            helperText={errors?.studentNumber?.message}
+                                                                        />
+                                                                    </Grid>
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <Typography color="inherit">
+                                                                {service?.studentNumber} {fields.studentNumber.adornment}
+                                                            </Typography>
+                                                        )}
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -465,9 +641,118 @@ function ServiceInfo(props) {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                        <Typography color="inherit">
-                                                            {currencyFormatter.format(service?.pricePerSlot)}{fields.price.suffix}
+                                                        {service?.status === serviceStatusNames.pending ? (
+                                                            <Controller
+                                                                name="pricePerSlot"
+                                                                control={control}
+                                                                render={({ value, onChange }) => (
+                                                                    <Grid container>
+                                                                        <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                            <TextField
+                                                                                // label={fields.price.title}
+                                                                                variant="outlined"
+                                                                                type="number"
+                                                                                required
+                                                                                fullWidth
+                                                                                // autoFocus
+                                                                                InputProps={{
+                                                                                    endAdornment: (
+                                                                                        <InputAdornment position="end">
+                                                                                            {fields.price.adornment}
+                                                                                        </InputAdornment>
+                                                                                    ),
+                                                                                    inputProps: { min: 100000, max: 2000000 },
+                                                                                }}
+                                                                                value={value}
+                                                                                onChange={(e) => {
+                                                                                    onChange(e.target.value)
+                                                                                    suggestPrice(Number(e.target.value), setPriceSuggestions)
+                                                                                }}
+                                                                                error={!!errors?.pricePerSlot}
+                                                                                helperText={errors?.pricePerSlot?.message}
+                                                                            />
+                                                                        </Grid>
+                                                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                                            {priceSuggestions.map(suggestion => (
+                                                                                <Button variant="outlined" size="small" color="secondary"
+                                                                                    onClick={(e) => onChange(suggestion)}
+                                                                                    className={classes.suggestions}
+                                                                                >
+                                                                                    {new Intl.NumberFormat('vi-VN').format(suggestion)}
+                                                                                </Button>
+                                                                            ))}
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <Typography color="inherit">
+                                                                {currencyFormatter.format(service?.pricePerSlot)}/period
+                                                            </Typography>
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+
+                                            <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                                <Grid container spacing={0} className={classes.rowx}>
+                                                    <Grid item xs={12} sm={4} md={4} lg={4} className={classes.rowx}>
+                                                        <Typography
+                                                            color="inherit"
+                                                            className={classes.title}
+                                                        >
+                                                            {fields.slotNumber.title}
                                                         </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
+                                                        {service?.status === serviceStatusNames.pending ? (
+                                                            <Controller
+                                                                name="slotNumber"
+                                                                control={control}
+                                                                render={({ value, onChange }) => (
+                                                                    <Grid container>
+                                                                        <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                            <TextField
+                                                                                // label={fields.slotNumber.title}
+                                                                                variant="outlined"
+                                                                                type="number"
+                                                                                required
+                                                                                fullWidth
+                                                                                value={value}
+                                                                                onChange={(e) => onChange(e.target.value)}
+                                                                                InputProps={{
+                                                                                    endAdornment: (
+                                                                                        <InputAdornment position="end">
+                                                                                            {fields.slotNumber.adornment}
+                                                                                        </InputAdornment>
+                                                                                    ),
+                                                                                    inputProps: { min: 0, max: 10 }
+                                                                                }}
+                                                                                error={!!errors?.slotNumber}
+                                                                                helperText={errors?.slotNumber?.message}
+                                                                            />
+                                                                        </Grid>
+                                                                        {/* <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                                            <Tooltip
+                                                                                title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                                                                arrow interactive
+                                                                            >
+                                                                                <Typography variant='body1'>
+                                                                                    <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                                                                    <span className={classes.txtRevenue}>
+                                                                                        ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
+                                                                                    </span>
+                                                                                </Typography>
+                                                                            </Tooltip>
+                                                                        </Grid> */}
+                                                                    </Grid>
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <Typography color="inherit">
+                                                                {service?.slotNumber} {service?.slotNumber === 1 ? 'period/week' : 'periods/week'}
+                                                            </Typography>
+                                                        )}
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -511,6 +796,16 @@ function ServiceInfo(props) {
                                                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.action}>
                                                     <Button
                                                         type="submit"
+                                                        onClick={() => {
+                                                            // console.log('serviceType = ', getValues('serviceType'));
+                                                            console.log('startDate = ', getValues('duration[0]'));
+                                                            console.log('endDate = ', getValues('duration[1]'));
+                                                            console.log('classNumber = ', getValues('classNumber'));
+                                                            console.log('studentNumber = ', getValues('studentNumber'));
+                                                            console.log('pricePerSlot = ', getValues('pricePerSlot'));
+                                                            console.log('slotNumber = ', getValues('slotNumber'));
+                                                            console.log('note = ', getValues('note'));
+                                                        }}
                                                         disabled={!formState.isDirty}
                                                         className={classes.btnApprove}
                                                         variant="contained"
@@ -572,7 +867,25 @@ function ServiceInfo(props) {
                                                 </Grid>
                                                 <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
                                                     <Typography color="inherit">
-                                                        {service?.classNumber} {fields.classNo.suffix}
+                                                        {service?.classNumber} {fields.classNo.adornment}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                            <Grid container spacing={0} className={classes.rowx}>
+                                                <Grid item xs={12} sm={4} md={4} lg={4} className={classes.rowx}>
+                                                    <Typography
+                                                        color="inherit"
+                                                        className={classes.title}
+                                                    >
+                                                        {fields.studentNumber.title}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
+                                                    <Typography color="inherit">
+                                                        {service?.studentNumber} {fields.studentNumber.adornment}
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -590,7 +903,25 @@ function ServiceInfo(props) {
                                                 </Grid>
                                                 <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
                                                     <Typography color="inherit">
-                                                        {currencyFormatter.format(service?.pricePerSlot)}{fields.price.suffix}
+                                                        {currencyFormatter.format(service?.pricePerSlot)}{fields.price.adornment}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                            <Grid container spacing={0} className={classes.rowx}>
+                                                <Grid item xs={12} sm={4} md={4} lg={4} className={classes.rowx}>
+                                                    <Typography
+                                                        color="inherit"
+                                                        className={classes.title}
+                                                    >
+                                                        {fields.slotNumber.title}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
+                                                    <Typography color="inherit">
+                                                        {service?.slotNumber} {service?.slotNumber === 1 ? 'period/week' : 'periods/week'}
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -749,7 +1080,7 @@ function ServiceInfo(props) {
                         </Grid>
 
                         {/* Criteria Sector */}
-                        {user.roles[0] === roleNames.manager && (
+                        {(user.roles[0] === roleNames.manager || user.roles[0] === roleNames.salesman) && (
                             <Grid item xs={12} sm={12} md={4} lg={4} className={classes.content}>
                                 <Grid container spacing={0} className={classes.wrapper}>
                                     <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
@@ -822,8 +1153,12 @@ function ServiceInfo(props) {
                                                 >
                                                     <Typography variant='body1'>
                                                         <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
-                                                <span className={classes.txtRevenue}>
-                                                            ≈ {currencyFormatter.format(service?.pricePerSlot * service?.slotNumber)}
+                                                        <span className={classes.txtRevenue}>
+                                                            {currencyFormatter.format(service?.pricePerSlot * service?.slotNumber * 4)}
+                                                            {/* {getValues('pricePerSlot') && getValues('slotNumber')
+                                                                ? `≈ ${currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}`
+                                                                : `≈ ${currencyFormatter.format(service?.pricePerSlot * service?.slotNumber * 4)}`
+                                                            } */}
                                                         </span>
                                                     </Typography>
                                                 </Tooltip>

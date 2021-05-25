@@ -26,10 +26,11 @@ import {
 import { useService } from '../../hooks/ServiceContext'
 import MenuOptions from './MenuOptions/MenuOptions'
 import * as ReducerActions from '../../../../constants/ActionTypes'
-import { serviceStatusNames } from '../../../../constants/Generals'
+import { roleNames, serviceStatusNames } from '../../../../constants/Generals'
 import { Consts } from '../../ServicesConfig'
 import Highlighter from 'react-highlight-words'
-import { parseDateToString } from '../../../../utils/DateTimes';
+import { parseDateToString } from '../../../../utils/DateTimes'
+import { useAuth } from '../../../../hooks/AuthContext';
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
@@ -109,7 +110,7 @@ function TablePaginationActions(props) {
 // }
 
 function SortableTableHeaders(props) {
-    const { columns, direction, column, onRequestSort } = props
+    const { columns, direction, column, onRequestSort, role } = props
     const createSortHandler = (col, direction) => {
         onRequestSort(col, direction)
     }
@@ -138,8 +139,8 @@ function SortableTableHeaders(props) {
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
-                        align={col.key === 'no' ? 'center' : 'left'}
-                        width={col.width}
+                        align={(col.key === 'no' || col.key === 'task.user.username') ? 'center' : 'left'}
+                        width={role === roleNames.manager ? col.width1 : col.width2}
                     >
                         {col?.sortable ? (
                             <MuiTableSortLabel
@@ -185,6 +186,8 @@ function Tables(props) {
     const styles = useStyles()
     const { columns, rows, totalRecord, totalPage } = props
     const { messages } = Consts
+
+    const { user } = useAuth()
 
     const {
         params,
@@ -264,6 +267,7 @@ function Tables(props) {
                         direction={direction}
                         column={column}
                         onRequestSort={onSortBy}
+                        role={user.roles[0]}
                     />
 
                     <TableBody className={classes.tBody}>
@@ -304,42 +308,48 @@ function Tables(props) {
                                             }}
                                         />
                                     </TableCell>
-                                    <TableCell>
-                                        {row?.fullName && (
-                                            <ListItem className={classes.itemPIC}>
-                                                <ListItemAvatar>
-                                                    <Avatar src={row?.avatar} />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    className={classes.picName}
-                                                    primary={
-                                                        <Highlighter
-                                                            highlightClassName="YourHighlightClass"
-                                                            searchWords={[params.searchKey]}
-                                                            autoEscape={true}
-                                                            textToHighlight={row?.fullName || ''}
-                                                        />
-                                                    }
-                                                    secondary={
-                                                        <Highlighter
-                                                            highlightClassName="YourHighlightClass"
-                                                            searchWords={[params.searchKey]}
-                                                            autoEscape={true}
-                                                            textToHighlight={row?.username || ''}
-                                                        />
-                                                    }
-                                                    classes={{
-                                                        primary: styles.itemTextPrimary,
-                                                        secondary: styles.itemTextSecondary,
-                                                    }}
-                                                />
-                                            </ListItem>
-                                        )}
-                                    </TableCell>
+                                    {user.roles[0] === roleNames.manager && (
+                                        <TableCell>
+                                            {row?.fullName && (
+                                                <ListItem className={classes.itemPIC}>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={row?.avatar} />
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        className={classes.picName}
+                                                        primary={
+                                                            <Highlighter
+                                                                highlightClassName="YourHighlightClass"
+                                                                searchWords={[params.searchKey]}
+                                                                autoEscape={true}
+                                                                textToHighlight={row?.fullName || ''}
+                                                            />
+                                                        }
+                                                        secondary={
+                                                            <Highlighter
+                                                                highlightClassName="YourHighlightClass"
+                                                                searchWords={[params.searchKey]}
+                                                                autoEscape={true}
+                                                                textToHighlight={row?.username || ''}
+                                                            />
+                                                        }
+                                                        classes={{
+                                                            primary: styles.itemTextPrimary,
+                                                            secondary: styles.itemTextSecondary,
+                                                        }}
+                                                    />
+                                                </ListItem>
+                                            )}
+                                        </TableCell>
+                                    )}
                                     <TableCell className={classes.tBodyCell}>
-                                        {/**Duration 1 cái progress bar ở đây */}
-                                        {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                        {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
+                                        {row?.status === serviceStatusNames.approved && (
+                                            <>
+                                                {/**Duration 1 cái progress bar ở đây */}
+                                                {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
+                                            </>
+                                        )}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
                                         {row?.status && setServiceStatusChipColor(row?.status)}

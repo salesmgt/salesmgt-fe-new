@@ -22,12 +22,12 @@ const theme = createMuiTheme({
                     height: '8px',
                 },
                 '*::-webkit-scrollbar-track': {
-                    background: '#ffffff',
+                    background: '#F1F1F1',   // #ffffff
                     boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
                     borderRadius: '4px',
                 },
                 '*::-webkit-scrollbar-thumb': {
-                    backgroundColor: '#ffffff',
+                    backgroundColor: '#C1C1C1', //#ffffff
                     borderRadius: '4px',
 
                     '&:hover': {

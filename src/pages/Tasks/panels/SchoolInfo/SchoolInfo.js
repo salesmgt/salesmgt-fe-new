@@ -80,7 +80,7 @@ function SchoolInfo(props) {
     const { headers, operations, fields } = Consts
     const styles = useStyles()
 
-    console.log('SchoolInfo - task: ', task);
+    // console.log('SchoolInfo - task: ', task);
 
     const { user } = useAuth()
     const { schStatus } = useApp()

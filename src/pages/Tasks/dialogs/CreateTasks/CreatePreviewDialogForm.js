@@ -20,7 +20,8 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Box
+    Box,
+    Tooltip
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import { previewColumns } from './CreateTasksConfig'
@@ -32,6 +33,8 @@ import { useApp } from '../../../../hooks/AppContext'
 import { useTaskForm } from './TaskFormContext'
 import { getPurpsByStatus } from '../../../../utils/Sortings'
 import { createTasks } from '../../TasksServices'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
+import DateFnsUtils from '@date-io/date-fns'
 import classes from './CreatePreviewDialogForm.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -93,6 +96,7 @@ function CreatePreviewDialogForm(props) {
     const { fields, operations } = Consts
     // const [object, setObject] = React.useState(null)
     const [purpose, setPurpose] = useState(null)
+    const [deadline, setDeadline] = useState(new Date(new Date().getFullYear(), 8, 30))
 
     const { salesPurps } = useApp()
     const { params } = useTaskForm()  //, dispatchParams, setFilter
@@ -165,6 +169,10 @@ function CreatePreviewDialogForm(props) {
 
     const handlePurposeChange = (event) => {
         setPurpose(event.target.value)
+    }
+
+    const handleDeadlineChange = (newDate) => {
+        setDeadline(newDate);
     }
 
     const setStatusChipColor = (status) => {
@@ -301,17 +309,31 @@ function CreatePreviewDialogForm(props) {
                                                 />
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                {setStatusChipColor(row?.status)}
+                                                {row?.status && setStatusChipColor(row?.status)}
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                {setPurposeChipColor(purpose)}
+                                                {purpose && setPurposeChipColor(purpose)}
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                <IconButton
-                                                    onClick={(e) => handleOnRemove(e, row)}
-                                                >
-                                                    <MdClose />
-                                                </IconButton>
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        format="dd/MM/yyyy"
+                                                        allowKeyboardControl
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        value={deadline}
+                                                        onChange={handleDeadlineChange}
+                                                    />
+                                                </MuiPickersUtilsProvider>
+                                            </TableCell>
+                                            <TableCell className={classes.tBodyCell}>
+                                                <Tooltip title="Remove">
+                                                    <IconButton
+                                                        onClick={(e) => handleOnRemove(e, row)}
+                                                    >
+                                                        <MdClose />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </TableCell>
                                         </TableRow>
                                     ))}

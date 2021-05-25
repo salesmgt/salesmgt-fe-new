@@ -16,6 +16,8 @@ export const ReportReducer = (params, action) => {
         //     return { ...params, page: 0, listFilters: { ...listFilters, status: payload } }
         case Actions.FILTER_PURPOSE:
             return { ...params, page: 0, listFilters: { ...listFilters, purpose: payload } }
+        case Actions.FILTER_REPORT_RESULT:
+            return { ...params, page: 0, listFilters: { ...listFilters, result: payload } }
         case Actions.FILTER_DATE_RANGE:
             return { ...params, page: 0, listFilters: { ...listFilters, dateRange: payload } }
         // case Actions.FILTER_FROM_DATE:

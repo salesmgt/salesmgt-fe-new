@@ -52,6 +52,14 @@ export const Consts = {
             titleFrom: 'From date',
             titleTo: 'To date',
         },
+        result: {
+            title: 'Result',
+            options: {
+                all: 'All',
+                success: 'Đã gặp HT/HP',
+                failed: 'Chưa gặp HT/HP',
+            },
+        },
     },
     messages: {
         notFound: 'No records found.',

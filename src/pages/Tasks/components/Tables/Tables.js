@@ -279,12 +279,17 @@ function Tables(props) {
 
         if (result === taskResultNames.successful) {
             return '#4caf50'    // 'successEndDate'
-        } else if (countToDeadline > 15) {
-            return '#1976d2'    // 'safeEndDate'
-        } else if (0 <= countToDeadline <= 15) {
-            return '#ff9800'    // 'warningEndDate'
-        } else {
-            return '#fc2718'    // 'overtimeEndDate'
+        }
+        else if (result === taskResultNames.tbd) {
+            if (countToDeadline > 15) {
+                return '#1976d2'    // 'safeEndDate'
+            } else if (0 <= countToDeadline <= 15) {
+                return '#ff9800'    // 'warningEndDate'
+            } else {
+                return '#fc2718'    // 'overtimeEndDate'
+            }
+        } else {    // !result
+            return '#000'
         }
     }
 

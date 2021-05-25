@@ -28,6 +28,9 @@ export async function getReports(
         url = filters['purpose'].filterValue
             ? url.concat(`&purpose=${filters['purpose'].filterValue}`)
             : url
+        url = filters['result'].filterValue !== null
+            ? url.concat(`&isSuccess=${filters['result'].filterValue}`)
+            : url
         url = filters['dateRange'].filterValue[0]
             ? url.concat(`&fromDate=${filters['dateRange'].filterValue[0]}`)
             : url

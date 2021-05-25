@@ -45,6 +45,9 @@ export async function getTasks(
             filters['isAssigned'].filterValue !== null
                 ? url.concat(`&isAssigned=${filters['isAssigned'].filterValue}`)
                 : url
+        url = filters['taskStatus'].filterValue
+            ? url.concat(`&result=${filters['taskStatus'].filterValue}`)
+            : url
     }
 
     const response = await Api.get(url)
@@ -170,7 +173,7 @@ export async function getTimeline(tasklId) {
 }
 
 //===================== Services of a task =====================
-export async function getServiceTypes() {
+export async function getServiceTypes() {   // Tự hỏi viết cái này ở đây có đúng và cần thiết ko nhỉ???
     const response = await Api.get('/serviceTypes')
     const data = await response.data
     return data

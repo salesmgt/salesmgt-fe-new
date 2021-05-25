@@ -24,7 +24,7 @@ import ConfirmUnassign from '../../../dialogs/ConfirmUnassign/ConfirmUnassign'
 import CreateServices from '../../../dialogs/CreateServices/CreateServices'
 import { useTask } from '../../../hooks/TaskContext'
 import { Consts } from '../../../TasksConfig'
-import { roleNames, statusNames } from '../../../../../constants/Generals'
+import { roleNames, statusNames, taskResultNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import Assign from '../../../dialogs/Assign/Assign'
 import classes from './MenuOptions.module.scss'
@@ -48,7 +48,7 @@ function MenuOptions(props) {
     const stateData = {
         model: data,
         params: params, // get from context
-        pathName: `${url}/${data.id}`,
+        // pathName: `${url}/${data.id}`,
     }
 
     // console.log('task data: ', data);
@@ -192,19 +192,22 @@ function MenuOptions(props) {
                     </ListItemText>
                 </MenuItem>
 
-                {user.roles[0] === roleNames.salesman && data.schoolStatus !== statusNames.pending && (
-                    <div>
-                        <MenuItem onClick={handleOpenServices}>
-                            <ListItemIcon className={classes.itemIcon}>
-                                <MdNoteAdd fontSize="large" />
-                            </ListItemIcon>
-                            <ListItemText className={classes.itemText}>
-                                {menuItems.services.title}
-                            </ListItemText>
-                        </MenuItem>
-                        {renderServicesDialog()}
-                    </div>
-                )}
+                {user.roles[0] === roleNames.salesman && data?.schoolStatus !== statusNames.pending
+                    && data?.result !== taskResultNames.successful &&
+                    (
+                        <div>
+                            <MenuItem onClick={handleOpenServices}>
+                                <ListItemIcon className={classes.itemIcon}>
+                                    <MdNoteAdd fontSize="large" />
+                                </ListItemIcon>
+                                <ListItemText className={classes.itemText}>
+                                    {menuItems.services.title}
+                                </ListItemText>
+                            </MenuItem>
+                            {renderServicesDialog()}
+                        </div>
+                    )
+                }
                 {user.roles[0] !== roleNames.salesman && (
                     <div>
                         <MenuItem onClick={handleOpenConfirmRemove}>
