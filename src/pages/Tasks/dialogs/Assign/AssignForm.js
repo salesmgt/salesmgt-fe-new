@@ -42,6 +42,7 @@ import { useHistory } from 'react-router'
 import { Alert, AlertTitle } from '@material-ui/lab'
 import SuggestionQuickView from '../SuggestionQuickView/SuggestionQuickView'
 import { Loading } from '../../../../components'
+import { parseDateToString } from '../../../../utils/DateTimes';
 import classes from './Assign.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -118,18 +119,18 @@ function AssignForm(props) {
     //=====================List suggested Salesmen=====================
     const [listSuggestions, setListSuggestions] = useState(null);
     const getSchoolIds = (listTasks) => {
-        console.log('Assign Form --- listSchools: ', listTasks);
+        // console.log('Assign Form --- listSchools: ', listTasks);
         let schoolIds = []
         listTasks.forEach(task => {
             schoolIds.push(task?.schoolId)
-            console.log('list ids = ', schoolIds);
+            // console.log('list ids = ', schoolIds);
         });
         return schoolIds
     }
 
     const getSuggestions = (listTasks) => {
         const listSchoolIds = [...getSchoolIds(listTasks)]
-        console.log('useEffect------list ids = ', listSchoolIds);
+        // console.log('useEffect------list ids = ', listSchoolIds);
 
         suggestSalesmen(listSchoolIds).then(data => {
             if (isMounted) {
@@ -159,14 +160,18 @@ function AssignForm(props) {
         return <Loading />
     }
 
-    console.log('outside - rowsState: ', rowsState);
+    // console.log('outside - rowsState: ', rowsState);
 
     const handleSubmit = () => {
-        console.log('handleSubmit() ----- rowsState: ', rowsState);
+        // console.log('handleSubmit() ----- rowsState: ', rowsState);
 
         const array = []
         rowsState.map((item) => {
-            item = { ...item, username: PIC?.username }
+            item = {
+                ...item,
+                username: PIC?.username,
+                assignDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss')
+            }
             array.push(item)
         })
         // console.log(array)
@@ -220,7 +225,7 @@ function AssignForm(props) {
     }
 
     const handlePICChange = (event, newPIC) => {
-        console.log('selected PIC: ', newPIC);
+        // console.log('selected PIC: ', newPIC);
         setPIC(newPIC)
     }
 
@@ -244,6 +249,7 @@ function AssignForm(props) {
             onClose()
         }
     }
+
     const onBlur = (e, row) => {
         if (e.target.value?.length > 250) {
             setNotify({
@@ -253,12 +259,13 @@ function AssignForm(props) {
             })
             return
         }
-        const object = rowsState.findIndex((obj) => obj.id === row.id)
-        //const item ={...rowsState[object],note: e.target.value}
+        const index = rowsState.findIndex((obj) => obj.id === row.id)
+        // console.log('index of note: ', index);
+        //const item ={...rowsState[index],note: e.target.value}
         let array = [null]
         array = [...rowsState]
-        array[object] = {
-            ...array[object],
+        array[index] = {
+            ...array[index],
             note: e.target.value ? e.target.value : null,
             noteBy: e.target.value ? user.username : null,
         }

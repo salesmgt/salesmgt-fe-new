@@ -25,10 +25,10 @@ function DateRangePickers(props) {
     //     // setDateRange
     //     setFilter,
     // } = useReport()
-    console.log('Task ------- duration: ', duration);
+    // console.log('Task ------- duration: ', duration);
 
     const handleChange = (newDuration) => {
-        console.log('Task ------- newDuration: ', newDuration);
+        // console.log('Task ------- newDuration: ', newDuration);
 
         setDuration(newDuration)
         handleDateRangeChange(newDuration)
