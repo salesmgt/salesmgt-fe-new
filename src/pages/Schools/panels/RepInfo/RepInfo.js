@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     Button,
@@ -17,6 +17,7 @@ import { Snackbars, Loading } from '../../../../components'
 import { Consts } from './RepInfoConfig'
 import * as SchoolsServices from '../../SchoolsServices'
 import { PHONE_RGX } from '../../../../utils/Regex'
+import { useSnackbar } from 'notistack'
 import classes from './RepInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -28,21 +29,20 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, { message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)', excludeEmptyString: true }),
+        .matches(PHONE_RGX, {
+            message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)',
+            excludeEmptyString: true,
+        }),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
 function RepInfo(props) {
     const { school, refreshPage } = props
-    const { headers, operations, fields } = Consts
+    const { headers, operations, fields, messages } = Consts
 
     const history = useHistory()
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
+    const { enqueueSnackbar } = useSnackbar()
 
     const defaultValues = {
         id: school?.schoolId,
@@ -98,11 +98,7 @@ function RepInfo(props) {
         SchoolsServices.updateSchool(data.id, model)
             .then((res) => {
                 refreshPage(data.id)
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
+                enqueueSnackbar(messages.success, { variant: 'success' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -112,11 +108,7 @@ function RepInfo(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+                enqueueSnackbar(messages.error, { variant: 'error' })
             })
 
         // alert(JSON.stringify(model))
@@ -162,7 +154,14 @@ function RepInfo(props) {
                                 className={classes.row}
                             >
                                 <Grid container spacing={0}>
-                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={6}
+                                        lg={6}
+                                        className={classes.row}
+                                    >
                                         <Controller
                                             name="id"
                                             control={control}
@@ -197,7 +196,14 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
                                         <InputLabel>
                                             {fields.reprIsMale.title}
                                         </InputLabel>
@@ -237,7 +243,14 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={12}
+                                        className={classes.row}
+                                    >
                                         <Controller
                                             name="reprPhone"
                                             control={control}
@@ -259,7 +272,14 @@ function RepInfo(props) {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={6} md={6} lg={6} className={classes.row}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={6}
+                                        lg={6}
+                                        className={classes.row}
+                                    >
                                         <Controller
                                             name="reprEmail"
                                             control={control}
@@ -306,7 +326,6 @@ function RepInfo(props) {
                 </Grid>
                 {/* Another Sector */}
             </Grid>
-            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

@@ -10,8 +10,8 @@ import {
     withStyles,
     Typography,
     IconButton,
-    FormLabel,
-    Checkbox,
+    // FormLabel,
+    // Checkbox,
     Grid,
     TextField,
     RadioGroup,
@@ -29,7 +29,8 @@ import moment from 'moment'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Snackbars } from '../../../../components'
+// import { Snackbars } from '../../../../components'
+import { useSnackbar } from 'notistack'
 import { Consts, confirmTaskCompleteMessage, getCriteriaInfo } from '../DialogConfig'   // updateStatusMessage,
 import * as TasksServices from '../../TasksServices'
 import { useTask } from '../../hooks/TaskContext'
@@ -104,7 +105,9 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 
 function UpdateSchStatus(props) {
     const { open, onClose, resetStatus, task, currStatus, refreshPage } = props
-    const { headers, operations, fields } = Consts
+    const { headers, operations, fields, messages } = Consts
+
+    const { enqueueSnackbar } = useSnackbar()
 
     const { user } = useAuth()
     const { userInfo } = useApp()
@@ -114,11 +117,11 @@ function UpdateSchStatus(props) {
     const [openInfoTooltip, setOpenInfoTooltip] = useState(false);
     const [priceSuggestions, setPriceSuggestions] = useState([]);
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
+    // const [notify, setNotify] = useState({
+    //     isOpen: false,
+    //     message: '',
+    //     type: '',
+    // })
 
     const defaultValues = {
         // id: memoDets?.id,
@@ -172,11 +175,13 @@ function UpdateSchStatus(props) {
         TasksServices.updateStatus(task?.schoolId, currStatus)
             .then((res) => {
                 refreshPage(task?.id)
-                setNotify({
-                    isOpen: true,
-                    message: "Updated school's status successfully",
-                    type: 'success',
-                })
+                // setNotify({
+                //     isOpen: true,
+                //     message: "Updated school's status successfully",
+                //     type: 'success',
+                // })
+
+                enqueueSnackbar(messages.updatedSuccess, { variant: 'success' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -186,10 +191,13 @@ function UpdateSchStatus(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: "Updated school's status failed",
-                    type: 'error',
+                // setNotify({
+                //     isOpen: true,
+                //     message: "Updated school's status failed",
+                //     type: 'error',
+                // })
+                enqueueSnackbar(messages.updatedError, {
+                    variant: 'error',
                 })
             })
     }
@@ -242,10 +250,14 @@ function UpdateSchStatus(props) {
 
         TasksServices.createServices(model)
             .then((res) => {
-                setNotify({
-                    isOpen: true,
-                    message: 'Submitd a service successfully',
-                    type: 'success',
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Proposed a service successfully',
+                //     type: 'success',
+                // })
+
+                enqueueSnackbar(messages.createdSuccess, {
+                    variant: 'success',
                 })
 
                 // Send notification by Firebase
@@ -264,10 +276,13 @@ function UpdateSchStatus(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Submitd a service failed',
-                    type: 'error',
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Proposed a service failed',
+                //     type: 'error',
+                // })
+                enqueueSnackbar(messages.createdError, {
+                    variant: 'error',
                 })
             })
 
@@ -636,8 +651,6 @@ function UpdateSchStatus(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbars notify={notify} setNotify={setNotify} />
         </>
     )
 }

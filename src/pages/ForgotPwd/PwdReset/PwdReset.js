@@ -19,7 +19,7 @@ const clientSchema = yup.object().shape({
         ),
     confirmPwd: yup
         .string()
-        .oneOf([yup.ref('newPwd'), null], "Confirm password is not match")
+        .oneOf([yup.ref('newPwd'), null], 'Confirm password is not match')
         .required('Confirm is required'),
 })
 
@@ -29,8 +29,6 @@ function PwdReset() {
     const history = useHistory()
     const location = useLocation()
     const username = location?.state?.username
-
-    console.log(location?.state)
 
     const defaultValues = {
         newPwd: '',

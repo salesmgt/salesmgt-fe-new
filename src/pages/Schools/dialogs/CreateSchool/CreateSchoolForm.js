@@ -19,15 +19,15 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-// import { Snackbars } from '../../../../components'
 import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import * as SchoolsServices from '../../SchoolsServices'
 import { Consts } from '../DialogConfig'
-import { PHONE_RGX, TEL_RGX } from '../../../../utils/Regex'  //SCHOOL_NAME_RGX, 
+import { PHONE_RGX, TEL_RGX } from '../../../../utils/Regex' //SCHOOL_NAME_RGX,
 import { useSchool } from '../../hooks/SchoolContext'
-import { AddressField } from '../../../../components';
+import { AddressField } from '../../../../components'
+import { useSnackbar } from 'notistack'
 import classes from './CreateSchool.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -42,7 +42,10 @@ const clientSchema = yup.object().shape({
     phone: yup
         .string()
         .max(11, 'Tel must be at most 11 digits and has the correct format')
-        .matches(TEL_RGX, { message: 'Telephone number is in wrong format (02xxxxxxxxx)', excludeEmptyString: true }),
+        .matches(TEL_RGX, {
+            message: 'Telephone number is in wrong format (02xxxxxxxxx)',
+            excludeEmptyString: true,
+        }),
     reprName: yup
         .string()
         .trim()
@@ -51,7 +54,10 @@ const clientSchema = yup.object().shape({
     reprPhone: yup
         .string()
         .max(10, 'Phone must be at most 10 digits')
-        .matches(PHONE_RGX, { message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)', excludeEmptyString: true }),
+        .matches(PHONE_RGX, {
+            message: 'Phone number is in wrong format (03|5|7|9xxxxxxxx)',
+            excludeEmptyString: true,
+        }),
     reprEmail: yup.string().trim().email('Invalid email'),
 })
 
@@ -99,11 +105,13 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CreateSchoolForm(props) {
-    const { onClose, setNotify, refreshPage } = props
-    const { operations, fields } = Consts
+    const { onClose, refreshPage } = props
+    const { operations, fields, messages } = Consts
     const styles = useStyles()
 
-    const { dists, schEduLvls, schTypes, schStatus } = useApp()     //, schScales
+    const { enqueueSnackbar } = useSnackbar()
+
+    const { dists, schEduLvls, schTypes, schStatus } = useApp() //, schScales
     const { params } = useSchool()
     const { page, limit, column, direction, searchKey, listFilters } = params
 
@@ -123,10 +131,10 @@ function CreateSchoolForm(props) {
     //     type: '',
     // })
 
-    const [latitude, setLatitude] = useState(0.0);
-    const [longitude, setLongitude] = useState(0.0);
+    const [latitude, setLatitude] = useState(0.0)
+    const [longitude, setLongitude] = useState(0.0)
 
-    let district = '';
+    let district = ''
     const defaultValues = {
         name: '',
         address: '',
@@ -156,7 +164,7 @@ function CreateSchoolForm(props) {
 
     const repWatch = watch('showRep')
 
-    const [addressErr, setAddressErr] = useState('');
+    const [addressErr, setAddressErr] = useState('')
     const validateAddress = (address) => {
         setAddressErr('')
         if (address) {
@@ -166,12 +174,15 @@ function CreateSchoolForm(props) {
                     district = tmp1.substring(0, tmp1.indexOf(', '))
                     setAddressErr('')
                     return true
-                } else {    // Quận/Huyện tên chữ, ko có số
-                    const tmp1 = address.substring(0, address.lastIndexOf(', Thành phố Hồ Chí Minh'))
+                } else {
+                    // Quận/Huyện tên chữ, ko có số
+                    const tmp1 = address.substring(
+                        0,
+                        address.lastIndexOf(', Thành phố Hồ Chí Minh')
+                    )
                     // const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
                     district = tmp1.substring(tmp1.lastIndexOf(', ') + 1).trim()
                     // district = tmp2.substring(2)
-                    // console.log('district nè: ', district);
                     setAddressErr('')
                     if (!district || district.includes('Hồ Chí Minh')) {
                         setAddressErr('Please input exactly address')
@@ -180,7 +191,9 @@ function CreateSchoolForm(props) {
                     return true
                 }
             } else if (address) {
-                setAddressErr('Please choose address locates in Ho Chi Minh City')
+                setAddressErr(
+                    'Please choose address locates in Ho Chi Minh City'
+                )
                 return false
             }
         } else {
@@ -190,21 +203,6 @@ function CreateSchoolForm(props) {
             return false
         }
     }
-
-    // Sao ko in đc lỗi của tr.hợp này ta???    => Bị errorMessage của validateAddress đè mất rồi còn đâu
-    // const hasAddress = (address) => {
-    //     // setAddressErr('')
-    //     console.log('hasAddress?   address: ', address);
-    //     if (!address) {
-    //         setLatitude(0.0)
-    //         setLongitude(0.0)
-    //         setAddressErr('Address is required')
-    //         return false
-    //     } else {
-    //         setAddressErr('')
-    //         return true
-    //     }
-    // }
 
     const onSubmit = (data) => {
         if (validateAddress(data.address)) {
@@ -226,34 +224,38 @@ function CreateSchoolForm(props) {
 
             // console.log('data?.address: ', data?.address);
 
-            SchoolsServices.createSchool(model).then((res) => {
-                setNotify({
-                    isOpen: true,
-                    message: 'Created Successfully',
-                    type: 'success',
+            SchoolsServices.createSchool(model)
+                .then((res) => {
+                    enqueueSnackbar(messages.success, { variant: 'success' })
+                    refreshPage(
+                        page,
+                        limit,
+                        column,
+                        direction,
+                        searchKey,
+                        listFilters
+                    )
+                    onClose()
                 })
-                refreshPage(page, limit, column, direction, searchKey, listFilters)
-                onClose()
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    if (error.response.status === 409) {
-                        serverSchema.forEach(({ name, type, message }) =>
-                            setError(name, { type, message })
-                        )
-                    } else {
-                        history.push({
-                            pathname: '/errors',
-                            state: { error: error.response.status },
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error)
+                        if (error.response.status === 409) {
+                            serverSchema.forEach(({ name, type, message }) =>
+                                setError(name, { type, message })
+                            )
+                        } else {
+                            history.push({
+                                pathname: '/errors',
+                                state: { error: error.response.status },
+                            })
+                        }
+
+                        enqueueSnackbar(messages.error, {
+                            variant: 'error',
                         })
                     }
-                    setNotify({
-                        isOpen: true,
-                        message: 'Created failed',
-                        type: 'error',
-                    })
-                }
-            })
+                })
             // alert(JSON.stringify(model))
         }
     }
@@ -261,8 +263,9 @@ function CreateSchoolForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form noValidate
-                // onSubmit={handleSubmit(onSubmit)}
+                <form
+                    noValidate
+                    // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={8} md={8} lg={8}>
@@ -292,9 +295,12 @@ function CreateSchoolForm(props) {
                                     <AddressField
                                         setLatitude={setLatitude}
                                         setLongitude={setLongitude}
-                                        inputValue={value} setInputValue={onChange}
+                                        inputValue={value}
+                                        setInputValue={onChange}
                                         onBlur={() => validateAddress(value)}
-                                        errText={formState.isDirty ? addressErr : ''}
+                                        errText={
+                                            formState.isDirty ? addressErr : ''
+                                        }
                                     />
                                     // <TextField
                                     //     label={fields.addr.title}
@@ -450,7 +456,9 @@ function CreateSchoolForm(props) {
                                 control={control}
                                 render={({ value, onChange }) => (
                                     <Checkbox
-                                        onChange={(e) => onChange(e.target.checked)}
+                                        onChange={(e) =>
+                                            onChange(e.target.checked)
+                                        }
                                         checked={value}
                                     />
                                 )}
@@ -567,7 +575,7 @@ function CreateSchoolForm(props) {
                 <Button
                     className={classes.btnSave}
                     // type="submit"
-                    disabled={!formState.isDirty}   // || addressErr
+                    disabled={!formState.isDirty} // || addressErr
                     onClick={handleSubmit(onSubmit)}
                 >
                     {operations.save}

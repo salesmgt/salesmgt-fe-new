@@ -1,4 +1,4 @@
-import { parseDateToString } from "../../../utils/DateTimes"
+import { parseDateToString } from '../../../utils/DateTimes'
 
 export const Consts = {
     headers: {
@@ -6,13 +6,19 @@ export const Consts = {
         comment: 'Comment on Report',
         confirm: 'Confirm Remove',
         cannot: 'Cannot Remove',
-        child1: 'Preview:'
+        child1: 'Preview:',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
         remove: 'Remove',
         ok: 'OK, I understood',
+    },
+    messages: {
+        info: '',
+        success: 'Created Successfully',
+        error: 'Created Failed',
+        warning: '',
     },
     fields: {
         task: {
@@ -48,9 +54,7 @@ export const Consts = {
     },
 }
 
-export const columns = [
-    '#', 'School Name', 'Result', 'Description', ''
-]
+export const columns = ['#', 'School Name', 'Result', 'Description', '']
 
 // Form "Create Reports" keys
 export const IS_SUCCESS = 'isSuccess'
@@ -63,7 +67,12 @@ export const confirmMessage = (schoolLevel, schoolName, date) => {
     return (
         <>
             Do you really want to remove report of school
-            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            <strong>
+                <em>
+                    {' '}
+                    {schoolLevel} {schoolName}{' '}
+                </em>
+            </strong>
             on <strong>{parseDateToString(date, 'DD/MM/YYYY')}</strong>?
             <br />
             This process cannot be undone.
@@ -71,14 +80,25 @@ export const confirmMessage = (schoolLevel, schoolName, date) => {
     )
 }
 
-export const cannotMessage = (schoolLevel, schoolName, date, commentedPerson) => {
+export const cannotMessage = (
+    schoolLevel,
+    schoolName,
+    date,
+    commentedPerson
+) => {
     return (
         <>
             You cannot remove the report of school
-            <strong><em> {schoolLevel} {schoolName} </em></strong>
+            <strong>
+                <em>
+                    {' '}
+                    {schoolLevel} {schoolName}{' '}
+                </em>
+            </strong>
             on <strong>{parseDateToString(date, 'DD/MM/YYYY')}</strong>.
             <br />
-            This report is already commented by <strong>{commentedPerson}</strong>.
+            This report is already commented by{' '}
+            <strong>{commentedPerson}</strong>.
         </>
     )
 }

@@ -44,6 +44,10 @@ export const Consts = {
     },
     messages: {
         notFound: 'No records found.',
+        info: '',
+        success: 'Updated Successfully',
+        error: 'Updated Failed',
+        warning: '',
     },
     menuItems: {
         details: {

@@ -30,7 +30,8 @@ import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import { useAccount } from '../../hooks/AccountContext'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import { AddressField } from '../../../../components';
+import { AddressField } from '../../../../components'
+import { useSnackbar } from 'notistack'
 import classes from './CreateAccount.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -51,7 +52,10 @@ const clientSchema = yup.object().shape({
         .string()
         .required('Phone is required')
         .max(10, 'Phone must be at most 10 digits and has the correct format')
-        .matches(PHONE_RGX, 'Phone number is in wrong format (03|5|7|9xxxxxxxx)'),
+        .matches(
+            PHONE_RGX,
+            'Phone number is in wrong format (03|5|7|9xxxxxxxx)'
+        ),
     email: yup
         .string()
         .trim()
@@ -104,9 +108,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CreateAccountForm(props) {
-    const { onClose, setNotify, refreshPage } = props
-    const { operations, fields } = Consts
+    const { onClose, refreshPage } = props
+    const { operations, fields, messages } = Consts
     const styles = useStyles()
+
+    const { enqueueSnackbar } = useSnackbar()
 
     const { roles } = useApp()
     const bakRoles = roles ? roles : Milk.getMilk(milkNames.roles)
@@ -116,15 +122,10 @@ function CreateAccountForm(props) {
     const { params } = useAccount()
     const { page, limit, column, direction, searchKey, listFilters } = params
 
-    // const [notify, setNotify] = useState({
-    //     isOpen: false,
-    //     message: '',
-    //     type: '',
-    // })
     // let latitude = 0.0, longitude = 0.0
-    const [address, setAddress] = useState('');
-    const [latitude, setLatitude] = useState(0.0);
-    const [longitude, setLongitude] = useState(0.0);
+    const [address, setAddress] = useState('')
+    const [latitude, setLatitude] = useState(0.0)
+    const [longitude, setLongitude] = useState(0.0)
 
     const defaultValues = {
         username: '',
@@ -157,17 +158,11 @@ function CreateAccountForm(props) {
         })
     }
 
-    const {
-        control,
-        handleSubmit,
-        errors,
-        setError,
-        formState,
-        reset,
-    } = useForm({
-        resolver: yupResolver(clientSchema),
-        defaultValues: defaultValues,
-    })
+    const { control, handleSubmit, errors, setError, formState, reset } =
+        useForm({
+            resolver: yupResolver(clientSchema),
+            defaultValues: defaultValues,
+        })
 
     const onSubmit = (data) => {
         // console.log('---------form nè---------');
@@ -187,11 +182,8 @@ function CreateAccountForm(props) {
 
         AccountsServices.createAccount(model)
             .then((res) => {
-                setNotify({
-                    isOpen: true,
-                    message: 'Created Successfully',
-                    type: 'success',
-                })
+                enqueueSnackbar(messages.success, { variant: 'success' })
+
                 createNoti(model)
                 refreshPage(
                     page,
@@ -229,11 +221,8 @@ function CreateAccountForm(props) {
                             state: { error: error.response.status },
                         })
                     }
-                    setNotify({
-                        isOpen: true,
-                        message: 'Created failed',
-                        type: 'error',
-                    })
+
+                    enqueueSnackbar(messages.error, { variant: 'error' })
                 }
             })
 
@@ -243,8 +232,9 @@ function CreateAccountForm(props) {
     return (
         <>
             <DialogContent className={classes.dialogCont}>
-                <form noValidate
-                // onSubmit={handleSubmit(onSubmit)}
+                <form
+                    noValidate
+                    // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -328,7 +318,8 @@ function CreateAccountForm(props) {
                             <AddressField
                                 setLatitude={setLatitude}
                                 setLongitude={setLongitude}
-                                inputValue={address} setInputValue={setAddress}
+                                inputValue={address}
+                                setInputValue={setAddress}
                             />
                             {/* <Controller
                                 name="address"
@@ -409,8 +400,7 @@ function CreateAccountForm(props) {
                                                     key={data}
                                                     value={data}
                                                     classes={{
-                                                        root:
-                                                            styles.menuItemRoot,
+                                                        root: styles.menuItemRoot,
                                                         selected:
                                                             styles.menuItemSelected,
                                                     }}
@@ -455,8 +445,6 @@ function CreateAccountForm(props) {
                     {operations.cancel}
                 </Button>
             </DialogActions>
-
-            {/* <Snackbars notify={notify} setNotify={setNotify} /> */}
         </>
     )
 }

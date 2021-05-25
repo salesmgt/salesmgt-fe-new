@@ -6,6 +6,12 @@ export const Consts = {
         cancel: 'Cancel',
         save: 'Save',
     },
+    messages: {
+        info: '',
+        success: 'Updated Successfully',
+        error: 'Updated Failed',
+        warning: '',
+    },
     fields: {
         fullName: {
             title: 'Full Name',

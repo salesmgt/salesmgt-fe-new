@@ -9,6 +9,12 @@ export const Consts = {
         save: 'Save',
         empty: 'User not found!',
     },
+    messages: {
+        info: '',
+        success: 'Updated Successfully',
+        error: 'Updated Failed',
+        warning: '',
+    },
     fields: {
         username: {
             title: 'Username',
@@ -27,7 +33,7 @@ export const Consts = {
         },
         dob: {
             title: 'Birthday',
-            empty: 'N/A'
+            empty: 'N/A',
         },
         isMale: {
             title: 'Gender',

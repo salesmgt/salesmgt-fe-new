@@ -26,14 +26,15 @@ import { CardHeaders } from './components'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-// import * as Cookies from '../../utils/Cookies'
 import { useAuth } from '../../hooks/AuthContext'
 import { useApp } from '../../hooks/AppContext'
 import { storage } from '../../services/firebase'
 import Resizer from 'react-image-file-resizer'
 import moment from 'moment'
-import { Snackbars, Loading, AddressField } from '../../components'
+import { Loading, AddressField } from '../../components'
 import { PWD_RGX, PHONE_RGX } from '../../utils/Regex'
+import { useSnackbar } from 'notistack'
+import Geocode from 'react-geocode'
 import classes from './Profiles.module.scss'
 
 const pwdSchema = yup.object().shape({
@@ -50,7 +51,7 @@ const pwdSchema = yup.object().shape({
         ),
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref('newPassword'), null], "Confirm password is not match")
+        .oneOf([yup.ref('newPassword'), null], 'Confirm password is not match')
         .required('Confirm is required'),
 })
 
@@ -70,11 +71,14 @@ const phoneSchema = yup.object().shape({
             10,
             'Phone number must be at most 10 digits and has the correct format'
         )
-        .matches(PHONE_RGX, 'Phone number is in wrong format (03|5|7|9xxxxxxxx)'),
+        .matches(
+            PHONE_RGX,
+            'Phone number is in wrong format (03|5|7|9xxxxxxxx)'
+        ),
 })
 
 const addrSchema = yup.object().shape({
-    address: yup.string().trim(),
+    address: yup.string().trim().required('Address is required'),
 })
 
 const serverSchema = [
@@ -92,8 +96,10 @@ const serverSchema = [
 
 function Profiles() {
     const { user } = useAuth()
+    const { headers, operations, fields, messages } = Consts
+
+    const { enqueueSnackbar } = useSnackbar()
     const { setUserInfo } = useApp()
-    const { headers, operations, fields } = Consts
 
     const location = useLocation()
     const history = useHistory()
@@ -101,16 +107,10 @@ function Profiles() {
 
     const [data, setData] = useState(null)
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
-
     const [expanded, setExpanded] = useState(false)
-    // const [address, setAddress] = useState('');
-    const [latitude, setLatitude] = useState(0.0);
-    const [longitude, setLongitude] = useState(0.0);
+
+    const [latitude, setLatitude] = useState(0.0)
+    const [longitude, setLongitude] = useState(0.0)
 
     const pwdValues = { oldPassword: '', newPassword: '', confirmPassword: '' }
 
@@ -160,7 +160,7 @@ function Profiles() {
 
     const {
         handleSubmit: addrSubmit,
-        // errors: addrErrors,
+        errors: addrErrors,
         // register: addrRegister,
         reset: addrReset,
         formState: addrState,
@@ -223,20 +223,12 @@ function Profiles() {
         const file = event.target.files[0]
 
         if (!file) {
-            setNotify({
-                isOpen: true,
-                message: 'Updated failed',
-                type: 'error',
-            })
+            enqueueSnackbar(messages.error, { variant: 'error' })
             return false
         }
 
         if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
-            setNotify({
-                isOpen: true,
-                message: 'Updated failed',
-                type: 'error',
-            })
+            enqueueSnackbar(messages.error, { variant: 'error' })
             return false
         }
 
@@ -259,11 +251,8 @@ function Profiles() {
         const url = await uploadAvatarToFirebase(finalFile)
         // console.log('url avatar = ', url)
         saveAvatarToDb(url)
-        setNotify({
-            isOpen: true,
-            message: 'Updated Successfully',
-            type: 'success',
-        })
+
+        enqueueSnackbar(messages.success, { variant: 'success' })
     }
 
     const uploadAvatarToFirebase = async (file) => {
@@ -273,19 +262,17 @@ function Profiles() {
                 .put(file)
             uploadImageTask.on(
                 'stage_changed',
-                (snapshot) => { },
+                (snapshot) => {},
                 (error) => {
                     console.log(error)
                     reject('Upload Image to firebase failed: ' + error)
                 },
                 () => {
-                    // console.log('file.name = ', file.name);
                     storage
                         .ref('images/avatars/')
                         .child(`${user.username}-${file.name}`)
                         .getDownloadURL()
                         .then((url) => {
-                            // console.log('getDownloadURL(): ', url);
                             resolve(url)
                         })
                 }
@@ -322,11 +309,8 @@ function Profiles() {
         )
             .then((data) => {
                 refreshPage()
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
+
+                enqueueSnackbar(messages.success, { variant: 'success' })
                 pwdReset({
                     oldPassword: '',
                     newPassword: '',
@@ -347,11 +331,8 @@ function Profiles() {
                         })
                     }
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+
+                enqueueSnackbar(messages.error, { variant: 'error' })
             })
         // pwdReset({ oldPassword: '', newPassword: '', confirmPassword: '' })
     }
@@ -365,11 +346,8 @@ function Profiles() {
         ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
+
+                enqueueSnackbar(messages.success, { variant: 'success' })
                 emailReset({ email: '' })
             })
             .catch((error) => {
@@ -380,11 +358,8 @@ function Profiles() {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+
+                enqueueSnackbar(messages.error, { variant: 'error' })
             })
         // emailReset({ email: '' })
     }
@@ -398,11 +373,8 @@ function Profiles() {
         ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
+
+                enqueueSnackbar(messages.success, { variant: 'success' })
                 phoneReset({ phone: '' })
             })
             .catch((error) => {
@@ -413,20 +385,13 @@ function Profiles() {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+
+                enqueueSnackbar(messages.error, { variant: 'error' })
             })
         // phoneReset({ phone: '' })
     }
 
     const onAddrSubmit = (data) => {
-        // console.log('---------Profile nè---------');
-        // console.log('address nè: ', data?.address);
-        // console.log(`[latitude, longitude] = [${latitude}, ${longitude}]`);
-
         const model = {
             attribute: 'address',
             value: data?.address,
@@ -434,15 +399,57 @@ function Profiles() {
             longitude: longitude,
         }
 
+        // Geocode.fromLatLng(latitude, longitude).then(
+        //     (response) => {
+        //         const address = response.results[0].formatted_address
+        //         let district, city, country
+        //         for (
+        //             let i = 0;
+        //             i < response.results[0].address_components.length;
+        //             i++
+        //         ) {
+        //             for (
+        //                 let j = 0;
+        //                 j <
+        //                 response.results[0].address_components[i].types.length;
+        //                 j++
+        //             ) {
+        //                 switch (
+        //                     response.results[0].address_components[i].types[j]
+        //                 ) {
+        //                     case 'administrative_area_level_2':
+        //                         district =
+        //                             response.results[0].address_components[i]
+        //                                 .long_name
+        //                         break
+        //                     case 'administrative_area_level_1':
+        //                         city =
+        //                             response.results[0].address_components[i]
+        //                                 .long_name
+        //                         break
+        //                     case 'country':
+        //                         country =
+        //                             response.results[0].address_components[i]
+        //                                 .long_name
+        //                         break
+        //                 }
+        //             }
+        //         }
+        //         console.log(district, city, country)
+        //         console.log(address)
+        //     },
+        //     (error) => {
+        //         console.error(error)
+        //     }
+        // )
+
         ProfilesServices.updateGeneral(user.username, model)
             .then((data) => {
                 refreshPage()
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
-                addrReset(addrValues)
+
+                enqueueSnackbar(messages.success, { variant: 'success' })
+
+                addrReset({ address: '' })
             })
             .catch((error) => {
                 if (error.response) {
@@ -452,11 +459,8 @@ function Profiles() {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+
+                enqueueSnackbar(messages.error, { variant: 'error' })
             })
         // addrReset({ address: '' })
     }
@@ -1116,7 +1120,10 @@ function Profiles() {
                             </form>
 
                             {/* Address section */}
-                            <form noValidate onSubmit={addrSubmit(onAddrSubmit)}>
+                            <form
+                                noValidate
+                                onSubmit={addrSubmit(onAddrSubmit)}
+                            >
                                 <Accordion
                                     className={classes.accor}
                                     elevation={0}
@@ -1155,21 +1162,54 @@ function Profiles() {
                                             </Grid>
                                         </Grid>
                                     </AccordionSummary>
-                                    <AccordionDetails className={classes.accorDetails}>
+                                    <AccordionDetails
+                                        className={classes.accorDetails}
+                                    >
                                         <Grid container>
-                                            <Grid item xs={1} sm={3} md={3} lg={3} />
-                                            <Grid item xs={12} sm={9} md={9} lg={9}
+                                            <Grid
+                                                item
+                                                xs={1}
+                                                sm={3}
+                                                md={3}
+                                                lg={3}
+                                            />
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={9}
+                                                md={9}
+                                                lg={9}
                                                 className={classes.inputZone}
                                             >
                                                 <Controller
-                                                    className={classes.inputField}
+                                                    className={
+                                                        classes.inputField
+                                                    }
                                                     name="address"
                                                     control={addrControl}
-                                                    render={({ value, onChange }) => (
+                                                    render={({
+                                                        value,
+                                                        onChange,
+                                                    }) => (
                                                         <AddressField
-                                                            setLatitude={setLatitude}
-                                                            setLongitude={setLongitude}
-                                                            inputValue={value} setInputValue={onChange}
+                                                            setLatitude={
+                                                                setLatitude
+                                                            }
+                                                            setLongitude={
+                                                                setLongitude
+                                                            }
+                                                            inputValue={value}
+                                                            setInputValue={
+                                                                onChange
+                                                            }
+                                                            error={
+                                                                !!addrErrors.address
+                                                            }
+                                                            helperText={
+                                                                addrErrors
+                                                                    ?.address
+                                                                    ?.message
+                                                            }
                                                         />
                                                     )}
                                                 />
@@ -1203,18 +1243,18 @@ function Profiles() {
                                         >
                                             {operations.save}
                                         </Button>
-                                        {/* <Button
+                                        <Button
                                             className={classes.cancelBtn}
                                             size="large"
                                             onClick={() =>
                                                 addrReset({
-                                                    addrErrors: false,
+                                                    // addrErrors: false,
                                                     address: '',
                                                 })
                                             }
                                         >
                                             {operations.cancel}
-                                        </Button> */}
+                                        </Button>
                                     </AccordionActions>
                                 </Accordion>
                             </form>
@@ -1222,7 +1262,6 @@ function Profiles() {
                     </Card>
                 </AnimationGroup>
             </div>
-            <Snackbars notify={notify} setNotify={setNotify} />
         </div>
     )
 }

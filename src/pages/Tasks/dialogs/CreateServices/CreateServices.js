@@ -47,7 +47,7 @@ function ServicesForm(props) {
         schoolName,
         schoolLevel,
         schoolStatus,
-        setNotify,
+        // setNotify,
     } = props
     const { headers } = Consts
 
@@ -58,7 +58,7 @@ function ServicesForm(props) {
             </DialogTitleWithIconClose>
             <CreateServicesForm
                 onClose={onClose}
-                setNotify={setNotify}
+                // setNotify={setNotify}
                 taskId={taskId}
                 schoolId={schoolId}
                 schoolLevel={schoolLevel}

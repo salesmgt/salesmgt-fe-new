@@ -8,6 +8,12 @@ export const Consts = {
         save: 'Save',
         WithData: 'With Representative',
     },
+    messages: {
+        info: '',
+        success: 'Created Successfully',
+        error: 'Created Failed',
+        warning: '',
+    },
     fields: {
         name: {
             title: 'School Name',
@@ -89,5 +95,5 @@ export const Consts = {
         success: 'Checked',
         error: 'Error',
     },
-    refFile: 'documents/Import_Sample.xlsx'
+    refFile: 'documents/Import_Sample.xlsx',
 }

@@ -28,6 +28,17 @@ export const Consts = {
             placeholder: 'Search...',
         },
     },
+    messages: {
+        createdInfo: '',
+        createdSuccess: 'Created Successfully',
+        createdError: 'Created Failed',
+        createdwarning: '',
+        updatedInfo: '',
+        updatedSuccess: 'Updated Successfully',
+        updatedError: 'Updated Failed',
+        updatedwarning: '',
+        notFound: 'No records found.',
+    },
     filters: {
         district: {
             title: 'Districts',
@@ -124,9 +135,6 @@ export const Consts = {
         }
         // End for Services
     },
-    messages: {
-        notFound: 'No records found.',
-    }
 }
 
 // export const columnsTableAssign = ['#', 'School Name', 'PIC', 'Note', '']
@@ -336,7 +344,8 @@ export const confirmUnassignMsg = (PIC, schoolLevel, schoolName) => {
                 </em>
             </strong>
             ?
-            <br /><br />
+            <br />
+            <br />
             This process cannot be undone.
         </>
     )
@@ -377,9 +386,16 @@ export const confirmUpdateSchoolStatus = (schoolLevel, schoolName, currentStatus
     return (
         <>
             Do you really want to update status of
-            <strong><em> {schoolLevel} {schoolName} </em></strong>
-            from <strong>{currentStatus}</strong> to <strong>{newStatus}</strong>?
-            <br /><br />
+            <strong>
+                <em>
+                    {' '}
+                    {schoolLevel} {schoolName}{' '}
+                </em>
+            </strong>
+            from <strong>{currentStatus}</strong> to{' '}
+            <strong>{newStatus}</strong>?
+            <br />
+            <br />
             This process cannot be undone.
         </>
     )
@@ -387,7 +403,10 @@ export const confirmUpdateSchoolStatus = (schoolLevel, schoolName, currentStatus
 export const schoolYearSubTitle = (schoolYear) => {
     return (
         <>
-            <b><i>School Year: </i></b>&nbsp;{schoolYear}
+            <b>
+                <i>School Year: </i>
+            </b>
+            &nbsp;{schoolYear}
         </>
     )
 }

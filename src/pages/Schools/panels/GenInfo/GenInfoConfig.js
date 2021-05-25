@@ -7,6 +7,12 @@ export const Consts = {
         cancel: 'Cancel',
         save: 'Save',
     },
+    messages: {
+        info: '',
+        success: 'Updated Successfully',
+        error: 'Updated Failed',
+        warning: '',
+    },
     fields: {
         name: {
             title: 'School Name',
@@ -41,7 +47,7 @@ export const Consts = {
         empty: {
             title: 'N/A',
         },
-        // Principal        
+        // Principal
         reprName: {
             title: 'Full Name',
         },
