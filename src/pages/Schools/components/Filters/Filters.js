@@ -13,6 +13,7 @@ import {
     FormControl,
     Button,
     Menu,
+    Tooltip,
 } from '@material-ui/core'
 import { MdAdd, MdCreate, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { FaFileImport } from 'react-icons/fa'
@@ -27,7 +28,7 @@ import {
     TYPE_FILTER,
     LEVEL_FILTER,
     // SCALE_FILTER,
-    // STATUS_FILTER,
+    STATUS_FILTER,
     ACTIVE_FILTER,
 } from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
@@ -142,10 +143,11 @@ function Filters(props) {
     const { operations, filters } = Consts
     const { user } = useAuth()
 
-    const { dists, schTypes, schEduLvls } = useApp()    //, schStatus, schScales
+    const { dists, schTypes, schEduLvls, schStatus } = useApp()    //, schStatus, schScales
     const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
     const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
     const bakSchEduLvls = schEduLvls ? schEduLvls : Milk.getMilk(milkNames.eduLvls)
+    const bakSchStatus = schStatus ? schStatus : Milk.getMilk(milkNames.status)
     // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
 
     //Use states which have been declared in the SchoolContext
@@ -156,7 +158,7 @@ function Filters(props) {
         schoolType,
         schoolLevel,
         // schoolScale,
-        // schoolStatus,
+        schoolStatus,
         isActive,
         workingStatuses,
         setFilter,
@@ -238,17 +240,17 @@ function Filters(props) {
         })
     }
 
-    // const handleSchoolStatusChange = (event) => {
-    //     const selectedSchoolStatus = event.target.value
-    //     setFilter(STATUS_FILTER, selectedSchoolStatus)
-    //     dispatchParams({
-    //         type: ReducerActions.FILTER_SCHOOL_STATUS,
-    //         payload: {
-    //             filterType: STATUS_FILTER,
-    //             filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
-    //         },
-    //     })
-    // }
+    const handleSchoolStatusChange = (event) => {
+        const selectedSchoolStatus = event.target.value
+        setFilter(STATUS_FILTER, selectedSchoolStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
+            },
+        })
+    }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
     const handleChipsRemoved = (removedFilters) => {
@@ -266,9 +268,9 @@ function Filters(props) {
                 // case SCALE_FILTER:
                 //     setFilter(SCALE_FILTER, '')
                 //     break
-                // case STATUS_FILTER:
-                //     setFilter(STATUS_FILTER, '')
-                //     break
+                case STATUS_FILTER:
+                    setFilter(STATUS_FILTER, '')
+                    break
                 case ACTIVE_FILTER:
                     setFilter(ACTIVE_FILTER, null)
                     break
@@ -325,31 +327,35 @@ function Filters(props) {
                     </Box>
                     {user.roles[0] === roleNames.admin && (
                         <Box className={classes.flexItem}>
-                            <Button
-                                className={classes.btn}
-                                variant="contained"
-                                color="secondary"
-                                onClick={(event) =>
-                                    setAnchorEl(event.currentTarget)
-                                }
-                            // onClick={() => setOpenCreateDialog(true)}
-                            >
-                                <MdAdd fontSize="large" />
-                                {/* &nbsp;Create */}
-                            </Button>
-
+                            <Tooltip title={operations.selectCreateOptions}>
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={(event) =>
+                                        setAnchorEl(event.currentTarget)
+                                    }
+                                >
+                                    <MdAdd fontSize="large" />
+                                </Button>
+                            </Tooltip>
                             <Menu
                                 anchorEl={anchorEl}
                                 keepMounted
                                 open={Boolean(anchorEl)}
                                 onClose={() => setAnchorEl(null)}
                             >
-                                <MenuItem onClick={() => handleOpenCreateDialog()}>
-                                    <MdCreate style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.create}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleOpenImportDialog()}>
-                                    <FaFileImport style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.import}
-                                </MenuItem>
+                                <Tooltip title="Input form manually" placement="left">
+                                    <MenuItem onClick={() => handleOpenCreateDialog()}>
+                                        <MdCreate style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.create}
+                                    </MenuItem>
+                                </Tooltip>
+
+                                <Tooltip title="Import file Excel" placement="left">
+                                    <MenuItem onClick={() => handleOpenImportDialog()}>
+                                        <FaFileImport style={{ color: '#616161' }} /> &nbsp; &nbsp; {operations.import}
+                                    </MenuItem>
+                                </Tooltip>
                             </Menu>
 
                             <CreateSchool
@@ -511,63 +517,65 @@ function Filters(props) {
                             </FormControl>
                         </Grid> */}
 
-                        <Grid item xs={6} sm={4} md={4} lg={4}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.workingStatus.title}</InputLabel>
-                                <Select value={isActive === null ? '' : isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
-                                    {workingStatuses.map((workingStatus) => (
-                                        <MenuItem
-                                            key={workingStatus}
-                                            value={workingStatus}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
-                                            }}
-                                        >
-                                            {workingStatus === null ? `${filters.workingStatus.options.all}` : (workingStatus ? `${filters.workingStatus.options.active}` : `${filters.workingStatus.options.inactive}`)}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        {/* <Grid item xs={6} sm={4} md={4} lg={4}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolStatus.title}</InputLabel>
-                                <Select
-                                    value={schoolStatus || ''}
-                                    onChange={handleSchoolStatusChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
+                        {user.roles[0] === roleNames.admin ? (
+                            <Grid item xs={6} sm={4} md={4} lg={4}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>{filters.workingStatus.title}</InputLabel>
+                                    <Select value={isActive === null ? '' : isActive} onChange={handleIsActiveChange} MenuProps={MenuProps}>
+                                        {workingStatuses.map((workingStatus) => (
+                                            <MenuItem
+                                                key={workingStatus}
+                                                value={workingStatus}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {workingStatus === null ? `${filters.workingStatus.options.all}` : (workingStatus ? `${filters.workingStatus.options.active}` : `${filters.workingStatus.options.inactive}`)}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        ) : (
+                            <Grid item xs={6} sm={4} md={4} lg={4}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel>{filters.schoolStatus.title}</InputLabel>
+                                    <Select
+                                        value={schoolStatus || ''}
+                                        onChange={handleSchoolStatusChange}
+                                        MenuProps={MenuProps}
                                     >
-                                        All
-                                    </MenuItem>
-                                    {schStatus?.map((status) => (
                                         <MenuItem
-                                            key={status}
-                                            value={status}
+                                            value=""
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
+                                                selected: classes.menuItemSelected,
                                             }}
                                         >
-                                            {status}
+                                            All
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid> */}
+                                        {bakSchStatus?.map((status) => (
+                                            <MenuItem
+                                                key={status}
+                                                value={status}
+                                                className={classes.option}
+                                                classes={{
+                                                    root: classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {status}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        )}
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

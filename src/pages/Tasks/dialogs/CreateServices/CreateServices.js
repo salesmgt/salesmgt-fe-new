@@ -52,7 +52,7 @@ function ServicesForm(props) {
     const { headers } = Consts
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xs">
+        <Dialog open={open} onClose={onClose} maxWidth="sm">
             <DialogTitleWithIconClose onClose={onClose}>
                 {`${headers.createServices} ${schoolLevel} ${schoolName}`}
             </DialogTitleWithIconClose>

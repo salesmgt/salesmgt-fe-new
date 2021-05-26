@@ -8,6 +8,7 @@ import {
     FormControl,
     Button,
     Box,
+    Tooltip,
 } from '@material-ui/core'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../../../constants/ActionTypes'
@@ -73,12 +74,12 @@ function Filters(props) {
     const {
         // params,
         dispatchParams,
-        district,
-        schoolType,
-        schoolLevel,
+        district, setDistrict,
+        schoolType, setSchoolType,
+        schoolLevel, setSchoolLevel,
         // schoolScale,
         // schoolStatus,
-        setFilter,
+        // setFilter,
     } = useTaskForm()
     // const [purpose, setPurpose] = useState([])
 
@@ -89,7 +90,8 @@ function Filters(props) {
     //=========================================Handle filters=========================================
     const handleDistrictChange = (event) => {
         const selectedDistrict = event.target.value
-        setFilter(DISTRICT_FILTER, selectedDistrict)
+        // setFilter(DISTRICT_FILTER, selectedDistrict)
+        setDistrict(selectedDistrict);
         dispatchParams({
             type: ReducerActions.FILTER_DISTRICT,
             payload: {
@@ -101,7 +103,8 @@ function Filters(props) {
 
     const handleSchoolTypeChange = (event) => {
         const selectedSchoolType = event.target.value
-        setFilter(TYPE_FILTER, selectedSchoolType)
+        // setFilter(TYPE_FILTER, selectedSchoolType)
+        setSchoolType(selectedSchoolType)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_TYPE,
             payload: {
@@ -113,7 +116,8 @@ function Filters(props) {
 
     const handleSchoolLevelChange = (event) => {
         const selectedSchoolLevel = event.target.value
-        setFilter(LEVEL_FILTER, selectedSchoolLevel)
+        // setFilter(LEVEL_FILTER, selectedSchoolLevel)
+        setSchoolLevel(selectedSchoolLevel)
         dispatchParams({
             type: ReducerActions.FILTER_SCHOOL_LEVEL,
             payload: {
@@ -171,9 +175,11 @@ function Filters(props) {
                     />
                 </Box>
                 <Box className={classes.flexItem}>
-                    <Button onClick={onClick} color="secondary" variant="contained" className={styles.btnAdd}>
-                        <MdAdd fontSize="large" />
-                    </Button>
+                    <Tooltip title="Create Tasks">
+                        <Button onClick={onClick} color="secondary" variant="contained" className={styles.btnAdd}>
+                            <MdAdd fontSize="large" />
+                        </Button>
+                    </Tooltip>
                     {renderNotiDialog()}
                 </Box>
             </Box>

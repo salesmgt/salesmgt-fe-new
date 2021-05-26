@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import {
     Accordion,
@@ -13,19 +13,33 @@ import {
     FormControl,
     Button,
     Menu,
+    TextField,
+    InputAdornment,
+    ListItemAvatar,
+    Avatar,
+    ListItemText,
 } from '@material-ui/core'
-import { MdExpandMore, MdFilterList } from 'react-icons/md'
+import { MdAccountCircle, MdExpandMore, MdFilterList } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
 import Chips from './Chips/Chips'
 import * as ReducerActions from '../../../../constants/ActionTypes'
 import { useService } from '../../hooks/ServiceContext'
-import { SCHOOL_YEAR_FILTER } from '../../../../constants/Filters'
+import {
+    SERVICE_TYPE_FILTER,
+    SERVICE_STATUS_FILTER,
+    SCHOOL_YEAR_FILTER,
+    PIC_FILTER,
+    EXPIRED_FILTER,
+    DATE_RANGE_FILTER
+} from '../../../../constants/Filters'
 import { useApp } from '../../../../hooks/AppContext'
-import { useAuth } from '../../../../hooks/AuthContext';
 import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../ServicesConfig'
+import moment from 'moment'
+import DateRangePickers from '../DateRangePickers/DateRangePickers';
 import styles from './Filters.module.scss'
+import { Autocomplete } from '@material-ui/lab'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -70,6 +84,20 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItemSelected: {},
+    autoComplete: {
+        width: 260,
+        marginLeft: '0.5rem',
+    },
+    itemPIC: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 0,
+        margin: 0,
+    },
+    itemTextPrimary: {
+        fontSize: '0.875rem',
+    },
 }))
 
 const MuiAccordion = withStyles({
@@ -127,15 +155,12 @@ const MuiAccordionDetails = withStyles((theme) => ({
     },
 }))(AccordionDetails)
 
-function Filters(props) {
+function Filters() {
     const classes = useStyles()
     const { operations, filters } = Consts
 
-    // const { dists, schTypes, schEduLvls } = useApp()    //, schStatus, schScales
-    // const bakDists = dists ? dists : Milk.getMilk(milkNames.dists)
-    // const bakSchTypes = schTypes ? schTypes : Milk.getMilk(milkNames.types)
-    // const bakSchEduLvls = schEduLvls ? schEduLvls : Milk.getMilk(milkNames.eduLvls)
-    // const bakSchScales = schScales ? schScales : Milk.getMilk(milkNames.scales)
+    const { schYears } = useApp()
+    const bakSchoolYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
 
     //Use states which have been declared in the ServiceContext
     const {
@@ -145,32 +170,133 @@ function Filters(props) {
         serviceType,
         schoolYear,
         serviceTypes,
+        isExpired,
+        expiredStatuses,
+        serviceStatuses,
         setFilter,
+        PIC,
+        PICs,
+        getListPICs,
     } = useService()
 
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const typingTimeoutRef = useRef({})
 
     //================Handle useState() of filters================
+    const handleServiceStatusChange = (event) => {
+        const selectedServiceStatus = event.target.value
+        setFilter(SERVICE_STATUS_FILTER, selectedServiceStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_SERVICE_STATUS,
+            payload: {
+                filterType: SERVICE_STATUS_FILTER,
+                filterValue: selectedServiceStatus,
+            },
+        })
+    }
 
-    // const handleSchoolStatusChange = (event) => {
-    //     const selectedSchoolStatus = event.target.value
-    //     setFilter(STATUS_FILTER, selectedSchoolStatus)
-    //     dispatchParams({
-    //         type: ReducerActions.FILTER_SCHOOL_STATUS,
-    //         payload: {
-    //             filterType: STATUS_FILTER,
-    //             filterValue: selectedSchoolStatus ? selectedSchoolStatus : '',
-    //         },
-    //     })
-    // }
+    const handleServiceTypeChange = (event) => {
+        const selectedServiceType = event.target.value
+        setFilter(SERVICE_TYPE_FILTER, selectedServiceType)
+        dispatchParams({
+            type: ReducerActions.FILTER_SERVICE_TYPE,
+            payload: {
+                filterType: SERVICE_TYPE_FILTER,
+                filterValue: selectedServiceType,
+            },
+        })
+    }
+
+    const handleSchoolYearChange = (event) => {
+        const selectedSchoolYear = event.target.value
+        setFilter(SCHOOL_YEAR_FILTER, selectedSchoolYear)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_YEAR,
+            payload: {
+                filterType: SCHOOL_YEAR_FILTER,
+                filterValue: selectedSchoolYear,
+            },
+        })
+    }
+
+    const handleIsExpiredChange = (event) => {
+        const selectedExpiredStatus = event.target.value
+        setFilter(EXPIRED_FILTER, selectedExpiredStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_EXPIRED,
+            payload: {
+                filterType: EXPIRED_FILTER,
+                filterValue: selectedExpiredStatus,
+            },
+        })
+    }
+
+    const onSearchPICChange = (event) => {
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current)
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            const searchPIC = event.target.value
+            if (searchPIC) {
+                getListPICs(searchPIC)
+            } else {
+                getListPICs()
+            }
+        }, 300)
+    }
+
+    const handlePICChange = (event, newPIC) => {
+        setFilter(PIC_FILTER, newPIC)
+        dispatchParams({
+            type: ReducerActions.FILTER_PIC,
+            payload: {
+                filterType: PIC_FILTER,
+                filterValue: newPIC ? newPIC : null,
+            },
+        })
+    }
+
+    // Duration
+    const handleDateRangeChange = (selectedDate) => {
+        const fromDate = selectedDate[0]
+            ? moment(selectedDate[0]).format('YYYY-MM-DD')
+            : null
+        const toDate = selectedDate[1]
+            ? moment(selectedDate[1]).format('YYYY-MM-DD')
+            : null
+
+        setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
+        dispatchParams({
+            type: ReducerActions.FILTER_DATE_RANGE,
+            payload: {
+                filterType: DATE_RANGE_FILTER,
+                filterValue: [fromDate, toDate]
+                    ? [fromDate, toDate]
+                    : [null, null],
+            },
+        })
+    }
 
     //==============Handle action delete from Chips and btn "Clear all"==============
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
-                // case DISTRICT_FILTER:
-                //     setFilter(DISTRICT_FILTER, '')
-                //     break
+                case SERVICE_TYPE_FILTER:
+                    setFilter(SERVICE_TYPE_FILTER, '')
+                    break
+                case SERVICE_STATUS_FILTER:
+                    setFilter(SERVICE_STATUS_FILTER, '')
+                    break
+                case SCHOOL_YEAR_FILTER:
+                    setFilter(SCHOOL_YEAR_FILTER, '')
+                    break
+                case EXPIRED_FILTER:
+                    setFilter(EXPIRED_FILTER, null)
+                    break
+                case DATE_RANGE_FILTER:
+                    setFilter(DATE_RANGE_FILTER, [null, null])
+                    break
                 default:
                     break
             }
@@ -179,8 +305,27 @@ function Filters(props) {
 
     const generateChipsArray = (listFilters) => {
         const listChips = []
-        for (const chip in listFilters) {
-            listChips.push(listFilters[chip])
+        let newListFilters = { ...listFilters }
+
+        for (const chip in newListFilters) {
+            if (chip === DATE_RANGE_FILTER) {
+                const fromDate = moment(
+                    newListFilters[chip].filterValue[0]
+                ).format('MMM D, YYYY')
+                const toDate = moment(
+                    newListFilters[chip].filterValue[1]
+                ).format('MMM D, YYYY')
+                if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
+                    newListFilters = {
+                        ...newListFilters,
+                        dateRange: {
+                            filterType: DATE_RANGE_FILTER,
+                            filterValue: `${fromDate} ➜ ${toDate}`,
+                        },
+                    }
+                }
+            }
+            listChips.push(newListFilters[chip])
         }
         return listChips
     }
@@ -225,12 +370,12 @@ function Filters(props) {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        {/* <Grid item xs={6} sm={4} md={4} lg={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.district.title}</InputLabel>
+                                <InputLabel>{filters.serviceType.title}</InputLabel>
                                 <Select
-                                    value={district || ''}
-                                    onChange={handleDistrictChange}
+                                    value={serviceType || ''}
+                                    onChange={handleServiceTypeChange}
                                     MenuProps={MenuProps}
                                 >
                                     <MenuItem
@@ -243,43 +388,7 @@ function Filters(props) {
                                     >
                                         All
                                     </MenuItem>
-                                    {bakDists?.map((dist) => (
-                                        <MenuItem
-                                            key={dist}
-                                            value={dist}
-                                            className={classes.option}
-                                            classes={{
-                                                root: classes.menuItemRoot,
-                                                selected:
-                                                    classes.menuItemSelected,
-                                            }}
-                                        >
-                                            {dist}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={6} sm={4} md={4} lg={4}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolType.title}</InputLabel>
-                                <Select
-                                    value={schoolType || ''}
-                                    onChange={handleSchoolTypeChange}
-                                    MenuProps={MenuProps}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        className={classes.option}
-                                        classes={{
-                                            root: classes.menuItemRoot,
-                                            selected: classes.menuItemSelected,
-                                        }}
-                                    >
-                                        All
-                                    </MenuItem>
-                                    {bakSchTypes?.map((type) => (
+                                    {serviceTypes?.map((type) => (
                                         <MenuItem
                                             key={type}
                                             value={type}
@@ -297,12 +406,12 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} sm={4} md={4} lg={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolLevel.title}</InputLabel>
+                                <InputLabel>{filters.serviceStatus.title}</InputLabel>
                                 <Select
-                                    value={schoolLevel || ''}
-                                    onChange={handleSchoolLevelChange}
+                                    value={serviceStatus || ''}
+                                    onChange={handleServiceStatusChange}
                                     MenuProps={MenuProps}
                                 >
                                     <MenuItem
@@ -315,10 +424,10 @@ function Filters(props) {
                                     >
                                         All
                                     </MenuItem>
-                                    {bakSchEduLvls?.map((level) => (
+                                    {serviceStatuses?.map((status) => (
                                         <MenuItem
-                                            key={level}
-                                            value={level}
+                                            key={status}
+                                            value={status}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -326,19 +435,21 @@ function Filters(props) {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {level}
+                                            {status}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid> */}
+                        </Grid>
 
-                        {/* <Grid item xs={6} sm={4} md={4} lg={4}>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.schoolScale.title}</InputLabel>
+                                <InputLabel>
+                                    {filters.schoolYear.title}
+                                </InputLabel>
                                 <Select
-                                    value={schoolScale || ''}
-                                    onChange={handleSchoolScaleChange}
+                                    value={schoolYear || ''}
+                                    onChange={handleSchoolYearChange}
                                     MenuProps={MenuProps}
                                 >
                                     <MenuItem
@@ -351,10 +462,10 @@ function Filters(props) {
                                     >
                                         All
                                     </MenuItem>
-                                    {bakSchScales?.map((scale) => (
+                                    {bakSchoolYears?.map((year) => (
                                         <MenuItem
-                                            key={scale}
-                                            value={scale}
+                                            key={year}
+                                            value={year}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -362,12 +473,48 @@ function Filters(props) {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {scale}
+                                            {year}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid> */}
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel>{filters.expiredStatus.title}</InputLabel>
+                                <Select
+                                    value={isExpired || ''}
+                                    onChange={handleIsExpiredChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem
+                                        value={null}
+                                        className={classes.option}
+                                        classes={{
+                                            root: classes.menuItemRoot,
+                                            selected: classes.menuItemSelected,
+                                        }}
+                                    >
+                                        All
+                                    </MenuItem>
+                                    {expiredStatuses?.map((expiredStatus) => (
+                                        <MenuItem
+                                            key={expiredStatus}
+                                            value={expiredStatus}
+                                            className={classes.option}
+                                            classes={{
+                                                root: classes.menuItemRoot,
+                                                selected:
+                                                    classes.menuItemSelected,
+                                            }}
+                                        >
+                                            {expiredStatus}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

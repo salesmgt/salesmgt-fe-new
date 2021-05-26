@@ -53,50 +53,47 @@ function useTaskFormProvider() {
     )
 
     // fix major BUG
-    const setFilter = (key, value) => {
-        switch (key) {
-            case DISTRICT_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    district: {
-                        filterType: DISTRICT_FILTER,
-                        filterValue: value,
-                    },
-                }
-                setDistrict(value)
-                break
-            case TYPE_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    type: { filterType: TYPE_FILTER, filterValue: value },
-                }
-                setSchoolType(value)
-                break
-            case LEVEL_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    level: { filterType: LEVEL_FILTER, filterValue: value },
-                }
-                setSchoolLevel(value)
-                break
-            // case SCALE_FILTER:
-            //     defaultFilters = {
-            //         ...defaultFilters,
-            //         scale: { filterType: SCALE_FILTER, filterValue: value },
-            //     }
-            //     setSchoolScale(value)
-            //     break
-            case STATUS_FILTER:
-                defaultFilters = {
-                    ...defaultFilters,
-                    status: { filterType: STATUS_FILTER, filterValue: value },
-                }
-                setSchoolStatus(value)
-                break
-            default:
-                break
-        }
-    }
+    // const setFilter = (key, value) => {
+    //     switch (key) {
+    //         case DISTRICT_FILTER:
+    //             defaultFilters = {
+    //                 ...defaultFilters,
+    //                 district: { filterType: DISTRICT_FILTER, filterValue: value },
+    //             }
+    //             setDistrict(value)
+    //             break
+    //         case TYPE_FILTER:
+    //             defaultFilters = {
+    //                 ...defaultFilters,
+    //                 type: { filterType: TYPE_FILTER, filterValue: value },
+    //             }
+    //             setSchoolType(value)
+    //             break
+    //         case LEVEL_FILTER:
+    //             defaultFilters = {
+    //                 ...defaultFilters,
+    //                 level: { filterType: LEVEL_FILTER, filterValue: value },
+    //             }
+    //             setSchoolLevel(value)
+    //             break
+    //         // case SCALE_FILTER:
+    //         //     defaultFilters = {
+    //         //         ...defaultFilters,
+    //         //         scale: { filterType: SCALE_FILTER, filterValue: value },
+    //         //     }
+    //         //     setSchoolScale(value)
+    //         //     break
+    //         case STATUS_FILTER:
+    //             defaultFilters = {
+    //                 ...defaultFilters,
+    //                 status: { filterType: STATUS_FILTER, filterValue: value },
+    //             }
+    //             setSchoolStatus(value)
+    //             break
+    //         default:
+    //             break
+    //     }
+    // }
 
     return {
         params,
@@ -110,11 +107,14 @@ function useTaskFormProvider() {
         column,
         setColumn,
         district,
+        setDistrict,
         schoolType,
+        setSchoolType,
         schoolLevel,
+        setSchoolLevel,
         // schoolScale,
         schoolStatus,
-        setFilter,
+        setSchoolStatus,
     }
 }
 

@@ -5,6 +5,7 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    Tooltip,
 } from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo } from 'react-icons/md'
@@ -38,9 +39,11 @@ function MenuOptions(props) {
 
     return (
         <div>
-            <IconButton color="primary" onClick={handleOpen}>
-                <MdMoreVert />
-            </IconButton>
+            <Tooltip title="Actions">
+                <IconButton color="primary" onClick={handleOpen}>
+                    <MdMoreVert />
+                </IconButton>
+            </Tooltip>
             <Menu
                 anchorEl={anchorEl}
                 keepMounted

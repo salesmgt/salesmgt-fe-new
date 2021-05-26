@@ -21,5 +21,25 @@
 }
 
 .suggestions {
-    margin: 0 0.5rem 0.25rem 0;
+    margin: 0.2rem 0.25rem 0 0 !important;
+    // padding: 0 !important;
+}
+.txtEstimate {
+    font-weight: 500;
+}
+.txtRevenue {
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: $main-success;
+}
+
+.iconInfo {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: $grey-600;   //$text-icon;
+    padding: 0;
+    margin: 0;
+    &:hover {
+        cursor: pointer;
+    }
 }

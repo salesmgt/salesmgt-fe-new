@@ -166,8 +166,8 @@ function RepInfo(props) {
                 data?.isSuccess === ''
                     ? false
                     : data?.isSuccess === 'true'
-                    ? true
-                    : false,
+                        ? true
+                        : false,
 
             // schoolName: report?.name,
             // address: report?.address,
@@ -283,8 +283,8 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     {user.username === report?.username &&
-                    report?.commentedPerson === null &&
-                    report?.contextComments === null ? (
+                        report?.commentedPerson === null &&
+                        report?.contextComments === null ? (
                         <form onSubmit={rpSubmit(onRpSubmit)} noValidate>
                             {/* Report Detail */}
                             <Grid
@@ -354,11 +354,11 @@ function RepInfo(props) {
                                                             MenuProps={
                                                                 MenuProps
                                                             }
-                                                            // fullWidth
-                                                            // variant="outlined"
-                                                            // inputRef={register}
-                                                            // error={!!errors.isSuccess}
-                                                            // helperText={errors?.isSuccess?.message}
+                                                        // fullWidth
+                                                        // variant="outlined"
+                                                        // inputRef={register}
+                                                        // error={!!errors.isSuccess}
+                                                        // helperText={errors?.isSuccess?.message}
                                                         >
                                                             <MenuItem
                                                                 value={true}
@@ -601,9 +601,8 @@ function RepInfo(props) {
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
-                                            {setResultChipColor(
-                                                report?.isSuccess
-                                            )}
+                                            {(report?.isSuccess === true || report?.isSuccess === false)
+                                                && setResultChipColor(report?.isSuccess)}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -793,8 +792,8 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     {user.roles[0] === roleNames.salesman ||
-                    (user.roles[0] !== roleNames.salesman &&
-                        user.username === report?.username) ? (
+                        (user.roles[0] !== roleNames.salesman &&
+                            user.username === report?.username) ? (
                         <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
                                 item
@@ -923,7 +922,7 @@ function RepInfo(props) {
                                                             report?.commentedPerson
                                                                 ? `${fields.cmt.hasCmt} ${report?.commentedPerson}`
                                                                 : fields.cmt
-                                                                      .noCmt
+                                                                    .noCmt
                                                         }
                                                         variant="outlined"
                                                         fullWidth

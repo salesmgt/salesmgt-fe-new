@@ -60,6 +60,21 @@ export const purposeNames = {
     purp5: 'Ký mới hợp đồng',
 }
 
+export const suggestedReasons = {
+    distance: 'Distance',
+    ward: 'In Ward',
+    district: 'In District',
+    near: 'Nearly',
+    exp: 'Experience',
+    taskNo: 'Current assigned tasks',
+    fewTask: 'Few tasks',
+    quiteManyTask: 'Quite many tasks',
+    manyTask: 'Many tasks',
+    fullTask: 'Full tasks'
+}
+
+//==========================================================================
+
 export const cookieNames = {
     accessToken: 'accessToken',
 }
@@ -70,7 +85,7 @@ export const milkNames = {
     eduLvls: 'eduLvls',
     types: 'types',
     // scales: 'scales',
-    status: 'status',
+    status: 'status',   // schoolStatus
     roles: 'roles',
     schYears: 'schYears',
     salesPurps: 'salesPurps',

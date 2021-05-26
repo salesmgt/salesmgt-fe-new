@@ -45,6 +45,9 @@ export async function getTasks(
             filters['isAssigned'].filterValue !== null
                 ? url.concat(`&isAssigned=${filters['isAssigned'].filterValue}`)
                 : url
+        url = filters['taskStatus'].filterValue
+            ? url.concat(`&result=${filters['taskStatus'].filterValue}`)
+            : url
     }
 
     const response = await Api.get(url)
@@ -142,6 +145,14 @@ export async function createTasks(listTasks) {
     return data
 }
 
+//===================== Assign Salesmen to Tasks =====================
+// Get list suggested Salesman in feature assign
+export async function suggestSalesmen(listSchoolId) {
+    const response = await Api.post('/schools/suggestion', listSchoolId)
+    const data = await response.data
+    return data
+}
+
 export async function assignMulti(list) {
     const response = await Api.put(`/tasks/mutiple-assign`, list)
     const data = await response.data
@@ -162,7 +173,7 @@ export async function getTimeline(tasklId) {
 }
 
 //===================== Services of a task =====================
-export async function getServiceTypes() {
+export async function getServiceTypes() {   // Tự hỏi viết cái này ở đây có đúng và cần thiết ko nhỉ???
     const response = await Api.get('/serviceTypes')
     const data = await response.data
     return data

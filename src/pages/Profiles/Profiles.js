@@ -15,6 +15,7 @@ import {
     Grid,
     TextField,
     Icon,
+    Tooltip,
 } from '@material-ui/core'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { MdEdit, MdPhotoCamera } from 'react-icons/md'
@@ -512,12 +513,14 @@ function Profiles() {
                         onChange={(event) => handleUploadAvatar(event)}
                     />
                     <label htmlFor="icon-button-file">
-                        <IconButton
-                            className={classes.uploadBtn}
-                            component="span"
-                        >
-                            <MdPhotoCamera />
-                        </IconButton>
+                        <Tooltip title="Upload avatar">
+                            <IconButton
+                                className={classes.uploadBtn}
+                                component="span"
+                            >
+                                <MdPhotoCamera />
+                            </IconButton>
+                        </Tooltip>
                     </label>
                 </div>
                 <Animation animation="transition.slideLeftIn" delay={300}>

@@ -11,25 +11,28 @@ import {
     Radio,
     InputAdornment,
     InputLabel,
+    Typography,
+    Tooltip,
+    Icon,
+    Box,
+    ClickAwayListener,
 } from '@material-ui/core'
 import moment from 'moment'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Consts } from '../DialogConfig'
+import { Consts, getCriteriaInfo } from '../DialogConfig'
 import * as TasksServices from '../../TasksServices'
-import { DURATION_RGX } from '../../../../utils/Regex'
-import {
-    schoolLevelNames,
-    serviceNames,
-    statusNames,
-} from '../../../../constants/Generals'
+import { schoolLevelNames, serviceNames, statusNames } from '../../../../constants/Generals'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { useTask } from '../../hooks/TaskContext'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import { parseDateToString } from '../../../../utils/DateTimes'
-import DateRangePickers from '../../components/DateRangePickers/DateRangePickers'
+import { parseDateToString } from '../../../../utils/DateTimes';
+import { DateRangePickers } from '../../components';
+import { suggestPrice } from '../../../../utils/Suggestions';
+import { IoInformationCircleSharp } from 'react-icons/io5'
+import NumberFormat from 'react-number-format'
 import { useSnackbar } from 'notistack'
 import classes from './CreateServices.module.scss'
 
@@ -41,8 +44,32 @@ const clientSchema = yup.object().shape({
     // .min(1, 'Duartion must be at least 1 digit')
     // .max(2, 'Duartion must be at most 2 digits')
     // .matches(DURATION_RGX, 'Invalid entry'),
+    classNumber: yup.number('Number of classes must be a number')
+        .integer('Number of classes must be an integer')
+        .min(1, 'Minimum 1 class')
+        .max(100, 'Maximum 100 classes')
+        .required('Number of classes is required'),
+    studentNumber: yup.number('Number of students must be a number')
+        .integer('Number of students must be an integer')
+        .min(1, 'Minimum 1 student')
+        .max(100, 'Maximum 100 students')
+        .required('Number of students is required'),
+    slotNumber: yup.number('Number of periods must be a number')
+        .integer('Number of periods must be an integer')
+        .min(1, 'Minimum 1 period')
+        .max(10, 'Maximum 10 periods')
+        .required('Number of periods is required'),
+    pricePerSlot: yup
+        .number('Price floor must be a number')
+        .min(100000, 'Minimum price is 100.000VND')
+        .max(2000000, 'Maximum price is 2.000.000VND')
+        .required('Price floor is required'),
     note: yup.string().trim(),
 })
+
+const currencyFormatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency', currency: 'VND',
+});
 
 function CreateServicesForm(props) {
     const {
@@ -67,21 +94,28 @@ function CreateServicesForm(props) {
     const { serviceTypes, params } = useTask()
     const { listFilters, page, limit, column, direction, searchKey } = params
 
+    const [listManagers, setListManagers] = useState([])
+
+    const [openInfoTooltip, setOpenInfoTooltip] = useState(false);
+    const [priceSuggestions, setPriceSuggestions] = useState([]);
+
     const defaultValues = {
         // id: taskId,
-        startDate: null,
-        endDate: new Date(new Date().getFullYear(), 8, 30),
-        serviceType: '',
+        startDate: new Date(),
+        endDate: new Date(new Date().getFullYear(new Date().getFullYear() + 1)),
+        serviceType: serviceNames.svc1,
+        classNumber: 0,
+        studentNumber: 0,
+        slotNumber: 0,
+        pricePerSlot: 100000,
         note: '',
-        classNumber: '',
     }
 
-    const { control, errors, handleSubmit, formState, reset } = useForm({
+    const { control, errors, handleSubmit, formState, reset, getValues } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
     })
 
-    const [listManagers, setListManagers] = useState([])
     const getListManagers = () => {
         TasksServices.getListManagers().then((res) => setListManagers(res.list))
     }
@@ -133,27 +167,26 @@ function CreateServicesForm(props) {
     const customServiceTypes = customiseServiceList(schoolLevel)
 
     const onSubmit = (data) => {
+        console.log('duration = ', data?.duration);
+
         const model = {
             ...data,
             taskId: taskId,
             submitDate: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
             startDate: data?.duration[0]
                 ? parseDateToString(data?.duration[0], 'YYYY-MM-DD HH:mm:ss')
-                : null,
+                : parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
             endDate: data?.duration[1]
                 ? parseDateToString(data?.duration[1], 'YYYY-MM-DD HH:mm:ss')
                 : parseDateToString(
-                      new Date(new Date().getFullYear(), 8, 30),
-                      'YYYY-MM-DD HH:mm:ss'
-                  ),
-            serviceType: data?.serviceType ? data?.serviceType : '',
-            classNumber: parseInt(
-                data?.classNumber ? data?.classNumber : '0',
-                10
-            ),
-            pricePerSlot: parseFloat(
-                data?.pricePerSlot ? data?.pricePerSlot : '0.0'
-            ),
+                    new Date(new Date().getFullYear(new Date().getFullYear() + 1)),
+                    'YYYY-MM-DD HH:mm:ss'
+                ),
+            serviceType: data?.serviceType ? data?.serviceType : serviceNames.svc1,
+            classNumber: parseInt(data?.classNumber ? data?.classNumber : '0', 10),
+            studentNumber: parseInt(data?.studentNumber ? data?.studentNumber : '0', 10),
+            slotNumber: parseInt(data?.slotNumber ? data?.slotNumber : '0', 10),
+            pricePerSlot: parseFloat(data?.pricePerSlot ? data?.pricePerSlot : '0.0'),
         }
         delete model.duration
 
@@ -247,109 +280,87 @@ function CreateServicesForm(props) {
         // alert(JSON.stringify(model))
     }
 
-    const suggestPrice = (inputPrice) => {
-        console.log('inputPrice = ', inputPrice)
-        let suggestions = []
-        const price = parseFloat(inputPrice)
-        switch (price) {
-            case price <= 0:
-                suggestions.push(500000)
-                suggestions.push(1000000)
-                suggestions.push(1500000)
-                return suggestions
-            case 0 < price < 5000000:
-                const count = 0
-                while (price * 10 > 5000000) {
-                    suggestions.push(price * 10)
-                    count++
-                    if (count > 3) break // break của while()
-                    // else if (count === 2)
-                    //     suggestions.push(price)
-                    // else suggestions.push(price / 10)
-                }
-                // for(suggestions.map(suggest => {
-                //     if
-                // }))
-                return suggestions
-            case price > 5000000:
-                const firstDigit = parseInt(String(price).charAt(0))
-                if (firstDigit > 5) {
-                    suggestions.push(5000000)
-                    suggestions.push(2000000)
-                    suggestions.push(1500000)
-                } else {
-                    suggestions.push(firstDigit * 1000000)
-                    suggestions.push(firstDigit * 100000)
-                    suggestions.push(firstDigit * 10000)
-                }
-                return suggestions
-
-            default:
-                suggestions.push(inputPrice * 1000)
-                suggestions.push(inputPrice * 10000)
-                suggestions.push(inputPrice * 100000)
-                return suggestions
-        }
-        // if (inputPrice.length < 7) {
-        //     suggestions.push(inputPrice * 10)
-        //     suggestions.push(inputPrice * 100)
-        //     suggestions.push(inputPrice * 1000)
-        // }
-    }
+    // console.log(new Intl.NumberFormat('vi-VN').format(priceSuggestions[0]),
+    //     new Intl.NumberFormat('vi-VN').format(priceSuggestions[1]), new Intl.NumberFormat('vi-VN').format(priceSuggestions[2]));
 
     return (
         <>
             <DialogContent className={classes.dialogCont}>
                 <form
                     noValidate
-                    // onSubmit={handleSubmit(onSubmit)}
+                // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
-                        <Grid item xs={12} sm={10} md={9} lg={9}>
-                            <Controller
-                                name="duration"
-                                control={control}
-                                defaultValue={[new Date(), new Date() + 365]}
-                                render={({ value, onChange }) => (
-                                    <>
-                                        <InputLabel>Duration *</InputLabel>
-                                        <DateRangePickers
-                                            handleDurationChange={onChange}
-                                        />
-                                    </>
-                                )}
-                            />
-                        </Grid>
-
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <InputLabel>{fields.service.title}</InputLabel>
+                            <Box display="flex" flexDirection="row">
+                                <Box flexGrow={1} display="flex" flexDirection="row">
+                                    <Tooltip title='Service "Toán Khoa" only available for schools which are "Tiểu học"' placement="right-end">
+                                        <InputLabel>{fields.service.title}</InputLabel>
+                                        {/* <div style={{
+                                             marginLeft: '0.7rem' }}><IoInformationCircleSharp className={classes.iconInfo} /></div> */}
+                                    </Tooltip>
+                                </Box>
+                                <Box>
+                                    <ClickAwayListener onClickAway={() => setOpenInfoTooltip(false)}>
+                                        <Tooltip
+                                            interactive
+                                            title={getCriteriaInfo()}
+                                            placement="bottom-end"
+                                            open={openInfoTooltip}
+                                            onClose={() => setOpenInfoTooltip(false)}
+                                            disableFocusListener
+                                            disableHoverListener  // disable cái này thì khi thả chuột ra ko bị close
+                                        >
+                                            <div onClick={() => setOpenInfoTooltip(true)}>
+                                                <IoInformationCircleSharp className={classes.iconInfo} />
+                                            </div>
+                                        </Tooltip>
+                                    </ClickAwayListener>
+                                </Box>
+                            </Box>
                             <Controller
                                 name="serviceType"
                                 control={control}
                                 render={({ value, onChange }) => (
-                                    <RadioGroup
-                                        value={value}
-                                        onChange={onChange}
-                                        row
-                                    >
-                                        {customServiceTypes.map((service) => (
-                                            <FormControlLabel
-                                                key={service}
-                                                control={<Radio />}
-                                                label={service}
-                                                value={service}
-                                            />
-                                        ))}
+                                    <RadioGroup value={value} onChange={onChange} row>
+                                        <Grid container xs={12} sm={12} md={12} lg={12}>
+                                            {customServiceTypes.map(service => (
+                                                <Grid item xs={3} sm={3} md={3} lg={3} key={service}>
+                                                    <FormControlLabel
+                                                        control={<Radio />}
+                                                        label={service}
+                                                        value={service}
+                                                    />
+                                                </Grid>
+                                            ))}
+                                        </Grid>
                                     </RadioGroup>
                                 )}
                             />
                         </Grid>
 
-                        <Grid item xs={12} sm={7} md={7} lg={7}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <Controller
+                                name="duration"
+                                control={control}
+                                defaultValue={[new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1))]}
+                                render={({ value, onChange }) => (
+                                    <DateRangePickers
+                                        dateRange={value}
+                                        handleDateRangeChange={onChange}
+                                        startLabel="Valid from"
+                                        endLabel="Valid until"
+                                        isFilter={false}
+                                    />
+                                )}
+                            />
+                            {/* <InputLabel>Duration *</InputLabel> */}
+                        </Grid>
+
+                        <Grid item xs={7} sm={6} md={6} lg={6}>
                             <Controller
                                 name="classNumber"
                                 control={control}
-                                defaultValue={10}
                                 render={({ value, onChange }) => (
                                     <TextField
                                         label={fields.classNo.title}
@@ -360,6 +371,11 @@ function CreateServicesForm(props) {
                                         value={value}
                                         onChange={onChange}
                                         InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {fields.classNo.adornment}
+                                                </InputAdornment>
+                                            ),
                                             inputProps: { min: 1, max: 100 },
                                         }}
                                         error={!!errors.classNumber}
@@ -373,21 +389,89 @@ function CreateServicesForm(props) {
                             />
                         </Grid>
 
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                            <Controller
+                                name="studentNumber"
+                                control={control}
+                                render={({ value, onChange }) => (
+                                    <TextField
+                                        label={fields.studentNumber.title}
+                                        variant="outlined"
+                                        type="number"
+                                        required
+                                        fullWidth
+                                        value={value}
+                                        onChange={onChange}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {fields.studentNumber.adornment}
+                                                </InputAdornment>
+                                            ),
+                                            inputProps: { min: 1, max: 100 },
+                                        }}
+                                        error={!!errors.studentNumber}
+                                        helperText={errors?.studentNumber ?
+                                            errors?.studentNumber?.message
+                                            : fields.studentNumber.helper
+                                        }
+                                    />
+                                )}
+                            />
+                        </Grid>
+
+                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                            {/* <Controller
+                                as={<TextField />}
+                                name="pricePerSlot"
+                                label={fields.price.title}
+                                variant="outlined"
+                                type="number"
+                                required
+                                fullWidth
+                                control={control}
+                                value={pricePerSlot}
+                                onChange={([event]) => {
+                                    console.log('onChange neeeee: ', event);
+                                    setPricePerSlot(event.target.value)
+                                    handlePriceChange(event)
+                                    return event.target.value
+                                }}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {fields.price.adornment}
+                                        </InputAdornment>
+                                    ),
+                                    inputProps: { min: 1, max: 2000000 },
+                                }}
+                                error={!!errors.pricePerSlot}
+                                helperText={errors?.pricePerSlot ?
+                                    errors?.pricePerSlot?.message
+                                    : fields.price.helper
+                                }
+                            /> */}
+
                             <Controller
                                 name="pricePerSlot"
                                 control={control}
-                                defaultValue={100000}
                                 render={({ value, onChange }) => (
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={12} sm={7} md={7} lg={7}>
+                                    <Grid container>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            {/* <NumberFormat
+                                                allowNegative={false}
+                                                // suffix="VND/period"
+                                                isNumericString={true}
+                                                thousandSeparator={true}
+                                                value={value}
+                                                onValueChange={onChange}
+                                                customInput={() => ( */}
                                             <TextField
                                                 label={fields.price.title}
                                                 variant="outlined"
-                                                // type="number"
+                                                type="number"
                                                 required
                                                 fullWidth
-                                                // autoFocus
                                                 InputProps={{
                                                     endAdornment: (
                                                         <InputAdornment position="end">
@@ -397,15 +481,12 @@ function CreateServicesForm(props) {
                                                             }
                                                         </InputAdornment>
                                                     ),
-                                                    // inputProps: { min: 100000, max: 5000000 },
+                                                    inputProps: { min: 100000, max: 2000000 },
                                                 }}
-                                                value={new Intl.NumberFormat(
-                                                    'vi-VN'
-                                                ).format(value)}
-                                                // onChange={console.log}
-                                                onChange={() => {
-                                                    onChange()
-                                                    // console.log(value)
+                                                value={value}
+                                                onChange={(e) => {
+                                                    onChange(e.target.value)
+                                                    suggestPrice(Number(e.target.value), setPriceSuggestions)
                                                 }}
                                                 error={!!errors.pricePerSlot}
                                                 helperText={
@@ -415,25 +496,113 @@ function CreateServicesForm(props) {
                                                         : fields.price.helper
                                                 }
                                             />
+                                            {/* )}
+                                            /> */}
+
+
+                                            {/* <TextField
+                                                label={fields.price.title}
+                                                variant="outlined"
+                                                type="number"
+                                                required
+                                                fullWidth
+                                                // autoFocus
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {fields.price.adornment}
+                                                        </InputAdornment>
+                                                    ),
+                                                    inputProps: { min: 100000, max: 2000000 },
+                                                }}
+                                                value={value}
+                                                // value={new Intl.NumberFormat('vi-VN').format(value)}
+                                                // onChange={onChange}
+                                                onChange={(e) => {
+                                                    onChange(e.target.value)
+                                                    suggestPrice(Number(e.target.value), setPriceSuggestions)
+                                                }}
+                                                error={!!errors.pricePerSlot}
+                                                helperText={errors?.pricePerSlot ?
+                                                    errors?.pricePerSlot?.message
+                                                    : fields.price.helper
+                                                }
+                                            /> */}
+
+
+
+                                            {/* <CurrencyInput
+                                                decimalsLimit={2}
+                                                allowNegativeValue={false}
+                                                maxLength={7}
+                                                groupSeparator='.'
+                                                // intlConfig={{ locale: 'vi-VN', currency: 'VND' }}
+                                                value={value}
+                                                onValueChange={onChange} /> */}
                                         </Grid>
-                                        <Grid item xs={12} sm={5} md={5} lg={5}>
-                                            {suggestPrice(value).map(
-                                                (suggestion) => (
-                                                    <Button
-                                                        variant="outlined"
-                                                        size="small"
-                                                        color="secondary"
-                                                        onClick={console.log}
-                                                        className={
-                                                            classes.suggestions
-                                                        }
-                                                    >
-                                                        {new Intl.NumberFormat(
-                                                            'vi-VN'
-                                                        ).format(suggestion)}
-                                                    </Button>
-                                                )
-                                            )}
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            {priceSuggestions.map((suggestion, index) => (
+                                                <Button variant="outlined" size="small" color="secondary"
+                                                    onClick={(e) => {
+                                                        // console.log('suggestedPrice = ', suggestion);
+                                                        onChange(suggestion)
+                                                    }}
+                                                    key={index}
+                                                    className={classes.suggestions}
+                                                >
+                                                    {new Intl.NumberFormat('vi-VN').format(suggestion)}
+                                                </Button>
+                                            ))}
+                                        </Grid>
+                                    </Grid>
+                                )}
+                            />
+                        </Grid>
+
+                        <Grid item xs={7} sm={6} md={6} lg={6}>
+                            <Controller
+                                name="slotNumber"
+                                control={control}
+                                render={({ value, onChange }) => (
+                                    <Grid container>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <TextField
+                                                label={fields.slotNumber.title}
+                                                variant="outlined"
+                                                type="number"
+                                                required
+                                                fullWidth
+                                                value={value}
+                                                onChange={(e) => onChange(e.target.value)}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            {fields.slotNumber.adornment}
+                                                        </InputAdornment>
+                                                    ),
+                                                    inputProps: { min: 0, max: 10 }
+                                                }}
+                                                error={!!errors.slotNumber}
+                                                helperText={errors?.slotNumber ?
+                                                    errors?.slotNumber?.message
+                                                    : fields.slotNumber.helper
+                                                }
+                                            // error={!!errors.slotNumber}
+                                            // helperText={errors?.slotNumber?.message}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <Tooltip
+                                                title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                                arrow interactive
+                                            >
+                                                <Typography variant='body1'>
+                                                    <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                                <span className={classes.txtRevenue}>
+                                                        ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
+                                                    </span>
+                                                </Typography>
+                                            </Tooltip>
                                         </Grid>
                                     </Grid>
                                 )}

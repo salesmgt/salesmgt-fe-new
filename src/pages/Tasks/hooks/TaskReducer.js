@@ -62,6 +62,18 @@ export const TaskReducer = (params, action) => {
                 page: 0,
                 listFilters: { ...listFilters, isAssigned: payload },
             }
+        case Actions.FILTER_TASK_STATUS:
+            return {
+                ...params,
+                page: 0,
+                listFilters: { ...listFilters, taskStatus: payload },
+            }
+        // case Actions.FILTER_DATE_RANGE:
+        //     return {
+        //         ...params,
+        //         page: 0,
+        //         listFilters: { ...listFilters, dateRange: payload },
+        //     }
 
         case Actions.ENTER_SEARCH_KEYWORD:
             return { ...params, page: 0, searchKey: payload }

@@ -139,13 +139,17 @@ function SortableTableHeaders(props) {
                         sortDirection={column === col.key ? direction : false}
                         align={col.key === 'no' ? 'center' : 'left'}
                     >
-                        <MuiTableSortLabel
-                            active={column === col.key}
-                            direction={column === col.key ? direction : 'asc'}
-                            onClick={() => createSortHandler(col, direction)}
-                        >
-                            {col.name}
-                        </MuiTableSortLabel>
+                        {col?.sortable ? (
+                            <MuiTableSortLabel
+                                active={column === col.key}
+                                direction={column === col.key ? direction : 'asc'}
+                                onClick={() => createSortHandler(col, direction)}
+                            >
+                                {col.name}
+                            </MuiTableSortLabel>
+                        ) :
+                            col.name
+                        }
                     </TableCell>
                 ))}
             </TableRow>
@@ -262,12 +266,12 @@ function Tables(props) {
                                     <TableCell
                                         // className={row?.active ? classes.tCellSchoolName : classes.tCellInactiveSchoolName}
                                         className={(row?.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
-                                        // className={(row?.isActive !== null && row?.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
+                                    // className={(row?.isActive !== null && row?.isActive === true) ? classes.tBodyCell : classes.tCellInactiveAccount}
                                     >
                                         <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
-                                            autoEscape={true}   
+                                            autoEscape={true}
                                             textToHighlight={row?.username || ''}
                                         />
                                     </TableCell>
@@ -284,7 +288,7 @@ function Tables(props) {
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
-                                                        autoEscape={true}   
+                                                        autoEscape={true}
                                                         textToHighlight={row?.fullName || ''}
                                                     />
                                                 }
@@ -298,25 +302,25 @@ function Tables(props) {
                                     <TableCell
                                         className={(row?.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     >
-                                       <Highlighter
+                                        <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
-                                            autoEscape={true}   
+                                            autoEscape={true}
                                             textToHighlight={row?.phone || ''}
                                         />
                                     </TableCell>
                                     <TableCell
                                         className={(row?.active === false) ? classes.tCellInactiveAccount : classes.tBodyCell}
                                     >
-                                       <Highlighter
+                                        <Highlighter
                                             highlightClassName="YourHighlightClass"
                                             searchWords={[params.searchKey]}
-                                            autoEscape={true}   
+                                            autoEscape={true}
                                             textToHighlight={row?.email || ''}
-                                        /> 
+                                        />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        {setRoleChipColor(row?.roleName)}
+                                        {row?.roleName && setRoleChipColor(row?.roleName)}
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}

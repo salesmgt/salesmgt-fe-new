@@ -50,7 +50,7 @@ export const Consts = {
             title: 'Sales Purpose',
         },
         schlYear: {
-            title: 'Shool Year',
+            title: 'School Year',
         },
         duration: {
             title: 'Duration',

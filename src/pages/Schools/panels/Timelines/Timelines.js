@@ -39,7 +39,7 @@ function Timelines() {
         getTimeline(schoolId).then(res => {
             if (isMounted) {
                 setTimeline(res)
-                // console.log('SchoolDetail - getTimeline: ', res);
+                // console.log('SchoolDetail - getTimeline: ', res.length);
             }
         }).catch((error) => {
             if (error.response) {
@@ -151,7 +151,7 @@ function Timelines() {
                                                                 </ListItemAvatar>
                                                                 <ListItemText primary={item?.fullName} className={classes.picName} />
                                                             </div>
-                                                            {setPurposeChipColor(item?.purpose)}
+                                                            {item?.purpose && setPurposeChipColor(item?.purpose)}
                                                         </div>
                                                         {/* <div className={classes.tlnContentChild}>
                                                             <Typography variant="subtitle2" color="textSecondary">

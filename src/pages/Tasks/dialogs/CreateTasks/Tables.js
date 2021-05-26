@@ -145,13 +145,17 @@ function SortableTableHeaders(props) {
                         sortDirection={column === col.key ? direction : false}
                         width={col.width}
                     >
-                        <MuiTableSortLabel
-                            active={column === col.key}
-                            direction={column === col.key ? direction : 'asc'}
-                            onClick={() => createSortHandler(col, direction)}
-                        >
-                            {col.name}
-                        </MuiTableSortLabel>
+                        {col?.sortable ? (
+                            <MuiTableSortLabel
+                                active={column === col.key}
+                                direction={column === col.key ? direction : 'asc'}
+                                onClick={() => createSortHandler(col, direction)}
+                            >
+                                {col.name}
+                            </MuiTableSortLabel>
+                        ) :
+                            col.name
+                        }
                     </TableCell>
                 ))}
             </TableRow>
@@ -370,7 +374,7 @@ function Tables(props) {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        {setStatusChipColor(row?.status)}
+                                        {row?.status && setStatusChipColor(row?.status)}
                                     </TableCell>
                                 </TableRow>
                             ))

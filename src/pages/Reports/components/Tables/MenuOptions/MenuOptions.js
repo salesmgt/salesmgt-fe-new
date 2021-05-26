@@ -6,6 +6,7 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    Tooltip,
 } from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { MdMoreVert, MdInfo, MdDelete } from 'react-icons/md'
@@ -56,21 +57,21 @@ function MenuOptions(props) {
         //     commentedBy.push(comment.fullName);
         // });
         // if (user.username === data?.username) {
-            if (data?.contextComments) {
-                return (
-                    <CannotRemove
-                        open={open}
-                        onClose={() => setOpen(false)}
-                        data={data}
-                    />
-                )
-            }
-            // else if (data.comments.length === 0) {
-            else {
-                return (
-                    <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
-                )
-            }
+        if (data?.contextComments) {
+            return (
+                <CannotRemove
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    data={data}
+                />
+            )
+        }
+        // else if (data.comments.length === 0) {
+        else {
+            return (
+                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
+            )
+        }
         // } else {
         //     const newData = {...data, msg: 'You cannot remove reports of the others.'}
         //     return (
@@ -155,9 +156,11 @@ function MenuOptions(props) {
 
     return (
         <div>
-            <IconButton color="primary" onClick={handleOpen}>
-                <MdMoreVert />
-            </IconButton>
+            <Tooltip title="Actions">
+                <IconButton color="primary" onClick={handleOpen}>
+                    <MdMoreVert />
+                </IconButton>
+            </Tooltip>
             <Menu
                 anchorEl={anchorEl}
                 keepMounted

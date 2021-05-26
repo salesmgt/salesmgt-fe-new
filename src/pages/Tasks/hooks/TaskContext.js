@@ -17,9 +17,11 @@ import {
     PIC_FILTER,
     SCHOOL_YEAR_FILTER,
     STATUS_FILTER,
-    ASSIGNED_FILTER
+    ASSIGNED_FILTER,
+    TASK_STATUS_FILTER,
+    // DATE_RANGE_FILTER
 } from '../../../constants/Filters'
-import { roleNames } from '../../../constants/Generals'
+import { roleNames, taskStatusNames } from '../../../constants/Generals'
 import { getServiceTypes } from '../TasksServices';
 
 const TaskContext = createContext()
@@ -38,6 +40,8 @@ let defaultFilters = {
     purpose: { filterType: PURPOSE_FILTER, filterValue: '' },
     status: { filterType: STATUS_FILTER, filterValue: '' },
     isAssigned: { filterType: ASSIGNED_FILTER, filterValue: null },
+    // dateRange: { filterType: DATE_RANGE_FILTER, filterValue: [null, null] },
+    taskStatus: { filterType: TASK_STATUS_FILTER, filterValue: '' },
 }
 
 function useTaskProvider() {
@@ -114,8 +118,16 @@ function useTaskProvider() {
             ? defaultFilters.isAssigned.filterValue
             : null
     )
-
-    const assignedStatuses = [null, true, false];
+    const [taskStatus, setTaskStatus] = useState(
+        defaultFilters.taskStatus.filterValue
+            ? defaultFilters.taskStatus.filterValue
+            : ''
+    )
+    // const [dateRange, setDateRange] = useState(
+    //     defaultFilters.dateRange.filterValue[0]
+    //         ? defaultFilters.dateRange.filterValue
+    //         : [null, null]
+    // )
 
     // fix major BUG
     const setFilter = (key, value) => {
@@ -192,6 +204,24 @@ function useTaskProvider() {
                 }
                 setIsAssigned(value)
                 break
+            case TASK_STATUS_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    taskStatus: { filterType: TASK_STATUS_FILTER, filterValue: value },
+                }
+                setTaskStatus(value)
+                break
+            // case DATE_RANGE_FILTER:
+            //     // console.log('DATE_RANGE_FILTER - value = ', value);
+            //     defaultFilters = {
+            //         ...defaultFilters,
+            //         dateRange: {
+            //             filterType: DATE_RANGE_FILTER,
+            //             filterValue: value,
+            //         },
+            //     }
+            //     setDateRange(value)
+            //     break
             default:
                 break
         }
@@ -200,6 +230,8 @@ function useTaskProvider() {
     // APIs
     const [PICs, setPICs] = useState([])
     const [serviceTypes, setServiceTypes] = useState([])
+    const assignedStatuses = [null, true, false];
+    const taskStatuses = [taskStatusNames.ongoing, taskStatusNames.success, taskStatusNames.failed];
     // const [schoolYears, setSchoolYears] = useState([])
     // const [districts, setDistricts] = useState([])
     // const [schoolTypes, setSchoolTypes] = useState([])
@@ -280,7 +312,10 @@ function useTaskProvider() {
         assignedStatuses,
         setFilter,
         getListPICs,
-        serviceTypes
+        serviceTypes,
+        taskStatus,
+        taskStatuses,
+        // dateRange,
     }
 }
 

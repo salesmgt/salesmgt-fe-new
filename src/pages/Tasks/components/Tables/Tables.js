@@ -22,7 +22,7 @@ import {
     MdKeyboardArrowRight,
     MdLastPage,
 } from 'react-icons/md'
-import { RiStickyNoteFill } from 'react-icons/ri';
+// import { RiStickyNoteFill } from 'react-icons/ri';
 // import { schools as schoolsData } from '../../data/mock-data'
 import { useTask } from '../../hooks/TaskContext'
 import MenuOptions from './MenuOptions/MenuOptions'
@@ -279,12 +279,17 @@ function Tables(props) {
 
         if (result === taskResultNames.successful) {
             return '#4caf50'    // 'successEndDate'
-        } else if (countToDeadline > 15) {
-            return '#1976d2'    // 'safeEndDate'
-        } else if (0 <= countToDeadline <= 15) {
-            return '#ff9800'    // 'warningEndDate'
-        } else {
-            return '#fc2718'    // 'overtimeEndDate'
+        }
+        else if (result === taskResultNames.tbd) {
+            if (countToDeadline > 15) {
+                return '#1976d2'    // 'safeEndDate'
+            } else if (0 <= countToDeadline <= 15) {
+                return '#ff9800'    // 'warningEndDate'
+            } else {
+                return '#fc2718'    // 'overtimeEndDate'
+            }
+        } else {    // !result
+            return '#000'
         }
     }
 
@@ -350,17 +355,15 @@ function Tables(props) {
                                                         {`${row?.level} `}
                                                         <Highlighter
                                                             highlightClassName="YourHighlightClass"
-                                                            searchWords={[
-                                                                params.searchKey,
-                                                            ]}
+                                                            searchWords={[params.searchKey]}
                                                             autoEscape={true}
                                                             textToHighlight={row?.schoolName || ''}
-                                                        /> &nbsp;
-                                                        {row?.note && (
+                                                        />
+                                                        {/* {row?.note && (
                                                             <Badge color="secondary" variant="dot">
                                                                 <RiStickyNoteFill className={classes.iconNote} />
                                                             </Badge>
-                                                        )}
+                                                        )} */}
                                                     </>
                                                 }
                                                 secondary={row?.district}
@@ -436,15 +439,15 @@ function Tables(props) {
                                             />
                                         </TableCell> */}
                                         <TableCell className={classes.tBodyCell}>
-                                            {setPurposeChipColor(row?.purpose)}
+                                            {row?.purpose && setPurposeChipColor(row?.purpose)}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
-                                            {row?.assignDate && (
+                                            {row?.username && row?.assignDate && (
                                                 <Highlighter
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[params.searchKey]}
                                                     autoEscape={true}
-                                                    textToHighlight={parseDateToString(row?.assignDate, 'DD-MM-yyyy') || '07-05-2021'}
+                                                    textToHighlight={parseDateToString(row?.assignDate, 'DD-MM-yyyy') || ''}
                                                 />
                                             )}
                                         </TableCell>
@@ -455,13 +458,13 @@ function Tables(props) {
                                                         highlightClassName="YourHighlightClass"
                                                         searchWords={[params.searchKey]}
                                                         autoEscape={true}
-                                                        textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || '30-09-2021'}
+                                                        textToHighlight={parseDateToString(row?.endDate, 'DD-MM-yyyy') || ''}
                                                     />
                                                 </strong>
                                             )}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
-                                            {setTaskStatusChipColor(row?.result, row?.endDate)}
+                                            {(row?.username && row?.result) && setTaskStatusChipColor(row?.result, row?.endDate)}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell} align="right">
                                             <MenuOptions

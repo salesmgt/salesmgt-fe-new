@@ -20,7 +20,8 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Box
+    Box,
+    Tooltip
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import { previewColumns } from './CreateTasksConfig'
@@ -32,7 +33,10 @@ import { useApp } from '../../../../hooks/AppContext'
 import { useTaskForm } from './TaskFormContext'
 import { getPurpsByStatus } from '../../../../utils/Sortings'
 import { createTasks } from '../../TasksServices'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
+import DateFnsUtils from '@date-io/date-fns'
 import classes from './CreatePreviewDialogForm.module.scss'
+import { parseDateToString } from '../../../../utils/DateTimes'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -89,10 +93,12 @@ const useStyles = makeStyles((theme) => ({
 function CreatePreviewDialogForm(props) {
     const styles = useStyles()
     const { onClose, schoolStatus, refreshAPI } = props
-    const [rowsState, setRowsState] = React.useState(props.rows)
+
     const { fields, operations } = Consts
-    // const [object, setObject] = React.useState(null)
+    const [rowsState, setRowsState] = React.useState(props.rows)
+    const [oneRow, setOneRow] = React.useState(null)
     const [purpose, setPurpose] = useState(null)
+    // const [deadline, setDeadline] = useState(new Date(new Date().getFullYear(), 8, 30))
 
     const { salesPurps } = useApp()
     const { params } = useTaskForm()  //, dispatchParams, setFilter
@@ -116,13 +122,39 @@ function CreatePreviewDialogForm(props) {
     const bakSalesPurps = salesPurps ? salesPurps : Milk.getMilk(milkNames.salesPurps)
     const purpsByStatus = getPurpsByStatus(schoolStatus, bakSalesPurps)
 
+    // const modifyRowsState = () => {
+    //     let array = []
+    //     console.log('handleSubmit(): rowsState = ', rowsState);
+
+    //     rowsState.map((item) => {
+    //         item = {
+    //             ...item,
+    //             purpose: purpose,
+    //             schoolYear: schoolYear,
+    //             endDate: new Date(new Date().getFullYear(), 8, 30)
+    //         }
+    //         array.push(item)
+    //     })
+
+    //     setRowsState(array)
+    // }
+    // modifyRowsState()
+    console.log('Preview Dialog:   rowsState = ', rowsState);
+
     const handleSubmit = () => {
         let array = []
+        console.log('handleSubmit(): rowsState = ', rowsState);
+
         rowsState.map((item) => {
-            item = { ...item, purpose: purpose, schoolYear: schoolYear }   // , schoolId: item.id
-            // console.log('item là gì vậy??? ', item);
+            item = {
+                ...item,
+                purpose: purpose,
+                schoolYear: schoolYear,
+                endDate: parseDateToString(item?.endDate ? item?.endDate : new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss')
+            }   // , schoolId: item.id
             array.push(item)
         })
+        console.log('handleSubmit(): array = ', array);
         createTasks(array).then(res => {
             // console.log('Created. res = ', res);
             setRowsState([]);
@@ -163,8 +195,27 @@ function CreatePreviewDialogForm(props) {
         }
     }
 
-    const handlePurposeChange = (event) => {
-        setPurpose(event.target.value)
+    const handleDeadlineChange = (newDate, row) => {
+        // setDeadline(newDate);
+        console.log('newDate = ', newDate);
+        console.log('editing row = ', row);
+
+        // let editingRow = rowsState.find(obj => obj.id === row.id)
+        // console.log('Before ----- editingRow = ', editingRow)
+        // editingRow = { ...editingRow, endDate: newDate }
+
+        // console.log('After ----- editingRow = ', editingRow)
+
+        const index = rowsState.findIndex((obj) => obj.schoolId === row.schoolId)
+        console.log('deadline of index = ', index);
+        //const item ={...rowsState[index],note: e.target.value}
+        let array = [...rowsState]
+        array[index] = {
+            ...array[index],
+            endDate: newDate
+        }
+        setRowsState(array)
+        // setOneRow({ ...row, endDate: newDate })
     }
 
     const setStatusChipColor = (status) => {
@@ -225,7 +276,7 @@ function CreatePreviewDialogForm(props) {
                                     <InputLabel>{fields.purpose.label}</InputLabel>
                                     <Select
                                         value={purpose || ''}
-                                        onChange={handlePurposeChange}
+                                        onChange={(event) => setPurpose(event.target.value)}
                                         MenuProps={MenuProps}
                                     >
                                         <MenuItem
@@ -301,17 +352,31 @@ function CreatePreviewDialogForm(props) {
                                                 />
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                {setStatusChipColor(row?.status)}
+                                                {row?.status && setStatusChipColor(row?.status)}
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                {setPurposeChipColor(purpose)}
+                                                {purpose && setPurposeChipColor(purpose)}
                                             </TableCell>
                                             <TableCell className={classes.tBodyCell}>
-                                                <IconButton
-                                                    onClick={(e) => handleOnRemove(e, row)}
-                                                >
-                                                    <MdClose />
-                                                </IconButton>
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        format="dd/MM/yyyy"
+                                                        allowKeyboardControl
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        value={row?.endDate ? row?.endDate : new Date(new Date().getFullYear(), 8, 30)}
+                                                        onChange={(newDate) => handleDeadlineChange(newDate, row)}
+                                                    />
+                                                </MuiPickersUtilsProvider>
+                                            </TableCell>
+                                            <TableCell className={classes.tBodyCell}>
+                                                <Tooltip title="Remove">
+                                                    <IconButton
+                                                        onClick={(e) => handleOnRemove(e, row)}
+                                                    >
+                                                        <MdClose />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </TableCell>
                                         </TableRow>
                                     ))}

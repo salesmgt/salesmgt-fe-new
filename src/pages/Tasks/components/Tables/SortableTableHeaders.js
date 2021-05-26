@@ -66,13 +66,17 @@ export default function SortableTableHeaders(props) {
                             }
                             width={user.roles[0] !== roleNames.salesman ? col.width1 : col.width2}
                         >
-                            <MuiTableSortLabel
-                                active={column === col.key}
-                                direction={column === col.key ? direction : 'asc'}
-                                onClick={() => createSortHandler(col, direction)}
-                            >
-                                {col.name}
-                            </MuiTableSortLabel>
+                            {col?.sortable ? (
+                                <MuiTableSortLabel
+                                    active={column === col.key}
+                                    direction={column === col.key ? direction : 'asc'}
+                                    onClick={() => createSortHandler(col, direction)}
+                                >
+                                    {col.name}
+                                </MuiTableSortLabel>
+                            ) :
+                                col.name
+                            }
                         </TableCell>
                     )
                 })}

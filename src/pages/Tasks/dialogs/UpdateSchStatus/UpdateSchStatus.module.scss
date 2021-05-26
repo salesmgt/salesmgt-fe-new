@@ -2,9 +2,9 @@
 
 .dialogCont {
     padding: 0.5rem 1rem !important;
-    .showCreate {
-        padding: 1rem 0rem 0.5rem 0rem;
-    }
+    // .showCreate {
+    //     padding: 1rem 0rem 0.5rem 0rem;
+    // }
 }
 
 .dialogAct {
@@ -17,5 +17,30 @@
         &:disabled {
             color: $disabled;
         }
+    }
+}
+
+.suggestions {
+    margin: 0.2rem 0.25rem 0 0 !important;
+    // padding: 0 !important;
+}
+.txtEstimate {
+    color: $common-black;
+    font-weight: 500;
+}
+.txtRevenue {
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: $main-success;
+}
+
+.iconInfo {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: $grey-600;   //$text-icon;
+    padding: 0;
+    margin: 0;
+    &:hover {
+        cursor: pointer;
     }
 }

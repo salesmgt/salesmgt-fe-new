@@ -7,7 +7,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import parse from 'autosuggest-highlight/parse'
 import throttle from 'lodash/throttle'
 import { MdLocationOn } from 'react-icons/md'
-import Geocode from 'react-geocode'
+// import Geocode from 'react-geocode'
+import Geocode from '../../services/geocode'
 
 function loadScript(src, position, id) {
     if (!position) {
@@ -49,11 +50,11 @@ export default function AddressField(props) {
     const loaded = React.useRef(false)
 
     // console.log('API_key: ', process.env.REACT_APP_GOOGLE_KEY);
-    Geocode.setApiKey(process.env.REACT_APP_GOOGLE_KEY)
-    Geocode.setLanguage('vi')
-    Geocode.setRegion('VN')
-    Geocode.setLocationType('ROOFTOP')
-    Geocode.enableDebug() // Enable or disable logs
+    // Geocode.setApiKey(process.env.REACT_APP_GOOGLE_KEY)
+    // Geocode.setLanguage('vi')
+    // Geocode.setRegion('VN')
+    // Geocode.setLocationType('ROOFTOP')
+    // Geocode.enableDebug() // Enable or disable logs
 
     if (typeof window !== 'undefined' && !loaded.current) {
         if (!document.querySelector('#google-maps')) {
@@ -144,6 +145,8 @@ export default function AddressField(props) {
                             response.results[0].geometry.location
                         setLatitude(lat)
                         setLongitude(lng)
+
+                        // convert from lat,lon to district
                         // console.log('useEffect(): inputValue = ', inputValue);
                     },
                     (error) => {
@@ -193,9 +196,9 @@ export default function AddressField(props) {
                     variant="outlined"
                     fullWidth
                     required
-                    // error={errText ? true : false}
+                    // error={errText ? true : false}       // Hà
                     // helperText={errText ? errText : ''}
-                    error={error ? true : false}
+                    error={error ? true : false}            // Nguyên
                     helperText={helperText ? helperText : ''}
                 />
             )}

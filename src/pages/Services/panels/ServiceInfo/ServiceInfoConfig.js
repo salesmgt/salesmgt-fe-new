@@ -1,6 +1,6 @@
 import classes from "./ServiceInfo.module.scss"
 import { schoolLevelNames, serviceNames } from "../../../../constants/Generals"
-import { Divider, Grid, Typography } from "@material-ui/core"
+import { Grid, Typography } from "@material-ui/core"
 
 export const Consts = {
     headers: {
@@ -28,17 +28,25 @@ export const Consts = {
         submitedBy: {
             title: 'Submited by',
         },
-        note: {
-            title: 'Note',
-        },
         classNo: {
             title: 'No. of applied classes',
-            suffix: 'classes',
+            adornment: 'classes',
+            helper: 'Min: 1 class.  Max: 100 classes'
+        },
+        studentNumber: {
+            title: 'Students per classes',
+            adornment: 'students/class',
+            helper: 'Min: 1 student.  Max: 100 students'
+        },
+        slotNumber: {
+            title: 'Periods per week',
+            adornment: 'periods/week',
+            helper: 'Min: 1 period. Max: 10 periods'
         },
         price: {
             title: 'Price floor',
-            suffix: '/period',
-            helper: '100.000VND - 5.000.000VND',
+            adornment: 'VND/period',
+            helper: '100.000VND - 2.000.000VND'
         },
         note: {
             title: 'Note',
@@ -53,7 +61,7 @@ export const Consts = {
             noReason: 'N/A',
         },
         revenue: {
-            formula: 'Price per period * Total of periods'
+            formula: 'Price floor * Periods per week * 4 weeks'
         }
     },
 }
@@ -69,7 +77,7 @@ export const getCriteriaInfo = () => {
                     <Typography variant="overline">Criteria description</Typography>
                     <br />
                     <Typography variant="caption" className={classes.txtCriInfoHeader}>
-                        1/ Price floor (per period)
+                        1/ Price floor per period
                     </Typography>
                     <div className={classes.txtCriInfo}>
                         <span className={classes.txtCriInfoHeader}>{serviceNames.svc1}:</span>
@@ -125,36 +133,100 @@ export const getCriteriaInfo = () => {
                     </p>
                     <br />
                     <Typography variant="caption" className={classes.txtCriInfoHeader}>
-                        2/ Number of classes
+                        2/ Number of periods per week
                     </Typography>
                     <div className={classes.txtCriInfo}>
-                        <i>Number of classes applying this service</i>
-                        <br />  ≥ 10 classes
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc1}:</span>
+                                &emsp;2 periods/week
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc2}:</span>
+                                &emsp;1 period/week
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc3}:</span>
+                                &emsp;2 periods/week
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc4}:</span>
+                                &emsp;2 periods/week
+                            </Grid>
+                        </Grid>
                     </div>
                     <br />
                     <Typography variant="caption" className={classes.txtCriInfoHeader}>
-                        3/ Average class size
+                        3/ Number of classes
+                    </Typography>
+                    <div className={classes.txtCriInfo}>
+                        <i>Number of classes applying this service</i>
+                        <br />
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc1}:</span>
+                                &emsp;≥ 8 classes
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc2}:</span>
+                                &emsp;≥ 8 classes
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc3}:</span>
+                                &emsp;≥ 2 classes
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11}>
+                                <span className={classes.txtCriInfoHeader}>• &nbsp;{serviceNames.svc4}:</span>
+                                &emsp;≥ 2 classes
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <br />
+                    <Typography variant="caption" className={classes.txtCriInfoHeader}>
+                        4/ Average class size
                     </Typography>
                     <p className={classes.txtCriInfo}>
-                        <i>Average number of students per class</i>
+                        <i>Average number of students per class:</i>
                         <br /> ≥ 40 students
                     </p>
                     <br />
                     <Typography variant="caption" className={classes.txtCriInfoHeader}>
-                        4/ Total number of periods
+                        5/ Duration
                     </Typography>
                     <p className={classes.txtCriInfo}>
-                        <i>Total number of periods in the whole duration</i>
+                        <i>Amount of time the service takes effective:</i>
+                        <br /> ≥ 7 months
                     </p>
+                    <br />
                 </Grid>
                 {/* <Divider style={{ color: 'white' }} /> */}
-                <hr style={{ width: '70%', height: '0%', textAlign: 'center', margin: '0 auto' }} />
+                <hr style={{ width: '85%', height: '0%', textAlign: 'center', margin: '0 auto' }} />
                 <Grid item>
                     <Typography variant="overline">Revenue estimation formula</Typography>
                     <br />
-                    <div style={{ border: '1px solid', textAlign: 'center', margin: '0 0.15rem', padding: '0 0.4rem' }}>
+                    <div style={{ border: '1px solid', textAlign: 'center', margin: '0 0 0 0.35rem', padding: '0 0.5rem' }}>
                         <p style={{ fontSize: '0.75rem', fontWeight: 100 }}>
-                            Revenue = Price per period * Total periods
+                            Revenue = <br />Price floor * Periods per week * 4 weeks
                         </p>
                     </div>
                 </Grid>
@@ -169,14 +241,16 @@ export const getCriteria = (serviceType, schoolLevel) => {
             if (schoolLevel === schoolLevelNames.th) {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 700000 }, // >= 700.000VND/period
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 }, // >= 10 classes
+                    { key: 'period', name: 'Number of periods per week', standardValue: 2 }, // 2 periods/week
+                    { key: 'class', name: 'Number of applied classes', standardValue: 8 }, // >= 10 classes
                     { key: 'student', name: 'Number of students per class', standardValue: 40 }, // >= 40 students
                     { key: 'duration', name: "Duration", standardValue: 7 }, // >= 7 months
                 ]
             } else {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 800000 },
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 },
+                    { key: 'period', name: 'Number of periods per week', standardValue: 2 },
+                    { key: 'class', name: 'Number of applied classes', standardValue: 8 },
                     { key: 'student', name: 'Number of students per class', standardValue: 40 },
                     { key: 'duration', name: "Duration", standardValue: 7 },
                 ]
@@ -185,14 +259,16 @@ export const getCriteria = (serviceType, schoolLevel) => {
             if (schoolLevel === schoolLevelNames.th) {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 600000 },
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 },
+                    { key: 'period', name: 'Number of periods per week', standardValue: 1 },
+                    { key: 'class', name: 'Number of applied classes', standardValue: 8 },
                     { key: 'student', name: 'Number of students per class', standardValue: 40 },
                     { key: 'duration', name: "Duration", standardValue: 7 },
                 ]
             } else {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 700000 },
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 },
+                    { key: 'period', name: 'Number of periods per week', standardValue: 1 },
+                    { key: 'class', name: 'Number of applied classes', standardValue: 8 },
                     { key: 'student', name: 'Number of students per class', standardValue: 40 },
                     { key: 'duration', name: "Duration", standardValue: 7 },
                 ]
@@ -201,7 +277,8 @@ export const getCriteria = (serviceType, schoolLevel) => {
             if (schoolLevel === schoolLevelNames.th) {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 1500000 },
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 },
+                    { key: 'period', name: 'Number of periods per week', standardValue: 2 },
+                    { key: 'class', name: 'Number of applied classes', standardValue: 2 },
                     { key: 'student', name: 'Number of students per class', standardValue: 40 },
                     { key: 'duration', name: "Duration", standardValue: 7 },
                 ]
@@ -210,14 +287,16 @@ export const getCriteria = (serviceType, schoolLevel) => {
             if (schoolLevel === 'Tiểu học') {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 1000000 },
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 },
+                    { key: 'period', name: 'Number of periods per week', standardValue: 2 },
+                    { key: 'class', name: 'Number of applied classes', standardValue: 2 },
                     { key: 'student', name: 'Number of students per class', standardValue: 40 },
                     { key: 'duration', name: "Duration", standardValue: 7 },
                 ]
             } else {
                 return [
                     { key: 'price', name: 'Price Floor', standardValue: 1800000 },
-                    { key: 'class', name: 'Number of applied classes', standardValue: 10 },
+                    { key: 'period', name: 'Number of periods per week', standardValue: 2 },
+                    { key: 'class', name: 'Number of applied classes', standardValue: 2 },
                     { key: 'student', name: 'Number of students per class', standardValue: 40 },
                     { key: 'duration', name: "Duration", standardValue: 7 },
                 ]

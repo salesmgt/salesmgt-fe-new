@@ -1,13 +1,30 @@
-export const columns = [
-    { key: 'no', name: 'No', sortable: false, width: '1%' },
-    { key: 'serviceType', name: 'Service Type', sortable: true, width: '15%' },
-    { key: 'task.school.schoolId', name: 'School Name', sortable: true, width: '23%' },
-    { key: 'task.user.username', name: 'PIC', sortable: true, width: '23%' },
-    { key: 'duration', name: 'Duration', sortable: false, width: '25%' },
-    { key: 'status', name: 'Status', sortable: true, width: '12%' },    // Pending, Approved, Rejected
-    // { key: 'approveDate', name: 'Approved Date', sortable: true, width: '17%' },
-    { key: '', name: '', sortable: false, width: '1%' },
+import { roleNames } from "../../constants/Generals";
+
+const columns = [
+    { key: 'no', name: 'No', sortable: false, width1: '1%', width2: '5%' },
+    { key: 'serviceType', name: 'Service Type', sortable: true, width1: '15%', width2: '20%' },
+    { key: 'task.school.schoolId', name: 'School Name', sortable: true, width1: '23%', width2: '30%' },
+    { key: 'task.user.username', name: 'PIC', sortable: true, width1: '23%', width2: '0%' },
+    { key: 'duration', name: 'Duration', sortable: false, width1: '25%', width2: '30%' },
+    { key: 'status', name: 'Status', sortable: true, width1: '12%', width2: '15%' },    // Pending, Approved, Rejected
+    // { key: 'approveDate', name: 'Approved Date', sortable: true, width1: '17%', width2: '1%' },
+    { key: '', name: '', sortable: false, width1: '1%', width2: '1%' },
 ]
+
+export const getColumns = (role) => {
+    const [no, serviceType, schoolName, pic, duration, status, actions] = columns
+
+    switch (role) {
+        case roleNames.manager:
+            return [no, serviceType, schoolName, pic, duration, status, actions]
+        case roleNames.salesman:
+            return [no, serviceType, schoolName, duration, status, actions]
+        default:
+            break;
+    }
+}
+
+//=========================================================================================================
 
 export const detailPageConsts = {
     linkNames: {
@@ -30,14 +47,28 @@ export const Consts = {
         create: 'Insert',
     },
     filters: {
-        serviceStatus: {
-            title: 'Service Statuses',
-        },
         serviceType: {
             title: 'Service Types',
         },
+        serviceStatus: {
+            title: 'Service Statuses',
+        },
         schoolYear: {
             title: 'School Years',
+        },
+        expiredStatus: {
+            title: 'Expired Statuses',
+            options: {
+                all: 'All',
+                expired: 'Expired',
+                valid: 'Valid / Effective',
+            },
+        },
+        // duration: {
+        //     title: 'Duration (from/to)',
+        // },
+        pic: {
+            title: 'PICs',
         },
     },
     messages: {

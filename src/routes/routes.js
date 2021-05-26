@@ -87,7 +87,14 @@ export const roleRoutes = {
                 </ServiceProvider>
             ),
         },
-        { path: 'services/:id', component: () => <Service /> },
+        {
+            path: 'services/:id',
+            component: () => (
+                <ServiceProvider>
+                    <Service />
+                </ServiceProvider>
+            )
+        },
         {
             path: 'salesmen',
             component: () => (
@@ -173,7 +180,14 @@ export const roleRoutes = {
                 </ServiceProvider>
             ),
         },
-        { path: 'services/:id', component: () => <Service /> },
+        {
+            path: 'services/:id',
+            component: () => (
+                <ServiceProvider>
+                    <Service />
+                </ServiceProvider>
+            )
+        },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
 }

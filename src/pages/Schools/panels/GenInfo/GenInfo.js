@@ -172,10 +172,7 @@ function GenInfo(props) {
                     return true
                 } else {
                     // Quận/Huyện tên chữ, ko có số
-                    const tmp1 = address.substring(
-                        0,
-                        address.lastIndexOf(', Thành phố Hồ Chí Minh')
-                    )
+                    const tmp1 = address.substring(0, address.lastIndexOf(', Thành phố Hồ Chí Minh'))
                     // const tmp2 = tmp1.substring(tmp1.lastIndexOf(', '))
                     district = tmp1.substring(tmp1.lastIndexOf(', ') + 1).trim()
                     // district = tmp2.substring(2)
@@ -852,11 +849,7 @@ function GenInfo(props) {
                                 >
                                     <Typography color="inherit">
                                         {school?.reprName
-                                            ? `${
-                                                  school?.reprIsMale
-                                                      ? 'Mr. '
-                                                      : 'Ms. '
-                                              } ${school?.reprName}`
+                                            ? `${school?.reprIsMale ? 'Mr. ' : 'Ms. '} ${school?.reprName}`
                                             : fields.empty.title}
                                     </Typography>
                                 </Grid>

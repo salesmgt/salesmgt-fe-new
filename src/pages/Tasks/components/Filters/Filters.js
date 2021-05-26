@@ -17,6 +17,7 @@ import {
     ListItemText,
     Button,
     InputAdornment,
+    Tooltip,
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import {
@@ -40,6 +41,8 @@ import {
     PURPOSE_FILTER,
     STATUS_FILTER,
     ASSIGNED_FILTER,
+    DATE_RANGE_FILTER,
+    TASK_STATUS_FILTER,
 } from '../../../../constants/Filters'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
@@ -54,6 +57,8 @@ import { Snackbars } from '../../../../components'
 import { getPurpsByStatus } from '../../../../utils/Sortings'
 import TaskFormProvider from '../../dialogs/CreateTasks/TaskFormContext'
 import styles from './Filters.module.scss'
+import DateRangePickers from '../DateRangePickers/DateRangePickers'
+import moment from 'moment'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -82,10 +87,6 @@ const useStyles = makeStyles((theme) => ({
     },
     option: {
         fontSize: '0.875rem',
-    },
-    lastOption: {
-        fontSize: '0.875rem',
-        borderBottom: '0.5px solid #e0e0e0',
     },
     btn: {
         padding: '0.5rem',
@@ -216,6 +217,8 @@ function Filters(props) {
         schoolStatus,
         isAssigned,
         assignedStatuses,
+        taskStatus,
+        taskStatuses,
         setFilter,
         getListPICs,
     } = useTask()
@@ -363,6 +366,39 @@ function Filters(props) {
         })
     }
 
+    const handleTaskStatusChange = (event) => {
+        const selectedTaskStatus = event.target.value
+        setFilter(TASK_STATUS_FILTER, selectedTaskStatus)
+        dispatchParams({
+            type: ReducerActions.FILTER_TASK_STATUS,
+            payload: {
+                filterType: TASK_STATUS_FILTER,
+                filterValue: selectedTaskStatus ? selectedTaskStatus : '',
+            },
+        })
+    }
+
+    // const handleDateRangeChange = (selectedDate) => {
+    //     const fromDate = selectedDate[0]
+    //         ? moment(selectedDate[0]).format('YYYY-MM-DD')
+    //         : null
+    //     const toDate = selectedDate[1]
+    //         ? moment(selectedDate[1]).format('YYYY-MM-DD')
+    //         : null
+
+    //     setFilter(DATE_RANGE_FILTER, [fromDate, toDate])
+    //     dispatchParams({
+    //         type: ReducerActions.FILTER_DATE_RANGE,
+    //         payload: {
+    //             filterType: DATE_RANGE_FILTER,
+    //             filterValue: [fromDate, toDate]
+    //                 ? [fromDate, toDate]
+    //                 : [null, null],
+    //         },
+    //     })
+    // }
+
+    //===================================For Chips===================================
     const handleChipsRemoved = (removedFilters) => {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
@@ -393,6 +429,12 @@ function Filters(props) {
                 case ASSIGNED_FILTER:
                     setFilter(ASSIGNED_FILTER, null)
                     break
+                case TASK_STATUS_FILTER:
+                    setFilter(TASK_STATUS_FILTER, '')
+                    break
+                // case DATE_RANGE_FILTER:
+                //     setFilter(DATE_RANGE_FILTER, [null, null])
+                //     break
                 default:
                     break
             }
@@ -401,11 +443,31 @@ function Filters(props) {
 
     const generateChipsArray = (listFilters) => {
         const listChips = []
-        for (const chip in listFilters) {
-            listChips.push(listFilters[chip])
+        // let newListFilters = { ...listFilters }
+
+        for (const chip in listFilters) {     // newListFilters
+            // if (chip === DATE_RANGE_FILTER) {
+            //     const fromDate = moment(
+            //         newListFilters[chip].filterValue[0]
+            //     ).format('MMM D, YYYY')
+            //     const toDate = moment(
+            //         newListFilters[chip].filterValue[1]
+            //     ).format('MMM D, YYYY')
+            //     if (fromDate !== 'Invalid date' && toDate !== 'Invalid date') {
+            //         newListFilters = {
+            //             ...newListFilters,
+            //             dateRange: {
+            //                 filterType: DATE_RANGE_FILTER,
+            //                 filterValue: `${fromDate} ➜ ${toDate}`,
+            //             },
+            //         }
+            //     }
+            // }
+            listChips.push(listFilters[chip])  // newListFilters[chip]
         }
         return listChips
     }
+
     //===============================================================================
 
     //=================Handle action enter / submit of SearchFields==================
@@ -505,26 +567,29 @@ function Filters(props) {
                     {user.roles[0] !== roleNames.salesman && (
                         <>
                             <Box className={classes.flexItem}>
-                                <Button
-                                    className={classes.btn}
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleOpenCreateDialog}
-                                >
-                                    <MdAdd fontSize="large" />
-                                    {/* &nbsp;{operations.create} */}
-                                </Button>
+                                <Tooltip title={operations.create}>
+                                    <Button
+                                        className={classes.btn}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleOpenCreateDialog}
+                                    >
+                                        <MdAdd fontSize="large" />
+                                    </Button>
+                                </Tooltip>
                                 {renderCreateTaskDialog()}
                             </Box>
                             <Box className={classes.flexItem}>
-                                <Button
-                                    className={classes.btn}
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleOpenAssignDialog}
-                                >
-                                    <MdPersonAdd fontSize="large" />
-                                </Button>
+                                <Tooltip title={operations.assign}>
+                                    <Button
+                                        className={classes.btn}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleOpenAssignDialog}
+                                    >
+                                        <MdPersonAdd fontSize="large" />
+                                    </Button>
+                                </Tooltip>
                                 {renderAssignDialog()}
                             </Box>
                         </>
@@ -532,15 +597,9 @@ function Filters(props) {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
-                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
-                            className={classes.paddingTop}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                        // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                         >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>{filters.status.title}</InputLabel>
@@ -551,7 +610,7 @@ function Filters(props) {
                                 >
                                     <MenuItem
                                         value=""
-                                        className={classes.lastOption}
+                                        className={classes.option}
                                         classes={{
                                             root: classes.menuItemRoot,
                                             selected: classes.menuItemSelected,
@@ -577,15 +636,9 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
-                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
-                            className={classes.paddingTop}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                        // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                         >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>{filters.purpose.title}</InputLabel>
@@ -596,7 +649,7 @@ function Filters(props) {
                                 >
                                     <MenuItem
                                         value=""
-                                        className={classes.lastOption}
+                                        className={classes.option}
                                         classes={{
                                             root: classes.menuItemRoot,
                                             selected: classes.menuItemSelected,
@@ -622,15 +675,9 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
-                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
-                            className={classes.paddingTop}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                        // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                         >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>
@@ -669,15 +716,9 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
-                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
-                            className={classes.paddingTop}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                        // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                         >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>
@@ -716,15 +757,9 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
-                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
-                            className={classes.paddingTop}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                        // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                         >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>
@@ -763,15 +798,9 @@ function Filters(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            // md={user.roles[0] === roleNames.salesman ? 4: 3}
-                            // lg={user.roles[0] === roleNames.salesman ? 4: 3}
-                            className={classes.paddingTop}
+                        <Grid item xs={12} sm={6} md={4} lg={3}
+                        // md={user.roles[0] === roleNames.salesman ? 4: 3}
+                        // lg={user.roles[0] === roleNames.salesman ? 4: 3}
                         >
                             <FormControl className={classes.formControl}>
                                 <InputLabel>
@@ -852,14 +881,44 @@ function Filters(props) {
                             </FormControl>
                         </Grid> */}
 
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <FormControl
+                                className={classes.formControl}
+                            >
+                                <InputLabel>
+                                    {filters.taskStatus.title}
+                                </InputLabel>
+                                <Select
+                                    value={taskStatus || ''}
+                                    onChange={handleTaskStatusChange}
+                                    MenuProps={MenuProps}
+                                >
+                                    {taskStatuses?.map(
+                                        (status) => (
+                                            <MenuItem
+                                                key={status}
+                                                value={status}
+                                                className={
+                                                    classes.option
+                                                }
+                                                classes={{
+                                                    root:
+                                                        classes.menuItemRoot,
+                                                    selected:
+                                                        classes.menuItemSelected,
+                                                }}
+                                            >
+                                                {status}
+                                            </MenuItem>
+                                        )
+                                    )}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
                         {user.roles[0] !== roleNames.salesman && (
                             <>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={4}
-                                    lg={3}
+                                <Grid item xs={12} sm={6} md={4} lg={3}
                                     className={classes.paddingTop}
                                 >
                                     <FormControl
@@ -871,8 +930,7 @@ function Filters(props) {
                                         <Select
                                             value={
                                                 isAssigned === null
-                                                    ? ''
-                                                    : isAssigned
+                                                    ? '' : isAssigned
                                             }
                                             onChange={handleIsAssignedChange}
                                             MenuProps={MenuProps}
@@ -903,7 +961,7 @@ function Filters(props) {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={5} lg={4}>
+                                <Grid item xs={12} sm={6} md={4} lg={4}>
                                     <Autocomplete
                                         autoComplete
                                         autoSelect
@@ -976,6 +1034,15 @@ function Filters(props) {
                                 </Grid>
                             </>
                         )}
+                        {/* <Grid item xs={12} sm={6} md={5} lg={4}>
+                            <DateRangePickers
+                                dateRange={[null, null]}
+                                handleDateRangeChange={handleDateRangeChange}
+                                startLabel="Assign Date"
+                                endLabel="Deadline"
+                                isFilter={true}
+                            />
+                        </Grid> */}
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

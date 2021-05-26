@@ -792,7 +792,7 @@ function AssignInfo(props) {
                                             className={classes.rowx}
                                         >
                                             <Typography color="inherit">
-                                                {setPurposeChipColor(task?.purpose)}
+                                                {task?.purpose && setPurposeChipColor(task?.purpose)}
                                             </Typography>
                                         </Grid>
                                     </Grid>

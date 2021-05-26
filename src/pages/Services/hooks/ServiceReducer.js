@@ -11,6 +11,10 @@ export const ServiceReducer = (params, action) => {
             return { ...params, page: 0, listFilters: { ...listFilters, serviceType: payload } }
         case Actions.FILTER_SCHOOL_YEAR:
             return { ...params, page: 0, listFilters: { ...listFilters, schoolYear: payload } }
+        case Actions.FILTER_EXPIRED:
+            return { ...params, page: 0, listFilters: { ...listFilters, isExpired: payload } }
+        case Actions.FILTER_DATE_RANGE:
+            return { ...params, page: 0, listFilters: { ...listFilters, dateRange: payload } }
 
         case Actions.ENTER_SEARCH_KEYWORD:
             return { ...params, page: 0, searchKey: payload }

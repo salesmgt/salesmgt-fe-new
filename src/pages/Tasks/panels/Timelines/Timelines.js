@@ -184,7 +184,7 @@ function Timelines(props) {
                                                             </ListItemAvatar>
                                                             <ListItemText primary={task?.fullName} className={classes.picName} />
                                                         </div>
-                                                        {setPurposeChipColor(task?.purpose)}
+                                                        {task?.purpose && setPurposeChipColor(task?.purpose)}
                                                     </div>
                                                     {/* <div className={classes.tlnContentChild}>
                                                     <Typography variant="subtitle2" color="textSecondary">
@@ -264,7 +264,7 @@ function Timelines(props) {
                                                                     {parseDateToString(item?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
                                                                     {parseDateToString(item?.endDate, 'DD-MM-YYYY')}
                                                                 </Typography>
-                                                                {setServiceStatusChipColor(item?.status)}
+                                                                {item?.status && setServiceStatusChipColor(item?.status)}
                                                             </div>
                                                         </Link>
                                                     </TimelineOppositeContent>
