@@ -14,7 +14,8 @@ export const Consts = {
         confirmUpdate: 'Confirm Update School Status',  // from 'Đang HT' to 'Ngưng HT'
         createServices: 'Services for', //Submit 
         confirmCreateTask: 'Confirm Create Tasks',
-        confirmCompleteTask: 'Confirm Complete Task'  // from 'Đang HT' to 'Ngưng HT'
+        confirmCompleteTask: 'Confirm Task Complete',  // Mới thên sau này
+        confirmFailTask: 'Confirm Task Fail'  // Mới thên sau này
     },
     operations: {
         cancel: 'Cancel',
@@ -27,6 +28,8 @@ export const Consts = {
         search: {
             placeholder: 'Search...',
         },
+        complete: 'Complete',
+        fail: 'Fail'
     },
     messages: {
         createdInfo: '',
@@ -366,11 +369,29 @@ export const cannotMessage = (schoolLevel, schoolName, schoolYear, PIC) => {
         </>
     )
 }
-export const confirmTaskCompleteMessage = () => {
+export const confirmTaskCompleteMessage1 = () => {
     return (
         <>
-            To complete this task, please submit a
+            To mark this task as completed, please submit a
             <strong><em> Service</em></strong> in the form below.
+        </>
+    )
+}
+export const confirmTaskCompleteMessage2 = () => {
+    return (
+        <>
+            Are you sure to mark this task as <b>completed</b>?
+            <br /><br />
+            This process cannot be undone.
+        </>
+    )
+}
+export const confirmTaskFailMessage = () => {
+    return (
+        <>
+            Are you sure to mark this task as <b>failed</b>?
+            <br /><br />
+            This process cannot be undone.
         </>
     )
 }

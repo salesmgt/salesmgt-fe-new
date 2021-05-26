@@ -10,6 +10,7 @@ import {
     Select,
     MenuItem,
     Chip,
+    Box,
 } from '@material-ui/core'
 import { MdWarning } from 'react-icons/md'
 import { useForm, Controller } from 'react-hook-form'
@@ -17,7 +18,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
-import { milkNames, purposeNames } from '../../../../constants/Generals'
+import { milkNames, purposeNames, taskResultNames, taskStatusNames } from '../../../../constants/Generals'
 import { Snackbars, Loading, NotFound } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
@@ -25,6 +26,9 @@ import { roleNames, statusNames } from '../../../../constants/Generals'
 import * as TasksServices from '../../TasksServices'
 import { getPurpsByStatus, handleMatchPurps } from '../../../../utils/Sortings'
 import { parseDateToString } from '../../../../utils/DateTimes';
+import UpdateSchStatus from '../../dialogs/UpdateSchStatus/UpdateSchStatus';
+import ConfirmTaskFail from '../../dialogs/ConfirmTaskFail/ConfirmTaskFail';
+import ConfirmTaskComplete from '../../dialogs/ConfirmTaskComplete/ConfirmTaskComplete';
 import classes from './AssignInfo.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -68,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     // },
     inputRoot: {
         '&$disabled': {
-            color: 'black',
+            color: '#616161',   // $text-icon
         },
     },
     disabled: {},
@@ -82,6 +86,9 @@ function AssignInfo(props) {
     const { user } = useAuth()
 
     const history = useHistory()
+    const [openConfirmCompleteDialog, setOpenConfirmCompleteDialog] = useState(false);
+    const [openConfirmCompleteDialog2, setOpenConfirmCompleteDialog2] = useState(false);
+    const [openConfirmFailDialog, setOpenConfirmFailDialog] = useState(false);
 
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -176,6 +183,85 @@ function AssignInfo(props) {
                 return <Chip label={purpose} /> // #5c21f3
         }
     }
+
+    const generateTaskStatusChip = (result, endDate) => {
+        const today = new Date()
+        const deadline = new Date(endDate)
+        switch (result) {
+            case taskResultNames.successful:
+                return <Chip label={taskStatusNames.success} variant="outlined" className={classes.chipSuccess} />
+            case taskResultNames.tbd:
+                if (today <= deadline)
+                    return <Chip label={taskStatusNames.ongoing} variant="outlined" className={classes.chipOnGoing} />
+                else
+                    return <Chip label={taskStatusNames.failed} variant="outlined" className={classes.chipFailed} />
+            default:
+                break   // ko hiện gì
+            // return <Chip label={result} /> // #5c21f3
+        }
+    }
+
+    console.log('task: ', task);
+
+    const handleMarkComplete = (purpose) => {
+        switch (purpose) {
+            case purposeNames.purp1:  // Sales mới
+            case purposeNames.purp4:  // Tái ký
+            case purposeNames.purp5:  // Ký mới
+                if (openConfirmCompleteDialog) {
+                    return (
+                        <UpdateSchStatus
+                            open={openConfirmCompleteDialog}
+                            onClose={() => setOpenConfirmCompleteDialog(false)}
+                            task={task}
+                            refreshPage={refreshPage}
+                        // resetStatus={resetStatus}
+                        // currStatus={currStatus}
+                        />
+                    )
+                }
+            case purposeNames.purp2:  // Theo dõi
+            case purposeNames.purp3:  // Chăm sóc
+                if (openConfirmCompleteDialog2) {
+                    return (
+                        <ConfirmTaskComplete
+                            open={openConfirmCompleteDialog2}
+                            onClose={() => setOpenConfirmCompleteDialog2(false)}
+                            refreshPage={refreshPage}
+                            task={task}
+                        // setNotify={setNotify}
+                        />
+                    )
+                }
+            default:
+                break;
+        }
+    }
+
+    const handleMarkFail = () => {
+        if (openConfirmFailDialog) {
+            return (
+                <ConfirmTaskFail
+                    open={openConfirmFailDialog}
+                    onClose={() => setOpenConfirmFailDialog(false)}
+                    refreshPage={refreshPage}
+                    setNotify={setNotify}
+                />
+            )
+        }
+    }
+
+    // const renderConfirmFailedDialog = (taskStatus) => {
+    //     return (
+    //         <ConfirmTaskFail
+    //             open={openConfirmFailDialog}
+    //             onClose={() => setOpenConfirmFailDialog(false)}
+    //             taskStatus={taskStatus}
+    //             refreshPage={refreshPage}
+    //             setNotify={setNotify}
+    //         />
+    //     )
+    // }
 
     return (
         <div className={classes.panel}>
@@ -492,9 +578,7 @@ function AssignInfo(props) {
                                                             label={
                                                                 task?.noteBy
                                                                     ? `${fields.note.hasNote} ${task?.noteBy}`
-                                                                    : fields
-                                                                        .note
-                                                                        .noNote
+                                                                    : fields.note.noNote
                                                             }
                                                             variant="outlined"
                                                             fullWidth
@@ -502,13 +586,8 @@ function AssignInfo(props) {
                                                             rows={5}
                                                             value={value}
                                                             onChange={onChange}
-                                                            error={
-                                                                !!errors.note
-                                                            }
-                                                            helperText={
-                                                                errors?.note
-                                                                    ?.message
-                                                            }
+                                                            error={!!errors.note}
+                                                            helperText={errors?.note?.message}
                                                         />
                                                     )}
                                                 />
@@ -576,22 +655,26 @@ function AssignInfo(props) {
                                 className={classes.wrapper}
                             >
                                 <Grid
-                                    item
+                                    item container
                                     xs={12}
                                     sm={12}
                                     md={12}
                                     lg={12}
                                     className={classes.row}
                                 >
-                                    <Typography
-                                        color="inherit"
-                                        className={classes.header}
-                                    >
-                                        {headers.child1}
-                                    </Typography>
+                                    <Grid item xs={6} sm={4} md={4} lg={3}>
+                                        <Typography color="inherit" className={classes.header}>
+                                            {headers.child1}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} sm={8} md={8} lg={6}>
+                                        <Box display="flex" flexDirection="row-reverse">
+                                            {generateTaskStatusChip(task?.result, task?.endDate)}
+                                        </Box>
+                                    </Grid>
                                 </Grid>
 
-                                <Grid
+                                {/* <Grid
                                     item
                                     xs={12}
                                     sm={12}
@@ -627,7 +710,6 @@ function AssignInfo(props) {
                                             lg={6}
                                             className={classes.rowx}
                                         >
-                                            {/* <Typography color="inherit"> */}
                                             <div className={classes.user}>
                                                 {task?.avatar ? (
                                                     <Avatar
@@ -669,10 +751,9 @@ function AssignInfo(props) {
                                                     </Typography>
                                                 </div>
                                             </div>
-                                            {/* </Typography> */}
                                         </Grid>
                                     </Grid>
-                                </Grid>
+                                </Grid> */}
 
                                 <Grid
                                     item
@@ -798,14 +879,7 @@ function AssignInfo(props) {
                                     </Grid>
                                 </Grid>
 
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={12}
-                                    className={classes.row}
-                                >
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
                                     <Grid
                                         container
                                         spacing={0}
@@ -852,10 +926,8 @@ function AssignInfo(props) {
                                                         disabled
                                                         InputProps={{
                                                             classes: {
-                                                                root:
-                                                                    styles.inputRoot,
-                                                                disabled:
-                                                                    styles.disabled,
+                                                                root: styles.inputRoot,
+                                                                disabled: styles.disabled,
                                                             },
                                                         }}
                                                         value={value}
@@ -865,6 +937,43 @@ function AssignInfo(props) {
                                         </Grid>
                                     </Grid>
                                 </Grid>
+
+                                {(task?.result === taskResultNames.tbd) && (new Date() <= new Date(task?.endDate)) && (
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                        <Grid container spacing={0} className={classes.rowx}>
+                                            <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}></Grid>
+                                            <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
+                                                <Box display="flex" flexDirection="row" justifyContent="flex-end"
+                                                    className={classes.btnChangeTaskStatus}
+                                                >
+                                                    <Button order={1} variant="contained" className={classes.btnComplete}
+                                                        onClick={() => {
+                                                            if (task?.purpose === purposeNames.purp1 ||
+                                                                task?.purpose === purposeNames.purp4 ||
+                                                                task?.purpose === purposeNames.purp5
+                                                            ) {
+                                                                setOpenConfirmCompleteDialog(true)
+                                                            } else {
+                                                                setOpenConfirmCompleteDialog2(true)
+                                                            }
+                                                        }}
+                                                    >
+                                                        Mark as completed
+                                                </Button>
+                                                    {/* {renderConfirmTaskCompleteDialog()} */}
+                                                    <Button order={2} variant="contained" className={classes.btnFail}
+                                                        onClick={() => setOpenConfirmFailDialog(true)}
+                                                    >
+                                                        Mark as failed
+                                                    </Button>
+                                                    {handleMarkComplete(task?.purpose)}
+                                                    {handleMarkFail()}
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                )
+                                }
                             </Grid>
                         </Grid>
                     ) : (

@@ -37,7 +37,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { IoInformationCircleSharp } from 'react-icons/io5'
 import RejectService from '../../dialogs/RejectService/RejectService';
 import ConfirmApprove from '../../dialogs/ConfirmApprove/ConfirmApprove';
-import { useService } from '../../hooks/ServiceContext'
 import { DateRangePickers } from '../../components';
 import { suggestPrice } from '../../../../utils/Suggestions';
 import classes from './ServiceInfo.module.scss'
@@ -105,7 +104,6 @@ function ServiceInfo(props) {
 
     const history = useHistory()
     const { user } = useAuth()
-    const { serviceTypes } = useService()
 
     // Popover Criteria Info
     // const [anchorEl, setAnchorEl] = React.useState(null);
@@ -903,7 +901,7 @@ function ServiceInfo(props) {
                                                 </Grid>
                                                 <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
                                                     <Typography color="inherit">
-                                                        {currencyFormatter.format(service?.pricePerSlot)}{fields.price.adornment}
+                                                        {currencyFormatter.format(service?.pricePerSlot)}/period
                                                     </Typography>
                                                 </Grid>
                                             </Grid>

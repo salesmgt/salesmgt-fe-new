@@ -364,7 +364,7 @@ function CreateServicesForm(props) {
                                         variant="outlined"
                                         type="number"
                                         required
-                                        fullWidth
+                                        // fullWidth
                                         value={value}
                                         onChange={onChange}
                                         InputProps={{
@@ -396,7 +396,7 @@ function CreateServicesForm(props) {
                                         variant="outlined"
                                         type="number"
                                         required
-                                        fullWidth
+                                        // fullWidth
                                         value={value}
                                         onChange={onChange}
                                         InputProps={{
@@ -468,7 +468,7 @@ function CreateServicesForm(props) {
                                                 variant="outlined"
                                                 type="number"
                                                 required
-                                                fullWidth
+                                                // fullWidth
                                                 InputProps={{
                                                     endAdornment: (
                                                         <InputAdornment position="end">
@@ -563,7 +563,7 @@ function CreateServicesForm(props) {
                                                 variant="outlined"
                                                 type="number"
                                                 required
-                                                fullWidth
+                                                // fullWidth
                                                 value={value}
                                                 onChange={(e) => onChange(e.target.value)}
                                                 InputProps={{

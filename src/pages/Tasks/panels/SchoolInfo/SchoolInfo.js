@@ -26,8 +26,8 @@ import { milkNames } from '../../../../constants/Generals'
 import { roleNames, statusNames } from '../../../../constants/Generals'
 import * as TasksServices from '../../TasksServices'
 import { PHONE_RGX } from '../../../../utils/Regex'
-import UpdateSchStatus from '../../dialogs/UpdateSchStatus/UpdateSchStatus'
-import ConfirmUpdateSchoolStatus from '../../dialogs/ConfirmUpdateSchoolStatus/ConfirmUpdateSchoolStatus'
+// import UpdateSchStatus from '../../dialogs/UpdateSchStatus/UpdateSchStatus'
+// import ConfirmUpdateSchoolStatus from '../../dialogs/ConfirmUpdateSchoolStatus/ConfirmUpdateSchoolStatus'
 import classes from './SchoolInfo.module.scss'
 
 const reprSchema = yup.object().shape({

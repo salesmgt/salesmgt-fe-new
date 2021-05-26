@@ -31,7 +31,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 // import { Snackbars } from '../../../../components'
 import { useSnackbar } from 'notistack'
-import { Consts, confirmTaskCompleteMessage, getCriteriaInfo } from '../DialogConfig'   // updateStatusMessage,
+import { Consts, confirmTaskCompleteMessage1, getCriteriaInfo } from '../DialogConfig'   // updateStatusMessage,
 import * as TasksServices from '../../TasksServices'
 import { useTask } from '../../hooks/TaskContext'
 import { useAuth } from '../../../../hooks/AuthContext'
@@ -104,7 +104,7 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 })
 
 function UpdateSchStatus(props) {
-    const { open, onClose, resetStatus, task, currStatus, refreshPage } = props
+    const { open, onClose, task, refreshPage } = props
     const { headers, operations, fields, messages } = Consts
 
     const { enqueueSnackbar } = useSnackbar()
@@ -169,38 +169,38 @@ function UpdateSchStatus(props) {
     }
     const customServiceTypes = customiseServiceList(task?.level)
 
-    const allowUpdate = () => {
-        // console.log('allow aupdate nè');
+    // const allowUpdate = () => {
+    //     // console.log('allow aupdate nè');
 
-        TasksServices.updateStatus(task?.schoolId, currStatus)
-            .then((res) => {
-                refreshPage(task?.id)
-                // setNotify({
-                //     isOpen: true,
-                //     message: "Updated school's status successfully",
-                //     type: 'success',
-                // })
+    //     TasksServices.updateStatus(task?.schoolId, currStatus)
+    //         .then((res) => {
+    //             refreshPage(task?.id)
+    //             // setNotify({
+    //             //     isOpen: true,
+    //             //     message: "Updated school's status successfully",
+    //             //     type: 'success',
+    //             // })
 
-                enqueueSnackbar(messages.updatedSuccess, { variant: 'success' })
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-                // setNotify({
-                //     isOpen: true,
-                //     message: "Updated school's status failed",
-                //     type: 'error',
-                // })
-                enqueueSnackbar(messages.updatedError, {
-                    variant: 'error',
-                })
-            })
-    }
+    //             enqueueSnackbar(messages.updatedSuccess, { variant: 'success' })
+    //         })
+    //         .catch((error) => {
+    //             if (error.response) {
+    //                 console.log(error)
+    //                 history.push({
+    //                     pathname: '/errors',
+    //                     state: { error: error.response.status },
+    //                 })
+    //             }
+    //             // setNotify({
+    //             //     isOpen: true,
+    //             //     message: "Updated school's status failed",
+    //             //     type: 'error',
+    //             // })
+    //             enqueueSnackbar(messages.updatedError, {
+    //                 variant: 'error',
+    //             })
+    //         })
+    // }
 
     // Coi xem chỗ này còn lỗi ko
     // console.log('listManagers: ', listManagers)
@@ -250,13 +250,37 @@ function UpdateSchStatus(props) {
 
         TasksServices.createServices(model)
             .then((res) => {
+                TasksServices.completeTasks(task?.id).then(res => {
+                    refreshPage(task?.id)
+                    enqueueSnackbar("Updated task's status successfully", {
+                        variant: 'success',
+                    })
+                }).catch((error) => {
+                    if (error.response) {
+                        console.log(error)
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
+                    // setNotify({
+                    //     isOpen: true,
+                    //     message: 'Proposed a service failed',
+                    //     type: 'error',
+                    // })
+                    enqueueSnackbar("Updated task's status failed", {
+                        variant: 'error',
+                    })
+                })
+
+
                 // setNotify({
                 //     isOpen: true,
                 //     message: 'Proposed a service successfully',
                 //     type: 'success',
                 // })
 
-                enqueueSnackbar(messages.createdSuccess, {
+                enqueueSnackbar('Created service successfully', {
                     variant: 'success',
                 })
 
@@ -265,7 +289,7 @@ function UpdateSchStatus(props) {
 
                 // reset({ showCreate: false })
 
-                allowUpdate()
+                // allowUpdate()
                 onClose()
             })
             .catch((error) => {
@@ -281,7 +305,7 @@ function UpdateSchStatus(props) {
                 //     message: 'Proposed a service failed',
                 //     type: 'error',
                 // })
-                enqueueSnackbar(messages.createdError, {
+                enqueueSnackbar('Created service failed', {
                     variant: 'error',
                 })
             })
@@ -302,7 +326,7 @@ function UpdateSchStatus(props) {
                             {/* If you want to update this status, please process to create
                     a Memorandum of Contract. */}
                             {/* {updateStatusMessage()} */}
-                            {confirmTaskCompleteMessage()}
+                            {confirmTaskCompleteMessage1()}
                             <Divider style={{ margin: '1.1rem 5rem' }} />
 
                             {/* <div className={classes.showCreate}>
@@ -325,7 +349,7 @@ function UpdateSchStatus(props) {
                                 <> */}
                             {/* <Divider style={{ marginBottom: '1.1rem' }} /> */}
                             <Grid container spacing={2} className={classes.wrapper}>
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowx}>
                                     <Box display="flex" flexDirection="row">
                                         <Box flexGrow={1} display="flex" flexDirection="row">
                                             <Tooltip title='Service "Toán Khoa" only available for schools which are "Tiểu học"' placement="right-end">
@@ -373,7 +397,7 @@ function UpdateSchStatus(props) {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowx}>
                                     <Controller
                                         name="duration"
                                         control={control}
@@ -391,17 +415,18 @@ function UpdateSchStatus(props) {
                                     {/* <InputLabel>Duration *</InputLabel> */}
                                 </Grid>
 
-                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                <Grid item xs={7} sm={6} md={6} lg={6} className={classes.rowx}>
                                     <Controller
                                         name="classNumber"
                                         control={control}
                                         render={({ value, onChange }) => (
                                             <TextField
+                                                className={classes.txtNumber}
                                                 label={fields.classNo.title}
                                                 variant="outlined"
                                                 type="number"
                                                 required
-                                                fullWidth
+                                                // fullWidth
                                                 value={value}
                                                 onChange={onChange}
                                                 InputProps={{
@@ -422,17 +447,18 @@ function UpdateSchStatus(props) {
                                     />
                                 </Grid>
 
-                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                <Grid item xs={7} sm={6} md={6} lg={6} className={classes.rowx}>
                                     <Controller
                                         name="studentNumber"
                                         control={control}
                                         render={({ value, onChange }) => (
                                             <TextField
+                                                className={classes.txtNumber}
                                                 label={fields.studentNumber.title}
                                                 variant="outlined"
                                                 type="number"
                                                 required
-                                                fullWidth
+                                                // fullWidth
                                                 value={value}
                                                 onChange={onChange}
                                                 InputProps={{
@@ -453,14 +479,15 @@ function UpdateSchStatus(props) {
                                     />
                                 </Grid>
 
-                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                <Grid item xs={7} sm={6} md={6} lg={6} className={classes.rowx}>
                                     <Controller
                                         name="pricePerSlot"
                                         control={control}
                                         render={({ value, onChange }) => (
                                             <Grid container>
-                                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                <Grid item xs={12} sm={12} md={10} lg={10}>
                                                     <TextField
+                                                        className={classes.txtPrice}
                                                         label={fields.price.title}
                                                         variant="outlined"
                                                         type="number"
@@ -507,7 +534,7 @@ function UpdateSchStatus(props) {
                                     />
                                 </Grid>
 
-                                <Grid item xs={7} sm={6} md={6} lg={6}>
+                                <Grid item xs={7} sm={6} md={6} lg={6} className={classes.rowx}>
                                     <Controller
                                         name="slotNumber"
                                         control={control}
@@ -515,11 +542,12 @@ function UpdateSchStatus(props) {
                                             <Grid container>
                                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                                     <TextField
+                                                        className={classes.txtNumber}
                                                         label={fields.slotNumber.title}
                                                         variant="outlined"
                                                         type="number"
                                                         required
-                                                        fullWidth
+                                                        // fullWidth
                                                         value={value}
                                                         onChange={(e) => onChange(e.target.value)}
                                                         InputProps={{
@@ -528,7 +556,7 @@ function UpdateSchStatus(props) {
                                                                     {fields.slotNumber.adornment}
                                                                 </InputAdornment>
                                                             ),
-                                                            inputProps: { min: 0, max: 10 }
+                                                            inputProps: { min: 1, max: 10 }
                                                         }}
                                                         error={!!errors.slotNumber}
                                                         helperText={errors?.slotNumber ?
@@ -601,7 +629,7 @@ function UpdateSchStatus(props) {
                                         />
                                     </Grid> */}
 
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowx}>
                                     <Controller
                                         name="note"
                                         control={control}
@@ -641,14 +669,15 @@ function UpdateSchStatus(props) {
                         onClick={() => {
                             reset({
                                 errors: false,
-                                showCreate: false,
+                                // showCreate: false,
                             })
                             onClose()
-                            resetStatus()
                         }}
                     >
                         {operations.cancel}
                     </Button>
+                    {console.log(getValues('pricePerSlot'))}
+                    {console.log(getValues('slotNumber'))}
                 </DialogActions>
             </Dialog>
         </>

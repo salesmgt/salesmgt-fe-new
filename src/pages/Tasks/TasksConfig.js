@@ -38,7 +38,8 @@ export const taskConsts = {
     },
     tabNames: {
         tab1: 'School Info',
-        tab2: 'Assign Info',
+        tab2: 'Task Info',
+        // tab2: 'Assign Info',
         tab3: 'Timeline',
         // tab3: 'Services Info',
     },

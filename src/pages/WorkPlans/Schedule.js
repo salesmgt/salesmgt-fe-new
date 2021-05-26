@@ -82,6 +82,9 @@ const useStyles = makeStyles((theme) => ({
     itemTextPrimary: {
         fontSize: '0.875rem',
     },
+    itemTextSecondary: {
+        fontSize: '0.8rem',
+    },
 }))
 L10n.load({
     'en-US': {
@@ -166,7 +169,7 @@ const Schedule = (props) => {
                 'Do you want to cancel the changes made to specific instances of this series and match it to the whole series again?'
             if (
                 args.element.querySelector('.e-dlg-content').textContent ===
-                    string &&
+                string &&
                 args.element.querySelector('.e-quick-dialog-alert-btn')
                     .textContent === 'Yes'
             ) {
@@ -310,7 +313,7 @@ const Schedule = (props) => {
                         endTime: cellData.endTime,
                         allDay: cellData.isAllDay,
                         location: filteredData[0].district ?
-                            schoolName + ' (' + filteredData[0].district + ')': schoolName,
+                            schoolName + ' (' + filteredData[0].district + ')' : schoolName,
                     }
                     schedule.openEditor(eventData, 'Add', true)
                 }
@@ -418,14 +421,12 @@ const Schedule = (props) => {
                                                 <Avatar src={option.avatar} />
                                             </ListItemAvatar>
                                             <ListItemText
-                                                primary={
-                                                    option.fullName
-                                                        ? option.fullName
-                                                        : ''
-                                                }
+                                                primary={option?.fullName ? option.fullName : ''}
+                                                secondary={option?.username
+                                                    ? `${option?.username} • ${option?.roleName}` : ''}
                                                 classes={{
-                                                    primary:
-                                                        classes.itemTextPrimary,
+                                                    primary: classes.itemTextPrimary,
+                                                    secondary: classes.itemTextSecondary,
                                                 }}
                                             />
                                         </ListItem>
@@ -435,9 +436,9 @@ const Schedule = (props) => {
                                 onChange={(event, newPIC) =>
                                     handleSearchNameChange(event, newPIC)
                                 }
-                                // onBlur={(event, pic) =>
-                                //     handleSearchNameChange(event, pic)
-                                // }
+                            // onBlur={(event, pic) =>
+                            //     handleSearchNameChange(event, pic)
+                            // }
                             />
                         </div>
                         <ScheduleComponent

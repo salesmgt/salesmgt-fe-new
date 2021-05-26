@@ -1,6 +1,7 @@
 export const Consts = {
     headers: {
-        child1: 'Assign Detail',
+        child1: 'Task Detail',
+        // child1: 'Assign Detail',
     },
     operations: {
         cancel: 'Cancel',
@@ -8,6 +9,8 @@ export const Consts = {
         empty: 'Not assigned yet!',
         restriction: `Sorry, you can't view this!`,
         purpWarning: 'New school status has been applied',
+        complete: 'Mark as completed',
+        fail: 'Mark as failed',
     },
     fields: {
         name: {

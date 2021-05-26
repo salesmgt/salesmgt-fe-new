@@ -6,10 +6,13 @@ import DateFnsAdapter from 'mui-pickers-v4/adapter/date-fns'
 // import { DATE_RANGE_FILTER } from '../../../../../constants/Filters'
 
 const useStyles = makeStyles((theme) => ({
-    formControl: {
+    formControl1: {
         width: 130,
         margin: theme.spacing(1),
         // paddingRight: '0.5rem',
+    },
+    formControl2: {
+        width: 200,
     },
 }))
 
@@ -57,12 +60,12 @@ function DateRangePickers(props) {
                         {isFilter ? (
                             <Grid container >
                                 <Grid item xs={6} sm={5} md={5} lg={5}>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl1}>
                                         <TextField {...startProps} variant="standard" fullWidth />
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={6} sm={5} md={5} lg={5} >
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl1}>
                                         <TextField {...endProps} variant="standard" fullWidth />
                                     </FormControl>
                                 </Grid>
@@ -70,14 +73,14 @@ function DateRangePickers(props) {
                         ) : (
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6} md={6} lg={6}>
-                                    <FormControl fullWidth>
-                                        <TextField {...startProps} variant="outlined" fullWidth value={duration[0]} />
+                                    <FormControl className={classes.formControl2}>
+                                        <TextField {...startProps} variant="outlined" value={duration[0]} />
                                     </FormControl>
                                 </Grid>
                                 {/* <Box sx={{ mx: 2 }}> to </Box> */}
                                 <Grid item xs={12} sm={6} md={6} lg={6}>
-                                    <FormControl fullWidth>
-                                        <TextField {...endProps} variant="outlined" fullWidth value={duration[1]} />
+                                    <FormControl className={classes.formControl2}>
+                                        <TextField {...endProps} variant="outlined" value={duration[1]} />
                                     </FormControl>
                                 </Grid>
                             </Grid>

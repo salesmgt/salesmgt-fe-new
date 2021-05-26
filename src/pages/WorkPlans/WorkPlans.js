@@ -46,6 +46,23 @@ function WorkPlans() {
                         })
                     }
                 })
+        } else { // user.roles[0] === roleNames.manager || user.roles[0] === roleNames.supervisor
+            getPICs({ active: true, fullName: e })
+                .then((data) => {
+                    const listPCIs = data.filter(pic => pic.roleName !== roleNames.admin)
+                    // console.log('data: ', data)
+                    // console.log('listPCIs: ', listPCIs)
+                    setListPICs(listPCIs)
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error)
+                        history.push({
+                            pathname: '/errors',
+                            state: { error: error.response.status },
+                        })
+                    }
+                })
         }
     }
     useEffect(() => {
