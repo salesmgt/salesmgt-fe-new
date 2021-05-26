@@ -622,23 +622,23 @@ function SchoolInfo(props) {
 
                 {/* School status Sector */}
                 {/* {user.roles[0] !== roleNames.salesman || */} {/**Ko cho Manager/Supervisor đổi status */}
-                {(user.roles[0] === roleNames.salesman && user.username === task?.username) && (
+                {/* {(user.roles[0] === roleNames.salesman && user.username === task?.username) && (
                     <>
                         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                             <form noValidate
                             // onSubmit={handleSubmit(onSubmit)}
                             >
-                                <Grid container spacing={0} className={classes.wrapper}>
-                                    <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
+                                <Grid container spacing={0} className={classes.wrapper}> */}
+                {/* <Grid item xs={12} sm={12} md={3} lg={3} className={classes.row}>
                                         <Typography
                                             color="inherit"
                                             className={classes.header}
                                         >
                                             {headers.child2}
                                         </Typography>
-                                    </Grid>
+                                    </Grid> */}
 
-                                    <Grid item xs={12} sm={12} md={9} lg={8}
+                {/* <Grid item xs={12} sm={12} md={9} lg={8}
                                         className={classes.statusCbZone}
                                     >
                                         <Controller
@@ -676,9 +676,9 @@ function SchoolInfo(props) {
                                                 </Select>
                                             )}
                                         />
-                                    </Grid>
-                                    {/* Action */}
-                                    {/* <Grid
+                                    </Grid> */}
+                {/* Action */}
+                {/* <Grid
                     item
                     xs={12}
                     sm={12}
@@ -695,13 +695,15 @@ function SchoolInfo(props) {
                         {operations.save}
                     </Button>
                 </Grid> */}
-                                    {/* End Action */}
-                                    {/* </Grid>
+                {/* End Action */}
+                {/* </Grid>
             </Grid> */}
-                                </Grid>
+                {/* </Grid>
                             </form>
-                        </Grid>
-                        <UpdateSchStatus
+                        </Grid> */}
+
+                {/**Giờ không còn cho Salesman update school status nữa. */}
+                {/* <UpdateSchStatus
                             open={open}
                             onClose={() => {
                                 resetStatus()
@@ -711,8 +713,8 @@ function SchoolInfo(props) {
                             task={task}
                             currStatus={currStatus}
                             refreshPage={refreshPage}
-                        />
-                        <ConfirmUpdateSchoolStatus
+                        /> */}
+                {/* <ConfirmUpdateSchoolStatus
                             open={openConfirmNgungHT}
                             onClose={() => {
                                 resetStatus()
@@ -722,9 +724,9 @@ function SchoolInfo(props) {
                             selectedStatus={currStatus}
                             refreshAPI={refreshPage}
                             setNotify={setNotify}
-                        />
-                    </>
-                )}
+                        /> */}
+                {/* </>
+                )} */}
                 {/* : (
                     <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                             <Grid container spacing={0} className={classes.wrapper}>
@@ -745,6 +747,8 @@ function SchoolInfo(props) {
                                         </Grid>
                                     </Grid>
                                 )} */}
+
+                {/**=========================================================================================================== */}
 
                 {/* Principal detail Sector */}
                 {task?.schoolStatus !== statusNames.pending ? (
