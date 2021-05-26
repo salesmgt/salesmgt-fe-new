@@ -160,9 +160,12 @@ function CreateServicesForm(props) {
         const customServiceTypes = [...serviceTypes]
 
         if (schoolLevel !== schoolLevelNames.th) {
-            customServiceTypes.splice(customServiceTypes.indexOf(serviceNames.svc3), 1)
+            customServiceTypes.splice(
+                customServiceTypes.indexOf(serviceNames.svc3),
+                1
+            )
         }
-        return customServiceTypes;
+        return customServiceTypes
     }
     const customServiceTypes = customiseServiceList(schoolLevel)
 
