@@ -15,12 +15,15 @@ import {
     ListItemText,
     Chip,
     Badge,
+    Box,
+    LinearProgress,
+    Typography
 } from '@material-ui/core'
 import {
     MdFirstPage,
     MdKeyboardArrowLeft,
     MdKeyboardArrowRight,
-    MdLastPage,
+    MdLastPage
 } from 'react-icons/md'
 // import { RiStickyNoteFill } from 'react-icons/ri';
 // import { schools as schoolsData } from '../../data/mock-data'
@@ -38,6 +41,21 @@ import Highlighter from 'react-highlight-words'
 import { Snackbars } from '../../../../components'
 import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes';
 import classes from './Tables.module.scss'
+
+function LinearProgressWithLabel(props) {
+    return (
+      <Box display="flex" alignItems="center">
+        <Box width="100%" mr={1}>
+          <LinearProgress variant="determinate" {...props} />
+        </Box>
+        <Box minWidth={35}>
+          <Typography variant="body2" color="textSecondary">{`${Math.round(
+            props.value,
+          )}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -62,7 +80,7 @@ function TablePaginationActions(props) {
     const handleNextPageButtonClick = (event) => {
         onChangePage(event, page + 1) // current page + 1
     }
-
+   
     return (
         <div className={classes.paging}>
             <IconButton
@@ -292,6 +310,13 @@ function Tables(props) {
             return '#000'
         }
     }
+    const calculate = (date1, date2)  => {
+        if (calculateDatesGap(new Date(date1),new Date(),"D")*100/calculateDatesGap(new Date(date1),new Date(date2),"D") > 100)
+        return 100
+         if (calculateDatesGap(new Date(date1),new Date(),"D")*100/calculateDatesGap(new Date(date1),new Date(date2),"D")  < 0)
+        return 0
+         return calculateDatesGap(new Date(date1),new Date(),"D")*100/calculateDatesGap(new Date(date1),new Date(date2),"D")
+     }
 
     return (
         <div className={classes.wrapper}>
@@ -442,14 +467,7 @@ function Tables(props) {
                                             {row?.purpose && setPurposeChipColor(row?.purpose)}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
-                                            {row?.username && row?.assignDate && (
-                                                <Highlighter
-                                                    highlightClassName="YourHighlightClass"
-                                                    searchWords={[params.searchKey]}
-                                                    autoEscape={true}
-                                                    textToHighlight={parseDateToString(row?.assignDate, 'DD-MM-yyyy') || ''}
-                                                />
-                                            )}
+                                            <LinearProgressWithLabel value={calculate(row?.assignDate,row?.endDate)} />
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell}>
                                             {row?.endDate && (

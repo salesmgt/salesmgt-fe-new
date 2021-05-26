@@ -19,7 +19,9 @@
         }
     }
 }
-
+.helper {
+    color: $main-error !important ;
+}
 .suggestions {
     margin: 0.2rem 0.25rem 0 0 !important;
     // padding: 0 !important;
