@@ -4,6 +4,7 @@ import {
     DialogContent,
     DialogActions,
     Button,
+    FormControl,
     Grid,
     TextField,
     RadioGroup,
@@ -15,7 +16,10 @@ import {
     Tooltip,
     Icon,
     Box,
+    OutlinedInput,
+    FormHelperText,
     ClickAwayListener,
+    FilledInput,
 } from '@material-ui/core'
 import moment from 'moment'
 import { useForm, Controller } from 'react-hook-form'
@@ -71,6 +75,7 @@ const currencyFormatter = new Intl.NumberFormat('vi-VN', {
     style: 'currency', currency: 'VND',
 });
 
+
 function CreateServicesForm(props) {
     const {
         onClose,
@@ -98,7 +103,6 @@ function CreateServicesForm(props) {
 
     const [openInfoTooltip, setOpenInfoTooltip] = useState(false);
     const [priceSuggestions, setPriceSuggestions] = useState([]);
-
     const defaultValues = {
         // id: taskId,
         startDate: new Date(),
@@ -110,7 +114,6 @@ function CreateServicesForm(props) {
         pricePerSlot: 100000,
         note: '',
     }
-
     const { control, errors, handleSubmit, formState, reset, getValues } = useForm({
         resolver: yupResolver(clientSchema),
         defaultValues: defaultValues,
@@ -157,9 +160,12 @@ function CreateServicesForm(props) {
         const customServiceTypes = [...serviceTypes]
 
         if (schoolLevel !== schoolLevelNames.th) {
-            customServiceTypes.splice(customServiceTypes.indexOf(serviceNames.svc3), 1)
+            customServiceTypes.splice(
+                customServiceTypes.indexOf(serviceNames.svc3),
+                1
+            )
         }
-        return customServiceTypes;
+        return customServiceTypes
     }
     const customServiceTypes = customiseServiceList(schoolLevel)
 
@@ -276,9 +282,6 @@ function CreateServicesForm(props) {
 
         // alert(JSON.stringify(model))
     }
-
-    // console.log(new Intl.NumberFormat('vi-VN').format(priceSuggestions[0]),
-    //     new Intl.NumberFormat('vi-VN').format(priceSuggestions[1]), new Intl.NumberFormat('vi-VN').format(priceSuggestions[2]));
 
     return (
         <>
@@ -418,44 +421,15 @@ function CreateServicesForm(props) {
                         </Grid>
 
                         <Grid item xs={7} sm={6} md={6} lg={6}>
-                            {/* <Controller
-                                as={<TextField />}
-                                name="pricePerSlot"
-                                label={fields.price.title}
-                                variant="outlined"
-                                type="number"
-                                required
-                                fullWidth
-                                control={control}
-                                value={pricePerSlot}
-                                onChange={([event]) => {
-                                    console.log('onChange neeeee: ', event);
-                                    setPricePerSlot(event.target.value)
-                                    handlePriceChange(event)
-                                    return event.target.value
-                                }}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            {fields.price.adornment}
-                                        </InputAdornment>
-                                    ),
-                                    inputProps: { min: 1, max: 2000000 },
-                                }}
-                                error={!!errors.pricePerSlot}
-                                helperText={errors?.pricePerSlot ?
-                                    errors?.pricePerSlot?.message
-                                    : fields.price.helper
-                                }
-                            /> */}
+                            <FormControl errors>
+                                <Controller
+                                    name="pricePerSlot"
+                                    control={control}
+                                    render={({ value, onChange }) => (<>
 
-                            <Controller
-                                name="pricePerSlot"
-                                control={control}
-                                render={({ value, onChange }) => (
-                                    <Grid container>
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            {/* <NumberFormat
+                                        <Grid container>
+                                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                {/* <NumberFormat
                                                 allowNegative={false}
                                                 // suffix="VND/period"
                                                 isNumericString={true}
@@ -463,7 +437,7 @@ function CreateServicesForm(props) {
                                                 value={value}
                                                 onValueChange={onChange}
                                                 customInput={() => ( */}
-                                            <TextField
+                                                {/* <TextField
                                                 label={fields.price.title}
                                                 variant="outlined"
                                                 type="number"
@@ -483,16 +457,31 @@ function CreateServicesForm(props) {
                                                     suggestPrice(Number(e.target.value), setPriceSuggestions)
                                                 }}
                                                 error={!!errors.pricePerSlot}
-                                                helperText={errors?.pricePerSlot ?
+                                                helperText={errors?.pricePerSlot ? */}
+
+
+                                                <InputLabel htmlFor="component-disabled">{fields.price.title} `*</InputLabel>
+                                                <NumberFormat
+                                                    {...props}
+                                                    id="component-disabled"
+                                                    value={value}
+                                                    customInput={FilledInput}
+                                                    // suffix={'₫'}
+                                                    isNumericString
+                                                    type="text"
+                                                    thousandSeparator
+                                                    onValueChange={({ floatValue: v }) => {
+                                                        onChange(v)
+                                                        suggestPrice(v, setPriceSuggestions)
+                                                    }}
+                                                />
+                                                <FormHelperText className={errors?.pricePerSlot ? classes.helper : classes.normal}>{errors?.pricePerSlot ?
                                                     errors?.pricePerSlot?.message
                                                     : fields.price.helper
-                                                }
-                                            />
-                                            {/* )}
-                                            /> */}
+                                                }</FormHelperText>
 
 
-                                            {/* <TextField
+                                                {/* <TextField
                                                 label={fields.price.title}
                                                 variant="outlined"
                                                 type="number"
@@ -523,7 +512,7 @@ function CreateServicesForm(props) {
 
 
 
-                                            {/* <CurrencyInput
+                                                {/* <CurrencyInput
                                                 decimalsLimit={2}
                                                 allowNegativeValue={false}
                                                 maxLength={7}
@@ -531,24 +520,24 @@ function CreateServicesForm(props) {
                                                 // intlConfig={{ locale: 'vi-VN', currency: 'VND' }}
                                                 value={value}
                                                 onValueChange={onChange} /> */}
+                                            </Grid>
+                                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                {priceSuggestions.map((suggestion, index) => (
+                                                    <Button variant="outlined" size="small" color="secondary"
+                                                        onClick={(e) =>
+                                                            onChange(suggestion)
+                                                        }
+                                                        key={index}
+                                                        className={classes.suggestions}
+                                                    >
+                                                        {new Intl.NumberFormat('vi-VN').format(suggestion)}
+                                                    </Button>
+                                                ))}
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            {priceSuggestions.map((suggestion, index) => (
-                                                <Button variant="outlined" size="small" color="secondary"
-                                                    onClick={(e) => {
-                                                        // console.log('suggestedPrice = ', suggestion);
-                                                        onChange(suggestion)
-                                                    }}
-                                                    key={index}
-                                                    className={classes.suggestions}
-                                                >
-                                                    {new Intl.NumberFormat('vi-VN').format(suggestion)}
-                                                </Button>
-                                            ))}
-                                        </Grid>
-                                    </Grid>
-                                )}
-                            />
+                                    </>)}
+                                />
+                            </FormControl>
                         </Grid>
 
                         <Grid item xs={7} sm={6} md={6} lg={6}>

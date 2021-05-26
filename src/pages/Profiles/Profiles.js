@@ -34,7 +34,7 @@ import moment from 'moment'
 import { Loading, AddressField } from '../../components'
 import { PWD_RGX, PHONE_RGX } from '../../utils/Regex'
 import { useSnackbar } from 'notistack'
-import Geocode from 'react-geocode'
+// import Geocode from 'react-geocode'
 import classes from './Profiles.module.scss'
 
 const pwdSchema = yup.object().shape({
