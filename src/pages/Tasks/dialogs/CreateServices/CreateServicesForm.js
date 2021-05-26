@@ -19,7 +19,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Consts } from '../DialogConfig'
 import * as TasksServices from '../../TasksServices'
 import { DURATION_RGX } from '../../../../utils/Regex'
-import { schoolLevelNames, serviceNames, statusNames } from '../../../../constants/Generals'
+import {
+    schoolLevelNames,
+    serviceNames,
+    statusNames,
+} from '../../../../constants/Generals'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { useTask } from '../../hooks/TaskContext'
@@ -119,9 +123,12 @@ function CreateServicesForm(props) {
         const customServiceTypes = [...serviceTypes]
 
         if (schoolLevel !== schoolLevelNames.th) {
-            customServiceTypes.splice(customServiceTypes.indexOf(serviceNames.svc3), 1)
+            customServiceTypes.splice(
+                customServiceTypes.indexOf(serviceNames.svc3),
+                1
+            )
         }
-        return customServiceTypes;
+        return customServiceTypes
     }
     const customServiceTypes = customiseServiceList(schoolLevel)
 
@@ -241,7 +248,7 @@ function CreateServicesForm(props) {
     }
 
     const suggestPrice = (inputPrice) => {
-        console.log('inputPrice = ', inputPrice);
+        console.log('inputPrice = ', inputPrice)
         let suggestions = []
         const price = parseFloat(inputPrice)
         switch (price) {
@@ -254,17 +261,16 @@ function CreateServicesForm(props) {
                 const count = 0
                 while (price * 10 > 5000000) {
                     suggestions.push(price * 10)
-                    count++;
-                    if (count > 3)
-                        break;  // break của while()
+                    count++
+                    if (count > 3) break // break của while()
                     // else if (count === 2)
                     //     suggestions.push(price)
                     // else suggestions.push(price / 10)
                 }
                 // for(suggestions.map(suggest => {
-                //     if 
+                //     if
                 // }))
-                return suggestions;
+                return suggestions
             case price > 5000000:
                 const firstDigit = parseInt(String(price).charAt(0))
                 if (firstDigit > 5) {
@@ -321,8 +327,12 @@ function CreateServicesForm(props) {
                                 name="serviceType"
                                 control={control}
                                 render={({ value, onChange }) => (
-                                    <RadioGroup value={value} onChange={onChange} row>
-                                        {customServiceTypes.map(service => (
+                                    <RadioGroup
+                                        value={value}
+                                        onChange={onChange}
+                                        row
+                                    >
+                                        {customServiceTypes.map((service) => (
                                             <FormControlLabel
                                                 key={service}
                                                 control={<Radio />}
@@ -381,33 +391,49 @@ function CreateServicesForm(props) {
                                                 InputProps={{
                                                     endAdornment: (
                                                         <InputAdornment position="end">
-                                                            {fields.price.adornment}
+                                                            {
+                                                                fields.price
+                                                                    .adornment
+                                                            }
                                                         </InputAdornment>
                                                     ),
                                                     // inputProps: { min: 100000, max: 5000000 },
                                                 }}
-                                                value={new Intl.NumberFormat('vi-VN').format(value)}
+                                                value={new Intl.NumberFormat(
+                                                    'vi-VN'
+                                                ).format(value)}
                                                 // onChange={console.log}
                                                 onChange={() => {
                                                     onChange()
                                                     // console.log(value)
                                                 }}
                                                 error={!!errors.pricePerSlot}
-                                                helperText={errors?.pricePerSlot ?
-                                                    errors?.pricePerSlot?.message
-                                                    : fields.price.helper
+                                                helperText={
+                                                    errors?.pricePerSlot
+                                                        ? errors?.pricePerSlot
+                                                              ?.message
+                                                        : fields.price.helper
                                                 }
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={5} md={5} lg={5}>
-                                            {suggestPrice(value).map(suggestion => (
-                                                <Button variant="outlined" size="small" color="secondary"
-                                                    onClick={console.log}
-                                                    className={classes.suggestions}
-                                                >
-                                                    {new Intl.NumberFormat('vi-VN').format(suggestion)}
-                                                </Button>
-                                            ))}
+                                            {suggestPrice(value).map(
+                                                (suggestion) => (
+                                                    <Button
+                                                        variant="outlined"
+                                                        size="small"
+                                                        color="secondary"
+                                                        onClick={console.log}
+                                                        className={
+                                                            classes.suggestions
+                                                        }
+                                                    >
+                                                        {new Intl.NumberFormat(
+                                                            'vi-VN'
+                                                        ).format(suggestion)}
+                                                    </Button>
+                                                )
+                                            )}
                                         </Grid>
                                     </Grid>
                                 )}
