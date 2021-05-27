@@ -112,20 +112,23 @@
   color: $dark-info !important;
   border-color: $dark-info !important;
   border-radius: $default-radius !important;
+  border-width: 2px !important;
   margin-right: 1rem;
 }
 .chipSuccess {
   font-weight: 500;
-  color: $dark-success !important;
-  border-color: $dark-success !important;
+  color: $main-success !important;
+  border-color: $main-success !important;
   border-radius: $default-radius !important;
+  border-width: 2px !important;
   margin-right: 1rem;
 }
 .chipFailed {
   font-weight: 500;
-  color: $dark-error !important;
-  border-color: $dark-error !important;
+  color: $main-error !important;
+  border-color: $main-error !important;
   border-radius: $default-radius !important;
+  border-width: 2px !important;
   margin-right: 1rem;
 }
 

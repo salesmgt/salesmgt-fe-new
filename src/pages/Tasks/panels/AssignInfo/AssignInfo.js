@@ -29,7 +29,9 @@ import { getPurpsByStatus, handleMatchPurps } from '../../../../utils/Sortings'
 import UpdateSchStatus from '../../dialogs/UpdateSchStatus/UpdateSchStatus';
 import ConfirmTaskFail from '../../dialogs/ConfirmTaskFail/ConfirmTaskFail';
 import ConfirmTaskComplete from '../../dialogs/ConfirmTaskComplete/ConfirmTaskComplete';
+import { useSnackbar } from 'notistack'
 import classes from './AssignInfo.module.scss'
+import { parseDateToString } from '../../../../utils/DateTimes'
 
 const clientSchema = yup.object().shape({
     note: yup.string().trim(),
@@ -86,15 +88,18 @@ function AssignInfo(props) {
     const { user } = useAuth()
 
     const history = useHistory()
+    const { enqueueSnackbar } = useSnackbar()
+
     const [openConfirmCompleteDialog, setOpenConfirmCompleteDialog] = useState(false);
     const [openConfirmCompleteDialog2, setOpenConfirmCompleteDialog2] = useState(false);
     const [openConfirmFailDialog, setOpenConfirmFailDialog] = useState(false);
 
-    const [notify, setNotify] = useState({
-        isOpen: false,
-        message: '',
-        type: '',
-    })
+    // const [notify, setNotify] = useState({
+    //     isOpen: false,
+    //     message: '',
+    //     type: '',
+    // })
+    // console.log('AssignInfo ------- task: ', task);
 
     const { salesPurps } = useApp()
     const bakSalesPurps = salesPurps
@@ -143,11 +148,12 @@ function AssignInfo(props) {
         TasksServices.updateTask(task?.id, model)
             .then((res) => {
                 refreshPage(task?.id)
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated Successfully',
-                    type: 'success',
-                })
+                enqueueSnackbar('Updated task successfully', { variant: 'success' })
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Updated Successfully',
+                //     type: 'success',
+                // })
             })
             .catch((error) => {
                 if (error.response) {
@@ -157,11 +163,12 @@ function AssignInfo(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Updated failed',
-                    type: 'error',
-                })
+                enqueueSnackbar('Updated task failed', { variant: 'error' })
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Updated failed',
+                //     type: 'error',
+                // })
             })
 
         // alert(JSON.stringify(model))
@@ -184,17 +191,18 @@ function AssignInfo(props) {
         }
     }
 
-    const generateTaskStatusChip = (result, endDate) => {
-        const today = new Date()
-        const deadline = new Date(endDate)
+    const generateTaskStatusChip = (result) => {    //, endDate
+        // const today = new Date()
+        // const deadline = new Date(endDate)
         switch (result) {
             case taskResultNames.successful:
                 return <Chip label={taskStatusNames.success} variant="outlined" className={classes.chipSuccess} />
             case taskResultNames.tbd:
-                if (today <= deadline)
-                    return <Chip label={taskStatusNames.ongoing} variant="outlined" className={classes.chipOnGoing} />
-                else
-                    return <Chip label={taskStatusNames.failed} variant="outlined" className={classes.chipFailed} />
+                // if (today <= deadline)
+                return <Chip label={taskStatusNames.ongoing} variant="outlined" className={classes.chipOnGoing} />
+            // else
+            case taskResultNames.failed:
+                return <Chip label={taskStatusNames.failed} variant="outlined" className={classes.chipFailed} />
             default:
                 break   // ko hiện gì
             // return <Chip label={result} /> // #5c21f3
@@ -227,9 +235,8 @@ function AssignInfo(props) {
                         <ConfirmTaskComplete
                             open={openConfirmCompleteDialog2}
                             onClose={() => setOpenConfirmCompleteDialog2(false)}
+                            taskId={task?.id}
                             refreshPage={refreshPage}
-                            task={task}
-                        // setNotify={setNotify}
                         />
                     )
                 }
@@ -244,8 +251,8 @@ function AssignInfo(props) {
                 <ConfirmTaskFail
                     open={openConfirmFailDialog}
                     onClose={() => setOpenConfirmFailDialog(false)}
+                    taskId={task?.id}
                     refreshPage={refreshPage}
-                    setNotify={setNotify}
                 />
             )
         }
@@ -268,7 +275,9 @@ function AssignInfo(props) {
             <Grid container spacing={0} className={classes.body}>
                 {/* Assign Info*/}
                 {task?.schoolStatus !== statusNames.pending ? (
+                    //=======================Task status: "Ongoing"========================
                     user.roles[0] !== roleNames.salesman ? (
+                        //---------------------Role Manager/Supervisor---------------------
                         <Grid
                             item
                             xs={12}
@@ -284,19 +293,23 @@ function AssignInfo(props) {
                                     className={classes.wrapper}
                                 >
                                     <Grid
-                                        item
+                                        item container
                                         xs={12}
                                         sm={12}
                                         md={12}
                                         lg={12}
                                         className={classes.row}
                                     >
-                                        <Typography
-                                            color="inherit"
-                                            className={classes.header}
-                                        >
-                                            {headers.child1}
-                                        </Typography>
+                                        <Grid item xs={6} sm={4} md={4} lg={3}>
+                                            <Typography color="inherit" className={classes.header}>
+                                                {headers.child1}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={6} sm={8} md={8} lg={6}>
+                                            <Box display="flex" flexDirection="row-reverse">
+                                                {generateTaskStatusChip(task?.result)}
+                                            </Box>
+                                        </Grid>
                                     </Grid>
 
                                     <Grid
@@ -447,12 +460,20 @@ function AssignInfo(props) {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
-                                                <LinearProgressBars
-                                                    startDate={task?.assignDate}
-                                                    endDate={task?.endDate}
-                                                    marker={new Date()}
-                                                    type="task"
-                                                />
+                                                {task?.result === taskResultNames.tbd ? (
+                                                    <LinearProgressBars
+                                                        startDate={task?.assignDate}
+                                                        endDate={task?.endDate}
+                                                        marker={new Date()}
+                                                        type="task"
+                                                    />
+                                                ) : (
+                                                    <Typography color="inherit">
+                                                        {parseDateToString(task?.assignDate, 'DD-MM-YYYY')}
+                                                    &nbsp; ➜ &nbsp;
+                                                        {parseDateToString(task?.endDate, 'DD-MM-YYYY')}
+                                                    </Typography>
+                                                )}
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -659,14 +680,8 @@ function AssignInfo(props) {
                             </form>
                         </Grid>
                     ) : user.username === task?.username ? (
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.content}
-                        >
+                        //--------------------Salesman đang sử dụng app--------------------
+                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.content}>
                             <Grid
                                 container
                                 spacing={0}
@@ -824,18 +839,20 @@ function AssignInfo(props) {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
-                                            <LinearProgressBars
-                                                startDate={task?.assignDate}
-                                                endDate={task?.endDate}
-                                                marker={new Date()}
-                                                type="task"
-                                            // value={calculatePercentage(task?.assignDate, task?.endDate)}
-                                            />
-                                            {/* <Typography color="inherit">
-                                                {parseDateToString(task?.assignDate, 'DD-MM-YYYY')}
-                                                &nbsp; ➜ &nbsp;
-                                                {parseDateToString(task?.endDate, 'DD-MM-YYYY')}
-                                            </Typography> */}
+                                            {task?.result === taskResultNames.tbd ? (
+                                                <LinearProgressBars
+                                                    startDate={task?.assignDate}
+                                                    endDate={task?.endDate}
+                                                    marker={new Date()}
+                                                    type="task"
+                                                />
+                                            ) : (
+                                                <Typography color="inherit">
+                                                    {parseDateToString(task?.assignDate, 'DD-MM-YYYY')}
+                                                    &nbsp; ➜ &nbsp;
+                                                    {parseDateToString(task?.endDate, 'DD-MM-YYYY')}
+                                                </Typography>
+                                            )}
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -981,11 +998,14 @@ function AssignInfo(props) {
                             </Grid>
                         </Grid>
                     ) : (
+                        //------------------Salesman coi của Salesman khác-----------------
                         <div className={classes.notFound}>
                             <NotFound title={operations.restriction} />
                         </div>
                     )
                 ) : (
+                    //==========Role bất kỳ, task status: "Failed" / "Successful"==========
+                    // Role Manager/Supervisor thì phải
                     <Grid
                         item
                         xs={12}
@@ -996,19 +1016,23 @@ function AssignInfo(props) {
                     >
                         <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
-                                item
+                                item container
                                 xs={12}
                                 sm={12}
                                 md={12}
                                 lg={12}
                                 className={classes.row}
                             >
-                                <Typography
-                                    color="inherit"
-                                    className={classes.header}
-                                >
-                                    {headers.child1}
-                                </Typography>
+                                <Grid item xs={6} sm={4} md={4} lg={3}>
+                                    <Typography color="inherit" className={classes.header}>
+                                        {headers.child1}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} sm={8} md={8} lg={6}>
+                                    <Box display="flex" flexDirection="row-reverse">
+                                        {generateTaskStatusChip(task?.result, task?.endDate)}
+                                    </Box>
+                                </Grid>
                             </Grid>
 
                             <Grid
@@ -1137,12 +1161,20 @@ function AssignInfo(props) {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
-                                        <LinearProgressBars
-                                            startDate={task?.assignDate}
-                                            endDate={task?.endDate}
-                                            marker={new Date()}
-                                            type="task"
-                                        />
+                                        {task?.result === taskResultNames.tbd ? (
+                                            <LinearProgressBars
+                                                startDate={task?.assignDate}
+                                                endDate={task?.endDate}
+                                                marker={new Date()}
+                                                type="task"
+                                            />
+                                        ) : (
+                                            <Typography color="inherit">
+                                                {parseDateToString(task?.assignDate, 'DD-MM-YYYY')}
+                                                &nbsp; ➜ &nbsp;
+                                                {parseDateToString(task?.endDate, 'DD-MM-YYYY')}
+                                            </Typography>
+                                        )}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -1262,8 +1294,8 @@ function AssignInfo(props) {
 
                 {/* Another content */}
             </Grid>
-            <Snackbars notify={notify} setNotify={setNotify} />
-        </div>
+            {/* <Snackbars notify={notify} setNotify={setNotify} /> */}
+        </div >
     )
 }
 

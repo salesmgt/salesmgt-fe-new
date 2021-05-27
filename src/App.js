@@ -7,7 +7,7 @@ import AuthProvider from './hooks/AuthContext'
 import AppProvider from './hooks/AppContext'
 import PublicRoute from './routes/PublicRoute'
 import PrivateRoute from './routes/PrivateRoute'
-import { Button, Slide, makeStyles, IconButton } from '@material-ui/core'
+import { Slide, makeStyles, IconButton } from '@material-ui/core'
 import {
     MdCheckCircle,
     MdInfoOutline,

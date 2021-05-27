@@ -14,8 +14,8 @@ import { MdClose } from 'react-icons/md'
 import { Consts, confirmTaskCompleteMessage2 } from '../DialogConfig'
 import { useHistory } from 'react-router'
 import { completeTasks } from '../../TasksServices';
-import classes from './ConfirmTaskComplete.module.scss'
 import { useSnackbar } from 'notistack'
+import classes from './ConfirmTaskComplete.module.scss'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -45,16 +45,15 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmTaskComplete(props) {
-    const { open, onClose, refreshPage, task } = props
+    const { open, onClose, refreshPage, taskId } = props
     const { headers, operations } = Consts
 
     const history = useHistory()
-
     const { enqueueSnackbar } = useSnackbar()
 
     const handleCompleteTask = () => {
-        completeTasks(task?.id).then(res => {
-            refreshPage(task?.id)
+        completeTasks(taskId).then(res => {
+            refreshPage(taskId)
             enqueueSnackbar("Updated task's status successfully", {
                 variant: 'success',
             })
@@ -70,30 +69,6 @@ function ConfirmTaskComplete(props) {
                 variant: 'error',
             })
         })
-
-
-
-        // approveServices(service?.id).then((res) => {
-        //     refreshPage(service?.id)
-        //     setNotify({
-        //         isOpen: true,
-        //         message: 'Approved service successfully',
-        //         type: 'success',
-        //     })
-        // }).catch((error) => {
-        //     if (error.response) {
-        //         console.log(error)
-        //         history.push({
-        //             pathname: '/errors',
-        //             state: { error: error.response.status },
-        //         })
-        //     }
-        //     setNotify({
-        //         isOpen: true,
-        //         message: 'Approved service failed',
-        //         type: 'error',
-        //     })
-        // })
 
         onClose();
     }

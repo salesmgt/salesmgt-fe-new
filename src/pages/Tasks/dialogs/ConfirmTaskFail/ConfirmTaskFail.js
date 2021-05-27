@@ -13,6 +13,8 @@ import {
 import { MdClose } from 'react-icons/md'
 import { Consts, confirmTaskFailMessage } from '../DialogConfig'
 import { useHistory } from 'react-router'
+import { incompleteTasks } from '../../TasksServices';
+import { useSnackbar } from 'notistack'
 import classes from './ConfirmTaskFail.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -43,33 +45,30 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmTaskFail(props) {
-    const { open, onClose, refreshPage, setNotify } = props
+    const { open, onClose, taskId, refreshPage } = props
     const { headers, operations } = Consts
 
     const history = useHistory()
+    const { enqueueSnackbar } = useSnackbar()
 
-    const handleUpdateTaskStatus = () => {
-        // approveServices(service?.id).then((res) => {
-        //     refreshPage(service?.id)
-        //     setNotify({
-        //         isOpen: true,
-        //         message: 'Approved service successfully',
-        //         type: 'success',
-        //     })
-        // }).catch((error) => {
-        //     if (error.response) {
-        //         console.log(error)
-        //         history.push({
-        //             pathname: '/errors',
-        //             state: { error: error.response.status },
-        //         })
-        //     }
-        //     setNotify({
-        //         isOpen: true,
-        //         message: 'Approved service failed',
-        //         type: 'error',
-        //     })
-        // })
+    const handleIncompleteTask = () => {
+        incompleteTasks(taskId).then(res => {
+            refreshPage(taskId)
+            enqueueSnackbar("Updated task's status successfully", {
+                variant: 'success',
+            })
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+            enqueueSnackbar("Updated task's status failed", {
+                variant: 'error',
+            })
+        })
 
         onClose();
     }
@@ -87,7 +86,7 @@ function ConfirmTaskFail(props) {
             </DialogContent>
             {/* <Divider /> */}
             <DialogActions>
-                <Button className={classes.btnYes} onClick={handleUpdateTaskStatus}>
+                <Button className={classes.btnYes} onClick={handleIncompleteTask}>
                     {operations.yes}
                 </Button>
                 <Button onClick={onClose}>

@@ -84,18 +84,18 @@ function Timelines(props) {
         }
     }
 
-    const setTaskStatusChipColor = (status) => {
-        switch (status) {
-            case taskStatusNames.ongoing:
-                return <Chip label={status} className={classes.chipOnGoing} />
-            case taskStatusNames.success:
-                return <Chip label={status} className={classes.chipSuccess} />
-            case taskStatusNames.failed:
-                return <Chip label={status} className={classes.chipFailed} />
-            default:
-                return <Chip label={status} /> // #5c21f3
-        }
-    }
+    // const setTaskStatusChipColor = (status) => {
+    //     switch (status) {
+    //         case taskStatusNames.ongoing:
+    //             return <Chip label={status} className={classes.chipOnGoing} />
+    //         case taskStatusNames.success:
+    //             return <Chip label={status} className={classes.chipSuccess} />
+    //         case taskStatusNames.failed:
+    //             return <Chip label={status} className={classes.chipFailed} />
+    //         default:
+    //             return <Chip label={status} /> // #5c21f3
+    //     }
+    // }
 
     const setServiceStatusChipColor = (status) => {
         switch (status) {

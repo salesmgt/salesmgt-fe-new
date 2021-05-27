@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@material-ui/core";
-import { schoolLevelNames, serviceNames } from "../../../constants/Generals";
+import { schoolLevelNames, serviceNames, statusNames } from "../../../constants/Generals";
 import classes from './DialogConfig.module.scss';
 
 export const Consts = {
@@ -51,6 +51,9 @@ export const Consts = {
         },
         schoolStatus: {
             title: 'School Status',
+        },
+        isPotential: {
+            title: statusNames.potential,
         },
         schoolType: {
             title: 'School Types',

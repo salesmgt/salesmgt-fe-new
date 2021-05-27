@@ -36,10 +36,13 @@ function LeftSide(props) {
     const [tabIndex, setTabIndex] = useState(0)
     const [tabLabel, setTabLabel] = useState(schStatus[0])
 
-    const { params, dispatchParams } = useTaskForm()    //, setFilter
+    const { params, dispatchParams, resetFormFilters } = useTaskForm()    //, setFilter
     const { listFilters, page, limit, column, direction, searchKey } = params
 
-    const onClose = () => setOpen(false)
+    const onClose = () => {
+        setOpen(false)
+        resetFormFilters()
+    }
 
     const handleTabChange = (e, newTabIndex) => {
         setSelectedRows([])
