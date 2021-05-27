@@ -11,25 +11,21 @@ import {
     MenuItem,
     Chip,
     Box,
-    LinearProgress,
-    Icon,
-    Tooltip
 } from '@material-ui/core'
 import { MdWarning } from 'react-icons/md'
-import { BiRun } from 'react-icons/bi'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
 import { milkNames, purposeNames, taskResultNames, taskStatusNames } from '../../../../constants/Generals'
-import { Snackbars, Loading, NotFound } from '../../../../components'
+import { Snackbars, Loading, NotFound, LinearProgressBars } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
 import { roleNames, statusNames } from '../../../../constants/Generals'
 import * as TasksServices from '../../TasksServices'
 import { getPurpsByStatus, handleMatchPurps } from '../../../../utils/Sortings'
-import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes';
+// import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes';
 import UpdateSchStatus from '../../dialogs/UpdateSchStatus/UpdateSchStatus';
 import ConfirmTaskFail from '../../dialogs/ConfirmTaskFail/ConfirmTaskFail';
 import ConfirmTaskComplete from '../../dialogs/ConfirmTaskComplete/ConfirmTaskComplete';
@@ -38,52 +34,6 @@ import classes from './AssignInfo.module.scss'
 const clientSchema = yup.object().shape({
     note: yup.string().trim(),
 })
-function LinearProgressWithLabel(props) {
-    const { today, assignDate, deadline, value } = props
-    const percent = () => {
-        const position = value - 5;
-        if (position < 0) {
-            return 0
-        } else return position
-    }
-
-    return (
-        <Box display="flex" flexDirection='column'>
-            <Box display="flex" flexDirection='row'>
-                <Box flexGrow={1}>
-                    <Typography variant="body2" color="textSecondary">
-                        {parseDateToString(assignDate, 'DD-MM-YYYY')}
-                    </Typography>
-                </Box>
-                <Box>
-                    <Typography variant="body2" color="textSecondary">
-                        {parseDateToString(deadline, 'DD-MM-YYYY')}
-                    </Typography>
-                </Box>
-            </Box>
-            <Box width="100%">
-                <LinearProgress variant="determinate" {...props} value={value} />
-            </Box>
-            <Box display="flex" flexDirection="row" width="100%">
-                <Box style={{ flexBasis: `${percent()}%`, marginTop: '0.5rem' }} className={classes.iconPosition}>
-                    {/* <Box style={{ flexBasis: `calc(${value}% - 0.9rem)%`, marginTop: '0.5rem' }}> */}
-
-                </Box>
-                <Box style={{ marginTop: '0.5rem' }}>
-                    <Tooltip title={
-                        <Typography variant="overline">
-                            {parseDateToString(today, 'DD-MM-YYYY')}
-                        </Typography>} placement="right"
-                    >
-                        <Icon>
-                            <BiRun style={{ width: '1.8rem', height: '1.8rem' }} />
-                        </Icon>
-                    </Tooltip>
-                </Box>
-            </Box>
-        </Box>
-    );
-}
 
 const ITEM_HEIGHT = 120
 const MenuProps = {
@@ -251,7 +201,7 @@ function AssignInfo(props) {
         }
     }
 
-    console.log('task: ', task);
+    // console.log('Task Info --- task: ', task);
 
     const handleMarkComplete = (purpose) => {
         switch (purpose) {
@@ -312,14 +262,6 @@ function AssignInfo(props) {
     //         />
     //     )
     // }
-
-    const calculatePercentage = (date1, date2) => {
-        if (calculateDatesGap(new Date(date1), new Date(), "D") * 100 / calculateDatesGap(new Date(date1), new Date(date2), "D") > 100)
-            return 100
-        if (calculateDatesGap(new Date(date1), new Date(), "D") * 100 / calculateDatesGap(new Date(date1), new Date(date2), "D") < 0)
-            return 0
-        return calculateDatesGap(new Date(date1), new Date(), "D") * 100 / calculateDatesGap(new Date(date1), new Date(date2), "D")
-    }
 
     return (
         <div className={classes.panel}>
@@ -493,6 +435,24 @@ function AssignInfo(props) {
                                                 <Typography color="inherit">
                                                     {task?.schoolYear}
                                                 </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                        <Grid container spacing={0} className={classes.rowx}>
+                                            <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                                <Typography color="inherit" className={classes.title}>
+                                                    {fields.duration.title}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
+                                                <LinearProgressBars
+                                                    startDate={task?.assignDate}
+                                                    endDate={task?.endDate}
+                                                    marker={new Date()}
+                                                    type="task"
+                                                />
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -857,37 +817,19 @@ function AssignInfo(props) {
                                 </Grid>
 
                                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        className={classes.rowx}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={4}
-                                            lg={3}
-                                            className={classes.rowx}
-                                        >
-                                            <Typography
-                                                color="inherit"
-                                                className={classes.title}
-                                            >
+                                    <Grid container spacing={0} className={classes.rowx}>
+                                        <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                            <Typography color="inherit" className={classes.title}>
                                                 {fields.duration.title}
                                             </Typography>
                                         </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={12}
-                                            md={8}
-                                            lg={6}
-                                            className={classes.rowx}
-                                        >
-
-                                            <LinearProgressWithLabel assignDate={task?.assignDate} deadline={task?.endDate} today={new Date()}
-                                                value={calculatePercentage(task?.assignDate, task?.endDate)}
+                                        <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
+                                            <LinearProgressBars
+                                                startDate={task?.assignDate}
+                                                endDate={task?.endDate}
+                                                marker={new Date()}
+                                                type="task"
+                                            // value={calculatePercentage(task?.assignDate, task?.endDate)}
                                             />
                                             {/* <Typography color="inherit">
                                                 {parseDateToString(task?.assignDate, 'DD-MM-YYYY')}
@@ -1183,6 +1125,24 @@ function AssignInfo(props) {
                                         <Typography color="inherit">
                                             {task?.schoolYear}
                                         </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                <Grid container spacing={0} className={classes.rowx}>
+                                    <Grid item xs={12} sm={12} md={4} lg={3} className={classes.rowx}>
+                                        <Typography color="inherit" className={classes.title}>
+                                            {fields.duration.title}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={8} lg={6} className={classes.rowx}>
+                                        <LinearProgressBars
+                                            startDate={task?.assignDate}
+                                            endDate={task?.endDate}
+                                            marker={new Date()}
+                                            type="task"
+                                        />
                                     </Grid>
                                 </Grid>
                             </Grid>

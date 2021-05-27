@@ -7,30 +7,25 @@ import {
     Chip,
     ClickAwayListener,
     Divider,
-    FormControlLabel,
     Grid,
     InputAdornment,
-    // Icon,
-    // IconButton,
     List,
     ListItem,
     ListItemAvatar,
     ListItemIcon,
     ListItemText,
     makeStyles,
-    Radio,
-    RadioGroup,
     TextField,
     Tooltip,
     Typography,
 } from '@material-ui/core'
-import { Snackbars, Loading, NotFound } from '../../../../components'
+import { Snackbars, Loading, NotFound, LinearProgressBars } from '../../../../components'
 import { Consts, getCriteria, getCriteriaInfo } from './ServiceInfoConfig'
 import { updateService } from '../../ServicesServices'
 import { useAuth } from '../../../../hooks/AuthContext';
 import { CheckMark, CrosskMark } from '../../../../assets/icons'
 import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes'
-import { roleNames, schoolLevelNames, serviceNames, serviceStatusNames } from '../../../../constants/Generals'
+import { roleNames, serviceStatusNames } from '../../../../constants/Generals'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -163,13 +158,9 @@ function ServiceInfo(props) {
     // }
     // const customServiceTypes = customiseServiceList(service?.educationLevel)
 
-    // console.log('startDate: ', service?.startDate)
-    // console.log('endDate: ', service?.endDate)
+    console.log('service: ', service)
 
     const onSubmit = (data) => {
-        console.log('data ---- startDate: ', data?.startDate);
-        console.log('data ---- endDate: ', data?.endDate);
-
         const model = {
             // ...data,
             id: service?.id,
@@ -222,7 +213,7 @@ function ServiceInfo(props) {
                 })
             })
 
-        alert(JSON.stringify(model))
+        // alert(JSON.stringify(model))
     }
 
     // Reject chỉ nhập lý do 1 lần duy nhất ban đầu, ko có thay đổi về sau nữa
@@ -370,9 +361,22 @@ function ServiceInfo(props) {
         }
     }
 
-    const getTooltipTitle = (criteria, standardValue, service) => {
+    const getTooltipTitle = (criteria, standardValue, service, formValues) => {
         const { pricePerSlot, slotNumber, classNumber, studentNumber, startDate, endDate } = service
-        const duration = calculateDatesGap(new Date(startDate), new Date(endDate), 'M')
+        const { priceFloor, slotNo, classNo, studentNo, time } = formValues
+        // Sao cái formValues này có lúc nó cập nhật có lúc nó giữ nguyên thế nhỉ???
+
+        // console.log('formValues = ', formValues);
+
+        let duration = 0
+        if (formValues && time) {
+            // console.log('time[0] = ', time[0]);
+            // console.log('time[1] = ', time[1]);
+            duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')
+        } else {
+            duration = calculateDatesGap(new Date(startDate), new Date(endDate), 'M')
+        }
+        // const duration = calculateDatesGap(new Date(startDate), new Date(endDate), 'M')
 
         switch (criteria) {
             case 'price':
@@ -384,7 +388,11 @@ function ServiceInfo(props) {
                         </Box>
                         <Box p={1} className={classes.tooltipRightInfo}>
                             <Typography variant='caption'>Actual: </Typography>
-                            <Typography variant='body2'>{currencyFormatter.format(pricePerSlot)}/period</Typography>
+                            <Typography variant='body2'>
+                                {formValues && priceFloor
+                                    ? currencyFormatter.format(priceFloor)
+                                    : currencyFormatter.format(pricePerSlot)}/period
+                            </Typography>
                         </Box>
                     </Box>
                 )
@@ -397,10 +405,16 @@ function ServiceInfo(props) {
                         </Box>
                         <Box p={1} className={classes.tooltipRightInfo}>
                             <Typography variant='caption'>Actual: </Typography>
-                            {slotNumber <= 1 ? (
-                                <Typography variant='body2'>{slotNumber} period/week</Typography>
+                            {(formValues && slotNo) ? (slotNo <= 1 ? (
+                                <Typography variant='body2'>{slotNo} period/week</Typography>
                             ) : (
-                                <Typography variant='body2'>{slotNumber} periods/week</Typography>
+                                <Typography variant='body2'>{slotNo} periods/week</Typography>
+                            )) : (
+                                slotNumber <= 1 ? (
+                                    <Typography variant='body2'>{slotNumber} period/week</Typography>
+                                ) : (
+                                    <Typography variant='body2'>{slotNumber} periods/week</Typography>
+                                )
                             )}
                         </Box>
                     </Box>
@@ -414,10 +428,16 @@ function ServiceInfo(props) {
                         </Box>
                         <Box p={1}>
                             <Typography variant='caption'>Actual: </Typography>
-                            {classNumber <= 1 ? (
-                                <Typography variant='body2'>{classNumber} class</Typography>
+                            {(formValues && classNo) ? (classNo <= 1 ? (
+                                <Typography variant='body2'>{classNo} class</Typography>
                             ) : (
-                                <Typography variant='body2'>{classNumber} classes</Typography>
+                                <Typography variant='body2'>{classNo} classes</Typography>
+                            )) : (
+                                classNumber <= 1 ? (
+                                    <Typography variant='body2'>{classNumber} class</Typography>
+                                ) : (
+                                    <Typography variant='body2'>{classNumber} classes</Typography>
+                                )
                             )}
                         </Box>
                     </Box>
@@ -431,7 +451,9 @@ function ServiceInfo(props) {
                         </Box>
                         <Box p={1}>
                             <Typography variant='caption'>Actual: </Typography>
-                            <Typography variant='body2'>{studentNumber} students/class</Typography>
+                            <Typography variant='body2'>
+                                {(formValues && studentNo) ? studentNo : studentNumber} students/class
+                            </Typography>
                         </Box>
                     </Box>
                 )
@@ -455,6 +477,24 @@ function ServiceInfo(props) {
             default:
                 break;
         }
+    }
+
+    const calculateEstimateSales = (service, formValues) => {
+        const { pricePerSlot, slotNumber, classNumber } = service
+        const { priceFloor, slotNo, classNo } = formValues
+        let estimateSales = 0
+
+        if (formValues && priceFloor && slotNo && classNo) {
+            estimateSales = currencyFormatter.format(priceFloor * slotNo * classNo * 4);
+        } else {
+            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4)
+        }
+
+        // Ô này chỉ view thôi mà, có sao hiện vậy chứ ko có validate lại
+        // if (estimateSales > 2000000000) {
+        //     estimateSales = 2000000000
+        // }
+        return estimateSales
     }
 
     return (
@@ -523,10 +563,16 @@ function ServiceInfo(props) {
                                                                 )}
                                                             />
                                                         ) : (
-                                                            <Typography color="inherit">
-                                                                {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                                                {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
-                                                            </Typography>
+                                                            <LinearProgressBars
+                                                                startDate={service?.startDate}
+                                                                endDate={service?.endDate}
+                                                                marker={new Date()}
+                                                                type="service"
+                                                            />
+                                                            // <Typography color="inherit">
+                                                            //     {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                            //     {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
+                                                            // </Typography>
                                                         )}
                                                     </Grid>
                                                 </Grid>
@@ -548,7 +594,7 @@ function ServiceInfo(props) {
                                                                 name="classNumber"
                                                                 control={control}
                                                                 render={({ value, onChange }) => (
-                                                                    <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                    <Grid item xs={8} sm={7} md={4} lg={4}>
                                                                         <TextField
                                                                             // label={fields.classNo.title}
                                                                             variant="outlined"
@@ -596,7 +642,7 @@ function ServiceInfo(props) {
                                                                 name="studentNumber"
                                                                 control={control}
                                                                 render={({ value, onChange }) => (
-                                                                    <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                    <Grid item xs={10} sm={7} md={6} lg={6}>
                                                                         <TextField
                                                                             // label={fields.studentNumber.title}
                                                                             variant="outlined"
@@ -709,7 +755,7 @@ function ServiceInfo(props) {
                                                                 control={control}
                                                                 render={({ value, onChange }) => (
                                                                     <Grid container>
-                                                                        <Grid item xs={12} sm={7} md={8} lg={7}>
+                                                                        <Grid item xs={8} sm={7} md={5} lg={5}>
                                                                             <TextField
                                                                                 // label={fields.slotNumber.title}
                                                                                 variant="outlined"
@@ -736,7 +782,7 @@ function ServiceInfo(props) {
                                                                                 arrow interactive
                                                                             >
                                                                                 <Typography variant='body1'>
-                                                                                    <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                                                                    <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
                                                                                     <span className={classes.txtRevenue}>
                                                                                         ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
                                                                                     </span>
@@ -796,13 +842,13 @@ function ServiceInfo(props) {
                                                         type="submit"
                                                         onClick={() => {
                                                             // console.log('serviceType = ', getValues('serviceType'));
-                                                            console.log('startDate = ', getValues('duration[0]'));
-                                                            console.log('endDate = ', getValues('duration[1]'));
-                                                            console.log('classNumber = ', getValues('classNumber'));
-                                                            console.log('studentNumber = ', getValues('studentNumber'));
-                                                            console.log('pricePerSlot = ', getValues('pricePerSlot'));
-                                                            console.log('slotNumber = ', getValues('slotNumber'));
-                                                            console.log('note = ', getValues('note'));
+                                                            // console.log('startDate = ', getValues('duration[0]'));
+                                                            // console.log('endDate = ', getValues('duration[1]'));
+                                                            // console.log('classNumber = ', getValues('classNumber'));
+                                                            // console.log('studentNumber = ', getValues('studentNumber'));
+                                                            // console.log('pricePerSlot = ', getValues('pricePerSlot'));
+                                                            // console.log('slotNumber = ', getValues('slotNumber'));
+                                                            // console.log('note = ', getValues('note'));
                                                         }}
                                                         disabled={!formState.isDirty}
                                                         className={classes.btnApprove}
@@ -845,10 +891,16 @@ function ServiceInfo(props) {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} sm={8} md={8} lg={8} className={classes.rowx}>
-                                                    <Typography color="inherit">
+                                                    <LinearProgressBars
+                                                        startDate={service?.startDate}
+                                                        endDate={service?.endDate}
+                                                        marker={new Date()}
+                                                        type="service"
+                                                    />
+                                                    {/* <Typography color="inherit">
                                                         {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                            {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
-                                                    </Typography>
+                                                        {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
+                                                    </Typography> */}
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -1129,7 +1181,15 @@ function ServiceInfo(props) {
                                                             )}
                                                         </ListItemIcon>
                                                         <Tooltip
-                                                            title={getTooltipTitle(cri.key, cri.standardValue, service)}
+                                                            title={user.roles[0] === roleNames.salesman
+                                                                ? getTooltipTitle(cri.key, cri.standardValue, service, {
+                                                                    priceFloor: getValues('pricePerSlot'),
+                                                                    slotNo: getValues('slotNumber'),
+                                                                    classNo: getValues('classNumber'),
+                                                                    studentNo: getValues('studentNumber'),
+                                                                    time: getValues('duration')
+                                                                }) : getTooltipTitle(cri.key, cri.standardValue, service, {})
+                                                            }
                                                             // placement='bottom-end'
                                                             arrow
                                                             interactive
@@ -1142,7 +1202,7 @@ function ServiceInfo(props) {
                                                 </div>
                                             ))}
                                             <ListItem>
-                                                {/* <ListItemText primary={`Estimate Revenue ≈ 30.000.000VND`} />    *${revenue} */}
+                                                {/* <ListItemText primary={`Estimate sales ≈ 30.000.000VND`} />    *${revenue} */}
                                                 <Tooltip
                                                     title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
                                                     arrow
@@ -1150,9 +1210,21 @@ function ServiceInfo(props) {
                                                     classes={{ tooltip: styles.customWidth }}
                                                 >
                                                     <Typography variant='body1'>
-                                                        <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
-                                                        <span className={classes.txtRevenue}>
-                                                            {currencyFormatter.format(service?.pricePerSlot * service?.slotNumber * 4)}
+                                                        <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
+                                                        <span className={classes.txtRevenue}>≈{' '}
+                                                            {user.roles[0] === roleNames.salesman && service?.status === serviceStatusNames.pending
+                                                                ? calculateEstimateSales(service, {
+                                                                    priceFloor: getValues('pricePerSlot'),
+                                                                    slotNo: getValues('slotNumber'),
+                                                                    classNo: getValues('classNumber')
+                                                                })
+                                                                : calculateEstimateSales(service, {})
+                                                            }
+                                                            {/* {user.roles[0] === roleNames.salesman
+                                                                ? currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)
+                                                                : currencyFormatter.format(service?.pricePerSlot * service?.slotNumber * service?.classNumber * 4)
+                                                            } */}
+                                                            {/* {currencyFormatter.format(service?.pricePerSlot * service?.slotNumber * service?.classNumber * 4)} */}
                                                             {/* {getValues('pricePerSlot') && getValues('slotNumber')
                                                                 ? `≈ ${currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}`
                                                                 : `≈ ${currencyFormatter.format(service?.pricePerSlot * service?.slotNumber * 4)}`

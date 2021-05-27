@@ -3,30 +3,30 @@ import { roleNames, taskStatusNames } from '../../constants/Generals'
 
 const columns = [
     { key: 'no', name: 'No', sortable: false, width1: '1%', width2: '1%' },
-    { key: 'schoolName', name: 'School Name', sortable: true, width1: '22%', width2: '26%' },
+    { key: 'schoolName', name: 'School Name', sortable: true, width1: '24%', width2: '28%' },
     // { key: 'school.reprName', name: 'Principal', sortable: true },
     { key: 'user.fullName', name: 'PIC', sortable: true, width1: '20%', width2: '0%' },
     { key: 'purpose', name: 'Purpose', sortable: true, width1: '14%', width2: '18%' },  //targetPurposeName
     // { key: 'schoolYear', name: 'School Year', sortable: true },
-    { key: 'assignDate', name: 'Assign Date', sortable: true, width1: '14%', width2: '18%' },
-    { key: 'endDate', name: 'Deadline', sortable: true, width1: '14%', width2: '18%' },   // Due Date
-    { key: 'result', name: 'Task Status', sortable: false, width1: '14%', width2: '18%' },    // TBD, Successful, Failed =/= task status (Ongoing, not started, finished)
+    { key: 'duration', name: 'Duration', sortable: false, width1: '28%', width2: '30%' },
+    // { key: 'endDate', name: 'Deadline', sortable: true, width1: '14%', width2: '18%' },   // Due Date
+    { key: 'result', name: 'Task Status', sortable: false, width1: '14%', width2: '15%' },    // TBD, Successful, Failed =/= task status (Ongoing, not started, finished)
     { key: '', name: '', sortable: false, width1: '1%', width2: '1%' },
 ]
 
 export function getColumns(role) {
     const [
-        no, schoolName, pic, purposes, assignDate, endDate, status, actions,
-    ] = columns
+        no, schoolName, pic, purposes, duration, status, actions,
+    ] = columns     // assignDate, endDate, 
 
     switch (role) {
         case roleNames.manager:
         case roleNames.supervisor:
             return [
-                no, schoolName, pic, purposes, assignDate, endDate, status, actions,
+                no, schoolName, pic, purposes, duration, status, actions,
             ]
         case roleNames.salesman:
-            return [no, schoolName, purposes, assignDate, endDate, status, actions]
+            return [no, schoolName, purposes, duration, status, actions]
         default:
             break
     }

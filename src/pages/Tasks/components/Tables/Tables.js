@@ -38,24 +38,8 @@ import SortableTableHeaders from './SortableTableHeaders'
 import Highlighter from 'react-highlight-words'
 // import { Pagination } from '@material-ui/lab';
 // import PropTypes from 'prop-types'
-import { Snackbars } from '../../../../components'
-import { parseDateToString, calculateDatesGap } from '../../../../utils/DateTimes';
+import { Snackbars, LinearProgressBars } from '../../../../components'
 import classes from './Tables.module.scss'
-
-function LinearProgressWithLabel(props) {
-    return (
-      <Box display="flex" alignItems="center">
-        <Box width="100%" mr={1}>
-          <LinearProgress variant="determinate" {...props} />
-        </Box>
-        <Box minWidth={35}>
-          <Typography variant="body2" color="textSecondary">{`${Math.round(
-            props.value,
-          )}%`}</Typography>
-        </Box>
-      </Box>
-    );
-  }
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -80,7 +64,7 @@ function TablePaginationActions(props) {
     const handleNextPageButtonClick = (event) => {
         onChangePage(event, page + 1) // current page + 1
     }
-   
+
     return (
         <div className={classes.paging}>
             <IconButton
@@ -125,6 +109,7 @@ function TablePaginationActions(props) {
         </div>
     )
 }
+
 const useStyles = makeStyles(() => ({
     itemPIC: {
         padding: 0,
@@ -287,36 +272,29 @@ function Tables(props) {
     }
     //=================================================================================
 
-    const setEndDateColor = (endDate, result) => {
-        // const today = new Date()
-        // const deadline = new Date(endDate)
-        // const deadline = new Date('2021-05-17')
-        // const countToDeadline = Math.round((deadline.getTime() - today.getTime()) / (1000 * 3600 * 24))
-        const countToDeadline = calculateDatesGap(new Date(), new Date(endDate), 'D')
-        // console.log('countToDeadline = ', countToDeadline);
+    // const setEndDateColor = (endDate, result) => {
+    //     // const today = new Date()
+    //     // const deadline = new Date(endDate)
+    //     // const deadline = new Date('2021-05-17')
+    //     // const countToDeadline = Math.round((deadline.getTime() - today.getTime()) / (1000 * 3600 * 24))
+    //     const countToDeadline = calculateDatesGap(new Date(), new Date(endDate), 'D')
+    //     // console.log('countToDeadline = ', countToDeadline);
 
-        if (result === taskResultNames.successful) {
-            return '#4caf50'    // 'successEndDate'
-        }
-        else if (result === taskResultNames.tbd) {
-            if (countToDeadline > 15) {
-                return '#1976d2'    // 'safeEndDate'
-            } else if (0 <= countToDeadline <= 15) {
-                return '#ff9800'    // 'warningEndDate'
-            } else {
-                return '#fc2718'    // 'overtimeEndDate'
-            }
-        } else {    // !result
-            return '#000'
-        }
-    }
-    const calculate = (date1, date2)  => {
-        if (calculateDatesGap(new Date(date1),new Date(),"D")*100/calculateDatesGap(new Date(date1),new Date(date2),"D") > 100)
-        return 100
-         if (calculateDatesGap(new Date(date1),new Date(),"D")*100/calculateDatesGap(new Date(date1),new Date(date2),"D")  < 0)
-        return 0
-         return calculateDatesGap(new Date(date1),new Date(),"D")*100/calculateDatesGap(new Date(date1),new Date(date2),"D")
-     }
+    //     if (result === taskResultNames.successful) {
+    //         return '#4caf50'    // 'successEndDate'
+    //     }
+    //     else if (result === taskResultNames.tbd) {
+    //         if (countToDeadline > 15) {
+    //             return '#1976d2'    // 'safeEndDate'
+    //         } else if (0 <= countToDeadline <= 15) {
+    //             return '#ff9800'    // 'warningEndDate'
+    //         } else {
+    //             return '#fc2718'    // 'overtimeEndDate'
+    //         }
+    //     } else {    // !result
+    //         return '#000'
+    //     }
+    // }
 
     return (
         <div className={classes.wrapper}>
@@ -466,10 +444,14 @@ function Tables(props) {
                                         <TableCell className={classes.tBodyCell}>
                                             {row?.purpose && setPurposeChipColor(row?.purpose)}
                                         </TableCell>
-                                        <TableCell className={classes.tBodyCell}>
-                                            <LinearProgressWithLabel value={calculate(row?.assignDate,row?.endDate)} />
+                                        <TableCell className={classes.tBodyCellDuration}>
+                                            <LinearProgressBars
+                                                startDate={row?.assignDate}
+                                                endDate={row?.endDate}
+                                                marker={new Date()}
+                                            />
                                         </TableCell>
-                                        <TableCell className={classes.tBodyCell}>
+                                        {/* <TableCell className={classes.tBodyCell}>
                                             {row?.endDate && (
                                                 <strong style={{ color: setEndDateColor(row?.endDate, row?.result) }}>
                                                     <Highlighter
@@ -480,7 +462,7 @@ function Tables(props) {
                                                     />
                                                 </strong>
                                             )}
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell className={classes.tBodyCell}>
                                             {(row?.username && row?.result) && setTaskStatusChipColor(row?.result, row?.endDate)}
                                         </TableCell>

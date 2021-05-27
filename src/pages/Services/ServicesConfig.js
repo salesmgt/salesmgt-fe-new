@@ -2,10 +2,10 @@ import { roleNames } from "../../constants/Generals";
 
 const columns = [
     { key: 'no', name: 'No', sortable: false, width1: '1%', width2: '5%' },
-    { key: 'serviceType', name: 'Service Type', sortable: true, width1: '15%', width2: '20%' },
-    { key: 'task.school.schoolId', name: 'School Name', sortable: true, width1: '23%', width2: '30%' },
+    { key: 'serviceType', name: 'Service Type', sortable: true, width1: '13%', width2: '18%' },
+    { key: 'task.school.schoolId', name: 'School Name', sortable: true, width1: '20%', width2: '25%' },
     { key: 'task.user.username', name: 'PIC', sortable: true, width1: '23%', width2: '0%' },
-    { key: 'duration', name: 'Duration', sortable: false, width1: '25%', width2: '30%' },
+    { key: 'duration', name: 'Duration', sortable: false, width1: '25%', width2: '28%' },
     { key: 'status', name: 'Status', sortable: true, width1: '12%', width2: '15%' },    // Pending, Approved, Rejected
     // { key: 'approveDate', name: 'Approved Date', sortable: true, width1: '17%', width2: '1%' },
     { key: '', name: '', sortable: false, width1: '1%', width2: '1%' },

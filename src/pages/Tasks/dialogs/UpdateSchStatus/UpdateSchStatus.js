@@ -573,9 +573,12 @@ function UpdateSchStatus(props) {
                                                         arrow interactive
                                                     >
                                                         <Typography variant='body1'>
-                                                            <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                                            <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
                                                                     <span className={classes.txtRevenue}>
-                                                                ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
+                                                                ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4) <= 2000000000
+                                                                    ? currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)
+                                                                    : currencyFormatter.format(2000000000)
+                                                                }
                                                             </span>
                                                         </Typography>
                                                     </Tooltip>
@@ -676,8 +679,8 @@ function UpdateSchStatus(props) {
                     >
                         {operations.cancel}
                     </Button>
-                    {console.log(getValues('pricePerSlot'))}
-                    {console.log(getValues('slotNumber'))}
+                    {/* {console.log(getValues('pricePerSlot'))}
+                    {console.log(getValues('slotNumber'))} */}
                 </DialogActions>
             </Dialog>
         </>

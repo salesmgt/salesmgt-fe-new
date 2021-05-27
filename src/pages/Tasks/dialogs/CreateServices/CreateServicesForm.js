@@ -459,26 +459,29 @@ function CreateServicesForm(props) {
                                                 error={!!errors.pricePerSlot}
                                                 helperText={errors?.pricePerSlot ? */}
 
-
-                                                <InputLabel htmlFor="component-disabled">{fields.price.title} `*</InputLabel>
-                                                <NumberFormat
-                                                    {...props}
-                                                    id="component-disabled"
-                                                    value={value}
-                                                    customInput={FilledInput}
-                                                    // suffix={'₫'}
-                                                    isNumericString
-                                                    type="text"
-                                                    thousandSeparator
-                                                    onValueChange={({ floatValue: v }) => {
-                                                        onChange(v)
-                                                        suggestPrice(v, setPriceSuggestions)
-                                                    }}
-                                                />
-                                                <FormHelperText className={errors?.pricePerSlot ? classes.helper : classes.normal}>{errors?.pricePerSlot ?
-                                                    errors?.pricePerSlot?.message
-                                                    : fields.price.helper
-                                                }</FormHelperText>
+                                                <FormControl variant="outlined" required>
+                                                    <InputLabel htmlFor="component-disabled">{fields.price.title}</InputLabel>
+                                                    <NumberFormat
+                                                        {...props}
+                                                        id="component-disabled"
+                                                        value={value}
+                                                        customInput={OutlinedInput}
+                                                        // customInput={() => <OutlinedInput {...props} label={fields.price.title} required />}
+                                                        // suffix={'₫'}
+                                                        isNumericString
+                                                        type="text"
+                                                        thousandSeparator={'.'}
+                                                        decimalSeparator={','}
+                                                        onValueChange={({ floatValue: val }) => {
+                                                            onChange(val)
+                                                            suggestPrice(val, setPriceSuggestions)
+                                                        }}
+                                                    />
+                                                    <FormHelperText className={errors?.pricePerSlot ? classes.helper : classes.normal}>
+                                                        {errors?.pricePerSlot ? errors?.pricePerSlot?.message
+                                                            : fields.price.helper}
+                                                    </FormHelperText>
+                                                </FormControl>
 
 
                                                 {/* <TextField
@@ -578,9 +581,12 @@ function CreateServicesForm(props) {
                                                 arrow interactive
                                             >
                                                 <Typography variant='body1'>
-                                                    <span className={classes.txtEstimate}>Estimate revenue</span> &nbsp;
+                                                    <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
                                                 <span className={classes.txtRevenue}>
-                                                        ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * 4)}
+                                                        ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4) <= 2000000000
+                                                            ? currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)
+                                                            : currencyFormatter.format(2000000000)
+                                                        }
                                                     </span>
                                                 </Typography>
                                             </Tooltip>

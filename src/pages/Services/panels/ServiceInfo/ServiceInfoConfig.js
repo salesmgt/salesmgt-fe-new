@@ -61,7 +61,7 @@ export const Consts = {
             noReason: 'N/A',
         },
         revenue: {
-            formula: 'Price floor * Periods per week * 4 weeks'
+            formula: <>Price floor * Periods per week * 4 weeks <br />* No. of classes</>
         }
     },
 }
@@ -222,11 +222,11 @@ export const getCriteriaInfo = () => {
                 {/* <Divider style={{ color: 'white' }} /> */}
                 <hr style={{ width: '85%', height: '0%', textAlign: 'center', margin: '0 auto' }} />
                 <Grid item>
-                    <Typography variant="overline">Revenue estimation formula</Typography>
+                    <Typography variant="overline">Sales estimation formula</Typography>
                     <br />
                     <div style={{ border: '1px solid', textAlign: 'center', margin: '0 0 0 0.35rem', padding: '0 0.5rem' }}>
                         <p style={{ fontSize: '0.75rem', fontWeight: 100 }}>
-                            Revenue = <br />Price floor * Periods per week * 4 weeks
+                            Sales = <br />Price floor * Periods per week * 4 weeks * No. of classes
                         </p>
                     </div>
                 </Grid>

@@ -29,8 +29,8 @@ import * as ReducerActions from '../../../../constants/ActionTypes'
 import { roleNames, serviceStatusNames } from '../../../../constants/Generals'
 import { Consts } from '../../ServicesConfig'
 import Highlighter from 'react-highlight-words'
-import { parseDateToString } from '../../../../utils/DateTimes'
-import { useAuth } from '../../../../hooks/AuthContext';
+import { LinearProgressBars } from '../../../../components'
+import { useAuth } from '../../../../hooks/AuthContext'
 // import PropTypes from 'prop-types'
 import classes from './Tables.module.scss'
 
@@ -342,13 +342,18 @@ function Tables(props) {
                                             )}
                                         </TableCell>
                                     )}
-                                    <TableCell className={classes.tBodyCell}>
+                                    <TableCell className={classes.tBodyCellDuration}>
                                         {row?.status === serviceStatusNames.approved && (
-                                            <>
-                                                {/**Duration 1 cái progress bar ở đây */}
-                                                {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                                {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
-                                            </>
+                                            // <>
+                                            //     {/**Duration 1 cái progress bar ở đây */}
+                                            <LinearProgressBars
+                                                startDate={row?.startDate}
+                                                endDate={row?.endDate}
+                                                marker={new Date()}
+                                            />
+                                            //     {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                            //     {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
+                                            // </>
                                         )}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>

@@ -67,32 +67,32 @@ function Task() {
         setTabValue(value)
     }
 
-    const getListTabs = (role) => {
-        if (role === roleNames.salesman)
-            return [tabNames.tab2, tabNames.tab1, tabNames.tab3]
-        else return [tabNames.tab1, tabNames.tab2, tabNames.tab3]
-    }
+    // const getListTabs = (role) => {
+    //     if (role === roleNames.salesman)
+    //         return [tabNames.tab2, tabNames.tab1, tabNames.tab3]
+    //     else return [tabNames.tab1, tabNames.tab2, tabNames.tab3]
+    // }
 
-    const getTab = (role, tabValue) => {
-        switch (tabValue) {
-            case 0:
-                if (role === roleNames.salesman) {
-                    return <AssignInfo task={task} refreshPage={refreshPage} />;
-                } else {
-                    return <SchoolInfo task={task} refreshPage={refreshPage} />;
-                }
-            case 1:
-                if (role === roleNames.salesman) {
-                    return <SchoolInfo task={task} refreshPage={refreshPage} />;
-                } else {
-                    return <AssignInfo task={task} refreshPage={refreshPage} />;
-                }
-            case 2:
-                return <Timelines task={task} />;
-            default:
-                break;
-        }
-    }
+    // const getTab = (role, tabValue) => {
+    //     switch (tabValue) {
+    //         case 0:
+    //             if (role === roleNames.salesman) {
+    //                 return <AssignInfo task={task} refreshPage={refreshPage} />;
+    //             } else {
+    //                 return <SchoolInfo task={task} refreshPage={refreshPage} />;
+    //             }
+    //         case 1:
+    //             if (role === roleNames.salesman) {
+    //                 return <SchoolInfo task={task} refreshPage={refreshPage} />;
+    //             } else {
+    //                 return <AssignInfo task={task} refreshPage={refreshPage} />;
+    //             }
+    //         case 2:
+    //             return <Timelines task={task} />;
+    //         default:
+    //             break;
+    //     }
+    // }
 
     return (
         <DetailLayouts
@@ -100,11 +100,21 @@ function Task() {
             header={`${task?.level} ${task?.schoolName}`}
             subHeader={task?.schoolStatus}
             isStatus={true}
-            tabs={getListTabs(user.roles[0])}
+            tabs={[tabNames.tab2, tabNames.tab1, tabNames.tab3]}
+            // tabs={getListTabs(user.roles[0])}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}
         >
-            {getTab(user.roles[0], tabValue)}
+            {/* {getTab(user.roles[0], tabValue)} */}
+            {tabValue === 0 &&
+                <AssignInfo task={task} refreshPage={refreshPage} />
+            }
+            {tabValue === 1 &&
+                <SchoolInfo task={task} refreshPage={refreshPage} />
+            }
+            {tabValue === 2 &&
+                <Timelines task={task} />
+            }
         </DetailLayouts>
     )
 }
