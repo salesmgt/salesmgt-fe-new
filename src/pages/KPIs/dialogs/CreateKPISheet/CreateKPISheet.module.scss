@@ -1,0 +1,103 @@
+@import '../../../../styles/Variables.module.scss';
+
+.wrapper {
+    // padding: 1rem 2rem 1rem !important; // top (right & left) bottom
+    height: 100%;
+    overflow-y: auto;
+
+    // .date {
+    //     color: $dark-warning !important;
+    //     background-color: 'red';
+    //     transform: none;
+    //     text-decoration: none;
+    // }
+
+    .container {
+        // height: 73.2vh;
+        // overflow-y: auto;
+        margin-top: 0.2rem;
+        border-radius: $default-radius;
+    }
+
+    .table {
+        padding: 0;
+
+        .tHead {
+            height: 2rem !important;
+        }
+
+        .tHeadCell {
+            background-color: $light-primary;
+            color: $common-white;
+            font-weight: bold;
+            font-size: larger;
+        }
+        .tBodyCell {
+            cursor: pointer;
+        }
+
+        // Ko nhận
+        // .tBody {
+        //     .tBodyRow {
+        //         height: 50;
+        //     }
+
+        //     .tBodyCell {
+        //         padding: 0.1rem 1rem
+        //     }
+        // }
+    }
+}
+
+.btnSave {
+    // color: $common-white !important;
+    // background-color: $main-info !important;
+    // &:hover {
+    //     background-color: $dark-info !important;
+    // }
+    // &:disabled {
+    //     background-color: $divider !important;
+    // }
+
+    color: $main-info !important;
+    &:hover {
+        color: $dark-info !important;
+    }
+    &:disabled {
+        color: $divider !important;
+    }
+}
+
+.autoComplete {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 0.5rem !important;
+    margin: 0 !important;
+}
+.itemTextPrimary {
+    font-size: '0.875rem';
+}
+.itemTextSecondary {
+    font-size: '0.8rem';
+}
+
+// .chipDate {
+//     padding: 0.3rem !important;
+//     font-size: 1.3rem !important;
+//     // color: $common-white !important;
+//     // background-color: $main-success !important;
+//     // box-shadow: 0 4px 6px -6px #000 !important;
+//     // border-radius: "0.5rem"
+// }
+
+.title {
+    font-weight: 600;
+    color: $secondary-text;
+    font-size: 1.2rem !important;
+}

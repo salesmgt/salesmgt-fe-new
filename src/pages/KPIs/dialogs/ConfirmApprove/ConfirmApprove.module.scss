@@ -1,0 +1,14 @@
+@import '../../../../styles/Variables.module.scss';
+
+.dialogText {
+    color: $common-black !important;
+}
+
+.btnApprove {
+    // color: $common-white !important;
+    color: $main-info !important;
+    // text-transform: none;
+    &:hover {
+        color: $dark-info !important;
+    }
+}

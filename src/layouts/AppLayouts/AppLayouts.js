@@ -88,7 +88,11 @@ function AppLayouts() {
         if (page.length > 2) {
             const strings = page[2].split('-')
             strings.forEach((string) => {
-                title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
+                if (string === 'kpi') {
+                    title += string.toUpperCase()
+                } else {
+                    title += string.charAt(0).toUpperCase() + string.slice(1) + ' '
+                }
             })
         }
         return title

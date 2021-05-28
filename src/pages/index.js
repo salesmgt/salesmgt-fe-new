@@ -27,4 +27,7 @@ export { default as Task } from './Tasks/Task'
 export { default as Services } from './Services/Services'
 export { default as Service } from './Services/Service'
 
+export { default as KPIs } from './KPIs/KPIs'
+export { default as KPI } from './KPIs/KPI'
+
 export { default as WorkPlans } from './WorkPlans/WorkPlans'

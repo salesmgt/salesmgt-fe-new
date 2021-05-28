@@ -1,0 +1,132 @@
+@import '../../../../styles/Variables.module.scss';
+
+.panel {
+    height: auto;
+    .action {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0.75rem 1.5rem 0.5rem 0;
+        .btnApprove {
+            color: $common-white;
+            background-color: $main-info;
+            &:hover {
+                background-color: $dark-info;
+            }
+            &:disabled {
+                background-color: $divider;
+            }
+        }
+        .btnReject {
+            margin-left: 0.5rem;
+            color: $common-white;
+            background-color: $main-error;
+            &:hover {
+                background-color: $dark-error;
+            }
+            &:disabled {
+                background-color: $divider;
+            }
+        }
+    }
+    .content {
+        padding: 0.5rem;
+        .wrapper {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid $divider;
+            border-radius: $default-radius;
+        }
+        .row {
+            padding: 0.5rem;
+        }
+        .rowx {
+            padding: 0rem 0.5rem;
+        }
+        .rowy {
+            padding: 0.5rem 0rem;
+        }
+        .header {
+            text-transform: uppercase;
+        }
+        .title {
+            font-weight: 600;
+            color: $secondary-text;
+        }
+    }
+}
+
+.picName {
+  font-size: 0.875rem !important;
+}
+
+.icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.iconInfo {
+    width: 1.35rem;
+    height: 1.35rem;
+    color: $text-icon;
+    padding: 0;
+    margin: 0;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.tooltipRightInfo {
+    padding-left: 1rem;
+}
+.txtEstimate {
+    font-weight: 500;
+}
+.txtRevenue {
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: $main-success;
+}
+
+.criInfoPanel {
+    width: 16.8rem;
+    max-height: 16rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.2rem;
+}
+
+.txtCriInfo {
+    font-size: 0.75rem;
+    font-weight: 100;
+    margin: 0.1rem 0 0.5rem;
+}
+.txtCriInfoHeader {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.tBodyCell {    
+    padding: 0.7rem 0.55rem
+}
+
+//=======================Service Status chips=======================
+.chipPending {
+    text-transform: capitalize;
+    background-color: $dark-info !important;
+    color: $common-white !important;
+}
+.chipApproved {
+    text-transform: capitalize;
+    background-color: $main-success !important;
+    color: $common-white !important;
+}
+.chipRejected {
+    text-transform: capitalize;
+    background-color: $dark-error !important;
+    color: $common-white !important;
+}
+
+.notFound {
+    width: 100%;
+}

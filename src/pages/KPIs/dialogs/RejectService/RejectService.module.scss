@@ -1,0 +1,27 @@
+@import '../../../../styles/Variables.module.scss';
+
+.row {
+    padding: 0.5rem;
+}
+.rowx {
+    padding: 0 0.5rem;
+}
+
+.title {
+    font-weight: 600;
+    color: $secondary-text;
+}
+
+.dialogText {
+    color: $common-black !important;
+}
+
+.btnReject {
+    // color: $common-white !important;
+    font-weight: 500;
+    color: $main-error !important;
+    // text-transform: none;
+    &:hover {
+        color: $dark-error !important;
+    }
+}

@@ -15,6 +15,7 @@ import AppBar from '@material-ui/core/AppBar';
 import { Consts } from '../DialogConfig'
 import { makeStyles } from '@material-ui/core/styles';
 import LeftSide from './LeftSide';
+import { calculateSchoolYear } from '../../../../utils/DateTimes';
 import { useTask } from '../../hooks/TaskContext'
 // import classes from './CreateTasks.module.scss'
 
@@ -45,23 +46,11 @@ function CreateTasks(props) {
     const classes = useStyles();
     const [data, setData] = useState(null)
 
-    const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear()
-        const thisMonth = new Date().getMonth()
-
-        if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
-            return `${thisYear}-${thisYear + 1}`
-        } else if (4 <= thisMonth < 11) {
-            return `${thisYear - 1}-${thisYear}`
-        } else {
-            return null
-        }
-    }
     const schoolYear = calculateSchoolYear()
     // console.log('schoolYear ne: ', schoolYear);
 
     let isMounted = true
-    const getListSchools = (schoolYear = calculateSchoolYear(), page = 0, limit = 10, column = 'schoolId', direction = 'asc', searchKey, listFilters) => {
+    const getListSchools = (schoolYear, page = 0, limit = 10, column = 'schoolId', direction = 'asc', searchKey, listFilters) => {
         getSchoolsForTasks(schoolYear, page, limit, column, direction, searchKey, listFilters)
             .then((res) => {
                 if (isMounted) {

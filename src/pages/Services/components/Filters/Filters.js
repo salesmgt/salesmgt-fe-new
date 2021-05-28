@@ -37,9 +37,9 @@ import * as Milk from '../../../../utils/Milk'
 import { milkNames } from '../../../../constants/Generals'
 import { Consts } from '../../ServicesConfig'
 import moment from 'moment'
-import DateRangePickers from '../DateRangePickers/DateRangePickers';
+// import DateRangePickers from '../DateRangePickers/DateRangePickers';
+// import { Autocomplete } from '@material-ui/lab'
 import styles from './Filters.module.scss'
-import { Autocomplete } from '@material-ui/lab'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38

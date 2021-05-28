@@ -23,6 +23,8 @@ export const FILTER_SERVICE_STATUS = 'FILTER_SERVICE_STATUS'
 export const FILTER_SERVICE_TYPE = 'FILTER_SERVICE_TYPE'
 export const FILTER_EXPIRED = 'FILTER_EXPIRED'
 
+export const FILTER_KPI_STATUS = 'FILTER_KPI_STATUS'
+
 //===========================Search field===========================
 export const ENTER_SEARCH_KEYWORD = 'ENTER_SEARCH_KEYWORD'
 

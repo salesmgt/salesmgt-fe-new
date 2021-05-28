@@ -1,0 +1,43 @@
+@import '../../../../styles/Variables.module.scss';
+.wrapper {
+  width: 100%;
+  .child {
+    width: 98%;
+    margin-bottom: 1rem;
+  }
+}
+
+.container {
+  height: 50vh;
+  overflow-y: auto;
+
+  .table {
+    padding: 0;
+    .tHead {
+      height: 2.5rem !important;
+    }
+    .tHeadCell {
+      background-color: $light-primary;
+      color: $common-white;
+      font-weight: bold;
+      font-size: large;
+    }
+    .tBody {
+      .tBodyRow {
+        height: 50;
+      }      
+      .tBodyCell {
+        padding: 0.15rem 1rem;
+        .txtFloorValue {
+          width: 8rem;
+        }
+        .txtWeight {
+          width: 6rem !important;
+        }
+      }
+      .tBodyCellTextField {
+        padding: 0.15rem 2.5rem 0.15rem 0.5rem;
+      }
+    }
+  }
+}

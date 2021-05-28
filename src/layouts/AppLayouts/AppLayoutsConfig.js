@@ -10,8 +10,9 @@ import {
     MdAccountCircle,
     MdExitToApp,
     MdAssignmentInd,
+    // MdTrendingUp,
 } from 'react-icons/md'
-import { FaSchool, FaHandshake, FaTasks } from 'react-icons/fa'
+import { FaSchool, FaHandshake, FaTasks, FaChartLine } from 'react-icons/fa'
 import { roleNames } from '../../constants/Generals'
 
 const menuItems = [
@@ -55,28 +56,26 @@ const menuItems = [
         path: 'salesmen',
         icon: <MdAssignmentInd />,
     },
+    {
+        title: 'KPI',
+        path: 'kpi',
+        icon: <FaChartLine />,  //MdTrendingUp
+    },
 ]
 
 export function getMenuItems(role) {
     const [
-        dashboards,
-        accounts,
-        tasks,
-        workPlans,
-        schools,
-        reports,
-        services,
-        salesmen
+        dashboards, accounts, tasks, workPlans, schools, reports, services, salesmen, kpis
     ] = menuItems
     switch (role) {
         case roleNames.admin:
             return [accounts, schools]
         case roleNames.manager:
-            return [dashboards, schools, tasks, reports, services, salesmen, workPlans]
+            return [dashboards, schools, tasks, reports, services, salesmen, kpis, workPlans]
         case roleNames.supervisor:
-            return [dashboards, schools, tasks, reports, salesmen, workPlans]
+            return [dashboards, schools, tasks, reports, salesmen, kpis, workPlans]
         case roleNames.salesman:
-            return [dashboards, tasks, reports, services, workPlans]
+            return [dashboards, tasks, reports, services, kpis, workPlans]
         default:
             break
     }
