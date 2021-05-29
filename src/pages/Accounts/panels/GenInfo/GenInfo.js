@@ -427,7 +427,7 @@ function GenInfo(props) {
                                         lg={5}
                                         className={classes.row}
                                     >
-                                        <InputLabel>
+                                        <InputLabel required>
                                             {fields.roles.title}
                                         </InputLabel>
                                         <Controller
@@ -466,7 +466,7 @@ function GenInfo(props) {
                                         lg={4}
                                         className={classes.row}
                                     >
-                                        <InputLabel>
+                                        <InputLabel required>
                                             {fields.status.title}
                                         </InputLabel>
                                         <Controller

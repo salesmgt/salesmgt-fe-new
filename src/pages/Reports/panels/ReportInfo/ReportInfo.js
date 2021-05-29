@@ -166,8 +166,8 @@ function RepInfo(props) {
                 data?.isSuccess === ''
                     ? false
                     : data?.isSuccess === 'true'
-                        ? true
-                        : false,
+                    ? true
+                    : false,
 
             // schoolName: report?.name,
             // address: report?.address,
@@ -283,8 +283,8 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     {user.username === report?.username &&
-                        report?.commentedPerson === null &&
-                        report?.contextComments === null ? (
+                    report?.commentedPerson === null &&
+                    report?.contextComments === null ? (
                         <form onSubmit={rpSubmit(onRpSubmit)} noValidate>
                             {/* Report Detail */}
                             <Grid
@@ -317,7 +317,14 @@ function RepInfo(props) {
                                     className={classes.row}
                                 >
                                     <Grid container spacing={0}>
-                                        <Grid item xs={12} sm={12} md={6} lg={6} className={classes.row}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={6}
+                                            lg={6}
+                                            className={classes.row}
+                                        >
                                             <Controller
                                                 name="id"
                                                 control={rpControl}
@@ -354,11 +361,11 @@ function RepInfo(props) {
                                                             MenuProps={
                                                                 MenuProps
                                                             }
-                                                        // fullWidth
-                                                        // variant="outlined"
-                                                        // inputRef={register}
-                                                        // error={!!errors.isSuccess}
-                                                        // helperText={errors?.isSuccess?.message}
+                                                            // fullWidth
+                                                            // variant="outlined"
+                                                            // inputRef={register}
+                                                            // error={!!errors.isSuccess}
+                                                            // helperText={errors?.isSuccess?.message}
                                                         >
                                                             <MenuItem
                                                                 value={true}
@@ -410,7 +417,12 @@ function RepInfo(props) {
                                             </FormControl>
                                         </Grid>
 
-                                        <Grid item xs={12} sm={12} md={10} lg={10}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -442,7 +454,12 @@ function RepInfo(props) {
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12} sm={12} md={10} lg={10}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -470,7 +487,12 @@ function RepInfo(props) {
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12} sm={12} md={10} lg={10}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -500,7 +522,12 @@ function RepInfo(props) {
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12} sm={12} md={10} lg={10}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
                                             className={classes.row}
                                         >
                                             <Controller
@@ -530,7 +557,14 @@ function RepInfo(props) {
                                             />
                                         </Grid>
                                         {/* Action */}
-                                        <Grid item xs={12} sm={12} md={10} lg={10} className={classes.action}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
+                                            className={classes.action}
+                                        >
                                             <Button
                                                 className={classes.submit}
                                                 // variant="contained"
@@ -601,8 +635,11 @@ function RepInfo(props) {
                                         className={classes.rowx}
                                     >
                                         <Typography color="inherit">
-                                            {(report?.isSuccess === true || report?.isSuccess === false)
-                                                && setResultChipColor(report?.isSuccess)}
+                                            {(report?.isSuccess === true ||
+                                                report?.isSuccess === false) &&
+                                                setResultChipColor(
+                                                    report?.isSuccess
+                                                )}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -792,8 +829,8 @@ function RepInfo(props) {
                     className={classes.content}
                 >
                     {user.roles[0] === roleNames.salesman ||
-                        (user.roles[0] !== roleNames.salesman &&
-                            user.username === report?.username) ? (
+                    (user.roles[0] !== roleNames.salesman &&
+                        user.username === report?.username) ? (
                         <Grid container spacing={0} className={classes.wrapper}>
                             <Grid
                                 item
@@ -832,7 +869,6 @@ function RepInfo(props) {
                                         lg={10}
                                         className={classes.row}
                                     >
-                                        {/* <Typography color="inherit"> */}
                                         <Controller
                                             name="contextComments"
                                             control={cmtControl}
@@ -859,7 +895,6 @@ function RepInfo(props) {
                                                 />
                                             )}
                                         />
-                                        {/* </Typography> */}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -897,7 +932,14 @@ function RepInfo(props) {
                                     className={classes.row}
                                 >
                                     <Grid container spacing={0}>
-                                        <Grid item xs={12} sm={12} md={10} lg={10} className={classes.row}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
+                                            className={classes.row}
+                                        >
                                             <Controller
                                                 name="id"
                                                 control={cmtControl}
@@ -922,7 +964,7 @@ function RepInfo(props) {
                                                             report?.commentedPerson
                                                                 ? `${fields.cmt.hasCmt} ${report?.commentedPerson}`
                                                                 : fields.cmt
-                                                                    .noCmt
+                                                                      .noCmt
                                                         }
                                                         variant="outlined"
                                                         fullWidth
@@ -943,7 +985,14 @@ function RepInfo(props) {
                                             />
                                         </Grid>
                                         {/* Action */}
-                                        <Grid item xs={12} sm={12} md={10} lg={10} className={classes.action}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={10}
+                                            lg={10}
+                                            className={classes.action}
+                                        >
                                             <Button
                                                 className={classes.submit}
                                                 variant="contained"
