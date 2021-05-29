@@ -176,7 +176,8 @@ function MenuOptions(props) {
                     </ListItemText>
                 </MenuItem>
 
-                <MenuItem
+                {/* Lúc trước chưa có Timeline thì mới cần Report này. Giờ có timeline rồi nên ko cần menu option này nữa */}
+                {/* <MenuItem
                     onClick={handleCloseMenus}
                     component={Link}
                     to={{
@@ -190,7 +191,7 @@ function MenuOptions(props) {
                     <ListItemText className={classes.itemText}>
                         {menuItems.reports.title}
                     </ListItemText>
-                </MenuItem>
+                </MenuItem> */}
 
                 {user.roles[0] === roleNames.salesman && data?.schoolStatus !== statusNames.pending
                     && data?.result !== taskResultNames.successful &&

@@ -314,7 +314,7 @@ function ServiceInfo(props) {
                 onClose={() => setOpenApproveDialog(false)}
                 service={service}
                 refreshPage={refreshPage}
-                setNotify={setNotify}
+            // setNotify={setNotify}
             />
         )
     }

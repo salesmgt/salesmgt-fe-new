@@ -35,8 +35,8 @@ import { getPurpsByStatus } from '../../../../utils/Sortings'
 import { createTasks } from '../../TasksServices'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
 import DateFnsUtils from '@date-io/date-fns'
-import classes from './CreatePreviewDialogForm.module.scss'
 import { parseDateToString, calculateSchoolYear } from '../../../../utils/DateTimes'
+import classes from './CreatePreviewDialogForm.module.scss'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38

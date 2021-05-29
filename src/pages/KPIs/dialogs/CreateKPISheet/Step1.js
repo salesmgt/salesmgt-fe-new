@@ -60,22 +60,35 @@ import classes from './Step1.module.scss'
 function Step1(props) {
     // const styles = useStyles()
     const { KPI, setKPI } = props
+    const { criteria, kpis } = KPI
+    const [myCriteria, setMyCriteria] = useState([])  //[]
     const history = useHistory()
-    const [criteria, setCriteria] = useState(KPI.criteria)  //[]
-    const [selectedCriteria, setSelectedCriteria] = useState([])  //[]
+    // const [selectedCriteria, setSelectedCriteria] = useState([])  //[]
 
     const refractorCriteria = (listCri) => {
         let myCriteria = []
-        listCri.map(cri => {
-            cri = { ...cri, isChecked: false }
+        listCri.map((cri, index) => {
+            if (index < (listCri.length - 1)) {
+                cri = { ...cri, isChecked: false, targetValue: 0, weight: Math.round(100 / listCri.length) }
+            } else {
+                cri = {
+                    ...cri,
+                    isChecked: false,
+                    targetValue: 0,
+                    weight: 100 - (Math.round(100 / listCri.length) * (listCri.length - 1))
+                }
+            }
             myCriteria.push(cri)
         })
+
+        // setKPI({ ...KPI, criteria: myCriteria, kpis: [{ ...kpis, criteria: myCriteria }] })
+
         return myCriteria
     }
-    const getCriteria = () => {
+    const getCriteriaFromDB = () => {
         getKPICriteria().then((data) => {
             const newListCri = refractorCriteria(data)
-            setCriteria(newListCri)
+            setMyCriteria(newListCri)
         })
             .catch((error) => {
                 if (error.response) {
@@ -88,24 +101,39 @@ function Step1(props) {
             })
     }
     useEffect(() => {
-        getCriteria()
-        // return () => setTasks([])
+        console.log('criteria.length = ', criteria.length);
+        if (criteria.length === 0) {
+            getCriteriaFromDB()
+        } else {
+            refractorCriteria(criteria)
+        }
     }, [])
-
-    // console.log('newListCriteria = ', criteria);
 
     const handleCriteriaChange = (event, listCriteria) => {
         console.log('listCriteria: ', listCriteria);
         // console.log('selected criteria: ', listCriteria);
-        // let myCriteria = []
-        // listCriteria.map(cri => {
-        //     if ()
-        //     cri = { ...cri, isChecked: true }
-        //     myCriteria.push(cri)
-        // })
+        let myCriteria = []
 
-        setKPI({ ...KPI, criteria: listCriteria })
+        listCriteria.map((cri, index) => {
+            if (index < (listCriteria.length - 1)) {
+                cri = { ...cri, isChecked: true, weight: Math.round(100 / listCriteria.length) }
+            } else {
+                cri = {
+                    ...cri,
+                    isChecked: true,
+                    weight: 100 - (Math.round(100 / listCriteria.length) * (listCriteria.length - 1))
+                }
+            }
+            myCriteria.push(cri)
+        })
+
+        setKPI({ ...KPI, criteria: myCriteria, kpis: [{ ...kpis, criteria: myCriteria }] })
     }
+
+    // const handleCheck = (e, option) => {
+    //     console.log('handleCheck ------- e', e);
+    //     console.log('handleCheck ------- e', option);
+    // }
 
     console.log('Step 1: KPI = ', KPI);
 
@@ -142,25 +170,30 @@ function Step1(props) {
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo"
-                    options={criteria}
-                    value={KPI.criteria}
+                    options={myCriteria}
+                    value={criteria}
                     disableCloseOnSelect
                     getOptionLabel={(option) => option.name}
-                    renderOption={(option, { selected }) => (
-                        <>
-                            <Checkbox
-                                icon={<MdCheckBoxOutlineBlank />}
-                                checkedIcon={<MdCheckBox />}
-                                style={{ marginRight: 5 }}
-                                // checked={KPI?.criteria.length === 0 ? selected : KPI?.criteria?.isChecked}
-                                checked={selected}
-                            />
-                            {option.name}
-                        </>
-                    )}
+                    renderOption={(option, { selected }) => {
+                        // console.log('option?.isChecked = ', option?.isChecked);
+                        return (
+                            <>
+                                <Checkbox
+                                    icon={<MdCheckBoxOutlineBlank />}
+                                    checkedIcon={<MdCheckBox />}
+                                    style={{ marginRight: 5 }}
+                                    // checked={KPI?.criteria.length === 0 ? selected : KPI?.criteria?.isChecked}
+                                    checked={selected}
+                                // onChange={(e) => handleCheck(e, option)}
+                                />
+                                {option.name}
+                            </>
+                        )
+                    }}
                     renderInput={(params) => (
                         <TextField {...params} variant="outlined" label="Evaluation Criteria" required />
                     )}
+                    // filterOptions={(options = KPI.criteria) => { console.log('list chọn nè: ', options) }}
                     onChange={handleCriteriaChange}
                 />
             </Grid>

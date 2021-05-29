@@ -181,7 +181,7 @@ function CreateAccountForm(props) {
 
         AccountsServices.createAccount(model)
             .then((res) => {
-                enqueueSnackbar(messages.success, { variant: 'success' })
+                enqueueSnackbar("Created Account successfully", { variant: 'success' })
 
                 createNoti(model)
                 refreshPage(
@@ -233,7 +233,7 @@ function CreateAccountForm(props) {
             <DialogContent className={classes.dialogCont}>
                 <form
                     noValidate
-                    // onSubmit={handleSubmit(onSubmit)}
+                // onSubmit={handleSubmit(onSubmit)}
                 >
                     <Grid container spacing={2} className={classes.wrapper}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>

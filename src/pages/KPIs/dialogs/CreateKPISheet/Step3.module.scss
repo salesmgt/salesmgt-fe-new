@@ -4,39 +4,76 @@
   .child {
     width: 98%;
     margin-bottom: 1rem;
+
+    .date { margin-right: 1rem;}
+    .avaGroup { 
+      padding: 0.2rem 0 0 1rem;
+    }
   }
 }
 
+
 .container {
   height: 50vh;
-  overflow-y: auto;
+  overflow: auto;
 
   .table {
+    width: 200vh;
+    overflow-x: auto;
     padding: 0;
+    border: 1px solid $grey-300;
+    border-radius: $default-radius;
     .tHead {
-      height: 2.5rem !important;
+      height: 1rem;
     }
     .tHeadCell {
       background-color: $light-primary;
       color: $common-white;
       font-weight: bold;
-      font-size: large;
+      font-size: 0.9rem;
+      border: 1px solid $grey-300;
+    }
+    // .tHeadCellSticky {
+    //   @extend .tHeadCell;
+    //   white-space: "nowrap";
+    //   z-index: 101;
+    //   position: "sticky";
+    //   left: 0;
+    //   background: "white"
+    // }
+    .tSubHeadCell {
+      background-color: $navy-200;
+      color: $common-white;
+      border: 0.1px solid $grey-300;
+      font-size: 0.85rem;
     }
     .tBody {
       .tBodyRow {
         height: 50;
       }      
       .tBodyCell {
-        padding: 0.15rem 1rem;
-        .txtFloorValue {
+        padding: 0 1rem;
+        border: 0.1px solid $grey-300;
+        white-space: "nowrap";
+
+        .txtTargetValue {
           width: 8rem;
         }
         .txtWeight {
           width: 6rem !important;
         }
       }
+      // .tBodyCellSticky {
+      //   @extend .tBodyCell;
+      //   white-space: "nowrap";
+      //   z-index: 100;
+      //   position: "sticky";
+      //   left: 0;
+      //   background: "white";
+      // }
       .tBodyCellTextField {
-        padding: 0.15rem 2.5rem 0.15rem 0.5rem;
+        padding: 0 0.6rem;
+        border: 0.1px solid $grey-300;
       }
     }
   }

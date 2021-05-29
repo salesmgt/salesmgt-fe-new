@@ -1,13 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
-    Button,
-    DialogContent,
-    DialogActions,
-    Typography,
     makeStyles,
-    Stepper,
-    Step,
-    StepLabel,
     Grid,
     Box,
     TableContainer,
@@ -16,21 +9,24 @@ import {
     TableCell,
     TableBody,
     TableRow,
-    InputAdornment,
     TextField,
-    Tooltip,
-    IconButton,
+    ListItem,
+    ListItemText,
+    Checkbox,
+    ListItemAvatar,
+    Avatar,
+    Typography,
+    FormControl,
+    FormControlLabel,
+    easing,
 } from '@material-ui/core'
-import { MdAdd, MdDelete } from 'react-icons/md'
-import { Autocomplete } from '@material-ui/lab'
-import { parseDateToString } from '../../../../utils/DateTimes'
+import { MdAdd, MdCheckBox, MdCheckBoxOutlineBlank, MdDelete } from 'react-icons/md'
+import { Autocomplete, AvatarGroup } from '@material-ui/lab'
 import { useHistory } from 'react-router'
+import { getAllSalesmen } from '../../KPIsServices';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
+import DateFnsUtils from '@date-io/date-fns'
 import * as ArrayUtils from '../../../../utils/Arrays'
-import { } from '../../../../utils/DateTimes'
-import { useAuth } from '../../../../hooks/AuthContext'
-import { Consts } from '../DialogConfig'
-import { steps, getStepContent } from './CreateKPISheetConfig'
-import { useKPI } from '../../hooks/KPIContext'
 import classes from './Step3.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -45,157 +41,337 @@ const MenuProps = {
 }
 //==============================================================
 
-const useStyles = makeStyles((theme) => ({
-    formControl: {
-        margin: theme.spacing(1),
-        // minWidth: 160,
+const useStyles = makeStyles(() => ({
+    itemPIC: {
+        display: 'flex',
+        flexDirection: 'row',
+        padding: 0,
+        margin: 0,
     },
-    option: {
-        fontSize: '0.875rem',
+    itemTextPrimary: {
+        fontSize: '0.8rem',
     },
-    // Selection
-    // root: {},
-    // menuItemRoot: {
-    //     '&$menuItemSelected': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
-    //     '&$menuItemSelected:focus': {
-    //         backgroundColor: 'rgba(0, 0, 0, 0.12)',
-    //     },
-    //     '&$menuItemSelected:hover': {
-    //         backgroundColor: 'rgba(0, 0, 0, 0.04);',
-    //     },
-    // },
-    // menuItemSelected: {},
-
-    // Stepper
-    root: {
-        width: '100%',
-    },
-    backButton: {
-        marginRight: theme.spacing(1),
-    },
-    instructions: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
+    itemTextSecondary: {
+        fontSize: '0.75rem',
     },
 }))
 
 function Step3(props) {
     const styles = useStyles()
     const { KPI, setKPI } = props
+    const { criteria, users, kpis } = KPI
     const history = useHistory()
+    const [listKPIs, setListKPIs] = useState(kpis)
+    // const [myCriteria, setMyCriteria] = useState(criteria)
+    const [startDate, setStartDate] = useState(KPI?.startDate)
+    const [endDate, setEndDate] = useState(KPI?.endDate)
+
     const [salesmen, setSalesmen] = useState([])
-    const [myCriteria, setMyCriteria] = useState(KPI.criteria)
+    const [staffs, setStaffs] = useState(users)
+    const [checkAll, setCheckAll] = useState(false)
     // const [previewKPIs, setPreviewKPIs] = useState([])
 
-    const getAllSalesmen = () => {
-        // getAllSalesmen({ key: searchKey })
-        //     .then((data) => {
-        //         setSalesmen(data)
-        //     })
-        //     .catch((error) => {
-        //         if (error.response) {
-        //             console.log(error)
-        //             history.push({
-        //                 pathname: '/errors',
-        //                 state: { error: error.response.status },
-        //             })
-        //         }
-        //     })
+    const getSalesmen = (searchKey) => {
+        getAllSalesmen({ key: searchKey })
+            .then((data) => {
+                setSalesmen(data)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error)
+                    history.push({
+                        pathname: '/errors',
+                        state: { error: error.response.status },
+                    })
+                }
+            })
     }
     useEffect(() => {
-        getAllSalesmen()
+        getSalesmen()
         // return () => setTasks([])
     }, [])
+    const totalSize = salesmen.length;
 
-    // if (!myCriteria?.floorValue || !myCriteria?.weight) {
+    const generateListKPIs = (listStaffs) => {
+        let arrKPIs = []
+        let objKPI = {}
+        objKPI = { ...objKPI, criteria: criteria }
+
+        listStaffs.forEach(staff => {
+            objKPI = { ...objKPI, username: staff.username }
+            arrKPIs.push(objKPI)
+        });
+        console.log('Sau khi add staffs: arrKPIs = ', arrKPIs);
+
+        setListKPIs(arrKPIs)
+        setKPI({ ...KPI, kpis: arrKPIs, users: listStaffs })
+    }
+
+    useEffect(() => {
+        generateListKPIs([])
+    }, []);
+
+    // if (!myCriteria?.targetValue || !myCriteria?.weight) {
     //     setMyCriteria(refractorCriteria)
     // }
-
-    const handleFloorValueChange = (event, index) => {
-        const inputValue = event.target.value;
-        console.log('inputValue = ', inputValue);
-        let listCriteria = [...myCriteria]
-        listCriteria[index] = {
-            ...listCriteria[index],
-            floorValue: inputValue
-        }
-        setMyCriteria(listCriteria)
-        setKPI({ ...KPI, criteria: listCriteria })
-    }
-
-    const handleWeightChange = (event, index) => {
-        const inputValue = event.target.value;
-        console.log('inputValue = ', inputValue);
-        let listCriteria = [...myCriteria]
-
-        listCriteria[index] = {
-            ...listCriteria[index],
-            weight: inputValue
-        }
-        setMyCriteria(listCriteria)
-        setKPI({ ...KPI, criteria: listCriteria })
-    }
-    // console.log('outside ------ myCriteria = ', myCriteria);
+    // console.log('Step 3 ------ myCriteria = ', myCriteria);
+    console.log('Step 3 ------ listKPIs = ', kpis?.criteria);
 
     console.log('Step 3: kpi = ', KPI)
 
+    const handleTargetValueChange = (event, rowIndex, criIndex) => {
+        const inputValue = event.target.value;
+        console.log('inputValue = ', inputValue);
+        console.log(`Edit at [${rowIndex}, ${criIndex}]`);
+
+        let newListKPIs = [...listKPIs]
+        let editingRow = newListKPIs[rowIndex]
+        let editingListCriteria = [...editingRow.criteria]
+        // let editingCriteria = editingListCriteria[criIndex]
+
+        // console.log('editingRow: ', editingRow);
+        // console.log('editingCriteria: ', editingCriteria);
+
+        // Tách item ra khỏi mảng để edit
+        editingListCriteria[criIndex] = {       // editingCriteria
+            ...editingListCriteria[criIndex],   // ...editingCriteria
+            targetValue: inputValue
+        }
+        // editingListCriteria[criIndex] = editingCriteria // sau đó đổ item đó vô lại mảng (replace)
+        newListKPIs[rowIndex] = {               // editingRow
+            ...newListKPIs[rowIndex],           // ...editingRow
+            criteria: editingListCriteria
+        }
+        // console.log('new editingCriteria: ', editingCriteria);
+        console.log('newListKPIs: ', newListKPIs);
+
+        // newListKPIs[rowIndex] = {
+        //     ...newListKPIs[rowIndex],
+        //     criteria: [...listCriteria, [criIndex]]
+        // }
+        // setMyCriteria(editingListCriteria)
+        setListKPIs(newListKPIs)
+        setKPI({ ...KPI, criteria: editingListCriteria, kpis: newListKPIs })
+    }
+
+    const handleStartDateChange = (newDate) => {
+        setStartDate(newDate)
+        setKPI({ ...KPI, startDate: newDate })
+    }
+
+    const handleEndDateChange = (newDate) => {
+        setEndDate(newDate)
+        setKPI({ ...KPI, endDate: newDate })
+    }
+
+    const handleSalesmenChange = (event, selectedSalesmen) => {
+        setStaffs(selectedSalesmen)
+        console.log('selectedSalesmen = ', selectedSalesmen);
+        setKPI({ ...KPI, users: selectedSalesmen })
+        generateListKPIs(selectedSalesmen)
+        if (selectedSalesmen.length === totalSize)
+            setCheckAll(true)
+        else setCheckAll(false)
+        // selectedSalesmen.forEach(option => {
+        //     setSalesmen([...ArrayUtils.removeItem(salesmen, 'username', option.username)])
+        // });
+    }
+
+    const handleCheckedAllChange = (event) => {
+        const isChecked = event.target.checked
+        setCheckAll(isChecked)
+        if (isChecked) {
+            setStaffs(salesmen)
+            setKPI({ ...KPI, users: salesmen })
+            generateListKPIs(salesmen)
+        }
+        else {
+            setStaffs([])
+            setKPI({ ...KPI, users: [] })
+            generateListKPIs([])
+        }
+    }
+
     return (
         <Box display="flex" flexDirection="column" justifyItems="center" alignItems="center" className={classes.wrapper}>
-            <Grid container className={classes.child}>
-
-            </Grid>
+            <Box display="flex" flexDirection="row" className={classes.child}>
+                <Grid item xs={12} sm={6} md={3} lg={2} className={classes.date}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            format="dd/MM/yyyy"
+                            allowKeyboardControl
+                            disableToolbar
+                            variant="inline"
+                            inputVariant="outlined"
+                            value={startDate}
+                            onChange={(newDate) => handleStartDateChange(newDate)}
+                        />
+                    </MuiPickersUtilsProvider>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3} lg={2} className={classes.date}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            format="dd/MM/yyyy"
+                            allowKeyboardControl
+                            disableToolbar
+                            variant="inline"  // for calendar (date picker)
+                            inputVariant="outlined" // for TextField
+                            value={endDate}
+                            onChange={(newDate) => handleEndDateChange(newDate)}
+                        />
+                    </MuiPickersUtilsProvider>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <Autocomplete
+                        multiple
+                        limitTags={0}
+                        noOptionsText="Cannot find Salesman"
+                        disableCloseOnSelect
+                        value={staffs}
+                        onChange={(event, checkedSalesmen) =>
+                            handleSalesmenChange(event, checkedSalesmen)
+                        }
+                        options={salesmen}
+                        getOptionLabel={(salesman) =>
+                            salesman.fullName ? salesman.fullName : ''
+                        }
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Salesmen"
+                                // margin="normal"
+                                variant="outlined"
+                                placeholder={staffs.length === 0 ? "Search Salesman by name" : ""}
+                            // onChange={onSearchSalesmenChange}
+                            // ref={params.InputProps.ref}
+                            />
+                        )}
+                        renderOption={(option, { selected }) => (
+                            <>
+                                <Checkbox
+                                    icon={<MdCheckBoxOutlineBlank />}
+                                    checkedIcon={<MdCheckBox />}
+                                    style={{ marginRight: 5 }}
+                                    checked={selected}
+                                />
+                                <div key={option.username} className={styles.itemPIC}>
+                                    <ListItemAvatar>
+                                        <Avatar src={option.avatar} />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={option?.fullName ? option.fullName : ''}
+                                        secondary={option?.username ? option.username : ''}
+                                        classes={{
+                                            primary: styles.itemTextPrimary,
+                                            secondary: styles.itemTextSecondary
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )}
+                        renderTags={(value, getTagProps) => {
+                            if (value.length === totalSize) {
+                                return (
+                                    <Typography style={{ fontSize: '0.95rem', color: '#616161', fontStyle: 'italic' }}>Selected all salesmen</Typography>
+                                )
+                            } else {
+                                return (
+                                    <Typography style={{ fontSize: '0.95rem', color: '#616161', fontStyle: 'italic' }}>Selected {value.length} salesmen</Typography>
+                                )
+                            }
+                            // value.map((option, index) => (
+                            //     <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                            // ))
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={2} lg={2} className={classes.avaGroup}>
+                    <FormControl className={classes.formControlCheckbox}>
+                        <FormControlLabel
+                            value={checkAll}
+                            control={
+                                <Checkbox color="secondary"
+                                    checked={checkAll}
+                                    onChange={handleCheckedAllChange} />
+                            }
+                            label="Select all"
+                            labelPlacement="end"
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={12} md={2} lg={2} className={classes.avaGroup}>
+                    <AvatarGroup max={4}>
+                        {staffs.map(staff => (
+                            <Avatar key={staff.username} src={staff?.avatar} />
+                        ))}
+                    </AvatarGroup>
+                </Grid>
+            </Box>
 
             <div className={classes.child}>
                 <TableContainer className={classes.container}>
-                    <Table className={classes.table}>
+                    <Table className={classes.table} stickyHeader size="small">
                         <TableHead className={classes.tHead}>
                             <TableRow className={classes.tBodyRow}>
-                                <TableCell >
-                                </TableCell>
-                                {myCriteria.map(col => (
-                                    <TableCell key={col.key} width={col.width} className={classes.tHeadCell}>
-                                        {col.name}
+                                {/* <div className={classes.tHeadCellSticky} rowSpan={2}> */}
+                                <TableCell colSpan={2} style={{ backgroundColor: '#2a4865' }} />
+                                {/* <TableCell rowSpan={2} style={{ minWidth: 5, maxWidth: 5 }} className={classes.tHeadCell}>#</TableCell>
+                                <TableCell rowSpan={2} style={{ minWidth: 100, maxWidth: 250 }}
+                                    className={classes.tHeadCell}>Salesman</TableCell> */}
+                                {/* </div> */}
+                                <TableCell className={classes.tHeadCell} align="center" colSpan={criteria.length}>Target Values</TableCell>
+                            </TableRow>
+                            <TableRow className={classes.tBodyRow}>
+                                <TableCell rowSpan={2} style={{ minWidth: 2, maxWidth: 2 }} className={classes.tHeadCell}>#</TableCell>
+                                <TableCell rowSpan={2} style={{ minWidth: 120, maxWidth: 150 }}
+                                    className={classes.tHeadCell}>Salesman</TableCell>
+                                {criteria?.map(cri => (
+                                    <TableCell key={cri.id} className={classes.tSubHeadCell} style={{ minWidth: 80, maxWidth: 100 }}>
+                                        {cri.name}
                                     </TableCell>
                                 ))}
                             </TableRow>
                         </TableHead>
                         <TableBody className={classes.tBody}>
-                            {myCriteria.map((cri, index) => (
-                                <TableRow key={cri.id} className={classes.tBodyRow}>
-                                    <TableCell className={classes.tBodyCell}>{index + 1}</TableCell>
-                                    <TableCell className={classes.tBodyCell}>{cri.name}</TableCell>
-                                    <TableCell className={classes.tBodyCellTextField}>
-                                        <TextField className={classes.txtFloorValue}
-                                            variant="outlined" size="small"
-                                            type="number"
-                                            value={cri.floorValue}
-                                            onChange={(event) => handleFloorValueChange(event, index)}
-                                            InputProps={{
-                                                inputProps: { min: 0, max: 999999999999 }  // 999 tỷ 999 triệu 999 ngàn 999
-                                            }}
-                                        />
+                            {users.map((salesman, rowIndex) => (
+                                <TableRow key={salesman.username} className={classes.tBodyRow}>
+                                    <TableCell className={classes.tBodyCell} style={{ minWidth: 2, maxWidth: 2 }}>{rowIndex + 1}</TableCell>
+                                    <TableCell className={classes.tBodyCell} style={{ minWidth: 120, maxWidth: 150 }}>
+                                        <ListItem className={styles.itemPIC}>
+                                            {/* <ListItemAvatar>
+                                                <Avatar src={salesman?.avatar} />
+                                            </ListItemAvatar> */}
+                                            <ListItemText
+                                                className={classes.picName}
+                                                primary={salesman.fullName}
+                                                secondary={salesman.username}
+                                                classes={{
+                                                    primary: styles.itemTextPrimary,
+                                                    secondary: styles.itemTextSecondary,
+                                                }}
+                                            />
+                                        </ListItem>
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCellTextField}>
-                                        <TextField className={classes.txtWeight}
-                                            variant="outlined" size="small"
-                                            type="number"
-                                            value={cri.weight}
-                                            onChange={(event) => handleWeightChange(event, index)}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end"> % </InputAdornment>
-                                                ),
-                                                inputProps: { min: 0, max: 100 }
-                                            }}
-                                        />
-                                    </TableCell>
+                                    {kpis[rowIndex]?.criteria?.map((cri, criIndex) => (
+                                        <TableCell key={cri.id} className={classes.tBodyCellTextField} style={{ minWidth: 80, maxWidth: 100 }}>
+                                            <TextField className={classes.txtTargetValue}
+                                                variant="outlined" size="small"
+                                                type="number"
+                                                value={cri.targetValue}
+                                                onChange={(event) => handleTargetValueChange(event, rowIndex, criIndex)}
+                                                InputProps={{
+                                                    inputProps: { min: 0, max: 999999999999 }  // 999 tỷ 999 triệu 999 ngàn 999
+                                                }}
+                                            />
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </div>
-        </Box>
+        </Box >
     )
 }
 

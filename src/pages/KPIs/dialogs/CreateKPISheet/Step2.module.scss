@@ -20,7 +20,7 @@
       background-color: $light-primary;
       color: $common-white;
       font-weight: bold;
-      font-size: large;
+      font-size: 1rem;
     }
     .tBody {
       .tBodyRow {
@@ -28,7 +28,7 @@
       }      
       .tBodyCell {
         padding: 0.15rem 1rem;
-        .txtFloorValue {
+        .txtTargetValue {
           width: 8rem;
         }
         .txtWeight {

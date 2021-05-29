@@ -1,10 +1,14 @@
+import { Alert } from "@material-ui/lab"
+
 export const Consts = {
     headers: {
         create: 'Create KPI Group',
+        confirm: 'Confirm Create KPI Group',
     },
     operations: {
         cancel: 'Cancel',
         save: 'Save',
+        yes: 'OK'
     },
     fields: {
         rejectedReason: {
@@ -14,13 +18,12 @@ export const Consts = {
     },
 }
 
-export const confirmMessage = (schoolLevel, schoolName, serviceType) => {
+export const confirmMessage = (groupName) => {
     return (
         <>
-            Do you really want to approve service <strong>{serviceType}</strong> of school
-            <strong><em> {schoolLevel} {schoolName} </em></strong>?
+            <Alert severity="success">All steps completed.</Alert>
             <br />
-            This process cannot be undone.
+            Do you really want to create KPI group <strong><em>{groupName}</em></strong> now?
         </>
     )
 }

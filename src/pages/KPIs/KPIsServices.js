@@ -1,4 +1,5 @@
 import Api from '../../services/Api'
+import queryString from 'query-string'
 
 export async function getKPISheets(
     page = 0,
@@ -34,10 +35,15 @@ export async function getKPIGroup(id) {
     return data
 }
 
-export async function createKPIGroup(id, kpi) {
-    const response = await Api.post(`/kpis/${id}`, kpi)
+export async function createKPIGroup(kpiGroup) {
+    const response = await Api.post('/kpis', kpiGroup)
     return response
 }
+
+// export async function createKPIGroup(id, kpi) {
+//     const response = await Api.post(`/kpis/${id}`, kpi)
+//     return response
+// }
 
 export async function updateKPIGroup(id, kpi) {
     const response = await Api.put(`/kpis/${id}`, kpi)
@@ -52,8 +58,9 @@ export async function getKPICriteria() {
 }
 
 //================List Salesmen to apply KPI group===============
-export async function getAllSalesmen() {
-    const response = await Api.get('/user/get-all')
+export async function getAllSalesmen(searchKey) {
+    const key = queryString.stringify(searchKey)
+    const response = await Api.get(`/users/get-all?${key}`)
     const data = await response.data
     return data
 }

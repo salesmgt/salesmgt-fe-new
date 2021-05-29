@@ -385,6 +385,7 @@ const Schedule = (props) => {
                             <Autocomplete
                                 autoHighlight
                                 clearOnEscape
+                                // clearOnBlur
                                 options={props.listPICs ? props.listPICs : []}
                                 getOptionLabel={(pic) =>
                                     pic.fullName ? pic.fullName : ''

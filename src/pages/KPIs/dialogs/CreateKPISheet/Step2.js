@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     TableContainer,
@@ -30,63 +30,68 @@ const MenuProps = {
 //==============================================================
 function Step2(props) {
     const { KPI, setKPI } = props
-    // const [myCriteria, setMyCriteria] = useState(KPI.criteria)
+    const { criteria, kpis } = KPI
+    const [myCriteria, setMyCriteria] = useState(criteria)
     // const [previewKPIs, setPreviewKPIs] = useState([])
     console.log('Step 2: kpi = ', KPI)
 
     const refractorCriteria = () => {
-        const criList = [...KPI.criteria]
+        const criList = [...criteria]
         let newCriteria = []
         criList.map((cri, index) => {
             if (index < (criList.length - 1)) {
-                cri = { ...cri, isChecked: true, floorValue: 0, weight: Math.round(100 / criList.length) }
+                cri = { ...cri, isChecked: true, targetValue: 0, weight: Math.round(100 / criList.length) }
             } else {
                 cri = {
                     ...cri,
                     isChecked: true,
-                    floorValue: 0,
+                    targetValue: 0,
                     weight: 100 - (Math.round(100 / criList.length) * (criList.length - 1))
                 }
             }
             newCriteria.push(cri)
         })
+        setKPI({ ...KPI, criteria: newCriteria, kpis: [{ ...kpis, criteria: newCriteria }] })
 
-        // if (!myCriteria?.floorValue || !myCriteria?.weight) {
+        // if (!myCriteria?.targetValue || !myCriteria?.weight) {
         //     setMyCriteria(newCriteria)
         // }
-        return newCriteria
+        // return newCriteria
     }
+    // useEffect(() => {
+    //     refractorCriteria()
+    // }, []);
     // setMyCriteria(refractorCriteria)
-    const [myCriteria, setMyCriteria] = useState(KPI.criteria?.floorValue === undefined ? refractorCriteria : KPI.criteria)
+    // const [myCriteria, setMyCriteria] = useState(KPI.criteria?.targetValue === undefined ? refractorCriteria : KPI.criteria)
 
-    console.log('outside ----- myCriteria: ', myCriteria);
+    // console.log('outside ----- myCriteria: ', myCriteria);
 
-    // if (!myCriteria?.floorValue || !myCriteria?.weight) {
+    // if (!myCriteria?.targetValue || !myCriteria?.weight) {
     //     setMyCriteria(refractorCriteria)
     // }
 
-    const handleFloorValueChange = (event, index) => {
+    const handleTargetValueChange = (event, index) => {
         const inputValue = event.target.value;
-        console.log('inputValue = ', inputValue);
+        // console.log('inputValue = ', inputValue);
         // console.log('editing row = ', row);
 
         // const index = myCriteria.findIndex((cri) => cri.id === row.id)
-        // console.log('floorValue of index = ', index);
+        // console.log('targetValue of index = ', index);
         //const item ={...myCriteria[index],note: e.target.value}
         let listCriteria = [...myCriteria]
         listCriteria[index] = {
             ...listCriteria[index],
-            floorValue: inputValue
+            targetValue: inputValue
         }
         setMyCriteria(listCriteria)
         // myCriteria = [...listCriteria]
-        // console.log('handleFloorValueChange() ------ myCriteria = ', myCriteria);
-        setKPI({ ...KPI, criteria: listCriteria })
+        // console.log('handleTargetValueChange() ------ myCriteria = ', myCriteria);
+        setKPI({ ...KPI, criteria: listCriteria, kpis: [{ ...kpis, criteria: listCriteria }] })
     }
 
     const handleWeightChange = (event, index) => {
         const inputValue = event.target.value;
-        console.log('inputValue = ', inputValue);
+        // console.log('inputValue = ', inputValue);
         let listCriteria = [...myCriteria]
 
         listCriteria[index] = {
@@ -99,14 +104,16 @@ function Step2(props) {
     // console.log('outside ------ myCriteria = ', myCriteria);
 
     const handleRemove = (id) => {
-        setMyCriteria([...ArrayUtils.removeItem(myCriteria, 'id', id)])
+        const listCriteria = [...ArrayUtils.removeItem(myCriteria, 'id', id)]
+        setMyCriteria(listCriteria)
+        setKPI({ ...KPI, criteria: listCriteria, kpis: [{ ...kpis, criteria: listCriteria }] })
     }
 
     return (
         <Box display="flex" flexDirection="column" justifyItems="center" alignItems="center" className={classes.wrapper}>
             <div className={classes.child}>
                 <TableContainer className={classes.container}>
-                    <Table className={classes.table}>
+                    <Table className={classes.table} stickyHeader size="small">
                         <TableHead className={classes.tHead}>
                             {previewColumns.map(col => (
                                 <TableCell key={col.key} width={col.width} className={classes.tHeadCell}>
@@ -115,22 +122,23 @@ function Step2(props) {
                             ))}
                         </TableHead>
                         <TableBody className={classes.tBody}>
-                            {myCriteria.map((cri, index) => (
+                            {criteria.map((cri, index) => (
                                 <TableRow key={cri.id} className={classes.tBodyRow}>
                                     <TableCell className={classes.tBodyCell}>{index + 1}</TableCell>
                                     <TableCell className={classes.tBodyCell}>{cri.name}</TableCell>
                                     <TableCell className={classes.tBodyCellTextField}>
-                                        <TextField className={classes.txtFloorValue}
+                                        <TextField className={classes.txtTargetValue}
                                             variant="outlined" size="small"
                                             type="number"
-                                            value={cri.floorValue}
-                                            onChange={(event) => handleFloorValueChange(event, index)}
+                                            value={cri.targetValue}
+                                            onChange={(event) => handleTargetValueChange(event, index)}
                                             InputProps={{
                                                 inputProps: { min: 0, max: 999999999999 }  // 999 tỷ 999 triệu 999 ngàn 999
                                             }}
                                         />
                                     </TableCell>
                                     <TableCell className={classes.tBodyCellTextField}>
+                                        {/* <div dir="rtl"> */}
                                         <TextField className={classes.txtWeight}
                                             variant="outlined" size="small"
                                             type="number"
@@ -143,10 +151,11 @@ function Step2(props) {
                                                 inputProps: { min: 0, max: 100 }
                                             }}
                                         />
+                                        {/* </div> */}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
-                                        <Tooltip title="Remove">
-                                            <IconButton onClick={() => handleRemove(cri?.id)}><MdDelete size="small" /></IconButton>
+                                        <Tooltip title="Remove" size="small">
+                                            <IconButton onClick={() => handleRemove(cri?.id)}><MdDelete /></IconButton>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>

@@ -32,7 +32,7 @@ export const getStepContent = (step, KPI, setKPI) => {
 export const previewColumns = [
     { key: 'no', name: '#', sortable: false, width: '2%' },
     { key: 'name', name: 'KPI Group Name', sortable: true, width: '48%', },
-    { key: 'floorValue', name: 'Floor Value', sortable: true, width: '22%' },
+    { key: 'targetValue', name: 'Target Value', sortable: true, width: '22%' },
     { key: 'weight', name: 'Weight', sortable: true, width: '15%' },
     { key: '', name: '', sortable: false, width: '8%' },
 ]
