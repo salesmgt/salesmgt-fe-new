@@ -104,8 +104,7 @@ function School() {
                         break
                 }
                 break
-            // case roleNames.manager:
-            //     break
+            case roleNames.manager:
             case roleNames.supervisor:
                 //[tabNames.tab1, tabNames.tab3]
                 switch (tabValue) {
