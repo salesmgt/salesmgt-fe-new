@@ -283,6 +283,18 @@ function CreateServicesForm(props) {
         // alert(JSON.stringify(model))
     }
 
+    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => {
+        let estimateSales = currencyFormatter.format(0)
+
+        if ((pricePerSlot * slotNumber * classNumber * 4) > 20000000000) {
+            estimateSales = currencyFormatter.format(20000000000);
+        } else {
+            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4)
+        }
+
+        return estimateSales
+    }
+
     return (
         <>
             <DialogContent className={classes.dialogCont}>
@@ -583,10 +595,8 @@ function CreateServicesForm(props) {
                                                 <Typography variant='body1'>
                                                     <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
                                                 <span className={classes.txtRevenue}>
-                                                        ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4) <= 2000000000
-                                                            ? currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)
-                                                            : currencyFormatter.format(2000000000)
-                                                        }
+                                                        ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'))}
+                                                        {/* ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)} */}
                                                     </span>
                                                 </Typography>
                                             </Tooltip>

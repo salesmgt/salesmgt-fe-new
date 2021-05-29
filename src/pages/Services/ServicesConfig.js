@@ -5,20 +5,20 @@ const columns = [
     { key: 'serviceType', name: 'Service Type', sortable: true, width1: '13%', width2: '18%' },
     { key: 'task.school.schoolId', name: 'School Name', sortable: true, width1: '20%', width2: '25%' },
     { key: 'task.user.username', name: 'PIC', sortable: true, width1: '23%', width2: '0%' },
-    { key: 'duration', name: 'Duration', sortable: false, width1: '25%', width2: '28%' },
+    // { key: 'duration', name: 'Duration', sortable: false, width1: '25%', width2: '28%' },
     { key: 'status', name: 'Status', sortable: true, width1: '12%', width2: '15%' },    // Pending, Approved, Rejected
     // { key: 'approveDate', name: 'Approved Date', sortable: true, width1: '17%', width2: '1%' },
     { key: '', name: '', sortable: false, width1: '1%', width2: '1%' },
 ]
 
 export const getColumns = (role) => {
-    const [no, serviceType, schoolName, pic, duration, status, actions] = columns
+    const [no, serviceType, schoolName, pic, status, actions] = columns     // duration,
 
     switch (role) {
         case roleNames.manager:
-            return [no, serviceType, schoolName, pic, duration, status, actions]
+            return [no, serviceType, schoolName, pic, status, actions]      // duration,
         case roleNames.salesman:
-            return [no, serviceType, schoolName, duration, status, actions]
+            return [no, serviceType, schoolName, status, actions]       // duration,
         default:
             break;
     }

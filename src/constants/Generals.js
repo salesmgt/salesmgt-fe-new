@@ -14,6 +14,7 @@ export const statusNames = {
     lead: 'Chưa hợp tác',
     customer: 'Đang hợp tác',
     pending: 'Ngưng hợp tác',
+    potential: 'Tiềm năng'
 }
 
 export const schoolLevelNames = {
@@ -29,6 +30,7 @@ export const schoolLevelNames = {
 export const taskResultNames = {
     tbd: 'TBD',
     successful: 'successful',
+    failed: 'failed',
 }
 
 // Đây là các tên tự đặt phía FE

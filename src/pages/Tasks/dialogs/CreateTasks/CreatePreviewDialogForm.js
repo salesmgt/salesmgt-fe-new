@@ -35,8 +35,8 @@ import { getPurpsByStatus } from '../../../../utils/Sortings'
 import { createTasks } from '../../TasksServices'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
 import DateFnsUtils from '@date-io/date-fns'
+import { parseDateToString, calculateSchoolYear } from '../../../../utils/DateTimes'
 import classes from './CreatePreviewDialogForm.module.scss'
-import { parseDateToString } from '../../../../utils/DateTimes'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -104,19 +104,6 @@ function CreatePreviewDialogForm(props) {
     const { params } = useTaskForm()  //, dispatchParams, setFilter
     const { page, limit, column, direction, searchKey, listFilters } = params
 
-    // 1 năm học sẽ kéo dài từ tháng 5 năm nay tới tháng 5 năm sau
-    const calculateSchoolYear = () => {
-        const thisYear = new Date().getFullYear()
-        const thisMonth = new Date().getMonth()
-
-        if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
-            return `${thisYear}-${thisYear + 1}`
-        } else if (4 <= thisMonth < 11) {
-            return `${thisYear - 1}-${thisYear}`
-        } else {
-            return null
-        }
-    }
     const schoolYear = calculateSchoolYear()
 
     const bakSalesPurps = salesPurps ? salesPurps : Milk.getMilk(milkNames.salesPurps)
@@ -197,8 +184,8 @@ function CreatePreviewDialogForm(props) {
 
     const handleDeadlineChange = (newDate, row) => {
         // setDeadline(newDate);
-        console.log('newDate = ', newDate);
-        console.log('editing row = ', row);
+        // console.log('newDate = ', newDate);
+        // console.log('editing row = ', row);
 
         // let editingRow = rowsState.find(obj => obj.id === row.id)
         // console.log('Before ----- editingRow = ', editingRow)
@@ -207,7 +194,7 @@ function CreatePreviewDialogForm(props) {
         // console.log('After ----- editingRow = ', editingRow)
 
         const index = rowsState.findIndex((obj) => obj.schoolId === row.schoolId)
-        console.log('deadline of index = ', index);
+        // console.log('deadline of index = ', index);
         //const item ={...rowsState[index],note: e.target.value}
         let array = [...rowsState]
         array[index] = {

@@ -51,6 +51,16 @@ function useTaskFormProvider() {
     const [schoolStatus, setSchoolStatus] = useState(
         defaultFilters?.status?.filterValue
     )
+    // Special filter (Checkbox)
+    const [checkedPotential, setCheckedPotential] = useState(false);
+
+    const resetFormFilters = () => {
+        setDistrict(defaultFilters?.district?.filterValue)
+        setSchoolType(defaultFilters?.type?.filterValue)
+        setSchoolLevel(defaultFilters?.level?.filterValue)
+        setSchoolStatus(defaultFilters?.status?.filterValue)
+        setCheckedPotential(false)
+    }
 
     // fix major BUG
     // const setFilter = (key, value) => {
@@ -115,6 +125,9 @@ function useTaskFormProvider() {
         // schoolScale,
         schoolStatus,
         setSchoolStatus,
+        checkedPotential,
+        setCheckedPotential,
+        resetFormFilters
     }
 }
 

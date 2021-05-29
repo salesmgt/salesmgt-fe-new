@@ -15,6 +15,8 @@ export const LEVEL_FILTER = 'level'
 
 export const TASK_STATUS_FILTER = 'taskStatus'
 
+export const KPI_STATUS_FILTER = 'KPIStatus'
+
 export const SERVICE_STATUS_FILTER = 'serviceStatus'
 export const SERVICE_TYPE_FILTER = 'serviceType'
 export const EXPIRED_FILTER = 'isExpired'

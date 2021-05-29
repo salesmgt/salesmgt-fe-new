@@ -151,6 +151,12 @@ export async function completeTasks(taskId) {
     return response
 }
 
+export async function incompleteTasks(taskId) {
+    const response = await Api.put(`/tasks/failed/${taskId}`)
+    // const data = await response.data
+    return response
+}
+
 //===================== Assign Salesmen to Tasks =====================
 // Get list suggested Salesman in feature assign
 export async function suggestSalesmen(listSchoolId) {

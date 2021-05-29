@@ -314,7 +314,7 @@ function ServiceInfo(props) {
                 onClose={() => setOpenApproveDialog(false)}
                 service={service}
                 refreshPage={refreshPage}
-                setNotify={setNotify}
+            // setNotify={setNotify}
             />
         )
     }
@@ -562,17 +562,19 @@ function ServiceInfo(props) {
                                                                     />
                                                                 )}
                                                             />
-                                                        ) : (
+                                                        ) : service?.status === serviceStatusNames.approved ? (
+
                                                             <LinearProgressBars
                                                                 startDate={service?.startDate}
                                                                 endDate={service?.endDate}
                                                                 marker={new Date()}
                                                                 type="service"
                                                             />
-                                                            // <Typography color="inherit">
-                                                            //     {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                                            //     {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
-                                                            // </Typography>
+                                                        ) : (
+                                                            <Typography color="inherit">
+                                                                {parseDateToString(service?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                                {parseDateToString(service?.endDate, 'DD-MM-YYYY')}
+                                                            </Typography>
                                                         )}
                                                     </Grid>
                                                 </Grid>

@@ -1,0 +1,1 @@
+export { default as KPIInfo } from './KPIInfo/KPIInfo'

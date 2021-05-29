@@ -9,6 +9,8 @@ import {
     Button,
     Box,
     Tooltip,
+    Checkbox,
+    FormControlLabel,
 } from '@material-ui/core'
 import { SearchFields } from '../../../../components'
 import * as ReducerActions from '../../../../constants/ActionTypes'
@@ -18,6 +20,7 @@ import {
     DISTRICT_FILTER,
     TYPE_FILTER,
     LEVEL_FILTER,
+    STATUS_FILTER,
     // SCALE_FILTER,
     // STATUS_FILTER,
 } from '../../../../constants/Filters'
@@ -25,6 +28,7 @@ import { Consts } from '../DialogConfig'
 import { MdAdd } from 'react-icons/md'
 import NotifyDialog from './NotifyDialog'
 import styles from './CreateTasks.module.scss'
+import { statusNames } from '../../../../constants/Generals'
 
 //===============Set max-height for dropdown list===============
 const ITEM_HEIGHT = 38
@@ -42,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         marginBottom: theme.spacing(1),
         minWidth: 170,
+    },
+    formControlCheckbox: {
+        marginTop: theme.spacing(2)
     },
     flexBox: {
         padding: 0,
@@ -77,6 +84,7 @@ function Filters(props) {
         district, setDistrict,
         schoolType, setSchoolType,
         schoolLevel, setSchoolLevel,
+        checkedPotential, setCheckedPotential
         // schoolScale,
         // schoolStatus,
         // setFilter,
@@ -123,6 +131,20 @@ function Filters(props) {
             payload: {
                 filterType: LEVEL_FILTER,
                 filterValue: selectedSchoolLevel ? selectedSchoolLevel : '',
+            },
+        })
+    }
+
+    const handleCheckedPotentialChange = (event) => {
+        const isPotential = event.target.checked
+        console.log(isPotential);
+        // setFilter(LEVEL_FILTER, selectedSchoolLevel)
+        setCheckedPotential(isPotential)
+        dispatchParams({
+            type: ReducerActions.FILTER_SCHOOL_STATUS,
+            payload: {
+                filterType: STATUS_FILTER,
+                filterValue: isPotential ? statusNames.potential : statusNames.lead,
             },
         })
     }
@@ -289,6 +311,21 @@ function Filters(props) {
                                 </MenuItem>
                             ))}
                         </Select>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={6} sm={4} md={3} lg={3}>
+                    <FormControl className={classes.formControlCheckbox}>
+                        <FormControlLabel
+                            value={checkedPotential}
+                            control={
+                                <Checkbox color="secondary"
+                                    checked={checkedPotential}
+                                    onChange={handleCheckedPotentialChange} />
+                            }
+                            label={filters.isPotential.title}
+                            labelPlacement="end"
+                        />
                     </FormControl>
                 </Grid>
 

@@ -25,3 +25,18 @@ export const calculateDatesGap = (day1, day2, returnAs) => {
             break;
     }
 }
+
+export const calculateSchoolYear = () => {
+    const thisYear = new Date().getFullYear()
+    const thisMonth = new Date().getMonth()
+
+    // Từ tháng 5 năm nay tới tháng 5 năm sau: đi sales cho các tasks theo năm học sau
+    // nên report cũng tính là năm học sau.
+    if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
+        return `${thisYear}-${thisYear + 1}`
+    } else if (4 <= thisMonth < 11) {
+        return `${thisYear - 1}-${thisYear}`
+    } else {
+        return null
+    }
+}

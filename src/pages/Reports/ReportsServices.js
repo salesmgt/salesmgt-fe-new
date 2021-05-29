@@ -7,7 +7,7 @@ export async function getReports(
     column = 'date',
     direction = 'desc',
     searchKey = undefined,
-    filters = undefined,
+    filters,
     taskId
 ) {
     let url = `/reports?page=${page}&limit=${limit}&column=${column}&direction=${direction}`

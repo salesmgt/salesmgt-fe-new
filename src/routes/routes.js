@@ -13,7 +13,9 @@ import {
     Services,
     Service,
     Salesman,
-    Salesmen
+    Salesmen,
+    KPI,
+    KPIs
 } from '../pages'
 import AccountProvider from '../pages/Accounts/hooks/AccountContext'
 import ReportProvider from '../pages/Reports/hooks/ReportContext'
@@ -21,6 +23,7 @@ import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
 import TaskProvider from '../pages/Tasks/hooks/TaskContext'
 import ServiceProvider from '../pages/Services/hooks/ServiceContext'
 import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
+import KPIProvider from '../pages/KPIs/hooks/KPIContext'
 
 export const defaultRoutes = {
     ADMIN: { route: '/apps/accounts' },
@@ -104,6 +107,15 @@ export const roleRoutes = {
             ),
         },
         { path: 'salesmen/:id', component: () => <Salesman /> },
+        {
+            path: 'kpi',
+            component: () => (
+                <KPIProvider>
+                    <KPIs />
+                </KPIProvider>
+            ),
+        },
+        { path: 'kpi/:id', component: () => <KPI /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
     'SALES SUPERVISOR': [
@@ -144,6 +156,15 @@ export const roleRoutes = {
             ),
         },
         { path: 'salesmen/:id', component: () => <Salesman /> },
+        {
+            path: 'kpi',
+            component: () => (
+                <KPIProvider>
+                    <KPIs />
+                </KPIProvider>
+            ),
+        },
+        { path: 'kpi/:id', component: () => <KPI /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
     SALESMAN: [
@@ -188,6 +209,15 @@ export const roleRoutes = {
                 </ServiceProvider>
             )
         },
+        {
+            path: 'kpi',
+            component: () => (
+                <KPIProvider>
+                    <KPIs />
+                </KPIProvider>
+            ),
+        },
+        { path: 'kpi/:id', component: () => <KPI /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
 }

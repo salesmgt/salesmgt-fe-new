@@ -14,11 +14,17 @@ function LinearProgressBars(props) {
     const { startDate, endDate, marker, type } = props
 
     const calculatePercentage = (date1, date2) => {
-        if (calculateDatesGap(new Date(date1), new Date(), "D") * 100 / calculateDatesGap(new Date(date1), new Date(date2), "D") > 100)
+        const daysPassed = calculateDatesGap(new Date(date1), new Date(), "D");
+        const duration = calculateDatesGap(new Date(date1), new Date(date2), "D");
+
+        // console.log('daysPassed = ', daysPassed);
+        // console.log('duration = ', duration);
+
+        if (daysPassed * 100 / duration > 100)
             return 100
-        if (calculateDatesGap(new Date(date1), new Date(), "D") * 100 / calculateDatesGap(new Date(date1), new Date(date2), "D") < 0)
+        if (duration === 0 || daysPassed * 100 / duration < 0)
             return 0
-        return calculateDatesGap(new Date(date1), new Date(), "D") * 100 / calculateDatesGap(new Date(date1), new Date(date2), "D")
+        return daysPassed * 100 / duration
     }
     const value = calculatePercentage(startDate, endDate)
 
@@ -33,12 +39,12 @@ function LinearProgressBars(props) {
         <Box display="flex" flexDirection='column'>
             <Box display="flex" flexDirection='row'>
                 <Box flexGrow={1}>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2">    {/** color="textSecondary" */}
                         {parseDateToString(startDate, 'DD-MM-YYYY')}
                     </Typography>
                 </Box>
                 <Box>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2">    {/** color="textSecondary" */}
                         {parseDateToString(endDate, 'DD-MM-YYYY')}
                     </Typography>
                 </Box>

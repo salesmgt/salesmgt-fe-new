@@ -15,9 +15,9 @@ import {
     ListItemText,
     Checkbox,
 } from '@material-ui/core'
+import Rating from '@material-ui/lab/Rating'
 import {
     MdFirstPage,
-    MdInfo,
     MdKeyboardArrowLeft,
     MdKeyboardArrowRight,
     MdLastPage,
@@ -308,10 +308,7 @@ function Tables(props) {
                                 >
                                     <TableCell
                                         padding="checkbox" width="1%"
-                                        onClick={(event) => {
-                                            !row?.username &&
-                                                handleClick(event, row)
-                                        }}
+                                        onClick={(event) => { !row?.username && handleClick(event, row) }}
                                     >
                                         <Checkbox
                                             checked={row?.username ? false : isSelected(row)}
@@ -328,6 +325,9 @@ function Tables(props) {
                                             autoEscape={true}
                                             textToHighlight={row?.name ? row?.name : ''}
                                         />
+                                        {row?.status === statusNames.potential && (
+                                            <>&nbsp;<Rating defaultValue={1} max={1} /></>
+                                        )}
                                     </TableCell>
                                     <TableCell
                                         className={classes.tBodyCell}

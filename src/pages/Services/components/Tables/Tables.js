@@ -342,20 +342,20 @@ function Tables(props) {
                                             )}
                                         </TableCell>
                                     )}
-                                    <TableCell className={classes.tBodyCellDuration}>
-                                        {row?.status === serviceStatusNames.approved && (
-                                            // <>
-                                            //     {/**Duration 1 cái progress bar ở đây */}
-                                            <LinearProgressBars
+                                    {/* <TableCell className={classes.tBodyCellDuration}>
+                                        {row?.status === serviceStatusNames.approved && ( */}
+                                    {/* <> */}
+                                    {/**Duration 1 cái progress bar ở đây */}
+                                    {/* <LinearProgressBars
                                                 startDate={row?.startDate}
                                                 endDate={row?.endDate}
                                                 marker={new Date()}
-                                            />
-                                            //     {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
-                                            //     {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
-                                            // </>
-                                        )}
-                                    </TableCell>
+                                            /> */}
+                                    {/* {parseDateToString(row?.startDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
+                                            </> */}
+                                    {/* )}
+                                    </TableCell> */}
                                     <TableCell className={classes.tBodyCell}>
                                         {row?.status && setServiceStatusChipColor(row?.status)}
                                     </TableCell>

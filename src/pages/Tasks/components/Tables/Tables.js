@@ -40,6 +40,7 @@ import Highlighter from 'react-highlight-words'
 // import PropTypes from 'prop-types'
 import { Snackbars, LinearProgressBars } from '../../../../components'
 import classes from './Tables.module.scss'
+import { parseDateToString } from '../../../../utils/DateTimes'
 
 // Customize component TablePagination
 function TablePaginationActions(props) {
@@ -254,17 +255,19 @@ function Tables(props) {
         }
     }
 
-    const setTaskStatusChipColor = (result, endDate) => {
-        const today = new Date()
-        const deadline = new Date(endDate)
+    const setTaskStatusChipColor = (result) => {    //, endDate
+        // console.log('taskResult: ', result);
+        // const today = new Date()
+        // const deadline = new Date(endDate)
         switch (result) {
             case taskResultNames.successful:
                 return <Chip label={taskStatusNames.success} className={classes.chipSuccess} />
             case taskResultNames.tbd:
-                if (today <= deadline)
-                    return <Chip label={taskStatusNames.ongoing} className={classes.chipOnGoing} />
-                else
-                    return <Chip label={taskStatusNames.failed} className={classes.chipFailed} />
+                // if (today <= deadline)
+                return <Chip label={taskStatusNames.ongoing} className={classes.chipOnGoing} />
+            // else
+            case taskResultNames.failed:
+                return <Chip label={taskStatusNames.failed} className={classes.chipFailed} />
             default:
                 return <Chip label={result} /> // #5c21f3
             // break   // ko hiện gì
@@ -445,11 +448,18 @@ function Tables(props) {
                                             {row?.purpose && setPurposeChipColor(row?.purpose)}
                                         </TableCell>
                                         <TableCell className={classes.tBodyCellDuration}>
-                                            <LinearProgressBars
-                                                startDate={row?.assignDate}
-                                                endDate={row?.endDate}
-                                                marker={new Date()}
-                                            />
+                                            {row?.result === taskResultNames.tbd ? (
+                                                <LinearProgressBars
+                                                    startDate={row?.assignDate}
+                                                    endDate={row?.endDate}
+                                                    marker={new Date()}
+                                                />
+                                            ) : (
+                                                <>
+                                                    {parseDateToString(row?.assignDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                    {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
+                                                </>
+                                            )}
                                         </TableCell>
                                         {/* <TableCell className={classes.tBodyCell}>
                                             {row?.endDate && (
@@ -464,7 +474,9 @@ function Tables(props) {
                                             )}
                                         </TableCell> */}
                                         <TableCell className={classes.tBodyCell}>
-                                            {(row?.username && row?.result) && setTaskStatusChipColor(row?.result, row?.endDate)}
+                                            {(row?.username && row?.result) && setTaskStatusChipColor(row?.result)
+                                                //, row?.endDate
+                                            }
                                         </TableCell>
                                         <TableCell className={classes.tBodyCell} align="right">
                                             <MenuOptions

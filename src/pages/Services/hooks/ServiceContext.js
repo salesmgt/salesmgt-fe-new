@@ -94,12 +94,14 @@ function useServiceProvider() {
                     serviceStatus: { filterType: SERVICE_STATUS_FILTER, filterValue: value },
                 }
                 setServiceStatus(value)
+                break
             case SERVICE_TYPE_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
                     serviceType: { filterType: SERVICE_TYPE_FILTER, filterValue: value },
                 }
                 setServiceType(value)
+                break
             case SCHOOL_YEAR_FILTER:
                 defaultFilters = {
                     ...defaultFilters,
