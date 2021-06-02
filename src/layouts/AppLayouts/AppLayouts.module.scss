@@ -72,6 +72,7 @@ $banner: url(../../assets/images/major/banner-major-edu.png);
         0px 16px 24px 2px rgba(0, 0, 0, 0.14),
         0px 6px 30px 5px rgba(0, 0, 0, 0.12) !important;
     width: $drawer-width;
+    overflow: hidden !important;
     white-space: nowrap;
     transition-property: width !important;
     transition-duration: $entering-screen !important;
@@ -92,7 +93,8 @@ $banner: url(../../assets/images/major/banner-major-edu.png);
 }
 .drawerPaperClose {
     width: $drawer-width-close;
-    overflow-x: hidden;
+    // overflow-x: hidden;
+    overflow: hidden !important;
     transition-property: width !important;
     transition-duration: $leaving-screen !important;
     transition-timing-function: $sharp !important;
