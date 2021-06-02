@@ -54,9 +54,7 @@ function ConfirmDisable(props) {
 
     const handleDisable = () => {
         disableKPIGroup(kpiGroupId).then((res) => {
-            console.log(res);
             enqueueSnackbar('Disable KPI group successfully', { variant: 'success' })
-
             refreshAPI(column, direction, searchKey, listFilters)
         }).catch((error) => {
             console.log(error)

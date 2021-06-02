@@ -35,29 +35,29 @@ function Step2(props) {
     // const [previewKPIs, setPreviewKPIs] = useState([])
     console.log('Step 2: kpi = ', KPI)
 
-    const refractorCriteria = () => {
-        const criList = [...criteria]
-        let newCriteria = []
-        criList.map((cri, index) => {
-            if (index < (criList.length - 1)) {
-                cri = { ...cri, isChecked: true, targetValue: 0, weight: Math.round(100 / criList.length) }
-            } else {
-                cri = {
-                    ...cri,
-                    isChecked: true,
-                    targetValue: 0,
-                    weight: 100 - (Math.round(100 / criList.length) * (criList.length - 1))
-                }
-            }
-            newCriteria.push(cri)
-        })
-        setKPI({ ...KPI, criteria: newCriteria, kpis: [{ ...kpis, criteria: newCriteria }] })
+    // const refractorCriteria = () => {
+    //     const criList = [...criteria]
+    //     let newCriteria = []
+    //     criList.map((cri, index) => {
+    //         if (index < (criList.length - 1)) {
+    //             cri = { ...cri, isChecked: true, targetValue: 0, weight: Math.round(100 / criList.length) }
+    //         } else {
+    //             cri = {
+    //                 ...cri,
+    //                 isChecked: true,
+    //                 targetValue: 0,
+    //                 weight: 100 - (Math.round(100 / criList.length) * (criList.length - 1))
+    //             }
+    //         }
+    //         newCriteria.push(cri)
+    //     })
+    //     setKPI({ ...KPI, criteria: newCriteria, kpis: [{ ...kpis, criteria: newCriteria }] })
 
-        // if (!myCriteria?.targetValue || !myCriteria?.weight) {
-        //     setMyCriteria(newCriteria)
-        // }
-        // return newCriteria
-    }
+    //     // if (!myCriteria?.targetValue || !myCriteria?.weight) {
+    //     //     setMyCriteria(newCriteria)
+    //     // }
+    //     // return newCriteria
+    // }
     // useEffect(() => {
     //     refractorCriteria()
     // }, []);
@@ -69,6 +69,27 @@ function Step2(props) {
     // if (!myCriteria?.targetValue || !myCriteria?.weight) {
     //     setMyCriteria(refractorCriteria)
     // }
+
+    const calculateSuggestedWeight = (listCriteria) => {
+        let myCriteria = []
+
+        // Re-calculate suggested weight
+        listCriteria.map((cri, index) => {
+            if (index < (listCriteria.length - 1)) {
+                cri = { ...cri, weight: Math.round(100 / listCriteria.length) } //isChecked: true, //ko cần cái này nữa
+            }
+            else {  // last item
+                cri = {
+                    ...cri,
+                    // isChecked: true,
+                    weight: 100 - (Math.round(100 / listCriteria.length) * (listCriteria.length - 1))
+                }
+            }
+            myCriteria.push(cri)
+        })
+
+        setKPI({ ...KPI, criteria: myCriteria, kpis: [{ ...kpis, criteria: myCriteria }] })
+    }
 
     const handleTargetValueChange = (event, index) => {
         const inputValue = event.target.value;
@@ -106,7 +127,11 @@ function Step2(props) {
     const handleRemove = (id) => {
         const listCriteria = [...ArrayUtils.removeItem(myCriteria, 'id', id)]
         setMyCriteria(listCriteria)
-        setKPI({ ...KPI, criteria: listCriteria, kpis: [{ ...kpis, criteria: listCriteria }] })
+        calculateSuggestedWeight(listCriteria)
+
+        // Vì trong calculateSuggestedWeight(listCriteria) đã xử lý hậu kỳ cái "listCriteria" và setKPI() rồi
+        // nên dưới này ko cần set lại "listCriteria" tiền xử lý (chưa calculate weight) nữa.
+        // setKPI({ ...KPI, criteria: listCriteria, kpis: [{ ...kpis, criteria: listCriteria }] })
     }
 
     return (

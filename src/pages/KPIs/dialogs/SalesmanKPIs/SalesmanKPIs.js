@@ -119,19 +119,6 @@ function SalesmanKPIs(props) {
         })
     }
 
-    // Phức tạp, để lại
-    // Tự làm khó mình quá, chi thế ta, có mấy cái khối ở trang KPI Group Details chính là average rồi đó!
-    // const calculateAverageValues = () => {
-    //     let sum = 0
-    //     kpiDetails?.kpis.forEach(kpi => {
-    //         sum += kpi?.actualValue
-    //         console.log('actualValue = ', kpi?.actualValue);
-    //     });
-    //     console.log('sum = ', sum);
-    //     console.log('avg = ', sum / (kpiDetails?.kpis.length));
-    //     // return sum / (kpiDetails?.kpis.length)
-    // }
-
     const prepareDataForChart = () => {
         let criteria = []
         let actualValues = []
@@ -206,28 +193,19 @@ function SalesmanKPIs(props) {
 
     const handleUpdateManualKPIActualValue = () => {
         // nhờ a Gia đổi request thành 1 array[kpiDetails]
-        // let models = []
-        let model = {
-            criteriaId: '',
-            criteria: '',
-            descrption: '',
-            type: '',
-            value: 0,
-            weight: 0
-        }
+        let models = []
+        let model = { id: 0, value: 0 }
         kpiDetails?.kpis.map(kpiDetail => {
             if (kpiDetail?.type === kpiDetailTypes.manual) {
                 model = {
                     ...model,
-                    criteria: kpiDetail?.cirteriaContent,
-                    descrption: kpiDetail?.description,
-                    type: kpiDetail?.type,
+                    id: kpiDetail?.kpiDetailId,
                     value: Number(kpiDetail?.actualValue),
-                    weight: kpiDetail?.weight
                 }
-                // models.push(model)
+                models.push(model)
                 console.log('kpiGroupId = ', kpiGroupId);
-                updateKPIManual(kpiDetail?.kpiDetailId, model).then(res => {
+                console.log('edited list = ', models);
+                updateKPIManual(kpiId, models).then(res => {
                     refreshPage(kpiGroupId)
 
                     enqueueSnackbar('Updated Salesman evaluation successfully', { variant: 'success' })
@@ -244,9 +222,8 @@ function SalesmanKPIs(props) {
                 })
             }
         })
-        // console.log('models: ', models);
 
-
+        // onClose()
     }
 
     const handleTargetValueChange = (event, currentKPIPoint) => {

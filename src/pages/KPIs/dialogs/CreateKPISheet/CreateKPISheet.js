@@ -135,6 +135,11 @@ function CreateKPISheet(props) {
         // setKPI(KPI)
     };
 
+    const handleCloseDialog = () => {
+        setKPI(defaultKPI)
+        onClose()
+    }
+
     // const handleReset = () => {
     //     setActiveStep(0);
     //     setKPI(defaultKPI)
@@ -150,13 +155,13 @@ function CreateKPISheet(props) {
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleCloseDialog}
             maxWidth="lg"
             fullWidth
             // component="form"
             className={classes.dialog}
         >
-            <DialogTitleWithIconClose onClose={onClose}>
+            <DialogTitleWithIconClose onClose={handleCloseDialog}>
                 {headers.create}
             </DialogTitleWithIconClose>
             <DialogContent className={classes.wrapper}>
@@ -227,7 +232,7 @@ function CreateKPISheet(props) {
                                         open={openConfirmDialog}
                                         onClose={() => {
                                             setOpenConfirmDialog(false) // close confirmDialog
-                                            onClose()   // close createDialog
+                                            // onClose()   // close createDialog
                                         }}
                                         KPI={KPI}
                                         refreshPage={refreshAPI}
@@ -245,27 +250,7 @@ function CreateKPISheet(props) {
                         </div>
                     )}
                 </div>
-
-
-                {/* <Button
-                    className={classes.btnSave}
-                    // type="submit"
-                    // onSubmit={handleCreateReport}
-                    // disabled={!formState.isDirty}
-                    // onClick={handleSubmit(onSubmit)}
-                    onClick={() => { }}
-                >
-                    {operations.save}
-                </Button>
-                <Button onClick={handleCloseDialog}>
-                    {operations.cancel}
-                </Button> */}
             </DialogActions>
-            {/* <CreateKPISheetForm
-                onClose={onClose}
-                refreshAPI={refreshAPI}
-            // setNotify={setNotify}
-            /> */}
         </Dialog>
     )
 }

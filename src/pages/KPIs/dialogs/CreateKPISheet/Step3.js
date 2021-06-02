@@ -66,7 +66,7 @@ function Step3(props) {
     const [endDate, setEndDate] = useState(KPI?.endDate)
 
     const [salesmen, setSalesmen] = useState([])
-    const [staffs, setStaffs] = useState(users)
+    const [staffs, setStaffs] = useState(users) // list đc chọn
     const [checkAll, setCheckAll] = useState(false)
     // const [previewKPIs, setPreviewKPIs] = useState([])
 
@@ -234,6 +234,7 @@ function Step3(props) {
                         getOptionLabel={(salesman) =>
                             salesman.fullName ? salesman.fullName : ''
                         }
+                        getOptionSelected={(option, value) => option.username === value.username}
                         renderInput={(params) => (
                             <TextField
                                 {...params}

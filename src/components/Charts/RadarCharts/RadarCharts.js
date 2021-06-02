@@ -30,6 +30,20 @@ const RadarCharts = (props) => {
                 //     paddingBottom: '0 !important'
                 // }
             },
+            dataLabels: {
+                enabled: true
+            },
+            plotOptions: {
+                radar: {
+                    size: 140,
+                    polygons: {
+                        strokeColors: '#e9e9e9',
+                        fill: {
+                            colors: ['#f8f8f8', '#fff']
+                        }
+                    }
+                }
+            },
             title: {
                 text: `KPI of ${salesmanName} (divided by Criteria)`,
                 // style: {
@@ -41,7 +55,20 @@ const RadarCharts = (props) => {
                 width: 2
             },
             fill: { opacity: 0.1 },
-            markers: { size: 0 },
+            markers: { size: 4 },
+            // markers: {
+            //     size: 4,
+            //     colors: ['#fff'],
+            //     strokeColor: '#FF4560',
+            //     strokeWidth: 2,
+            // },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            },
             xaxis: { categories: criteria },
             dataLabels: {
                 style: {

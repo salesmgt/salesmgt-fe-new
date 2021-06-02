@@ -60,35 +60,36 @@ import classes from './Step1.module.scss'
 function Step1(props) {
     // const styles = useStyles()
     const { KPI, setKPI } = props
-    const { criteria, kpis } = KPI
-    const [myCriteria, setMyCriteria] = useState([])  //[]
+    const { criteria, kpis } = KPI  // criteria is list of selections
+    const [listCriFromDB, setListCriFromDB] = useState([])  // fromDB
     const history = useHistory()
-    // const [selectedCriteria, setSelectedCriteria] = useState([])  //[]
+    // const [selectedCriteria, setSelectedCriteria] = useState([])
 
-    const refractorCriteria = (listCri) => {
-        let myCriteria = []
-        listCri.map((cri, index) => {
-            if (index < (listCri.length - 1)) {
-                cri = { ...cri, isChecked: false, targetValue: 0, weight: Math.round(100 / listCri.length) }
-            } else {
-                cri = {
-                    ...cri,
-                    isChecked: false,
-                    targetValue: 0,
-                    weight: 100 - (Math.round(100 / listCri.length) * (listCri.length - 1))
-                }
-            }
-            myCriteria.push(cri)
-        })
+    // const refractorCriteria = (listCri) => {
+    //     let myCriteria = []
+    //     listCri.map((cri, index) => {
+    //         if (index < (listCri.length - 1)) {
+    //             cri = { ...cri, targetValue: 0, weight: Math.round(100 / listCri.length) }  // isChecked: false,
+    //         } else {
+    //             cri = {
+    //                 ...cri,
+    //                 // isChecked: false,
+    //                 targetValue: 0,
+    //                 weight: 100 - (Math.round(100 / listCri.length) * (listCri.length - 1))
+    //             }
+    //         }
+    //         myCriteria.push(cri)
+    //     })
 
-        // setKPI({ ...KPI, criteria: myCriteria, kpis: [{ ...kpis, criteria: myCriteria }] })
+    //     // setKPI({ ...KPI, criteria: myCriteria, kpis: [{ ...kpis, criteria: myCriteria }] })
 
-        return myCriteria
-    }
+    //     return myCriteria
+    // }
     const getCriteriaFromDB = () => {
         getKPICriteria().then((data) => {
-            const newListCri = refractorCriteria(data)
-            setMyCriteria(newListCri)
+            // const newListCri = refractorCriteria(data)
+            // setListCriFromDB(newListCri)
+            setListCriFromDB(data)
         })
             .catch((error) => {
                 if (error.response) {
@@ -101,27 +102,29 @@ function Step1(props) {
             })
     }
     useEffect(() => {
-        console.log('criteria.length = ', criteria.length);
-        if (criteria.length === 0) {
-            getCriteriaFromDB()
-        } else {
-            refractorCriteria(criteria)
-        }
+        // console.log('criteria.length = ', criteria.length);
+        // if (criteria.length === 0) {
+        //     console.log('yesssssss');
+        getCriteriaFromDB()
+        // } else {
+        //     console.log('noooooooooooo');
+        //     refractorCriteria(criteria)
+        // }
     }, [])
 
     const handleCriteriaChange = (event, listCriteria) => {
-        console.log('listCriteria: ', listCriteria);
         // console.log('selected criteria: ', listCriteria);
         let myCriteria = []
 
+        // Re-calculate suggested weight
         listCriteria.map((cri, index) => {
             if (index < (listCriteria.length - 1)) {
-                cri = { ...cri, isChecked: true, weight: Math.round(100 / listCriteria.length) }
+                cri = { ...cri, weight: Math.round(100 / listCriteria.length) } //isChecked: true, //ko cần cái này nữa
             }
             else {  // last item
                 cri = {
                     ...cri,
-                    isChecked: true,
+                    // isChecked: true,
                     weight: 100 - (Math.round(100 / listCriteria.length) * (listCriteria.length - 1))
                 }
             }
@@ -171,10 +174,11 @@ function Step1(props) {
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo"
-                    options={myCriteria}
+                    options={listCriFromDB}
                     value={criteria}
                     disableCloseOnSelect
                     getOptionLabel={(option) => option.name}
+                    getOptionSelected={(option, value) => option?.id === value?.id}
                     renderOption={(option, { selected }) => {
                         // console.log('option?.isChecked = ', option?.isChecked);
                         return (
