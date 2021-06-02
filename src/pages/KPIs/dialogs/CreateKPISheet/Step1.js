@@ -117,7 +117,8 @@ function Step1(props) {
         listCriteria.map((cri, index) => {
             if (index < (listCriteria.length - 1)) {
                 cri = { ...cri, isChecked: true, weight: Math.round(100 / listCriteria.length) }
-            } else {
+            }
+            else {  // last item
                 cri = {
                     ...cri,
                     isChecked: true,
@@ -195,6 +196,7 @@ function Step1(props) {
                     )}
                     // filterOptions={(options = KPI.criteria) => { console.log('list chọn nè: ', options) }}
                     onChange={handleCriteriaChange}
+                // onBlur={}
                 />
             </Grid>
             {/* </Grid> */}

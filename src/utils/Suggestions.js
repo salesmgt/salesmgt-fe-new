@@ -5,7 +5,6 @@ export const suggestPrice = (inputPrice, setPriceSuggestions) => {
     setPriceSuggestions([])
 
     if (inputPrice > 0 && inputPrice < 10) {
-        alert(inputPrice)
         suggestOptions.push(inputPrice * 100000)
         if ((inputPrice * 1000000) <= MAX_PRICE) {
             suggestOptions.push(inputPrice * 1000000)

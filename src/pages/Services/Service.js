@@ -14,8 +14,8 @@ function Service() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
-    const [service, setService] = useState(stateData?.model)
+    // const stateData = location.state?.data
+    const [service, setService] = useState(null)    //stateData?.model
 
     const [exist, setExist] = useState(true)
 

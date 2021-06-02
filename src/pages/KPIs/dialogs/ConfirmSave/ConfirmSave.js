@@ -16,6 +16,8 @@ import { useHistory } from 'react-router'
 import { useSnackbar } from 'notistack'
 import { parseDateToString } from '../../../../utils/DateTimes'
 import { createKPIGroup } from '../../KPIsServices';
+import { useKPI } from '../../hooks/KPIContext';
+import { useAuth } from '../../../../hooks/AuthContext';
 import classes from './ConfirmSave.module.scss'
 
 const stylesTitle = (theme) => ({
@@ -52,6 +54,9 @@ function ConfirmApprove(props) {
     console.log('open rồi nè');
 
     const history = useHistory()
+    const { user } = useAuth()
+    const { params } = useKPI()
+    const { listFilters, column, direction, searchKey } = params
     const { enqueueSnackbar } = useSnackbar()
 
     const constructKPIObject = () => {
@@ -63,10 +68,11 @@ function ConfirmApprove(props) {
         }
         let myKPIDetails = []
         let aKpiDetail = {
-            actualValue: 0,
             criteriaId: 0,
-            floorValue: 0,
-            weight: 0
+            kpiDetailId: -1,
+            actualValue: 0,
+            targetValue: 0,
+            weight: 0,
         }
 
         // KPI?.users.forEach(staff => {
@@ -81,8 +87,8 @@ function ConfirmApprove(props) {
                 aKpiDetail = {
                     ...aKpiDetail,
                     criteriaId: cri?.id,
-                    floorValue: cri?.targetValue,
-                    weight: cri?.weight
+                    targetValue: parseInt(cri?.targetValue),
+                    weight: parseFloat(cri?.weight / 100)
                 }
                 myKPIDetails.push(aKpiDetail)
             });
@@ -110,7 +116,7 @@ function ConfirmApprove(props) {
         constructKPIObject()
 
         createKPIGroup(kpiData).then((res) => {
-            // refreshPage(service?.id)
+            refreshPage(column, direction, searchKey, listFilters, user.username)
             enqueueSnackbar("Created KPI group successfully", { variant: 'success' })
         }).catch((error) => {
             if (error.response) {

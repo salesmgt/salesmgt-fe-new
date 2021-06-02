@@ -17,10 +17,13 @@ import {
 import { MdClose } from 'react-icons/md'
 import { Consts } from '../DialogConfig'
 // import CreateKPISheetForm from './CreateKPISheetForm'
-import { steps, getStepContent } from './CreateKPISheetConfig'
+import { steps } from './CreateKPISheetConfig'
 import { calculateSchoolYear } from '../../../../utils/DateTimes'
-import classes from './CreateKPISheet.module.scss'
 import ConfirmSave from '../ConfirmSave/ConfirmSave'
+import Step1 from "./Step1";
+import Step2 from "./Step2";
+import Step3 from "./Step3";
+import classes from './CreateKPISheet.module.scss'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -97,6 +100,26 @@ function CreateKPISheet(props) {
         // }]
     }
     const [KPI, setKPI] = useState(defaultKPI)
+
+
+    const getStepContent = (step, KPI, setKPI) => {
+        switch (step) {
+            case 0:
+                return (
+                    <Step1 KPI={KPI} setKPI={setKPI} />
+                )
+            case 1:
+                return (
+                    <Step2 KPI={KPI} setKPI={setKPI} />
+                )
+            case 2:
+                return (
+                    <Step3 KPI={KPI} setKPI={setKPI} />
+                )
+            default:
+                break
+        }
+    }
 
     //========================Stepper handler========================
     const [activeStep, setActiveStep] = useState(0);
@@ -202,7 +225,10 @@ function CreateKPISheet(props) {
                                     </Button>
                                     <ConfirmSave
                                         open={openConfirmDialog}
-                                        onClose={() => setOpenConfirmDialog(false)}
+                                        onClose={() => {
+                                            setOpenConfirmDialog(false) // close confirmDialog
+                                            onClose()   // close createDialog
+                                        }}
                                         KPI={KPI}
                                         refreshPage={refreshAPI}
                                     />

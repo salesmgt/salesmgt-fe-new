@@ -14,8 +14,8 @@ function Salesman() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
-    const [salesman, setSalesman] = useState(stateData?.model)
+    // const stateData = location.state?.data
+    const [salesman, setSalesman] = useState(null)  //stateData?.model
 
     const [exist, setExist] = useState(true)
 

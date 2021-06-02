@@ -7,7 +7,7 @@
 }
 
 .container {
-  height: 73.2vh;
+  height: 80.8vh;
   overflow-y: auto;
 }
 
@@ -76,21 +76,16 @@
 }
 
 //=======================Service Status chips=======================
-.chipPending {
+.chipApplying {
   text-transform: capitalize;
   background-color: $dark-info !important;
   color: $common-white !important;
 }
-.chipApproved {
-  text-transform: capitalize;
-  background-color: $main-success !important;
-  color: $common-white !important;
-}
-.chipRejected {
-  text-transform: capitalize;
-  background-color: $dark-error !important;
-  color: $common-white !important;
-}
+// .chipDisable {
+//   text-transform: capitalize;
+//   background-color: $main-success !important;
+//   color: $common-white !important;
+// }
 
 
 .itemText {

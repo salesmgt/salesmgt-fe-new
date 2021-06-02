@@ -1,7 +1,7 @@
 import { roleNames } from "../../constants/Generals";
 
 const columns = [
-    { key: 'no', name: 'No', sortable: false, width: '2%' },
+    { key: 'no', name: '#', sortable: false, width: '2%' },
     { key: 'name', name: 'School Name', sortable: true, width: '20%' },
     // { key: "district.name", name: 'District', sortable: true },
     { key: 'address', name: 'Address', sortable: false, width: '42%' },

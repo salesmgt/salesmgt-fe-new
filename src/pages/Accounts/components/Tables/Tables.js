@@ -292,10 +292,6 @@ function Tables(props) {
                                                         textToHighlight={row?.fullName || ''}
                                                     />
                                                 }
-                                                classes={{
-                                                    primary:
-                                                        classes.itemTextPrimary,
-                                                }}
                                             />
                                         </ListItem>
                                     </TableCell>

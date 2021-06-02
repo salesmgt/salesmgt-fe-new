@@ -1,5 +1,5 @@
 export const columns = [
-    { key: 'no', name: 'No', sortable: false, width: '0%' },
+    { key: 'no', name: '#', sortable: false, width: '0%' },
     { key: 'date', name: 'Date', sortable: true, width: '10%' },
     { key: 'task.school.name', name: 'School Name', sortable: true, width: '20%' }, // SchoolName - primary, District - secondary
     { key: 'task.user.fullName', name: 'PIC', sortable: true, width: '20%' },

@@ -2,7 +2,7 @@
 import { roleNames, taskStatusNames } from '../../constants/Generals'
 
 const columns = [
-    { key: 'no', name: 'No', sortable: false, width1: '1%', width2: '1%' },
+    { key: 'no', name: '#', sortable: false, width1: '1%', width2: '1%' },
     { key: 'schoolName', name: 'School Name', sortable: true, width1: '24%', width2: '28%' },
     // { key: 'school.reprName', name: 'Principal', sortable: true },
     { key: 'user.fullName', name: 'PIC', sortable: true, width1: '20%', width2: '0%' },

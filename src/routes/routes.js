@@ -12,8 +12,8 @@ import {
     Reports,
     Services,
     Service,
-    Salesman,
-    Salesmen,
+    // Salesman,
+    // Salesmen,
     KPI,
     KPIs
 } from '../pages'
@@ -22,7 +22,7 @@ import ReportProvider from '../pages/Reports/hooks/ReportContext'
 import SchoolProvider from '../pages/Schools/hooks/SchoolContext'
 import TaskProvider from '../pages/Tasks/hooks/TaskContext'
 import ServiceProvider from '../pages/Services/hooks/ServiceContext'
-import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
+// import SalesmanProvider from '../pages/Salesmen/hooks/SalesmanContext'
 import KPIProvider from '../pages/KPIs/hooks/KPIContext'
 
 export const defaultRoutes = {
@@ -98,24 +98,24 @@ export const roleRoutes = {
                 </ServiceProvider>
             )
         },
+        // {
+        //     path: 'salesmen',
+        //     component: () => (
+        //         <SalesmanProvider>
+        //             <Salesmen />
+        //         </SalesmanProvider>
+        //     ),
+        // },
+        // { path: 'salesmen/:id', component: () => <Salesman /> },
         {
-            path: 'salesmen',
-            component: () => (
-                <SalesmanProvider>
-                    <Salesmen />
-                </SalesmanProvider>
-            ),
-        },
-        { path: 'salesmen/:id', component: () => <Salesman /> },
-        {
-            path: 'kpi',
+            path: 'kpis',
             component: () => (
                 <KPIProvider>
                     <KPIs />
                 </KPIProvider>
             ),
         },
-        { path: 'kpi/:id', component: () => <KPI /> },
+        { path: 'kpis/:id', component: () => <KPI /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
     'SALES SUPERVISOR': [
@@ -147,24 +147,24 @@ export const roleRoutes = {
             ),
         },
         { path: 'reports/:id', component: () => <Report /> },
+        // {
+        //     path: 'salesmen',
+        //     component: () => (
+        //         <SalesmanProvider>
+        //             <Salesmen />
+        //         </SalesmanProvider>
+        //     ),
+        // },
+        // { path: 'salesmen/:id', component: () => <Salesman /> },
         {
-            path: 'salesmen',
-            component: () => (
-                <SalesmanProvider>
-                    <Salesmen />
-                </SalesmanProvider>
-            ),
-        },
-        { path: 'salesmen/:id', component: () => <Salesman /> },
-        {
-            path: 'kpi',
+            path: 'kpis',
             component: () => (
                 <KPIProvider>
                     <KPIs />
                 </KPIProvider>
             ),
         },
-        { path: 'kpi/:id', component: () => <KPI /> },
+        { path: 'kpis/:id', component: () => <KPI /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
     SALESMAN: [
@@ -210,14 +210,14 @@ export const roleRoutes = {
             )
         },
         {
-            path: 'kpi',
+            path: 'kpis',
             component: () => (
                 <KPIProvider>
                     <KPIs />
                 </KPIProvider>
             ),
         },
-        { path: 'kpi/:id', component: () => <KPI /> },
+        { path: 'kpis/:id', component: () => <KPI /> },
         { path: 'work-plans', component: () => <WorkPlans /> },
     ],
 }

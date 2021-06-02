@@ -38,7 +38,7 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { DateRangePickers } from '../../components'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import { parseDateToString } from '../../../../utils/DateTimes';
+import { calculateDatesGap, parseDateToString } from '../../../../utils/DateTimes';
 import { suggestPrice } from '../../../../utils/Suggestions';
 import { schoolLevelNames, serviceNames } from '../../../../constants/Generals'
 import { IoInformationCircleSharp } from 'react-icons/io5'
@@ -313,13 +313,14 @@ function UpdateSchStatus(props) {
         // alert(JSON.stringify(model))
     }
 
-    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => {
+    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber, time) => {
         let estimateSales = currencyFormatter.format(0)
+        const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')
 
-        if ((pricePerSlot * slotNumber * classNumber * 4) > 20000000000) {
+        if ((pricePerSlot * slotNumber * classNumber * 4 * duration) > 20000000000) {
             estimateSales = currencyFormatter.format(20000000000);
         } else {
-            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4)
+            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4 * duration)
         }
 
         return estimateSales
@@ -587,7 +588,7 @@ function UpdateSchStatus(props) {
                                                         <Typography variant='body1'>
                                                             <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
                                                                     <span className={classes.txtRevenue}>
-                                                                ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'))}
+                                                                ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'), getValues('duration'))}
                                                             </span>
                                                         </Typography>
                                                     </Tooltip>

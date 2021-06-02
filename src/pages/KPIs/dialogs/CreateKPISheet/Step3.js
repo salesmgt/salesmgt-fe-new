@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     makeStyles,
     Grid,
@@ -18,15 +18,14 @@ import {
     Typography,
     FormControl,
     FormControlLabel,
-    easing,
 } from '@material-ui/core'
-import { MdAdd, MdCheckBox, MdCheckBoxOutlineBlank, MdDelete } from 'react-icons/md'
+import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md'
 import { Autocomplete, AvatarGroup } from '@material-ui/lab'
 import { useHistory } from 'react-router'
 import { getAllSalesmen } from '../../KPIsServices';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
 import DateFnsUtils from '@date-io/date-fns'
-import * as ArrayUtils from '../../../../utils/Arrays'
+// import * as ArrayUtils from '../../../../utils/Arrays'
 import classes from './Step3.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -124,16 +123,16 @@ function Step3(props) {
         console.log('inputValue = ', inputValue);
         console.log(`Edit at [${rowIndex}, ${criIndex}]`);
 
-        let newListKPIs = [...listKPIs]
-        let editingRow = newListKPIs[rowIndex]
-        let editingListCriteria = [...editingRow.criteria]
+        let newListKPIs = [...listKPIs]                         // table
+        let editingRow = newListKPIs[rowIndex]                  // row
+        let editingListCriteria = [...editingRow.criteria]      // column
         // let editingCriteria = editingListCriteria[criIndex]
 
         // console.log('editingRow: ', editingRow);
         // console.log('editingCriteria: ', editingCriteria);
 
         // Tách item ra khỏi mảng để edit
-        editingListCriteria[criIndex] = {       // editingCriteria
+        editingListCriteria[criIndex] = {       // editingCriteria          // cell
             ...editingListCriteria[criIndex],   // ...editingCriteria
             targetValue: inputValue
         }

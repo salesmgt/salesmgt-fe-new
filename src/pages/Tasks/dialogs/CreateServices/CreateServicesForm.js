@@ -32,7 +32,7 @@ import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
 import { useTask } from '../../hooks/TaskContext'
 import { app as FirebaseApp } from '../../../../services/firebase'
-import { parseDateToString } from '../../../../utils/DateTimes';
+import { calculateDatesGap, parseDateToString } from '../../../../utils/DateTimes';
 import { DateRangePickers } from '../../components';
 import { suggestPrice } from '../../../../utils/Suggestions';
 import { IoInformationCircleSharp } from 'react-icons/io5'
@@ -41,7 +41,7 @@ import { useSnackbar } from 'notistack'
 import classes from './CreateServices.module.scss'
 
 const clientSchema = yup.object().shape({
-    // duration: yup
+    duration: yup.DateSchema,
     // .string()
     // .trim()
     // .required('Duartion is required'),
@@ -283,13 +283,15 @@ function CreateServicesForm(props) {
         // alert(JSON.stringify(model))
     }
 
-    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => {
+    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber, time) => {
+        // console.log('CreateServices: duration = ', time);
         let estimateSales = currencyFormatter.format(0)
+        const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')    // chưa lấy đc time
 
-        if ((pricePerSlot * slotNumber * classNumber * 4) > 20000000000) {
+        if ((pricePerSlot * slotNumber * classNumber * 4 * duration) > 20000000000) {
             estimateSales = currencyFormatter.format(20000000000);
         } else {
-            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4)
+            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4 * duration)
         }
 
         return estimateSales
@@ -556,12 +558,12 @@ function CreateServicesForm(props) {
                         </Grid>
 
                         <Grid item xs={7} sm={6} md={6} lg={6}>
-                            <Controller
-                                name="slotNumber"
-                                control={control}
-                                render={({ value, onChange }) => (
-                                    <Grid container>
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <Grid container>
+                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Controller
+                                        name="slotNumber"
+                                        control={control}
+                                        render={({ value, onChange }) => (
                                             <TextField
                                                 label={fields.slotNumber.title}
                                                 variant="outlined"
@@ -586,24 +588,24 @@ function CreateServicesForm(props) {
                                             // error={!!errors.slotNumber}
                                             // helperText={errors?.slotNumber?.message}
                                             />
-                                        </Grid>
-                                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                                            <Tooltip
-                                                title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
-                                                arrow interactive
-                                            >
-                                                <Typography variant='body1'>
-                                                    <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
-                                                <span className={classes.txtRevenue}>
-                                                        ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'))}
-                                                        {/* ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)} */}
-                                                    </span>
-                                                </Typography>
-                                            </Tooltip>
-                                        </Grid>
-                                    </Grid>
-                                )}
-                            />
+                                        )}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Tooltip
+                                    title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                    arrow interactive
+                                >
+                                    <Typography variant='body1'>
+                                        <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
+                                    <span className={classes.txtRevenue}>
+                                            ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'), getValues('duration'))}
+                                            {/* ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)} */}
+                                        </span>
+                                    </Typography>
+                                </Tooltip>
+                            </Grid>
                         </Grid>
 
                         <Grid item xs={12} sm={12} md={12} lg={12}>

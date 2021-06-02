@@ -110,32 +110,32 @@ function Dashboards() {
     //     return <Loading />
     // }
 
-    const generateGreetings = () => {
-        const currHour = moment().format('kk')
-        const currDay = moment().format('DD/MM')
-        const specialDay = moment(userInfo?.birthDate).format('DD/MM')
+    // const generateGreetings = () => {
+    //     const currHour = moment().format('kk')
+    //     const currDay = moment().format('DD/MM')
+    //     const specialDay = moment(userInfo?.birthDate).format('DD/MM')
 
-        if (currDay === specialDay) {
-            return 'Happy birthday'
-        } else {
-            if (currHour >= 4 && currHour < 12) {
-                return 'Good morning'
-            }
-            if (currHour >= 12 && currHour < 17) {
-                return 'Good afternoon'
-            }
-            if (currHour >= 17 && currHour < 23) {
-                return 'Good evening'
-            }
-            if (
-                (currHour >= 23 && currHour <= 24) ||
-                (currHour > 0 && currHour < 4)
-            ) {
-                return 'Good night'
-            }
-        }
-        return 'Hello'
-    }
+    //     if (currDay === specialDay) {
+    //         return 'Happy birthday'
+    //     } else {
+    //         if (currHour >= 4 && currHour < 12) {
+    //             return 'Good morning'
+    //         }
+    //         if (currHour >= 12 && currHour < 17) {
+    //             return 'Good afternoon'
+    //         }
+    //         if (currHour >= 17 && currHour < 23) {
+    //             return 'Good evening'
+    //         }
+    //         if (
+    //             (currHour >= 23 && currHour <= 24) ||
+    //             (currHour > 0 && currHour < 4)
+    //         ) {
+    //             return 'Good night'
+    //         }
+    //     }
+    //     return 'Hello'
+    // }
 
     return (
         <div className={classes.wrapper}>

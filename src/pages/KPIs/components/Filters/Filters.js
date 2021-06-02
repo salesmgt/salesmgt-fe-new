@@ -9,6 +9,10 @@ import {
     Box,
     Button,
     Tooltip,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
 } from '@material-ui/core'
 import { MdExpandMore, MdFilterList, MdAdd } from 'react-icons/md'
 import { SearchFields } from '../../../../components'
@@ -142,14 +146,14 @@ function Filters(props) {
     const { operations, filters } = Consts
 
     //Use states which have been declared in the KPIContext
-    const { params, dispatchParams, status, setStatus, criteria } = useKPI()
+    const { params, dispatchParams, criteria, status, kpiStatuses, setFilter } = useKPI()
 
     const [openCreateDialog, setOpenCreateDialog] = useState(false)
 
     //================Handle useState() of filters================
     const handleKPIStatusChange = (event) => {
         const selectedStatus = event.target.value
-        setStatus(selectedStatus)
+        setFilter(KPI_STATUS_FILTER, selectedStatus)
         dispatchParams({
             type: ReducerActions.FILTER_KPI_STATUS,
             payload: {
@@ -164,7 +168,7 @@ function Filters(props) {
         removedFilters.forEach((removedFilter) => {
             switch (removedFilter) {
                 case KPI_STATUS_FILTER:
-                    setStatus('')
+                    setFilter(KPI_STATUS_FILTER, '')
                     break
                 default:
                     break
@@ -237,12 +241,12 @@ function Filters(props) {
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
-                        {/* <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel>{filters.serviceType.title}</InputLabel>
+                                <InputLabel>{filters.status.title}</InputLabel>
                                 <Select
-                                    value={serviceType || ''}
-                                    onChange={handleServiceTypeChange}
+                                    value={status || ''}
+                                    onChange={handleKPIStatusChange}
                                     MenuProps={MenuProps}
                                 >
                                     <MenuItem
@@ -255,10 +259,10 @@ function Filters(props) {
                                     >
                                         All
                                     </MenuItem>
-                                    {serviceTypes?.map((type) => (
+                                    {kpiStatuses?.map((status) => (
                                         <MenuItem
-                                            key={type}
-                                            value={type}
+                                            key={status}
+                                            value={status}
                                             className={classes.option}
                                             classes={{
                                                 root: classes.menuItemRoot,
@@ -266,12 +270,12 @@ function Filters(props) {
                                                     classes.menuItemSelected,
                                             }}
                                         >
-                                            {type}
+                                            {status}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid> */}
+                        </Grid>
                     </Grid>
                 </MuiAccordionDetails>
             </MuiAccordion>

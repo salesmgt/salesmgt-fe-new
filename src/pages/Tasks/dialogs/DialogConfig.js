@@ -137,7 +137,7 @@ export const Consts = {
             helper: '100.000VND - 2.000.000VND'
         },
         revenue: {
-            formula: 'Price floor * Periods per week * No. of classes * 4 weeks'
+            formula: 'Price floor * Periods per week * No. of classes * 4 weeks * Duration (in months)'
         }
         // End for Services
     },
@@ -145,7 +145,7 @@ export const Consts = {
 
 // export const columnsTableAssign = ['#', 'School Name', 'PIC', 'Note', '']
 export const columnsTableAssign = [
-    { key: 'no', name: 'No', width: '1%', align: 'center' },
+    { key: 'no', name: '#', width: '1%', align: 'center' },
     { key: 'schoolName', name: 'School Name', width: '30%', align: 'left' },
     { key: 'pic', name: 'PIC', width: '35%', align: 'left' },
     { key: 'note', name: 'Note', width: '25%', align: 'left' },
@@ -313,7 +313,7 @@ export const getCriteriaInfo = () => {
                     <br />
                     <div style={{ border: '1px solid', textAlign: 'center', margin: '0 0 0 0.35rem', padding: '0 0.5rem' }}>
                         <p style={{ fontSize: '0.75rem', fontWeight: 100 }}>
-                            Sales = <br />Price floor * Periods per week * 4 weeks * No. of classes
+                            Sales = <br />Price floor * Periods per week * 4 weeks * No. of classes * Duration (in months)
                         </p>
                     </div>
                 </Grid>

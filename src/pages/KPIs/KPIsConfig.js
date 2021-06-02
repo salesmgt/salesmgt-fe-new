@@ -1,12 +1,13 @@
 import { roleNames } from "../../constants/Generals";
 
 export const columns = [
-    { key: 'no', name: 'No', sortable: false, width: '1%' },
-    { key: 'name', name: 'Service Type', sortable: true, width: '13%', },
-    { key: 'startDate', name: 'School Name', sortable: true, width: '20%' },
-    { key: 'endDate', name: 'PIC', sortable: true, width: '23%' },
+    { key: 'no', name: '#', sortable: false, width: '1%' },
+    { key: 'name', name: 'Group Name', sortable: true, width: '32%', },
+    { key: 'salesmen', name: 'Apply for', sortable: false, width: '20%', },   // Này có cần thiết ko nhỉ?
+    { key: 'startDate', name: 'Start Date', sortable: true, width: '17%' },
+    { key: 'endDate', name: 'End Date', sortable: true, width: '17%' },
     // { key: 'duration', name: 'Duration', sortable: false, width: '25%' },
-    { key: 'status', name: 'Status', sortable: true, width: '12%' },    // active, disable
+    { key: 'status', name: 'Status', sortable: true, width: '15%' },    // active, disable
     { key: '', name: '', sortable: false, width: '1%' },
 ]
 
@@ -30,7 +31,8 @@ export const detailPageConsts = {
         back: 'KPIs',
     },
     tabNames: {
-        tab1: 'KPI Info',
+        tab1: 'KPIs Group Details',
+        // tab2: 'Criteria Info',
     },
     operations: {
         notFound: 'KPI Group Not Found',
@@ -46,28 +48,8 @@ export const Consts = {
         create: 'Create',
     },
     filters: {
-        serviceType: {
-            title: 'Service Types',
-        },
-        serviceStatus: {
-            title: 'Service Statuses',
-        },
-        schoolYear: {
-            title: 'School Years',
-        },
-        expiredStatus: {
-            title: 'Expired Statuses',
-            options: {
-                all: 'All',
-                expired: 'Expired',
-                valid: 'Valid / Effective',
-            },
-        },
-        // duration: {
-        //     title: 'Duration (from/to)',
-        // },
-        pic: {
-            title: 'PICs',
+        status: {
+            title: 'KPI Group Statuses',
         },
     },
     messages: {
@@ -77,5 +59,8 @@ export const Consts = {
         details: {
             title: 'View details',
         },
+        disable: {
+            title: 'Disable'
+        }
     },
 }

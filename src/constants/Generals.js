@@ -54,6 +54,17 @@ export const serviceStatusNames = {
     // notStart: '',    // chỉ cần null là đc rồi chứ nhỉ? khỏi cần 1 status riêng cho nó   ==> Bỏ
 }
 
+export const kpiStatusNames = {
+    applying: 'Being applied',
+    expired: 'Expired',
+    disable: 'Disable'
+}
+
+export const kpiDetailTypes = {
+    auto: 'auto',
+    manual: 'manual'
+}
+
 export const purposeNames = {
     purp1: 'Sales mới',
     purp2: 'Theo dõi',

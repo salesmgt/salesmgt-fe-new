@@ -10,12 +10,12 @@ import {
     Typography,
     IconButton,
 } from '@material-ui/core'
-import { removeReport } from '../../ReportsServices'
-import { useReport } from '../../hooks/ReportContext'
+import { disableKPIGroup } from '../../KPIsServices'
+import { useKPI } from '../../hooks/KPIContext'
 import { MdClose } from 'react-icons/md'
-import { Consts, confirmMessage } from '../DialogConfig'
+import { Consts, confirmDisableMessage } from '../DialogConfig'
 import { useSnackbar } from 'notistack'
-import classes from './ConfirmRemove.module.scss'
+import classes from './ConfirmDisable.module.scss'
 
 const stylesTitle = (theme) => ({
     root: {
@@ -44,26 +44,28 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
     );
 });
 
-function ConfirmRemove(props) {
-    const { open, onClose, data, refreshAPI } = props
+function ConfirmDisable(props) {
+    const { open, onClose, kpiGroupId, kpiGroupName, refreshAPI } = props
     const { headers, operations } = Consts
     const { enqueueSnackbar } = useSnackbar()
 
-    const { params } = useReport()
-    const { listFilters, page, limit, column, direction, searchKey } = params
+    const { params } = useKPI()
+    const { listFilters, column, direction, searchKey } = params
 
-    const handleRemove = (id) => {
-        removeReport(id).then((data) => {
-            refreshAPI(page, limit, column, direction, searchKey, listFilters)
-            enqueueSnackbar('Removed report successfully', { variant: 'success' })
+    const handleDisable = () => {
+        disableKPIGroup(kpiGroupId).then((res) => {
+            console.log(res);
+            enqueueSnackbar('Disable KPI group successfully', { variant: 'success' })
+
+            refreshAPI(column, direction, searchKey, listFilters)
         }).catch((error) => {
+            console.log(error)
             if (error.response) {
-                console.log(error)
                 // history.push({
                 //     pathname: '/errors',
                 //     state: { error: error.response.status },
                 // })
-                enqueueSnackbar('Removed report failed', { variant: 'error' })
+                enqueueSnackbar('Disable KPI group failed', { variant: 'error' })
             }
         })
 
@@ -72,17 +74,17 @@ function ConfirmRemove(props) {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitleWithIconClose onClose={onClose}>{headers.confirm}</DialogTitleWithIconClose>
+            <DialogTitleWithIconClose onClose={onClose}>{headers.disable}</DialogTitleWithIconClose>
             {/* <Divider /> */}
             <DialogContent>
                 <DialogContentText className={classes.dialogText}>
-                    {confirmMessage(data?.educationalLevel, data?.schoolName, data?.date)}
+                    {confirmDisableMessage(kpiGroupName)}
                 </DialogContentText>
             </DialogContent>
             {/* <Divider /> */}
             <DialogActions>
-                <Button className={classes.btnRemove} onClick={() => handleRemove(data?.id)} autoFocus>
-                    {operations.remove}
+                <Button className={classes.btnDisable} onClick={handleDisable} autoFocus>
+                    {operations.disable}
                 </Button>
                 <Button onClick={onClose}>
                     {operations.cancel}
@@ -92,4 +94,4 @@ function ConfirmRemove(props) {
     )
 }
 
-export default React.memo(ConfirmRemove)
+export default React.memo(ConfirmDisable)

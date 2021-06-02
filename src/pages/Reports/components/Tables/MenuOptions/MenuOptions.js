@@ -20,7 +20,7 @@ import classes from './MenuOptions.module.scss'
 function MenuOptions(props) {
     const { data, refreshAPI } = props
     const [anchorEl, setAnchorEl] = useState(null);
-    const [open, setOpen] = useState(false);
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
     const { user } = useAuth()
     const { url } = useRouteMatch()
@@ -45,7 +45,7 @@ function MenuOptions(props) {
 
     const handleOpenConfirmation = () => {
         setAnchorEl(null)
-        setOpen(true)
+        setOpenConfirmDialog(true)
     }
 
     const renderRemoveDialog = () => {
@@ -60,8 +60,8 @@ function MenuOptions(props) {
         if (data?.contextComments) {
             return (
                 <CannotRemove
-                    open={open}
-                    onClose={() => setOpen(false)}
+                    open={openConfirmDialog}
+                    onClose={() => setOpenConfirmDialog(false)}
                     data={data}
                 />
             )
@@ -69,13 +69,13 @@ function MenuOptions(props) {
         // else if (data.comments.length === 0) {
         else {
             return (
-                <ConfirmRemove open={open} onClose={() => setOpen(false)} data={data} refreshAPI={refreshAPI} />
+                <ConfirmRemove open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} data={data} refreshAPI={refreshAPI} />
             )
         }
         // } else {
         //     const newData = {...data, msg: 'You cannot remove reports of the others.'}
         //     return (
-        //         <CannotRemove open={open} onClose={() => setOpen(false)} data={newData} />
+        //         <CannotRemove open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} data={newData} />
         //     )
         // }
     }

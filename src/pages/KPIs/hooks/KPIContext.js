@@ -6,9 +6,10 @@ import React, {
     useEffect,
 } from 'react'
 import { KPIReducer } from './KPIReducer'
-import { ACTIVE_FILTER } from '../../../constants/Filters'
+import { KPI_STATUS_FILTER } from '../../../constants/Filters'
 import { useHistory } from 'react-router-dom'
 import { getKPICriteria } from '../KPIsServices'
+import { kpiStatusNames } from '../../../constants/Generals'
 
 const KPIContext = createContext()
 
@@ -17,7 +18,7 @@ export function useKPI() {
 }
 
 let defaultFilters = {
-    status: { filterType: ACTIVE_FILTER, filterValue: '' },  // active, disable,...
+    status: { filterType: KPI_STATUS_FILTER, filterValue: '' },  // active, disable, expired
 }
 
 function useKPIProvider() {
@@ -27,15 +28,11 @@ function useKPIProvider() {
     const [params, dispatchParams] = useReducer(KPIReducer, {
         listFilters: defaultFilters,
         searchKey: '',
-        page: 0,
-        limit: 10,
         column: 'id',
         direction: 'desc',
     })
 
-    // Paging
-    const [page, setPage] = useState(params.page)
-    const [limit, setLimit] = useState(params.limit)
+    // This table does not have Paging
 
     // Sorting
     const [column, setColumn] = useState(params.column)
@@ -45,6 +42,21 @@ function useKPIProvider() {
     const [status, setStatus] = useState(
         defaultFilters.status.filterValue ? defaultFilters.status.filterValue : ''
     )
+    const kpiStatuses = [kpiStatusNames.applying, kpiStatusNames.expired, kpiStatusNames.disable]
+
+    const setFilter = (key, value) => {
+        switch (key) {
+            case KPI_STATUS_FILTER:
+                defaultFilters = {
+                    ...defaultFilters,
+                    status: { filterType: KPI_STATUS_FILTER, filterValue: value },
+                }
+                setStatus(value)
+                break
+            default:
+                break
+        }
+    }
 
     // Get data from APIs
     const [criteria, setCriteria] = useState([])
@@ -68,10 +80,6 @@ function useKPIProvider() {
     return {
         params,
         dispatchParams,
-        page,
-        setPage,
-        limit,
-        setLimit,
         direction,
         setDirection,
         column,
@@ -79,6 +87,9 @@ function useKPIProvider() {
         status,
         setStatus,
         criteria,
+        status,
+        kpiStatuses,
+        setFilter
     }
 }
 

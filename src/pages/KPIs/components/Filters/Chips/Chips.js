@@ -94,31 +94,23 @@ function Chips(props) {
                     <ul className={classes.ul}>
                         {chips.map((chip) => {
                             return (
-                                <div key={chip.filterType}>
-                                    {chip.filterValue && (
-                                        <li>
-                                            {/* {renderChips(chip)} */}
-                                        </li>
-                                    )}
-                                </div>
-                                // <li key={chip.filterType}>
-                                //     {chip.filterType !== EXPIRED_FILTER && chip.filterValue &&
-                                //         <Chip
-                                //             label={chip.filterValue}
-                                //             onDelete={handleChipDelete(chip)}
-                                //             className={classes.chip}
-                                //             color="secondary"
-                                //         />
-                                //     }
-                                //     {chip.filterType === EXPIRED_FILTER && chip.filterValue !== null &&
-                                //         <Chip
-                                //             label={chip.filterValue ? 'Expired' : 'Valid / Effective'}
-                                //             onDelete={handleChipDelete(chip)}
-                                //             className={classes.chip}
-                                //             color="secondary"
-                                //         />
-                                //     }
-                                // </li>
+                                // <div key={chip.filterType}>
+                                //     {chip.filterValue && (
+                                //         <li>
+                                //             {/* {renderChips(chip)} */}
+                                //         </li>
+                                //     )}
+                                // </div>
+                                <li key={chip.filterType}>
+                                    {chip.filterValue &&
+                                        <Chip
+                                            label={chip.filterValue}
+                                            onDelete={handleChipDelete(chip)}
+                                            className={classes.chip}
+                                            color="secondary"
+                                        />
+                                    }
+                                </li>
                             )
                         })}
                     </ul>

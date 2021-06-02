@@ -130,3 +130,58 @@
 .notFound {
     width: 100%;
 }
+
+.cardCriteria {
+    // min-width: 300px !important;
+    background-color: $grey-200 !important;
+}
+.cardSalesman {
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+    &:hover {
+        background-color: $grey-200 !important;
+        cursor: pointer;
+    }
+}
+
+.criName {
+    font-size: 0.9rem;
+    font-weight: 600 !important;
+}
+.criWeight {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: $main-success;
+    margin-top: 0.5rem !important;
+}
+
+.icon {
+    padding: 0 !important;
+    margin: 0 !important;
+    .iconInfo {
+        width: 1rem !important;
+        height: 1rem !important;
+        color: $text-icon;
+        padding: 0 !important;
+        margin: 0 0 0 0.5rem !important;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.listSalesmen {
+    max-height: 47vh;
+    overflow-y: auto;
+}
+
+.indexSalesman1 {
+    padding: 0.5rem 0 0 0.8rem
+}
+.indexSalesman2 {
+    padding: 0.5rem 0 0 0.5rem
+}
+.salesmanName {
+    @extend .criName;
+    padding-left: 0.5rem;
+}

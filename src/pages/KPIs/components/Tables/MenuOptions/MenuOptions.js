@@ -8,20 +8,25 @@ import {
     Tooltip,
 } from '@material-ui/core'
 import { Link, useRouteMatch } from 'react-router-dom'
-import { MdMoreVert, MdInfo } from 'react-icons/md'
+import { MdMoreVert, MdInfo, MdDoNotDisturbOn } from 'react-icons/md'
 import { useKPI } from '../../../hooks/KPIContext'
 import { Consts } from '../../../KPIsConfig'
+import { useAuth } from '../../../../../hooks/AuthContext'
 // import PropTypes from 'prop-types'
 import classes from './MenuOptions.module.scss'
+import { roleNames } from '../../../../../constants/Generals'
+import ConfirmDisable from '../../../dialogs/ConfirmDisable/ConfirmDisable'
 
 function MenuOptions(props) {
-    const { data } = props
+    const { data, refreshAPI } = props
     const { menuItems } = Consts
 
     const { params } = useKPI()
     const { url } = useRouteMatch()
+    const { user } = useAuth()
 
     const [anchorEl, setAnchorEl] = useState(null)
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
     const stateData = {
         model: data,
@@ -35,6 +40,25 @@ function MenuOptions(props) {
 
     const handleCloseMenus = () => {
         setAnchorEl(null)
+    }
+
+    const handleOpenConfirmation = () => {
+        setAnchorEl(null)
+        setOpenConfirmDialog(true)
+    }
+
+    const renderDisableDialog = () => {
+        if (openConfirmDialog) {
+            return (
+                <ConfirmDisable
+                    open={openConfirmDialog}
+                    onClose={() => setOpenConfirmDialog(false)}
+                    kpiGroupId={data?.id}
+                    kpiGroupName={data?.groupName}
+                    refreshAPI={refreshAPI}
+                />
+            )
+        }
     }
 
     return (
@@ -65,6 +89,19 @@ function MenuOptions(props) {
                         {menuItems.details.title}
                     </ListItemText>
                 </MenuItem>
+                {user.roles[0] === roleNames.manager && (
+                    <div>
+                        <MenuItem onClick={handleOpenConfirmation}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <MdDoNotDisturbOn fontSize="large" />
+                            </ListItemIcon>
+                            <ListItemText className={classes.itemText}>
+                                Disable
+                            </ListItemText>
+                        </MenuItem>
+                        {renderDisableDialog()}
+                    </div>
+                )}
             </Menu>
         </div>
     )

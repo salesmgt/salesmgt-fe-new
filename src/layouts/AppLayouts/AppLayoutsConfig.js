@@ -9,7 +9,7 @@ import {
     MdDescription,
     MdAccountCircle,
     MdExitToApp,
-    MdAssignmentInd,
+    // MdAssignmentInd,
     // MdTrendingUp,
 } from 'react-icons/md'
 import { FaSchool, FaHandshake, FaTasks, FaChartLine } from 'react-icons/fa'
@@ -51,29 +51,29 @@ const menuItems = [
         path: 'services',
         icon: <FaHandshake />,
     },
+    // {
+    //     title: 'Salesmen',
+    //     path: 'salesmen',
+    //     icon: <MdAssignmentInd />,
+    // },
     {
-        title: 'Salesmen',
-        path: 'salesmen',
-        icon: <MdAssignmentInd />,
-    },
-    {
-        title: 'KPI',
-        path: 'kpi',
+        title: 'KPIs',
+        path: 'kpis',
         icon: <FaChartLine />,  //MdTrendingUp
     },
 ]
 
 export function getMenuItems(role) {
     const [
-        dashboards, accounts, tasks, workPlans, schools, reports, services, salesmen, kpis
+        dashboards, accounts, tasks, workPlans, schools, reports, services, kpis   //salesmen,
     ] = menuItems
     switch (role) {
         case roleNames.admin:
             return [accounts, schools]
         case roleNames.manager:
-            return [dashboards, schools, tasks, reports, services, salesmen, kpis, workPlans]
+            return [dashboards, schools, tasks, reports, services, kpis, workPlans]    //salesmen,
         case roleNames.supervisor:
-            return [dashboards, schools, tasks, reports, salesmen, kpis, workPlans]
+            return [dashboards, schools, tasks, reports, kpis, workPlans]  //salesmen,
         case roleNames.salesman:
             return [dashboards, tasks, reports, services, kpis, workPlans]
         default:

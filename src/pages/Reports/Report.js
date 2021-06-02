@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { DetailLayouts } from '../../layouts'
 import { AssignInfo, ReportInfo } from './panels'
-import moment from 'moment'
 import * as ReportsServices from './ReportsServices'
 import { rpConsts } from './ReportsConfig'
 import { Loading, NotFound } from '../../components'
+import { parseDateToString } from '../../utils/DateTimes'
 
 function Report() {
     const { linkNames, tabNames, operations } = rpConsts
@@ -15,8 +15,8 @@ function Report() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
-    const [report, setReport] = useState(stateData?.model)
+    // const stateData = location.state?.data
+    const [report, setReport] = useState(null)  //stateData?.model
     const [exist, setExist] = useState(true)
 
     let isMounted = true
@@ -67,7 +67,8 @@ function Report() {
         <DetailLayouts
             linkBack={linkNames.back}
             header={`${report?.level} ${report?.schoolName}`}
-            subHeader={moment(report?.date).format('DD/MM/YYYY')}
+            subHeader={parseDateToString(report?.date, 'DD/MM/YYYY')}
+            // subHeader={moment(report?.date).format('DD/MM/YYYY')}
             tabs={[tabNames.tab1, tabNames.tab2]}
             tabValue={tabValue}
             handleChangeTab={handleChangeTab}

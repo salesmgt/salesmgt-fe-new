@@ -480,14 +480,15 @@ function ServiceInfo(props) {
     }
 
     const calculateEstimateSales = (service, formValues) => {
-        const { pricePerSlot, slotNumber, classNumber } = service
+        const { pricePerSlot, slotNumber, classNumber, startDate, endDate } = service
         const { priceFloor, slotNo, classNo } = formValues
+        const duration = calculateDatesGap(new Date(startDate), new Date(endDate), 'M')
         let estimateSales = 0
 
         if (formValues && priceFloor && slotNo && classNo) {
-            estimateSales = currencyFormatter.format(priceFloor * slotNo * classNo * 4);
+            estimateSales = currencyFormatter.format(priceFloor * slotNo * classNo * 4 * duration);
         } else {
-            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4)
+            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4 * duration)
         }
 
         // Ô này chỉ view thôi mà, có sao hiện vậy chứ ko có validate lại
@@ -1218,7 +1219,8 @@ function ServiceInfo(props) {
                                                                 ? calculateEstimateSales(service, {
                                                                     priceFloor: getValues('pricePerSlot'),
                                                                     slotNo: getValues('slotNumber'),
-                                                                    classNo: getValues('classNumber')
+                                                                    classNo: getValues('classNumber'),
+
                                                                 })
                                                                 : calculateEstimateSales(service, {})
                                                             }

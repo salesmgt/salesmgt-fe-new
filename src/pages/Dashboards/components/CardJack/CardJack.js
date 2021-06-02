@@ -51,7 +51,7 @@ function CardJack(props) {
         setCurrentRange(event.target.value)
     }
 
-    console.log('datasets: ', datasets);
+    // console.log('datasets: ', datasets);
 
     return (
         <Paper className={classes.paper}>

@@ -14,8 +14,8 @@ function Account() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
-    const [account, setAccount] = useState(stateData?.model)
+    // const stateData = location.state?.data
+    const [account, setAccount] = useState(null)    //stateData?.model
 
     const [exist, setExist] = useState(true)
 

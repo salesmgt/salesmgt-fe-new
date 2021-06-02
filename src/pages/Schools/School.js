@@ -18,8 +18,8 @@ function School() {
     const location = useLocation()
     const history = useHistory()
 
-    const stateData = location.state?.data
-    const [school, setSchool] = useState(stateData?.model)
+    // const stateData = location.state?.data
+    const [school, setSchool] = useState(null)  //stateData?.model
 
     const [exist, setExist] = useState(true)
 
