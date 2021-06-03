@@ -1,7 +1,8 @@
 @import '../../../../styles/Variables.module.scss';
 
 .paper {
-    padding: 1.6rem;
+    height: 87vh;
+    padding: 0 0.5rem 0 0.5rem;
     border-radius: $default-radius !important;
     .header {
         display: flex;
@@ -9,21 +10,40 @@
         align-items: center;
         padding: 0.4rem;
         .title {
-            font-size: 1rem;
-            line-height: 1.75;
-            font-weight: 500;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            // line-height: 1.75;
+            font-weight: 900;
             overflow: hidden;
         }
     }
     .table {
-        max-height: 25rem;
+        max-height: 72vh;
+        
+    .tBody {
+        .tBodyRow {
+            height: 30;
+        }
+        .tBodyCell {
+            padding: 0.15rem 1rem;
+
+            .listItem {
+                padding: 0;
+                margin: 0;
+                .picName {
+                font-size: 0.875rem !important;
+                }
+            }
+        }
     }
+    
     .medalIcon {
         width: 2rem;
         height: 2rem;
     }
     .avatar {
-        width: 2rem;
-        height: 2rem;
+        width: 2.25rem;
+        height: 2.25rem;
+        margin-right: 0.5rem;
     }
-}
+}}

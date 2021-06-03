@@ -9,15 +9,27 @@ import {
     TableRow,
     TableBody,
     Avatar,
-    Grid,
     TableContainer,
+    ListItemText,
+    Box,
+    makeStyles,
 } from '@material-ui/core'
 import * as MedalIcons from '../../../../assets/icons'
 import classes from './CardRanks.module.scss'
 
+const useStyles = makeStyles(() => ({
+    txtFullName: {
+        fontSize: '0.875rem'
+    },
+    txtUsername: {
+        fontSize: '0.8rem'
+    }
+}))
+
 function CardRanks(props) {
+    const styles = useStyles()
     const { title, columns, data } = props
-    const { rows } = data
+    // const { rows } = data
 
     const getRankMedal = (rank) => {
         switch (rank) {
@@ -50,14 +62,26 @@ function CardRanks(props) {
         }
     }
 
+    const shortenCurrencyValue = (value) => {
+        let val = Math.abs(value);
+        if (val >= 1000000000) {
+            val = (val / 1000000000).toFixed(2) + " B ₫";
+            return val
+        } else if (val >= 1000000) {
+            val = (val / 1000000).toFixed(1) + " M ₫";
+            return val;
+        } else
+            return val + " ₫";
+    }
+
     return (
-        <Paper className={classes.paper}>
+        <div className={classes.paper}>
             <div className={classes.header}>
-                <Typography className={classes.title}>{title}</Typography>
+                <Typography className={classes.title}>Salesmen Ranking by Sales</Typography>
             </div>
             <Divider />
             <TableContainer className={classes.table}>
-                <Table stickyHeader>
+                <Table stickyHeader size="small">
                     <TableHead>
                         <TableRow>
                             {columns.map((key) => (
@@ -67,35 +91,34 @@ function CardRanks(props) {
                             ))}
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {rows.map((key) => (
-                            <TableRow key={key.rank}>
-                                <TableCell align="center">
-                                    {getRankMedal(key.rank)}
+                    <TableBody className={classes.tBody}>
+                        {data.map((salesman, index) => (
+                            <TableRow key={index} className={classes.tBodyRow}>
+                                <TableCell align="center" className={classes.tBodyCell}>
+                                    {getRankMedal(index + 1)}
                                 </TableCell>
-                                <TableCell align="center">
-                                    <Grid
-                                        container
-                                        alignItems="center"
-                                        justify="center"
-                                        spacing={2}
-                                    >
-                                        <Grid item>
-                                            <Avatar
-                                                className={classes.avatar}
-                                                src={key.personAvatar}
-                                                alt="avatar"
-                                            />
-                                        </Grid>
-                                        <Grid item>{key.personName}</Grid>
-                                    </Grid>
+                                <TableCell className={classes.tBodyCell}>
+                                    <Box display="flex" flexDirection="row" alignItems="center">
+                                        <Avatar className={classes.avatar}
+                                            src={salesman.avatar}
+                                            alt="avatar"
+                                        />
+                                        <ListItemText primary={salesman.fullName} secondary={salesman.username}
+                                            classes={{ primary: styles.txtFullName, secondary: styles.txtUsername }}
+                                        />
+                                    </Box>
+                                </TableCell>
+                                <TableCell className={classes.tBodyCell} align="right">
+                                    <strong>
+                                        {shortenCurrencyValue(salesman?.value)}
+                                    </strong>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-        </Paper>
+        </div>
     )
 }
 

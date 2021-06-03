@@ -7,8 +7,8 @@
     overflow-y: auto;
     border-radius: $default-radius;
 
-    .leftSide {
-        padding: 0.5rem;
+    .root {
+        padding: 1rem 0 0 1rem;
         .header {
             display: flex;
             height: 7rem;
@@ -35,7 +35,7 @@
                 padding: 0rem 0.5rem;
             }
             .rowy {
-                padding: 0.75rem 0rem;
+                padding: 0.5rem 0rem;
             }
             .rowt {
                 padding-top: 1rem;
@@ -54,4 +54,213 @@
     //         padding: 0 0.5rem;
     //     }
     // }
+}
+
+.block {
+    border-top: 6px solid;
+    height: 150px;
+}
+.blockSales {
+    @extend .block;
+    border-color: $heals;
+    .box1Block1 {
+        padding: 1rem 0 1rem;
+
+        .avaBlock1 {
+            width: 2.65rem;
+            height: 2.65rem;
+            background-color: $heals;
+    
+            .iconBlock1 {
+                width: 1.8rem;
+                height: 1.8rem;
+            }
+        }
+        .titleBlock1 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 0 0 0 0.5rem;
+            margin: 0;
+        }
+        .subtitleBlock1 {
+            padding: 0 0 0 0.6rem;
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: $grey-500;
+        }
+    }
+
+    .previousBlock1 {
+        font-weight: 400;
+        font-size: 1.5rem
+    }
+    .presentBlock1 {
+        font-weight: 600;
+        font-size: 1.5rem
+    }
+    .changesBlock1 {
+        padding: 1.1rem 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .changesUpBlock1 {
+        @extend .changesBlock1;
+        color: $main-success;
+    }
+    .changesDownBlock1 {
+        @extend .changesBlock1;
+        color: $main-error;
+    }
+}
+.blockSevices {
+    @extend .block;
+    border-color: $creative;
+    .box1Block2 {
+        padding: 1rem 0 1rem;
+
+        .avaBlock2 {
+            width: 2.65rem;
+            height: 2.65rem;
+            background-color: $creative;
+    
+            .iconBlock2 {
+                width: 1.6rem;
+                height: 1.6rem;
+            }
+        }
+        .titleBlock2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 0 0 0 0.5rem;
+            margin: 0;
+        }
+        .subtitleBlock2 {
+            padding: 0 0 0 0.6rem;
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: $grey-500;
+        }
+    }
+
+    .previousBlock2 {
+        font-weight: 400;
+        font-size: 1.5rem
+    }
+    .presentBlock2 {
+        font-weight: 600;
+        font-size: 1.5rem
+    }
+    .changesBlock2 {
+        padding: 1.1rem 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .changesUpBlock2 {
+        @extend .changesBlock2;
+        color: $main-success;
+    }
+    .changesDownBlock2 {
+        @extend .changesBlock2;
+        color: $main-error;
+    }
+}
+.blockCustomers {
+    @extend .block;
+    border-color: $memory;
+    .box1Block3 {
+        padding: 1rem 0 1rem;
+
+        .avaBlock3 {
+            width: 2.65rem;
+            height: 2.65rem;
+            background-color: $memory;
+    
+            .iconBlock3 {
+                width: 1.6rem;
+                height: 1.6rem;
+            }
+        }
+        .titleBlock3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 0 0 0 0.5rem;
+            margin: 0;
+        }
+        .subtitleBlock3 {
+            padding: 0 0 0 0.6rem;
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: $grey-500;
+        }
+    }
+
+    .previousBlock3 {
+        font-weight: 400;
+        font-size: 1.5rem
+    }
+    .presentBlock3 {
+        font-weight: 600;
+        font-size: 1.5rem
+    }
+    .changesBlock3 {
+        padding: 1.1rem 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .changesUpBlock3 {
+        @extend .changesBlock3;
+        color: $main-success;
+    }
+    .changesDownBlock3 {
+        @extend .changesBlock3;
+        color: $main-error;
+    }
+}
+
+.panel1 {
+    height: 425px;
+    padding: 1rem 1rem 0 0.5rem;
+    // text-align: center;
+}
+.panelServices {
+    @extend .panel1;
+    .toggleOptions {
+        // padding-right: 1rem;
+        .txtViewBy {
+            padding-right: 0.5rem;
+        }
+    }
+}
+.panelCustomers {
+    @extend .panel1;
+    .toggleOptions {
+        // padding-right: 1rem;
+        .txtViewBy {
+            padding-right: 0.5rem;
+        }
+    }
+}
+
+.panel2 {
+    height: 665px;
+    // text-align: center;
+    padding: 1rem 0 0 0.5rem;
+}
+.panelMap {
+    @extend .panel2;
+}
+.panelRanking {
+    @extend .panel2;
+    .toggleOptions {
+        padding-right: 1rem;
+        .txtViewBy {
+            padding-right: 0.5rem;
+        }
+    }
 }

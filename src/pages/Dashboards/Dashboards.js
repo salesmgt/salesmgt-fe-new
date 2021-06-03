@@ -1,413 +1,522 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-import moment from 'moment'
-import { Grid, Typography } from '@material-ui/core'
-import {
-    MdFiberNew,
-    MdTrendingUp,
-    MdLoop,
-    MdLoyalty,
-    MdVisibility,
-} from 'react-icons/md'
-import { FaFileSignature } from 'react-icons/fa'
-import { CardJack } from './components'
-import { Animation, AnimationGroup, Loading } from '../../components'
+import { useHistory } from 'react-router-dom'
+import { Box, Card, Grid, Avatar, makeStyles, Typography } from '@material-ui/core'
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
+import { MdAttachMoney } from 'react-icons/md'
+import { FaHandshake, FaSchool } from 'react-icons/fa'
+import { AnimationGroup, Loading } from '../../components'
 // import { useAuth } from '../../hooks/AuthContext'
 import { useApp } from '../../hooks/AppContext'
-import * as DashboardsServices from './DashboardsServices'
 import { Consts } from './DashboardsConfig'
 import * as Milk from '../../utils/Milk'
 import { milkNames } from '../../constants/Generals'
+import * as DashboardsServices from './DashboardsServices'
+import StackColumnCharts from '../../components/Charts/StackColumnCharts/StackColumnCharts'
+// import { createMuiTheme } from '@material-ui/core/styles'
+import PieCharts from '../../components/Charts/PieCharts/PieCharts'
+import CardRanks from './components/CardRanks/CardRanks'
 import classes from './Dashboards.module.scss'
+import { calculateSchoolYear } from '../../utils/DateTimes'
+
+// const theme = createMuiTheme({
+//     palette: {
+//         action: {
+//             disabledBackground: 'rgb(255, 252, 225)' || 'red',
+//             disabled: ''
+//         }
+//     }
+// }
+
+const useStyles = makeStyles((theme) => ({
+    btnToggles: {
+        minHeight: '1.8rem',
+        maxHeight: '1.8rem',
+        color: theme.palette.secondary.main,
+        // background: theme.palette.secondary.light
+    }
+}))
 
 function Dashboards() {
+    const styles = useStyles()
+    const { toggleButtonOptions } = Consts
     // const { user } = useAuth()
-    const { schYears, userInfo } = useApp()
+    const { schYears } = useApp()
     const bakschYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
-
-    const location = useLocation()
     const history = useHistory()
 
-    // const [userData, setUserData] = useState(null)
-
-    const [cardData, setCardData] = useState(null)
-
-    const { header, cardsConsts } = Consts
-
-    // let isMounted = true
-    // const refreshPage = () => {
-    //     DashboardsServices.getUser(user.username)
-    //         .then((data) => {
-    //             if (isMounted) {
-    //                 setUserData(data)
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (error.response) {
-    //                 console.log(error)
-    //                 history.push({
-    //                     pathname: '/errors',
-    //                     state: { error: error.response.status },
-    //                 })
-    //             }
-    //         })
-    // }
-
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // useEffect(() => {
-    //     refreshPage()
-    //     return () => {
-    //         // eslint-disable-next-line react-hooks/exhaustive-deps
-    //         isMounted = false
-    //     }
-    // }, [location.pathname])
+    const [data4Blocks, setData4Blocks] = useState()
+    const [data4ServiceColumn, setData4ServiceColumn] = useState()
+    const [data4CustomerPie, setData4CustomerPie] = useState()
+    const [data4CustomerMap, setData4CustomerMap] = useState()
+    const [data4Ranking, setData4Ranking] = useState([])
 
     let isMounted = true
-    const refreshPage = () => {
-        // DashboardsServices.getDashboards()
-        //     .then((data) => {
-        //         if (isMounted) {
-        //             setCardData(data)
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         if (error.response) {
-        //             console.log(error)
-        //             history.push({
-        //                 pathname: '/errors',
-        //                 state: { error: error.response.status },
-        //             })
-        //         }
-        //     })
+    const getData4Blocks = (type) => {
+        DashboardsServices.getDashboards(type).then((data) => {
+            if (isMounted) {
+                setData4Blocks(data)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    useEffect(() => {
+        getData4Blocks('div')
+        return () => {
+            isMounted = false
+        };
+    }, [])
+
+
+    const [years, setYears] = useState([])
+    const getData4ServiceColumn = (type, name) => {
+        DashboardsServices.getDashboards(type, name).then((data) => {
+            if (isMounted) {
+                setData4ServiceColumn(data)
+                setYears(data[0].years)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    useEffect(() => {
+        getData4ServiceColumn('column', 'DS')
+        return () => {
+            isMounted = false
+        };
+    }, [])
+
+    const [pieLabels, setPieLabels] = useState([])
+    const getData4CustomerPie = (type, name) => {
+        DashboardsServices.getDashboards(type, name).then((data) => {
+            if (isMounted) {
+                // setData4CustomerPie(data)
+                let values = []
+                let labels = []
+                data.forEach(item => {
+                    labels.push(item?.name)
+                    values.push(item?.data)
+                });
+                setData4CustomerPie(values)
+                setPieLabels(labels)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    useEffect(() => {
+        getData4CustomerPie('pie', 'school-status')
+        return () => {
+            isMounted = false
+        };
+    }, [])
+
+    const columns = ['Rank', 'Salesman', 'Sales']
+    const getData4Ranking = (type, name) => {
+        DashboardsServices.getDashboards(type, name).then((data) => {
+            if (isMounted) {
+                setData4Ranking(data)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    useEffect(() => {
+        getData4Ranking('rank', 'month')
+        return () => {
+            isMounted = false
+        };
+    }, [])
+
+    const [viewServiceBy, setViewServiceBy] = useState("Sales");
+    const handleChangeViewServiceBy = (event, option) => {
+        if (option && option !== viewServiceBy) {
+            setViewServiceBy(option);
+            if (option === 'Sales') {
+                getData4ServiceColumn('column', 'DS')
+            } else {
+                getData4ServiceColumn('column', 'SL')
+            }
+        }   // if (option === null || option === viewServiceBy), then ignore it <=> still keep the current value
+    };
+
+    const [viewCustomerBy, setViewCustomerBy] = useState("status");
+    const handleChangeViewCustomerBy = (event, option) => {
+        if (option !== null && option !== viewCustomerBy) {
+            setViewCustomerBy(option);
+            if (option === 'status') {
+                getData4CustomerPie('pie', 'school-status')
+            } else if (option === 'level') {
+                getData4CustomerPie('pie', 'level')
+            } else if (option === 'type') {
+                getData4CustomerPie('pie', 'school-type')
+            } else {
+                getData4CustomerPie('pie', 'district')
+            }
+        }
+    };
+
+    const [viewRankingBy, setViewRankingBy] = useState("month");
+    const handleChangeViewRankingBy = (event, option) => {
+        if (option !== null && option !== viewRankingBy) {
+            setViewRankingBy(option);
+            if (option === 'month') {
+                getData4Ranking('rank', 'month')
+            } else if (option === 'year') {
+                getData4Ranking('rank', 'year')
+            } else {
+                getData4Ranking('rank', 'all')
+            }
+        }
+    };
+
+    if (!bakschYears || !data4Blocks || !data4ServiceColumn ||
+        !data4CustomerPie || !data4Ranking) {
+        return <Loading />
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => {
-        refreshPage()
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            isMounted = false
+    let dataBlockSales = { ...data4Blocks[1], isIncreased: true, changes: 0 }
+    let dataBlockServices = { ...data4Blocks[2], isIncreased: true, changes: 0 }
+    let dataBlockCustomers = { ...data4Blocks[0], isIncreased: true, changes: 0 }
+    const prepareDataFor3Blocks = () => {
+        const thisSchoolYear = calculateSchoolYear();
+
+        // dataBlockSales
+        dataBlockSales = {
+            ...dataBlockSales,
+            title: dataBlockSales.name.substring(0, dataBlockSales.name.indexOf(thisSchoolYear) - 1),
+            subtitle: dataBlockSales.name.substring(dataBlockSales.name.indexOf(thisSchoolYear))
         }
-    }, [location.pathname])
+        if (dataBlockSales?.present > dataBlockSales?.previous) {
+            dataBlockSales = {
+                ...dataBlockSales,
+                isIncreased: true,
+                changes: ((dataBlockSales?.present - dataBlockSales?.previous) / dataBlockSales?.previous) * 100
+            }
+        } else if (dataBlockSales?.present < dataBlockSales?.previous) {
+            dataBlockSales = {
+                ...dataBlockSales,
+                isIncreased: false,
+                changes: ((dataBlockSales?.present - dataBlockSales?.previous) / dataBlockSales?.previous) * 100
+            }
+        } else {
+            dataBlockSales = {
+                ...dataBlockSales,
+                trend: 'stable',
+                changes: 0
+            }
+        }
 
-    // // if (!userData) {
-    // //     return <Loading />
-    // // }
+        // dataBlockServices
+        dataBlockServices = {
+            ...dataBlockServices,
+            title: dataBlockServices.name.substring(0, dataBlockServices.name.indexOf(thisSchoolYear) - 1),
+            subtitle: dataBlockServices.name.substring(dataBlockServices.name.indexOf(thisSchoolYear))
+        }
+        if (dataBlockServices?.present > dataBlockServices?.previous) {
+            dataBlockServices = {
+                ...dataBlockServices,
+                isIncreased: true,
+                changes: ((dataBlockServices?.present - dataBlockServices?.previous) / dataBlockServices?.previous) * 100
+            }
+        } else if (dataBlockServices?.present < dataBlockServices?.previous) {
+            dataBlockServices = {
+                ...dataBlockServices,
+                isIncreased: false,
+                changes: ((dataBlockServices?.present - dataBlockServices?.previous) / dataBlockServices?.previous) * 100
+            }
+        } else {
+            dataBlockServices = {
+                ...dataBlockServices,
+                trend: 'stable',
+                changes: 0
+            }
+        }
 
-    // // if (!schYears) {
-    // //     return <Loading />
-    // // }
+        // dataBlockCustomers
+        dataBlockCustomers = {
+            ...dataBlockCustomers,
+            title: dataBlockCustomers.name.substring(0, dataBlockCustomers.name.indexOf(thisSchoolYear) - 1),
+            subtitle: dataBlockCustomers.name.substring(dataBlockCustomers.name.indexOf(thisSchoolYear))
+        }
+        if (dataBlockCustomers?.present > dataBlockCustomers?.previous) {
+            dataBlockCustomers = {
+                ...dataBlockCustomers,
+                isIncreased: true,
+                changes: ((dataBlockCustomers?.present - dataBlockCustomers?.previous) / dataBlockCustomers?.previous) * 100
+            }
+        } else if (dataBlockCustomers?.present < dataBlockCustomers?.previous) {
+            dataBlockCustomers = {
+                ...dataBlockCustomers,
+                isIncreased: false,
+                changes: ((dataBlockCustomers?.present - dataBlockCustomers?.previous) / dataBlockCustomers?.previous) * 100
+            }
+        } else {
+            dataBlockCustomers = {
+                ...dataBlockCustomers,
+                trend: true,
+                changes: 0
+            }
+        }
 
-    // if (!bakschYears) {
-    //     return <Loading />
-    // }
+    }
+    prepareDataFor3Blocks()
+    console.log('dataBlockSales = ', dataBlockSales);
+    // console.log('dataBlockServices = ', dataBlockServices);
+    // console.log('dataBlockCustomers = ', dataBlockCustomers);
 
-    // if (!userInfo) {
-    //     return <Loading />
-    // }
-
-    // if (!cardData) {
-    //     return <Loading />
-    // }
-
-    // const generateGreetings = () => {
-    //     const currHour = moment().format('kk')
-    //     const currDay = moment().format('DD/MM')
-    //     const specialDay = moment(userInfo?.birthDate).format('DD/MM')
-
-    //     if (currDay === specialDay) {
-    //         return 'Happy birthday'
-    //     } else {
-    //         if (currHour >= 4 && currHour < 12) {
-    //             return 'Good morning'
-    //         }
-    //         if (currHour >= 12 && currHour < 17) {
-    //             return 'Good afternoon'
-    //         }
-    //         if (currHour >= 17 && currHour < 23) {
-    //             return 'Good evening'
-    //         }
-    //         if (
-    //             (currHour >= 23 && currHour <= 24) ||
-    //             (currHour > 0 && currHour < 4)
-    //         ) {
-    //             return 'Good night'
-    //         }
-    //     }
-    //     return 'Hello'
-    // }
+    const shortenCurrencyValue = (value) => {
+        let val = Math.abs(value);
+        if (val >= 1000000000) {
+            val = (val / 1000000000).toFixed(2) + "B ₫";
+            return val
+        } else if (val >= 1000000) {
+            val = (val / 1000000).toFixed(1) + "M ₫";
+            return val;
+        } else
+            return val + " ₫";
+    }
 
     return (
         <div className={classes.wrapper}>
-            {/* <Grid container spacing={0}>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    className={classes.leftSide}
-                >
-                    <Grid container spacing={0}>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.header}
-                        >
-                            <Animation
-                                animation="transition.slideLeftIn"
-                                delay={300}
-                            >
-                                <Typography
-                                    className={classes.greeting}
-                                    variant="h4"
-                                    color="inherit"
-                                >
-                                    {`${generateGreetings()}, ${userInfo?.fullName
-                                        .split(' ')
-                                        .pop()}`}
-                                </Typography>
-                            </Animation>
-                        </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            className={classes.body}
-                        >
-                            <AnimationGroup
-                                enter={{
-                                    animation: 'transition.slideUpBigIn',
-                                }}
-                            >
-                                <Grid container spacing={0}>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.rowy}
-                                    >
-                                        <Typography className={classes.title}>
-                                            {header.child1}
-                                        </Typography>
+            <Grid container spacing={0}>
+                <Grid item container xs={12} sm={12} md={12} lg={12} className={classes.root}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.body}>
+                        <AnimationGroup enter={{ animation: 'transition.slideUpBigIn' }}>
+                            <Grid container spacing={0}>
+                                {/**3 Info Blocks */}
+                                <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                    {/**Block 1: Total Sales */}
+                                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                                        <Card className={classes.blockSales} variant="elevation" elevation={10}>
+                                            <Box display="flex" flexDirection="column">
+                                                <Box display="flex" flexDirection="row">
+                                                    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" className={classes.box1Block1} flexGrow={1}>
+                                                        <Avatar className={classes.avaBlock1}><MdAttachMoney className={classes.iconBlock1} /></Avatar>
+                                                        <Box display="flex" flexDirection="column">
+                                                            <Typography className={classes.titleBlock1} color="textSecondary">{dataBlockSales?.title}</Typography>
+                                                            <span className={classes.subtitleBlock1}>{dataBlockSales?.subtitle}</span>
+                                                        </Box>
+                                                    </Box>
+                                                    {dataBlockSales?.isIncreased ? (
+                                                        <Box className={classes.changesUpBlock1}>+{dataBlockSales?.changes.toFixed(1)}%▲</Box>
+                                                    ) : (
+                                                        <Box className={classes.changesDownBlock1}>{dataBlockSales?.changes.toFixed(1)}%▼</Box>
+                                                    )}
+                                                </Box>
+                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Typography className={classes.content1Block1} variant="caption" color="textSecondary">Last year</Typography>
+                                                        <span className={classes.previousBlock1}>{shortenCurrencyValue(dataBlockSales?.previous)}</span>
+                                                    </Box>
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Typography className={classes.content1Block1} variant="caption" color="textSecondary">Present</Typography>
+                                                        <span className={classes.presentBlock1}>{shortenCurrencyValue(dataBlockSales?.present)}</span>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </Card>
                                     </Grid>
-                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                        <Grid container spacing={2}>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card1.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card1.color
-                                                    }
-                                                    icon={
-                                                        <MdFiberNew
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(75, 192, 192, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={
-                                                        cardData?.salesMoi
-                                                    }
-                                                    des={cardsConsts.card1.des}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card2.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card2.color
-                                                    }
-                                                    icon={
-                                                        <MdVisibility
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(255, 206, 86, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={cardData?.theoDoi}
-                                                    des={cardsConsts.card2.des}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card3.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card3.color
-                                                    }
-                                                    icon={
-                                                        <MdTrendingUp
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(54, 162, 235, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={
-                                                        cardData?.tiemNang
-                                                    }
-                                                    des={cardsConsts.card3.des}
-                                                />
-                                            </Grid>
+                                    {/**Block 2: Sold Services */}
+                                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                                        <Card className={classes.blockSevices} variant="elevation" elevation={10}>
+                                            <Box display="flex" flexDirection="column">
+                                                <Box display="flex" flexDirection="row">
+                                                    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" className={classes.box1Block2} flexGrow={1}>
+                                                        <Avatar className={classes.avaBlock2}><FaHandshake className={classes.iconBlock2} /></Avatar>
+                                                        <Box display="flex" flexDirection="column">
+                                                            <Typography className={classes.titleBlock2} color="textSecondary">Sold Services</Typography>
+                                                            {/* <Typography className={classes.titleBlock2} color="textSecondary">{dataBlockServices?.title}</Typography> */}
+                                                            <span className={classes.subtitleBlock2}>{dataBlockServices?.subtitle}</span>
+                                                        </Box>
+                                                    </Box>
+                                                    {dataBlockServices?.isIncreased ? (
+                                                        <Box className={classes.changesUpBlock2}>+{dataBlockServices?.changes.toFixed(1)}%▲</Box>
+                                                    ) : (
+                                                        <Box className={classes.changesDownBlock2}>{dataBlockServices?.changes.toFixed(1)}%▼</Box>
+                                                    )}
+                                                </Box>
+                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Typography className={classes.content1Block2} variant="caption" color="textSecondary">Last year</Typography>
+                                                        <span className={classes.previousBlock2}>{dataBlockServices?.previous} services</span>
+                                                    </Box>
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Typography className={classes.content1Block2} variant="caption" color="textSecondary">Present</Typography>
+                                                        <span className={classes.presentBlock2}>{dataBlockServices?.present} services</span>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </Card>
+                                    </Grid>
+                                    {/**Block 3: New Customers */}
+                                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                                        <Card className={classes.blockCustomers} variant="elevation" elevation={10}>
+                                            <Box display="flex" flexDirection="column">
+                                                <Box display="flex" flexDirection="row">
+                                                    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" className={classes.box1Block3} flexGrow={1}>
+                                                        <Avatar className={classes.avaBlock3}><FaSchool className={classes.iconBlock3} /></Avatar>
+                                                        <Box display="flex" flexDirection="column">
+                                                            <Typography className={classes.titleBlock3} color="textSecondary">{dataBlockCustomers?.title}S</Typography>
+                                                            <span className={classes.subtitleBlock3}>{dataBlockCustomers?.subtitle}</span>
+                                                        </Box>
+                                                    </Box>
+                                                    {dataBlockCustomers?.isIncreased ? (
+                                                        <Box className={classes.changesUpBlock3}>+{dataBlockCustomers?.changes.toFixed(1)}%▲</Box>
+                                                    ) : (
+                                                        <Box className={classes.changesDownBlock3}>{dataBlockCustomers?.changes.toFixed(1)}%▼</Box>
+                                                    )}
+                                                </Box>
+                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Typography className={classes.content1Block3} variant="caption" color="textSecondary">Last year</Typography>
+                                                        <span className={classes.previousBlock3}>{dataBlockCustomers?.previous} schools</span>
+                                                    </Box>
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Typography className={classes.content1Block3} variant="caption" color="textSecondary">Present</Typography>
+                                                        <span className={classes.presentBlock3}>{dataBlockCustomers?.present} schools</span>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </Card>
+                                    </Grid>
+                                </Grid>
+
+                                {/**Services & Customer */}
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowt}>
+                                    <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                        {/* Services (bar) */}
+                                        <Grid item xs={12} sm={7} md={7} lg={7}>
+                                            <Card className={classes.panelServices} variant="elevation" elevation={4}>
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
+                                                            <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
+                                                            {/* <ThemeProvider theme={theme}> */}
+                                                            <ToggleButtonGroup
+                                                                value={viewServiceBy}
+                                                                exclusive
+                                                                onChange={handleChangeViewServiceBy}
+                                                                size="small"
+                                                                color="primary"
+                                                                classes={{ root: styles.btnToggles }}
+                                                            >
+                                                                <ToggleButton value={toggleButtonOptions.serviceBarChart.ds}>Sales</ToggleButton>
+                                                                <ToggleButton value={toggleButtonOptions.serviceBarChart.sl}>Quantity</ToggleButton>
+                                                            </ToggleButtonGroup>
+                                                            {/* </ThemeProvider> */}
+                                                        </Box>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                        {data4ServiceColumn && years &&
+                                                            <StackColumnCharts values={data4ServiceColumn} years={years} option={viewServiceBy} />
+                                                        }
+                                                    </Grid>
+                                                </Grid>
+                                            </Card>
                                         </Grid>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.rowy}
-                                    >
-                                        <Typography className={classes.title}>
-                                            {header.child2}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                        <Grid container spacing={2}>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card6.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card6.color
-                                                    }
-                                                    icon={
-                                                        <MdLoyalty
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(255, 99, 132, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={cardData?.chamSoc}
-                                                    des={cardsConsts.card6.des}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card4.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card4.color
-                                                    }
-                                                    icon={
-                                                        <FaFileSignature
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(153, 102, 255, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={cardData?.kyMoi}
-                                                    des={cardsConsts.card4.des}
-                                                />
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                sm={4}
-                                                md={4}
-                                                lg={4}
-                                            >
-                                                <CardJack
-                                                    title={
-                                                        cardsConsts.card5.title
-                                                    }
-                                                    color={
-                                                        cardsConsts.card5.color
-                                                    }
-                                                    icon={
-                                                        <MdLoop
-                                                            style={{
-                                                                width: '2rem',
-                                                                height: '2rem',
-                                                                color:
-                                                                    'rgba(255, 159, 64, 1)',
-                                                            }}
-                                                        />
-                                                    }
-                                                    isOpts={true}
-                                                    ranges={bakschYears}
-                                                    datasets={cardData?.taiKy}
-                                                    des={cardsConsts.card5.des}
-                                                />
-                                            </Grid>
+
+                                        {/** Customers (pie) */}
+                                        <Grid item xs={12} sm={5} md={5} lg={5}>
+                                            <Card className={classes.panelCustomers} variant="elevation" elevation={4}>
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
+                                                            <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
+                                                            <ToggleButtonGroup
+                                                                value={viewCustomerBy}
+                                                                exclusive
+                                                                onChange={handleChangeViewCustomerBy}
+                                                                size="small"
+                                                                color="secondary"
+                                                                classes={{ root: styles.btnToggles }}
+                                                            >
+                                                                <ToggleButton color="secondary" value="status">Status</ToggleButton>
+                                                                <ToggleButton color="secondary" value="level">Level</ToggleButton>
+                                                                <ToggleButton color="secondary" value="type">Type</ToggleButton>
+                                                                <ToggleButton color="secondary" value="district">District</ToggleButton>
+                                                            </ToggleButtonGroup>
+                                                        </Box>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                        {data4ServiceColumn &&
+                                                            <PieCharts values={data4CustomerPie} labels={pieLabels} option={viewCustomerBy} />
+                                                        }
+                                                    </Grid>
+                                                </Grid>
+                                            </Card>
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                            </AnimationGroup>
-                        </Grid>
+
+                                {/**HCM Map (Customer) & Salesmen Ranking */}
+                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowy}>
+                                    <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.rowx}>
+                                        {/** Customers Map Chart */}
+                                        <Grid item xs={12} sm={8} md={8} lg={8}>
+                                            <Card className={classes.panelMap} variant="elevation" elevation={4}>
+                                                Customer in each district (HCM Map)
+                                            </Card>
+                                        </Grid>
+
+                                        {/** Salesmen Ranking */}
+                                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                                            <Card className={classes.panelRanking} variant="elevation" elevation={4}>
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
+                                                            <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
+                                                            <ToggleButtonGroup
+                                                                value={viewRankingBy}
+                                                                exclusive
+                                                                onChange={handleChangeViewRankingBy}
+                                                                size="small"
+                                                                color="primary"
+                                                                classes={{ root: styles.btnToggles }}
+                                                            >
+                                                                <ToggleButton value="month">This month</ToggleButton>
+                                                                <ToggleButton value="year">This year</ToggleButton>
+                                                                <ToggleButton value="all">Whole time</ToggleButton>
+                                                            </ToggleButtonGroup>
+                                                        </Box>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                        <CardRanks data={data4Ranking} columns={columns} />
+                                                    </Grid>
+                                                </Grid>
+                                            </Card>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </AnimationGroup>
                     </Grid>
                 </Grid>
-            </Grid> */}
+            </Grid>
         </div>
     )
 }
