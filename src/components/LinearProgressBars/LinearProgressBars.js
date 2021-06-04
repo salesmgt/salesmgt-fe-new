@@ -40,7 +40,7 @@ function LinearProgressBars(props) {
             <Box display="flex" flexDirection='row'>
                 <Box flexGrow={1}>
                     <Typography variant="body2">    {/** color="textSecondary" */}
-                        {parseDateToString(startDate, 'DD-MM-YYYY')}
+                        {startDate ? parseDateToString(startDate, 'DD-MM-YYYY') : ' ?'}
                     </Typography>
                 </Box>
                 <Box>

@@ -41,7 +41,7 @@ import { useSnackbar } from 'notistack'
 import classes from './CreateServices.module.scss'
 
 const clientSchema = yup.object().shape({
-    duration: yup.DateSchema,
+    // duration: yup.string(),
     // .string()
     // .trim()
     // .required('Duartion is required'),
@@ -133,7 +133,7 @@ function CreateServicesForm(props) {
     // ko gọi ngoài này nữa vì mỗi lần form này bị re-render, nó sẽ gọi lại API. Chết mất!
 
     // Coi xem chỗ này còn lỗi ko
-    const createNotify = (value) => {
+    const createNotify = (serviceId) => {    //value
         if (listManagers && listManagers?.length > 0) {
             new Promise((resolve, reject) => {
                 // listManagers.map((mng) => {
@@ -147,8 +147,8 @@ function CreateServicesForm(props) {
                         timestamp: moment(new Date()).format(
                             'YYYY-MM-DD HH:mm:ss'
                         ),
-                        content: 'Salesman has just submitd a service.',
-                        uid: taskId,
+                        content: 'A service has just been submited.',
+                        uid: serviceId,    // chờ BE trả về
                         isSeen: false,
                     })
                 // })
@@ -258,7 +258,7 @@ function CreateServicesForm(props) {
                 })
 
                 // Send notification by Firebase
-                createNotify(data)
+                createNotify(res.data)    // Chờ BE trả về id trong res
 
                 onClose()
             })
@@ -283,10 +283,11 @@ function CreateServicesForm(props) {
         // alert(JSON.stringify(model))
     }
 
-    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber, time) => {
+    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => { //, time
         // console.log('CreateServices: duration = ', time);
         let estimateSales = currencyFormatter.format(0)
-        const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')    // chưa lấy đc time
+        // const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')    // chưa lấy đc time
+        const duration = 1; // giả định thế
 
         if ((pricePerSlot * slotNumber * classNumber * 4 * duration) > 20000000000) {
             estimateSales = currencyFormatter.format(20000000000);
@@ -591,20 +592,21 @@ function CreateServicesForm(props) {
                                         )}
                                     />
                                 </Grid>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <Tooltip
-                                    title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
-                                    arrow interactive
-                                >
-                                    <Typography variant='body1'>
-                                        <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
-                                    <span className={classes.txtRevenue}>
-                                            ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'), getValues('duration'))}
-                                            {/* ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)} */}
-                                        </span>
-                                    </Typography>
-                                </Tooltip>
+                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Tooltip
+                                        title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                        arrow interactive
+                                    >
+                                        <Typography variant='body1'>
+                                            {/* <span className={classes.txtEstimate}>Estimate sales</span> &nbsp; */}
+                                            <span className={classes.txtRevenue}>
+                                                {/* ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'))} */}
+                                                {/* , getValues('duration') */}
+                                                {/* ≈ {currencyFormatter.format(getValues('pricePerSlot') * getValues('slotNumber') * getValues('classNumber') * 4)} */}
+                                            </span>
+                                        </Typography>
+                                    </Tooltip>
+                                </Grid>
                             </Grid>
                         </Grid>
 

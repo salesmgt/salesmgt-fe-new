@@ -82,6 +82,17 @@ function DetailLayouts(props) {
                         }}
                     />
                 )
+            case statusNames.potential:
+                return (
+                    <Chip
+                        label={status}
+                        style={{
+                            backgroundColor: 'rgba(255, 159, 64, 1)',
+                            color: '#fff',
+                            width: 'fit-content',
+                        }}
+                    />
+                )
             case statusAcct.active:
                 return (
                     <Chip

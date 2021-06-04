@@ -456,7 +456,9 @@ function Tables(props) {
                                                 />
                                             ) : (
                                                 <>
-                                                    {parseDateToString(row?.assignDate, 'DD-MM-YYYY')} ➜ &nbsp;
+                                                    {row?.assignDate ? parseDateToString(row?.assignDate, 'DD-MM-YYYY') : '?'}
+                                                    {/* {parseDateToString(row?.assignDate, 'DD-MM-YYYY')} ➜ &nbsp; */}
+                                                    ➜ &nbsp;
                                                     {parseDateToString(row?.endDate, 'DD-MM-YYYY')}
                                                 </>
                                             )}

@@ -158,7 +158,6 @@ function useAppProvider() {
     useEffect(() => {
         FiltersServices.getSchoolYears()
             .then((data) => {
-                console.log("dara ", data)
                 if (data) {
                     Milk?.setMilk(milkNames?.schYears, data)
 

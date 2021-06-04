@@ -158,7 +158,7 @@ function ServiceInfo(props) {
     // }
     // const customServiceTypes = customiseServiceList(service?.educationLevel)
 
-    console.log('service: ', service)
+    // console.log('service: ', service)
 
     const onSubmit = (data) => {
         const model = {

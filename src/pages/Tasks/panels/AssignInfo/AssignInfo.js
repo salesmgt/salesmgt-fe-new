@@ -18,7 +18,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useApp } from '../../../../hooks/AppContext'
 import * as Milk from '../../../../utils/Milk'
-import { milkNames, purposeNames, taskResultNames, taskStatusNames } from '../../../../constants/Generals'
+import { milkNames, purposeNames, serviceStatusNames, taskResultNames, taskStatusNames } from '../../../../constants/Generals'
 import { Snackbars, Loading, NotFound, LinearProgressBars } from '../../../../components'
 import { Consts } from './AssignInfoConfig'
 import { useAuth } from '../../../../hooks/AuthContext'
@@ -255,6 +255,32 @@ function AssignInfo(props) {
                     refreshPage={refreshPage}
                 />
             )
+        }
+    }
+
+    const renderButtonName = (purpose, listServices) => {
+        // const listServices = [...task?.services];
+        let buttonName = 'Submit a service'
+        if (purpose === purposeNames.purp1 || purpose === purposeNames.purp4 || purpose === purposeNames.purp5) {
+            if (listServices) {
+                const countPendingServices = listServices.filter((obj) => obj.status === serviceStatusNames.pending).length;
+                console.log('count = ', countPendingServices);
+                if (countPendingServices > 0) {
+                    buttonName = 'Submit more services'
+                }
+            }
+        } else {
+            buttonName = 'Mark as completed'
+        }
+        return buttonName
+    }
+
+    const renderServiceCountMessage = (listServices) => {
+        if (listServices) {
+            const countPendingServices = listServices.filter((obj) => obj.status === serviceStatusNames.pending).length;
+            if (countPendingServices > 0) {
+                return `You are having ${countPendingServices} pending services`
+            }
         }
     }
 
@@ -979,17 +1005,26 @@ function AssignInfo(props) {
                                                             }
                                                         }}
                                                     >
-                                                        Mark as completed
-                                                </Button>
-                                                    {/* {renderConfirmTaskCompleteDialog()} */}
-                                                    <Button order={2} variant="contained" className={classes.btnFail}
-                                                        onClick={() => setOpenConfirmFailDialog(true)}
-                                                    >
-                                                        Mark as failed
+                                                        {renderButtonName(task?.purpose, task?.services)}
                                                     </Button>
+                                                    {/* {renderConfirmTaskCompleteDialog()} */}
+                                                    {!task?.services || task?.services?.length === 0 && (
+                                                        <Button order={2} variant="contained" className={classes.btnFail}
+                                                            onClick={() => setOpenConfirmFailDialog(true)}
+                                                        >
+                                                            Mark as failed
+                                                        </Button>
+                                                    )}
                                                     {handleMarkComplete(task?.purpose)}
                                                     {handleMarkFail()}
                                                 </Box>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    style={{ textAlign: 'right', fontStyle: 'italic' }}
+                                                    color="textSecondary"
+                                                >
+                                                    {renderServiceCountMessage(task?.services)}
+                                                </Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>

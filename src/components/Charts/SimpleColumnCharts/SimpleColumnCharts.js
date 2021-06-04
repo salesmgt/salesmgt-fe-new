@@ -4,8 +4,7 @@ import Chart from "react-apexcharts"
 const SimpleColumnCharts = (props) => {
     const { title, xAxis, yAxis } = props.values
 
-    const state = {
-
+    let state = {
         series: [{
             name: 'KPI points',
             data: yAxis
@@ -15,6 +14,7 @@ const SimpleColumnCharts = (props) => {
             chart: {
                 height: 350,
                 type: 'bar',
+                offsetY: 10,
             },
             plotOptions: {
                 bar: {
@@ -27,7 +27,7 @@ const SimpleColumnCharts = (props) => {
             dataLabels: {
                 enabled: true,
                 formatter: function (val) {
-                    return val + "%";
+                    return parseFloat(val).toFixed(2) + "%";
                 },
                 offsetY: -20,
                 style: {
@@ -35,7 +35,6 @@ const SimpleColumnCharts = (props) => {
                     colors: ["#304758"]
                 }
             },
-
             xaxis: {
                 categories: xAxis,
                 position: 'bottom',
@@ -57,9 +56,9 @@ const SimpleColumnCharts = (props) => {
                         }
                     }
                 },
-                tooltip: {
-                    enabled: true,
-                }
+                // tooltip: {
+                //     enabled: true,
+                // }
             },
             yaxis: {
                 axisBorder: {
@@ -78,7 +77,7 @@ const SimpleColumnCharts = (props) => {
             title: {
                 text: title,
                 floating: true,
-                offsetY: 0,
+                offsetY: -5,
                 align: 'center',
                 style: {
                     color: '#444',

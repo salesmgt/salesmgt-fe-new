@@ -203,11 +203,22 @@ function UpdateSchStatus(props) {
     // }
 
     // Coi xem chỗ này còn lỗi ko
-    // console.log('listManagers: ', listManagers)
-    const createNotify = (value) => {
+    console.log('listManagers: ', listManagers)
+    const createNotify = (serviceId) => {    //value
         if (listManagers && listManagers?.length > 0) {
             new Promise((resolve, reject) => {
                 // listManagers.map((mng) => {
+                console.log({
+                    avatar: userInfo?.avatar ? userInfo?.avatar : '',
+                    actor: user?.username,
+                    type: 'service',
+                    timestamp: moment(new Date()).format(
+                        'YYYY-MM-DD HH:mm:ss'
+                    ),
+                    content: 'A service has just been submited.',
+                    uid: serviceId,
+                    isSeen: false,
+                });
                 FirebaseApp.database()
                     .ref('notify')
                     .child(listManagers[0]?.username)
@@ -218,8 +229,8 @@ function UpdateSchStatus(props) {
                         timestamp: moment(new Date()).format(
                             'YYYY-MM-DD HH:mm:ss'
                         ),
-                        content: 'Salesman has just submitd a service.',
-                        uid: task?.id,
+                        content: 'A service has just been submited.',
+                        uid: serviceId,
                         isSeen: false,
                     })
                 // })
@@ -250,28 +261,34 @@ function UpdateSchStatus(props) {
 
         TasksServices.createServices(model)
             .then((res) => {
-                TasksServices.completeTasks(task?.id).then(res => {
-                    refreshPage(task?.id)
-                    enqueueSnackbar("Updated task's status successfully", {
-                        variant: 'success',
-                    })
-                }).catch((error) => {
-                    if (error.response) {
-                        console.log(error)
-                        history.push({
-                            pathname: '/errors',
-                            state: { error: error.response.status },
-                        })
-                    }
-                    // setNotify({
-                    //     isOpen: true,
-                    //     message: 'Proposed a service failed',
-                    //     type: 'error',
-                    // })
-                    enqueueSnackbar("Updated task's status failed", {
-                        variant: 'error',
-                    })
-                })
+                // Send notification by Firebase
+                createNotify(res.data)  //res là serviceId
+
+                refreshPage(task?.id)
+                // Manager approve service thì trường này mới đổi trạng thái
+                // TasksServices.completeTasks(task?.id).then(res => {
+
+
+                //     // enqueueSnackbar("Updated task's status successfully", {
+                //     //     variant: 'success',
+                //     // })
+                // }).catch((error) => {
+                //     if (error.response) {
+                //         console.log(error)
+                //         history.push({
+                //             pathname: '/errors',
+                //             state: { error: error.response.status },
+                //         })
+                //     }
+                //     // setNotify({
+                //     //     isOpen: true,
+                //     //     message: 'Proposed a service failed',
+                //     //     type: 'error',
+                //     // })
+                //     enqueueSnackbar("Updated task's status failed", {
+                //         variant: 'error',
+                //     })
+                // })
 
 
                 // setNotify({
@@ -283,9 +300,6 @@ function UpdateSchStatus(props) {
                 enqueueSnackbar('Created service successfully', {
                     variant: 'success',
                 })
-
-                // Send notification by Firebase
-                createNotify(data)
 
                 // reset({ showCreate: false })
 
@@ -313,18 +327,19 @@ function UpdateSchStatus(props) {
         // alert(JSON.stringify(model))
     }
 
-    const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber, time) => {
-        let estimateSales = currencyFormatter.format(0)
-        const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')
+    // const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => { //, time
+    //     let estimateSales = currencyFormatter.format(0)
+    //     // const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')
+    //     const duration = 1; // giả định thế
 
-        if ((pricePerSlot * slotNumber * classNumber * 4 * duration) > 20000000000) {
-            estimateSales = currencyFormatter.format(20000000000);
-        } else {
-            estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4 * duration)
-        }
+    //     if ((pricePerSlot * slotNumber * classNumber * 4 * duration) > 20000000000) {
+    //         estimateSales = currencyFormatter.format(20000000000);
+    //     } else {
+    //         estimateSales = currencyFormatter.format(pricePerSlot * slotNumber * classNumber * 4 * duration)
+    //     }
 
-        return estimateSales
-    }
+    //     return estimateSales
+    // }
 
     return (
         <>
@@ -548,12 +563,12 @@ function UpdateSchStatus(props) {
                                 </Grid>
 
                                 <Grid item xs={7} sm={6} md={6} lg={6} className={classes.rowx}>
-                                    <Controller
-                                        name="slotNumber"
-                                        control={control}
-                                        render={({ value, onChange }) => (
-                                            <Grid container>
-                                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Grid container>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <Controller
+                                                name="slotNumber"
+                                                control={control}
+                                                render={({ value, onChange }) => (
                                                     <TextField
                                                         className={classes.txtNumber}
                                                         label={fields.slotNumber.title}
@@ -579,23 +594,23 @@ function UpdateSchStatus(props) {
                                                     // error={!!errors.slotNumber}
                                                     // helperText={errors?.slotNumber?.message}
                                                     />
-                                                </Grid>
-                                                <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                    <Tooltip
-                                                        title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
-                                                        arrow interactive
-                                                    >
-                                                        <Typography variant='body1'>
-                                                            <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                                            <Tooltip
+                                                title={<Typography variant='caption'>{fields.revenue.formula}</Typography>}
+                                                arrow interactive
+                                            >
+                                                <Typography variant='body1'>
+                                                    {/* <span className={classes.txtEstimate}>Estimate sales</span> &nbsp;
                                                                     <span className={classes.txtRevenue}>
-                                                                ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'), getValues('duration'))}
-                                                            </span>
-                                                        </Typography>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </Grid>
-                                        )}
-                                    />
+                                                        ≈ {calculateEstimateSales(getValues('pricePerSlot'), getValues('slotNumber'), getValues('classNumber'), getValues('duration'))}
+                                                    </span> */}
+                                                </Typography>
+                                            </Tooltip>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
 
                                 {/**Giờ bỏ cái này, ko dùng đến nữa */}

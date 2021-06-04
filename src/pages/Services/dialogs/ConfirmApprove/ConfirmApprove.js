@@ -57,6 +57,28 @@ function ConfirmApprove(props) {
                 message: 'Approved service successfully',
                 type: 'success',
             })
+
+            // 
+            // TasksServices.completeTasks(task?.id).then(res => {
+            //     refreshPage(task?.id)
+
+            // }).catch((error) => {
+            //     if (error.response) {
+            //         console.log(error)
+            //         history.push({
+            //             pathname: '/errors',
+            //             state: { error: error.response.status },
+            //         })
+            //     }
+            //     // setNotify({
+            //     //     isOpen: true,
+            //     //     message: 'Proposed a service failed',
+            //     //     type: 'error',
+            //     // })
+            //     enqueueSnackbar("Updated task's status failed", {
+            //         variant: 'error',
+            //     })
+            // })
         }).catch((error) => {
             if (error.response) {
                 console.log(error)

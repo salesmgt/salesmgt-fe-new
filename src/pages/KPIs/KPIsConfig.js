@@ -32,6 +32,7 @@ export const detailPageConsts = {
     },
     tabNames: {
         tab1: 'KPIs Group Details',
+        tab2: 'My KPIs Details',
         // tab2: 'Criteria Info',
     },
     operations: {

@@ -64,7 +64,7 @@
     @extend .block;
     border-color: $heals;
     .box1Block1 {
-        padding: 1rem 0 1rem;
+        padding: 1rem 0 1rem 1.5rem;
 
         .avaBlock1 {
             width: 2.65rem;
@@ -87,8 +87,14 @@
             padding: 0 0 0 0.6rem;
             margin: 0;
             font-size: 0.8rem;
-            font-weight: 500;
             color: $grey-500;
+            
+            .subtitle1Block1 {
+                font-weight: 500;
+            }
+            .subtitle2Block1 {
+                font-weight: 400;
+            }
         }
     }
 
@@ -101,7 +107,7 @@
         font-size: 1.5rem
     }
     .changesBlock1 {
-        padding: 1.1rem 0.5rem;
+        padding: 1.1rem 1.5rem 0 0;
         font-size: 1.2rem;
         font-weight: 500;
     }
@@ -116,14 +122,14 @@
 }
 .blockSevices {
     @extend .block;
-    border-color: $creative;
+    border-color: $trust;
     .box1Block2 {
-        padding: 1rem 0 1rem;
+        padding: 1rem 0 1rem 1.5rem;
 
         .avaBlock2 {
             width: 2.65rem;
             height: 2.65rem;
-            background-color: $creative;
+            background-color: $trust;
     
             .iconBlock2 {
                 width: 1.6rem;
@@ -141,8 +147,14 @@
             padding: 0 0 0 0.6rem;
             margin: 0;
             font-size: 0.8rem;
-            font-weight: 500;
             color: $grey-500;
+            
+            .subtitle1Block2 {
+                font-weight: 500;
+            }
+            .subtitle2Block2 {
+                font-weight: 400;
+            }
         }
     }
 
@@ -155,7 +167,7 @@
         font-size: 1.5rem
     }
     .changesBlock2 {
-        padding: 1.1rem 0.5rem;
+        padding: 1.1rem 1.5rem 0 0;
         font-size: 1.2rem;
         font-weight: 500;
     }
@@ -172,7 +184,7 @@
     @extend .block;
     border-color: $memory;
     .box1Block3 {
-        padding: 1rem 0 1rem;
+        padding: 1rem 0 1rem 1.5rem;
 
         .avaBlock3 {
             width: 2.65rem;
@@ -195,8 +207,14 @@
             padding: 0 0 0 0.6rem;
             margin: 0;
             font-size: 0.8rem;
-            font-weight: 500;
             color: $grey-500;
+            
+            .subtitle1Block3 {
+                font-weight: 500;
+            }
+            .subtitle2Block3 {
+                font-weight: 400;
+            }
         }
     }
 
@@ -209,7 +227,7 @@
         font-size: 1.5rem
     }
     .changesBlock3 {
-        padding: 1.1rem 0.5rem;
+        padding: 1.1rem 1.5rem 0 0;
         font-size: 1.2rem;
         font-weight: 500;
     }

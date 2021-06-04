@@ -8,10 +8,11 @@ import {
     Tooltip,
     Typography,
 } from '@material-ui/core'
+import { MdInfo } from 'react-icons/md';
 import Carousel from 'react-material-ui-carousel'
 // import { updateKPI } from '../../KPIsServices'
-import { Loading, SimpleColumnCharts } from '../../../../components';
-import { MdInfo } from 'react-icons/md';
+import { Loading } from '../../../../components';
+import { SimpleColumnCharts } from '../../../../components/Charts';
 import { parseDateToString } from '../../../../utils/DateTimes';
 import { chunkArray } from '../../../../utils/Arrays';
 import SalesmanKPIs from '../../dialogs/SalesmanKPIs/SalesmanKPIs';
@@ -33,9 +34,9 @@ function KPIInfo(props) {
         const endDate = new Date(KPI?.endDate)
 
         if (today > endDate) {
-            return `KPI of Salesmen for [${KPI?.groupName}] from ${parseDateToString(KPI?.startDate, 'DD/MM/YYYY')} ➜ ${parseDateToString(endDate, 'DD/MM/YYYY')}`
+            return `KPI of Salesmen for [${KPI?.groupName}] (${parseDateToString(KPI?.startDate, 'DD/MM/YYYY')} ➜ ${parseDateToString(endDate, 'DD/MM/YYYY')})`
         } else {
-            return `KPI of Salesmen for [${KPI?.groupName}] from ${parseDateToString(KPI?.startDate, 'DD/MM/YYYY')} ➜ ${parseDateToString(today, 'DD/MM/YYYY')}`
+            return `KPI of Salesmen for [${KPI?.groupName}] (${parseDateToString(KPI?.startDate, 'DD/MM/YYYY')} ➜ ${parseDateToString(today, 'DD/MM/YYYY')})`
         }
     }
 
@@ -69,7 +70,7 @@ function KPIInfo(props) {
 
     useEffect(() => {
         prepareDataForChart()
-    }, []);
+    }, [KPI]);
 
     if (!KPI) {
         return <Loading />
@@ -89,6 +90,17 @@ function KPIInfo(props) {
             kpiGroupName: kpiGroupName,
             averageValues: averageValues,
         })
+    }
+
+    const getKPICriteriaTitle = (criteria) => {
+        console.log(criteria);
+        return (
+            <span>
+                <span>Weight: {criteria?.weight * 100}%</span><br />
+                <span>Description:</span><br />
+                <span>{criteria?.descrption}</span>
+            </span>
+        )
     }
 
     return (
@@ -111,7 +123,7 @@ function KPIInfo(props) {
                                                         <Typography className={classes.criName} gutterBottom>{cri?.criteria}</Typography>
                                                     </Box>
                                                     <Box>
-                                                        <Tooltip title={`Weight: ${cri?.weight * 100}%`} placement="right">
+                                                        <Tooltip title={getKPICriteriaTitle(cri)} placement="right">
                                                             <div className={classes.icon}><MdInfo className={classes.iconInfo} /></div>
                                                         </Tooltip>
                                                     </Box>

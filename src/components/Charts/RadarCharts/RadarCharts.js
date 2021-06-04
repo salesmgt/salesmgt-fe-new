@@ -2,17 +2,17 @@ import React from 'react';
 import Chart from "react-apexcharts"
 
 const RadarCharts = (props) => {
-    const { salesmanName, criteria, actualValues, targetValues, averageValues } = props.values
+    const { title, criteria, actualValues, targetValues, averageValues } = props.values
 
     const state = {
         series: [{
-            name: 'My KPIs',
+            name: 'Actual',
             data: actualValues,
         }, {
             name: 'Target',
             data: targetValues,
         }, {
-            name: 'Average KPIs',
+            name: 'Average',
             data: averageValues,
         }],
         options: {
@@ -45,7 +45,7 @@ const RadarCharts = (props) => {
                 }
             },
             title: {
-                text: `KPI of ${salesmanName} (divided by Criteria)`,
+                text: title,
                 // style: {
                 //     marginBottom: '0 !important',
                 //     paddingBottom: '0 !important'
@@ -54,8 +54,8 @@ const RadarCharts = (props) => {
             stroke: {
                 width: 2
             },
-            fill: { opacity: 0.1 },
-            markers: { size: 4 },
+            fill: { opacity: 0.2 },
+            markers: { size: 5 },
             // markers: {
             //     size: 4,
             //     colors: ['#fff'],
@@ -65,11 +65,17 @@ const RadarCharts = (props) => {
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return val
+                        return `${parseFloat(val).toFixed(2)}%`
                     }
                 }
             },
-            xaxis: { categories: criteria },
+            xaxis: {
+                categories: criteria,
+                // style: {
+                //     color: '#000',
+
+                // }
+            },
             dataLabels: {
                 style: {
                     fontSize: '12px',

@@ -5,18 +5,17 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { MdAttachMoney } from 'react-icons/md'
 import { FaHandshake, FaSchool } from 'react-icons/fa'
 import { AnimationGroup, Loading } from '../../components'
-// import { useAuth } from '../../hooks/AuthContext'
+import { useAuth } from '../../hooks/AuthContext'
 import { useApp } from '../../hooks/AppContext'
 import { Consts } from './DashboardsConfig'
 import * as Milk from '../../utils/Milk'
-import { milkNames } from '../../constants/Generals'
+import { milkNames, roleNames } from '../../constants/Generals'
 import * as DashboardsServices from './DashboardsServices'
-import StackColumnCharts from '../../components/Charts/StackColumnCharts/StackColumnCharts'
-// import { createMuiTheme } from '@material-ui/core/styles'
-import PieCharts from '../../components/Charts/PieCharts/PieCharts'
+import { MapCharts, PieCharts, StackColumnCharts } from '../../components/Charts'
 import CardRanks from './components/CardRanks/CardRanks'
+import { calculateSchoolYear, parseDateToString } from '../../utils/DateTimes'
+// import { createMuiTheme } from '@material-ui/core/styles'
 import classes from './Dashboards.module.scss'
-import { calculateSchoolYear } from '../../utils/DateTimes'
 
 // const theme = createMuiTheme({
 //     palette: {
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 function Dashboards() {
     const styles = useStyles()
     const { toggleButtonOptions } = Consts
-    // const { user } = useAuth()
+    const { user } = useAuth()
     const { schYears } = useApp()
     const bakschYears = schYears ? schYears : Milk.getMilk(milkNames.schYears)
     const history = useHistory()
@@ -210,6 +209,7 @@ function Dashboards() {
             ...dataBlockSales,
             title: dataBlockSales.name.substring(0, dataBlockSales.name.indexOf(thisSchoolYear) - 1),
             subtitle: dataBlockSales.name.substring(dataBlockSales.name.indexOf(thisSchoolYear))
+            // subtitle: `${dataBlockSales.name.substring(dataBlockSales.name.indexOf(thisSchoolYear))} • until ${parseDateToString(new Date(), 'DD/MM/YYYY')}`
         }
         if (dataBlockSales?.present > dataBlockSales?.previous) {
             dataBlockSales = {
@@ -236,6 +236,7 @@ function Dashboards() {
             ...dataBlockServices,
             title: dataBlockServices.name.substring(0, dataBlockServices.name.indexOf(thisSchoolYear) - 1),
             subtitle: dataBlockServices.name.substring(dataBlockServices.name.indexOf(thisSchoolYear))
+            // subtitle: `${dataBlockServices.name.substring(dataBlockServices.name.indexOf(thisSchoolYear))} • until ${parseDateToString(new Date(), 'DD/MM/YYYY')}`
         }
         if (dataBlockServices?.present > dataBlockServices?.previous) {
             dataBlockServices = {
@@ -262,6 +263,7 @@ function Dashboards() {
             ...dataBlockCustomers,
             title: dataBlockCustomers.name.substring(0, dataBlockCustomers.name.indexOf(thisSchoolYear) - 1),
             subtitle: dataBlockCustomers.name.substring(dataBlockCustomers.name.indexOf(thisSchoolYear))
+            // subtitle: `${dataBlockCustomers.name.substring(dataBlockCustomers.name.indexOf(thisSchoolYear))} • until ${parseDateToString(new Date(), 'DD/MM/YYYY')}`
         }
         if (dataBlockCustomers?.present > dataBlockCustomers?.previous) {
             dataBlockCustomers = {
@@ -285,7 +287,7 @@ function Dashboards() {
 
     }
     prepareDataFor3Blocks()
-    console.log('dataBlockSales = ', dataBlockSales);
+    // console.log('dataBlockSales = ', dataBlockSales);
     // console.log('dataBlockServices = ', dataBlockServices);
     // console.log('dataBlockCustomers = ', dataBlockCustomers);
 
@@ -308,170 +310,185 @@ function Dashboards() {
                     <Grid item xs={12} sm={12} md={12} lg={12} className={classes.body}>
                         <AnimationGroup enter={{ animation: 'transition.slideUpBigIn' }}>
                             <Grid container spacing={0}>
-                                {/**3 Info Blocks */}
-                                <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.row}>
-                                    {/**Block 1: Total Sales */}
-                                    <Grid item xs={12} sm={4} md={4} lg={4}>
-                                        <Card className={classes.blockSales} variant="elevation" elevation={10}>
-                                            <Box display="flex" flexDirection="column">
-                                                <Box display="flex" flexDirection="row">
-                                                    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" className={classes.box1Block1} flexGrow={1}>
-                                                        <Avatar className={classes.avaBlock1}><MdAttachMoney className={classes.iconBlock1} /></Avatar>
-                                                        <Box display="flex" flexDirection="column">
-                                                            <Typography className={classes.titleBlock1} color="textSecondary">{dataBlockSales?.title}</Typography>
-                                                            <span className={classes.subtitleBlock1}>{dataBlockSales?.subtitle}</span>
+                                {user.roles[0] !== roleNames.salesman && (
+                                    <>
+                                        {/**3 Info Blocks */}
+                                        <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                            {/**Block 1: Total Sales */}
+                                            <Grid item xs={12} sm={4} md={4} lg={4}>
+                                                <Card className={classes.blockSales} variant="elevation" elevation={10}>
+                                                    <Box display="flex" flexDirection="column">
+                                                        <Box display="flex" flexDirection="row" justifyContent="space-between">
+                                                            <Box display="flex" flexDirection="row" alignItems="center" className={classes.box1Block1} flexGrow={1}>
+                                                                <Avatar className={classes.avaBlock1}><MdAttachMoney className={classes.iconBlock1} /></Avatar>
+                                                                <Box display="flex" flexDirection="column">
+                                                                    <Typography className={classes.titleBlock1} color="textSecondary">{dataBlockSales?.title}</Typography>
+                                                                    <span className={classes.subtitleBlock1}>
+                                                                        <span className={classes.subtitle1Block1}>{dataBlockSales?.subtitle}</span>
+                                                                        <span className={classes.subtitle2Block1}> • until </span>
+                                                                        <span className={classes.subtitle1Block1}>{parseDateToString(new Date(), 'DD/MM/YYYY')}</span>
+                                                                    </span>
+                                                                </Box>
+                                                            </Box>
+                                                            {dataBlockSales?.isIncreased ? (
+                                                                <Box className={classes.changesUpBlock1}>+{dataBlockSales?.changes.toFixed(1)}%▲</Box>
+                                                            ) : (
+                                                                <Box className={classes.changesDownBlock1}>{dataBlockSales?.changes.toFixed(1)}%▼</Box>
+                                                            )}
+                                                        </Box>
+                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                            <Box display="flex" flexDirection="column">
+                                                                <Typography className={classes.content1Block1} variant="caption" color="textSecondary">Last year</Typography>
+                                                                <span className={classes.previousBlock1}>{shortenCurrencyValue(dataBlockSales?.previous)}</span>
+                                                            </Box>
+                                                            <Box display="flex" flexDirection="column">
+                                                                <Typography className={classes.content1Block1} variant="caption" color="textSecondary">Present</Typography>
+                                                                <span className={classes.presentBlock1}>{shortenCurrencyValue(dataBlockSales?.present)}</span>
+                                                            </Box>
                                                         </Box>
                                                     </Box>
-                                                    {dataBlockSales?.isIncreased ? (
-                                                        <Box className={classes.changesUpBlock1}>+{dataBlockSales?.changes.toFixed(1)}%▲</Box>
-                                                    ) : (
-                                                        <Box className={classes.changesDownBlock1}>{dataBlockSales?.changes.toFixed(1)}%▼</Box>
-                                                    )}
-                                                </Box>
-                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                </Card>
+                                            </Grid>
+                                            {/**Block 2: Sold Services */}
+                                            <Grid item xs={12} sm={4} md={4} lg={4}>
+                                                <Card className={classes.blockSevices} variant="elevation" elevation={10}>
                                                     <Box display="flex" flexDirection="column">
-                                                        <Typography className={classes.content1Block1} variant="caption" color="textSecondary">Last year</Typography>
-                                                        <span className={classes.previousBlock1}>{shortenCurrencyValue(dataBlockSales?.previous)}</span>
-                                                    </Box>
-                                                    <Box display="flex" flexDirection="column">
-                                                        <Typography className={classes.content1Block1} variant="caption" color="textSecondary">Present</Typography>
-                                                        <span className={classes.presentBlock1}>{shortenCurrencyValue(dataBlockSales?.present)}</span>
-                                                    </Box>
-                                                </Box>
-                                            </Box>
-                                        </Card>
-                                    </Grid>
-                                    {/**Block 2: Sold Services */}
-                                    <Grid item xs={12} sm={4} md={4} lg={4}>
-                                        <Card className={classes.blockSevices} variant="elevation" elevation={10}>
-                                            <Box display="flex" flexDirection="column">
-                                                <Box display="flex" flexDirection="row">
-                                                    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" className={classes.box1Block2} flexGrow={1}>
-                                                        <Avatar className={classes.avaBlock2}><FaHandshake className={classes.iconBlock2} /></Avatar>
-                                                        <Box display="flex" flexDirection="column">
-                                                            <Typography className={classes.titleBlock2} color="textSecondary">Sold Services</Typography>
-                                                            {/* <Typography className={classes.titleBlock2} color="textSecondary">{dataBlockServices?.title}</Typography> */}
-                                                            <span className={classes.subtitleBlock2}>{dataBlockServices?.subtitle}</span>
+                                                        <Box display="flex" flexDirection="row" justifyContent="space-between">
+                                                            <Box display="flex" flexDirection="row" alignItems="center" className={classes.box1Block2} flexGrow={1}>
+                                                                <Avatar className={classes.avaBlock2}><FaHandshake className={classes.iconBlock2} /></Avatar>
+                                                                <Box display="flex" flexDirection="column">
+                                                                    <Typography className={classes.titleBlock2} color="textSecondary">{dataBlockServices?.title}</Typography>
+                                                                    <span className={classes.subtitleBlock2}>
+                                                                        <span className={classes.subtitle1Block2}>{dataBlockServices?.subtitle}</span>
+                                                                        <span className={classes.subtitle2Block2}> • until </span>
+                                                                        <span className={classes.subtitle1Block2}>{parseDateToString(new Date(), 'DD/MM/YYYY')}</span>
+                                                                    </span>
+                                                                </Box>
+                                                            </Box>
+                                                            {dataBlockServices?.isIncreased ? (
+                                                                <Box className={classes.changesUpBlock2}>+{dataBlockServices?.changes.toFixed(1)}%▲</Box>
+                                                            ) : (
+                                                                <Box className={classes.changesDownBlock2}>{dataBlockServices?.changes.toFixed(1)}%▼</Box>
+                                                            )}
+                                                        </Box>
+                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                            <Box display="flex" flexDirection="column">
+                                                                <Typography className={classes.content1Block2} variant="caption" color="textSecondary">Last year</Typography>
+                                                                <span className={classes.previousBlock2}>{dataBlockServices?.previous} services</span>
+                                                            </Box>
+                                                            <Box display="flex" flexDirection="column">
+                                                                <Typography className={classes.content1Block2} variant="caption" color="textSecondary">Present</Typography>
+                                                                <span className={classes.presentBlock2}>{dataBlockServices?.present} services</span>
+                                                            </Box>
                                                         </Box>
                                                     </Box>
-                                                    {dataBlockServices?.isIncreased ? (
-                                                        <Box className={classes.changesUpBlock2}>+{dataBlockServices?.changes.toFixed(1)}%▲</Box>
-                                                    ) : (
-                                                        <Box className={classes.changesDownBlock2}>{dataBlockServices?.changes.toFixed(1)}%▼</Box>
-                                                    )}
-                                                </Box>
-                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                </Card>
+                                            </Grid>
+                                            {/**Block 3: New Customers */}
+                                            <Grid item xs={12} sm={4} md={4} lg={4}>
+                                                <Card className={classes.blockCustomers} variant="elevation" elevation={10}>
                                                     <Box display="flex" flexDirection="column">
-                                                        <Typography className={classes.content1Block2} variant="caption" color="textSecondary">Last year</Typography>
-                                                        <span className={classes.previousBlock2}>{dataBlockServices?.previous} services</span>
-                                                    </Box>
-                                                    <Box display="flex" flexDirection="column">
-                                                        <Typography className={classes.content1Block2} variant="caption" color="textSecondary">Present</Typography>
-                                                        <span className={classes.presentBlock2}>{dataBlockServices?.present} services</span>
-                                                    </Box>
-                                                </Box>
-                                            </Box>
-                                        </Card>
-                                    </Grid>
-                                    {/**Block 3: New Customers */}
-                                    <Grid item xs={12} sm={4} md={4} lg={4}>
-                                        <Card className={classes.blockCustomers} variant="elevation" elevation={10}>
-                                            <Box display="flex" flexDirection="column">
-                                                <Box display="flex" flexDirection="row">
-                                                    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" className={classes.box1Block3} flexGrow={1}>
-                                                        <Avatar className={classes.avaBlock3}><FaSchool className={classes.iconBlock3} /></Avatar>
-                                                        <Box display="flex" flexDirection="column">
-                                                            <Typography className={classes.titleBlock3} color="textSecondary">{dataBlockCustomers?.title}S</Typography>
-                                                            <span className={classes.subtitleBlock3}>{dataBlockCustomers?.subtitle}</span>
+                                                        <Box display="flex" flexDirection="row" justifyContent="space-between">
+                                                            <Box display="flex" flexDirection="row" alignItems="center" className={classes.box1Block3} flexGrow={1}>
+                                                                <Avatar className={classes.avaBlock3}><FaSchool className={classes.iconBlock3} /></Avatar>
+                                                                <Box display="flex" flexDirection="column">
+                                                                    <Typography className={classes.titleBlock3} color="textSecondary">{dataBlockCustomers?.title}</Typography>
+                                                                    <span className={classes.subtitleBlock3}>
+                                                                        <span className={classes.subtitle1Block3}>{dataBlockCustomers?.subtitle}</span>
+                                                                        <span className={classes.subtitle2Block3}> • until </span>
+                                                                        <span className={classes.subtitle1Block3}>{parseDateToString(new Date(), 'DD/MM/YYYY')}</span>
+                                                                    </span>
+                                                                </Box>
+                                                            </Box>
+                                                            {dataBlockCustomers?.isIncreased ? (
+                                                                <Box className={classes.changesUpBlock3}>+{dataBlockCustomers?.changes.toFixed(1)}%▲</Box>
+                                                            ) : (
+                                                                <Box className={classes.changesDownBlock3}>{dataBlockCustomers?.changes.toFixed(1)}%▼</Box>
+                                                            )}
+                                                        </Box>
+                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
+                                                            <Box display="flex" flexDirection="column">
+                                                                <Typography className={classes.content1Block3} variant="caption" color="textSecondary">Last year</Typography>
+                                                                <span className={classes.previousBlock3}>{dataBlockCustomers?.previous} schools</span>
+                                                            </Box>
+                                                            <Box display="flex" flexDirection="column">
+                                                                <Typography className={classes.content1Block3} variant="caption" color="textSecondary">Present</Typography>
+                                                                <span className={classes.presentBlock3}>{dataBlockCustomers?.present} schools</span>
+                                                            </Box>
                                                         </Box>
                                                     </Box>
-                                                    {dataBlockCustomers?.isIncreased ? (
-                                                        <Box className={classes.changesUpBlock3}>+{dataBlockCustomers?.changes.toFixed(1)}%▲</Box>
-                                                    ) : (
-                                                        <Box className={classes.changesDownBlock3}>{dataBlockCustomers?.changes.toFixed(1)}%▼</Box>
-                                                    )}
-                                                </Box>
-                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-around">
-                                                    <Box display="flex" flexDirection="column">
-                                                        <Typography className={classes.content1Block3} variant="caption" color="textSecondary">Last year</Typography>
-                                                        <span className={classes.previousBlock3}>{dataBlockCustomers?.previous} schools</span>
-                                                    </Box>
-                                                    <Box display="flex" flexDirection="column">
-                                                        <Typography className={classes.content1Block3} variant="caption" color="textSecondary">Present</Typography>
-                                                        <span className={classes.presentBlock3}>{dataBlockCustomers?.present} schools</span>
-                                                    </Box>
-                                                </Box>
-                                            </Box>
-                                        </Card>
-                                    </Grid>
-                                </Grid>
-
-                                {/**Services & Customer */}
-                                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowt}>
-                                    <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.row}>
-                                        {/* Services (bar) */}
-                                        <Grid item xs={12} sm={7} md={7} lg={7}>
-                                            <Card className={classes.panelServices} variant="elevation" elevation={4}>
-                                                <Grid container spacing={2}>
-                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
-                                                            <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
-                                                            {/* <ThemeProvider theme={theme}> */}
-                                                            <ToggleButtonGroup
-                                                                value={viewServiceBy}
-                                                                exclusive
-                                                                onChange={handleChangeViewServiceBy}
-                                                                size="small"
-                                                                color="primary"
-                                                                classes={{ root: styles.btnToggles }}
-                                                            >
-                                                                <ToggleButton value={toggleButtonOptions.serviceBarChart.ds}>Sales</ToggleButton>
-                                                                <ToggleButton value={toggleButtonOptions.serviceBarChart.sl}>Quantity</ToggleButton>
-                                                            </ToggleButtonGroup>
-                                                            {/* </ThemeProvider> */}
-                                                        </Box>
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                        {data4ServiceColumn && years &&
-                                                            <StackColumnCharts values={data4ServiceColumn} years={years} option={viewServiceBy} />
-                                                        }
-                                                    </Grid>
-                                                </Grid>
-                                            </Card>
+                                                </Card>
+                                            </Grid>
                                         </Grid>
 
-                                        {/** Customers (pie) */}
-                                        <Grid item xs={12} sm={5} md={5} lg={5}>
-                                            <Card className={classes.panelCustomers} variant="elevation" elevation={4}>
-                                                <Grid container spacing={2}>
-                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
-                                                            <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
-                                                            <ToggleButtonGroup
-                                                                value={viewCustomerBy}
-                                                                exclusive
-                                                                onChange={handleChangeViewCustomerBy}
-                                                                size="small"
-                                                                color="secondary"
-                                                                classes={{ root: styles.btnToggles }}
-                                                            >
-                                                                <ToggleButton color="secondary" value="status">Status</ToggleButton>
-                                                                <ToggleButton color="secondary" value="level">Level</ToggleButton>
-                                                                <ToggleButton color="secondary" value="type">Type</ToggleButton>
-                                                                <ToggleButton color="secondary" value="district">District</ToggleButton>
-                                                            </ToggleButtonGroup>
-                                                        </Box>
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                                                        {data4ServiceColumn &&
-                                                            <PieCharts values={data4CustomerPie} labels={pieLabels} option={viewCustomerBy} />
-                                                        }
-                                                    </Grid>
+                                        {/**Services & Customer */}
+                                        <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowt}>
+                                            <Grid item container spacing={3} xs={12} sm={12} md={12} lg={12} className={classes.row}>
+                                                {/* Services (bar) */}
+                                                <Grid item xs={12} sm={7} md={7} lg={7}>
+                                                    <Card className={classes.panelServices} variant="elevation" elevation={4}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
+                                                                    <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
+                                                                    {/* <ThemeProvider theme={theme}> */}
+                                                                    <ToggleButtonGroup
+                                                                        value={viewServiceBy}
+                                                                        exclusive
+                                                                        onChange={handleChangeViewServiceBy}
+                                                                        size="small"
+                                                                        color="primary"
+                                                                        classes={{ root: styles.btnToggles }}
+                                                                    >
+                                                                        <ToggleButton value={toggleButtonOptions.serviceBarChart.ds}>Sales</ToggleButton>
+                                                                        <ToggleButton value={toggleButtonOptions.serviceBarChart.sl}>Quantity</ToggleButton>
+                                                                    </ToggleButtonGroup>
+                                                                    {/* </ThemeProvider> */}
+                                                                </Box>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                                {data4ServiceColumn && years &&
+                                                                    <StackColumnCharts values={data4ServiceColumn} years={years} option={viewServiceBy} />
+                                                                }
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Card>
                                                 </Grid>
-                                            </Card>
+
+                                                {/** Customers (pie) */}
+                                                <Grid item xs={12} sm={5} md={5} lg={5}>
+                                                    <Card className={classes.panelCustomers} variant="elevation" elevation={4}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="flex-end" className={classes.toggleOptions}>
+                                                                    <Typography variant="subtitle2" className={classes.txtViewBy}>View by </Typography>
+                                                                    <ToggleButtonGroup
+                                                                        value={viewCustomerBy}
+                                                                        exclusive
+                                                                        onChange={handleChangeViewCustomerBy}
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        classes={{ root: styles.btnToggles }}
+                                                                    >
+                                                                        <ToggleButton color="secondary" value="status">Status</ToggleButton>
+                                                                        <ToggleButton color="secondary" value="level">Level</ToggleButton>
+                                                                        <ToggleButton color="secondary" value="type">Type</ToggleButton>
+                                                                        <ToggleButton color="secondary" value="district">District</ToggleButton>
+                                                                    </ToggleButtonGroup>
+                                                                </Box>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                                {data4ServiceColumn &&
+                                                                    <PieCharts values={data4CustomerPie} labels={pieLabels} option={viewCustomerBy} />
+                                                                }
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Card>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </Grid>
+                                    </>
+                                )}
 
                                 {/**HCM Map (Customer) & Salesmen Ranking */}
                                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.rowy}>

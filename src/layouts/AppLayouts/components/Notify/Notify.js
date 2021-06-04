@@ -42,8 +42,14 @@ function Notify(props) {
             case 'service':
                 onUpdate(e, noti)
                 setNotiState({
-                    pathname: `${url}/tasks/${noti?.uid}`,
-                    state: { taskId: noti?.uid },
+                    pathname: `${url}/services/${noti?.uid}`,
+                    state: { serviceId: noti?.uid },
+                })
+                break
+            case 'task':
+                onUpdate(e, noti)
+                setNotiState({
+                    pathname: `${url}/tasks`,
                 })
                 break
             default:

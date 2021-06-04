@@ -348,6 +348,8 @@ function CreatePreviewDialogForm(props) {
                                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                                     <KeyboardDatePicker
                                                         format="dd/MM/yyyy"
+                                                        minDate={new Date(new Date().getTime() + (24 * 60 * 60 * 1000))}
+                                                        disablePast
                                                         allowKeyboardControl
                                                         disableToolbar
                                                         variant="inline"

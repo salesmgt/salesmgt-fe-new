@@ -12,7 +12,7 @@ const StackColumnCharts = (props) => {
 
     const getTitle = () => {
         if (option === 'Sales')
-            return 'Yearly Total Sales of Services (unit: Billion VND)'
+            return 'Yearly Total Sales of Services (unit: billion VND)'
         else
             return 'Yearly Quantity of Services (unit: service)'
     }

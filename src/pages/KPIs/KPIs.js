@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
 import { columns } from './KPIsConfig'
 import { useKPI } from './hooks/KPIContext'
-import { getKPIGroups } from './KPIsServices'
+import { getKPIGroups, getMyKPIGroups } from './KPIsServices'
 import { Loading } from '../../components'
 import { useAuth } from '../../hooks/AuthContext'
 import { roleNames } from '../../constants/Generals'
@@ -18,43 +18,45 @@ function KPIs() {
     const [data, setData] = useState(null)
 
     let isMounted = true
-    const refreshPage = (
-        column = 'id',
-        direction = 'desc',
-        searchKey,
-        listFilters,
-        picUsername
-    ) => {
-        getKPIGroups(
-            column,
-            direction,
-            searchKey,
-            listFilters,
-            picUsername
-        )
-            .then((res) => {
-                if (isMounted) {
-                    setData(res.data)
-                    // console.log('KPIs nè: ', res.data)
-                }
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error)
-                    history.push({
-                        pathname: '/errors',
-                        state: { error: error.response.status },
-                    })
-                }
-            })
+    const refreshPage = (column = 'id', direction = 'desc', searchKey, listFilters) => {
+        getKPIGroups(column, direction, searchKey, listFilters).then((res) => {
+            if (isMounted) {
+                setData(res.data)
+                // console.log('KPIs nè: ', res.data)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
+    }
+    const getSalesmanKPIGroup = (column = 'id', direction = 'desc', searchKey, listFilters, username) => {
+        getMyKPIGroups(column, direction, searchKey, listFilters, username).then(data => {
+            if (isMounted) {
+                setData(data)
+                console.log(`KPIs của ${username} nè: `, data)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
+                })
+            }
+        })
     }
 
     useEffect(() => {
-        // if (user.roles[0] === roleNames.salesman) {
-        //     // refreshPage(column, direction, searchKey, listFilters, user.username)   // ko phải thế này. coi swagger
-        // } else {
-        refreshPage(column, direction, searchKey, listFilters)
-        // }
+        if (user.roles[0] === roleNames.salesman) {
+            getSalesmanKPIGroup(column, direction, searchKey, listFilters, user.username)
+        } else {
+            refreshPage(column, direction, searchKey, listFilters)
+        }
         return () => {
             isMounted = false
             // setData(null)

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Chart from "react-apexcharts"
+import { parseDateToString } from '../../../utils/DateTimes';
 
 const PieCharts = (props) => {
     const { values, labels, option } = props
@@ -8,13 +9,20 @@ const PieCharts = (props) => {
     const getTitle = (option) => {
         switch (option) {
             case 'status':
-                return 'Customer Segment divided by School status (unit: school)'
+                let title = `Number of Schools by Status (unit: school)
+                (until ${parseDateToString(new Date(), 'DD/MM/YYYY')})`
+                // return (<span>
+                //     Number of Schools by School status (unit: school) <br />
+                //     (until {parseDateToString(new Date(), 'DD/MM/YYYY')})
+                // </span>
+                // )
+                return title
             case 'level':
-                return 'Customer Segment divided by School level (unit: school)'
+                return `Customer Segment Divided by Level (unit: school) (until ${parseDateToString(new Date(), 'DD/MM/YYYY')})`
             case 'type':
-                return 'Customer Segment divided by School type (unit: school)'
+                return `Customer Segment Divided by Type (unit: school) (until ${parseDateToString(new Date(), 'DD/MM/YYYY')})`
             case 'district':
-                return 'Customer Segment divided by District (unit: school)'
+                return `Customer Segment Divided by District (unit: school) (until ${parseDateToString(new Date(), 'DD/MM/YYYY')})`
             default:
                 break;
         }
@@ -33,7 +41,7 @@ const PieCharts = (props) => {
                     left: 3,
                     blur: 3,
                     opacity: 0.2
-                }
+                },
             },
             stroke: {
                 width: 0,
@@ -61,6 +69,7 @@ const PieCharts = (props) => {
             },
             legend: {
                 position: 'right',
+                offsetX: -20,
                 offsetY: 40,
                 fontSize: '14px'
             },
@@ -81,7 +90,8 @@ const PieCharts = (props) => {
                 palette: 'palette2'
             },
             title: {
-                text: getTitle(option)
+                text: getTitle(option),
+                whiteSpace: 'wrap'
             },
             responsive: [{
                 breakpoint: 480,
@@ -100,7 +110,7 @@ const PieCharts = (props) => {
 
     return (
         <div>
-            <Chart options={state.options} series={props?.values} type="donut" height={350} />
+            <Chart options={state.options} series={state.series} type="donut" height={350} />
         </div>
     );
 }

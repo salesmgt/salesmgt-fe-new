@@ -25,7 +25,7 @@ function Service() {
             .then((data) => {
                 if (isMounted) {
                     setService(data)
-                    console.log('serviceInfo: ', data);
+                    // console.log('serviceInfo: ', data);
                 }
             })
             .catch((error) => {

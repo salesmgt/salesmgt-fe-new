@@ -155,38 +155,38 @@ function Timelines(props) {
                         </Grid>
                         {/* Detail */}
                         <Grid item xs={12} sm={12} md={10} lg={9} className={classes.row}>
-                            {timeline.length > 0 ? (
+                            {(timeline.length > 0) || (task?.username) ? (
                                 <Timeline>
-                                    {task?.username && (
-                                        <TimelineItem>
-                                            <TimelineOppositeContent>
-                                                <div className={classes.tlnOpsContent}>
-                                                    <Typography variant="body1">
-                                                        <strong>{parseDateToString(task?.assignDate, 'DD-MM-yyyy')}</strong>
-                                                    </Typography>
-                                                    <Typography variant="subtitle2" color="textSecondary">
-                                                        {labels.schoolYear} <em>{task?.schoolYear}</em>
-                                                    </Typography>
-                                                </div>
-                                            </TimelineOppositeContent>
-                                            <TimelineSeparator>
-                                                <TimelineDot color="secondary">
-                                                    <IoPersonAddSharp fontSize="large" />
-                                                </TimelineDot>
-                                                <TimelineConnector className={classes.secondaryTail} />
-                                            </TimelineSeparator>
-                                            <TimelineContent>
-                                                <div className={classes.tlnContent}>
-                                                    <div className={classes.tlnContentChild}>
-                                                        <div className={classes.picZone}>
-                                                            <ListItemAvatar className={classes.picAvatar}>
-                                                                <Avatar src={task?.avatar} />
-                                                            </ListItemAvatar>
-                                                            <ListItemText primary={task?.fullName} className={classes.picName} />
-                                                        </div>
-                                                        {task?.purpose && setPurposeChipColor(task?.purpose)}
+                                    {/* {task?.username && ( */}
+                                    <TimelineItem>
+                                        <TimelineOppositeContent>
+                                            <div className={classes.tlnOpsContent}>
+                                                <Typography variant="body1">
+                                                    <strong>{parseDateToString(task?.assignDate, 'DD-MM-yyyy')}</strong>
+                                                </Typography>
+                                                <Typography variant="subtitle2" color="textSecondary">
+                                                    {labels.schoolYear} <em>{task?.schoolYear}</em>
+                                                </Typography>
+                                            </div>
+                                        </TimelineOppositeContent>
+                                        <TimelineSeparator>
+                                            <TimelineDot color="secondary">
+                                                <IoPersonAddSharp fontSize="large" />
+                                            </TimelineDot>
+                                            <TimelineConnector className={classes.secondaryTail} />
+                                        </TimelineSeparator>
+                                        <TimelineContent>
+                                            <div className={classes.tlnContent}>
+                                                <div className={classes.tlnContentChild}>
+                                                    <div className={classes.picZone}>
+                                                        <ListItemAvatar className={classes.picAvatar}>
+                                                            <Avatar src={task?.avatar} />
+                                                        </ListItemAvatar>
+                                                        <ListItemText primary={task?.fullName} className={classes.picName} />
                                                     </div>
-                                                    {/* <div className={classes.tlnContentChild}>
+                                                    {task?.purpose && setPurposeChipColor(task?.purpose)}
+                                                </div>
+                                                {/* <div className={classes.tlnContentChild}>
                                                     <Typography variant="subtitle2" color="textSecondary">
                                                         <b>{labels.startDate}</b> {task?.startDate}
                                                     </Typography>
@@ -194,16 +194,16 @@ function Timelines(props) {
                                                         <b>{labels.endDate}</b> {task?.endDate}
                                                     </Typography>
                                                 </div> */}
-                                                    {/* <div className={classes.tlnContentChild}>
+                                                {/* <div className={classes.tlnContentChild}>
                                                         <Typography variant="subtitle2" color="textSecondary">
                                                             <b>{labels.status} </b>
                                                             {setTaskStatusChipColor(task?.status)}
                                                         </Typography>
                                                     </div> */}
-                                                </div>
-                                            </TimelineContent>
-                                        </TimelineItem>
-                                    )}
+                                            </div>
+                                        </TimelineContent>
+                                    </TimelineItem>
+                                    {/* )} */}
 
                                     {timeline.map((item, index) =>
                                         <div key={index}>

@@ -43,6 +43,7 @@ import { Alert, AlertTitle } from '@material-ui/lab'
 import SuggestionQuickView from '../SuggestionQuickView/SuggestionQuickView'
 import { Loading } from '../../../../components'
 import { parseDateToString } from '../../../../utils/DateTimes';
+import { app as FirebaseApp } from '../../../../services/firebase'
 import classes from './Assign.module.scss'
 
 const useStyles = makeStyles((theme) => ({
@@ -160,7 +161,23 @@ function AssignForm(props) {
         return <Loading />
     }
 
-    // console.log('outside - rowsState: ', rowsState);
+    const createNotify = (picUsername) => {
+        new Promise((resolve, reject) => {
+            const notiRef = FirebaseApp.database()
+                .ref('notify')
+                .child(picUsername)
+                .push({
+                    // avatar:
+                    //     'https://firebasestorage.googleapis.com/v0/b/major-sales-management.appspot.com/o/images%2Fmajor-logo.png?alt=media&token=64f5c1ee-2428-4b99-b803-51a45422cdc1',
+                    actor: user?.username,
+                    type: 'task',
+                    content: 'You have just been assigned in new tasks.',
+                    timestamp: parseDateToString(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+                    uid: 0,
+                    isSeen: false,
+                })
+        })
+    }
 
     const handleSubmit = () => {
         // console.log('handleSubmit() ----- rowsState: ', rowsState);
@@ -184,6 +201,7 @@ function AssignForm(props) {
             setRows([])
             refreshAPI(page, limit, column, direction, searchKey, listFilters)
 
+            createNotify(PIC?.username)  // firebase notification
         }).catch((error) => {
             if (error.response) {
                 console.log(error)

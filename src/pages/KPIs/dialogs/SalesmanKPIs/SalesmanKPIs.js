@@ -25,7 +25,7 @@ import { useHistory } from 'react-router';
 import { Loading } from '../../../../components';
 import { parseDateToString } from '../../../../utils/DateTimes';
 import { kpiDetailTypes, roleNames } from '../../../../constants/Generals';
-import RadarCharts from '../../../../components/Charts/RadarCharts/RadarCharts';
+import { RadarCharts } from '../../../../components/Charts';
 import { useSnackbar } from 'notistack'
 import { useAuth } from '../../../../hooks/AuthContext';
 import classes from './SalesmanKPIs.module.scss'
@@ -91,7 +91,7 @@ function SalesmanKPIs(props) {
     let autoKPIs = []
     let manualKPIs = []
     const [dataForChart, setDataForChart] = useState({
-        salesmanName: '',
+        title: '',
         criteria: [],
         actualValues: [],
         targetValues: [],
@@ -127,7 +127,6 @@ function SalesmanKPIs(props) {
         // const averageValue = calculateAverageValues()
 
         kpiDetails?.kpis.forEach(kpi => {
-
             criteria.push(kpi?.cirteriaContent)
             actualValues.push(parseFloat((kpi?.actualValue / kpi?.targetValue) * 100))
             targetValues.push(100)  // 100%
@@ -142,7 +141,7 @@ function SalesmanKPIs(props) {
 
         setDataForChart({
             ...dataForChart,
-            salesmanName: kpiDetails?.fullName,
+            title: `KPI of ${kpiDetails?.fullName} (divided by Criteria)`,
             criteria: criteria,
             actualValues: actualValues,
             targetValues: targetValues,
@@ -182,7 +181,7 @@ function SalesmanKPIs(props) {
     const getSalesmanRank = (kpiPoints) => {
         if (kpiPoints > 100)
             return 'S'
-        else if (kpiPoints > 90)
+        else if (kpiPoints > 80)
             return 'A'
         else if (kpiPoints > 50)
             return 'B'
@@ -192,7 +191,6 @@ function SalesmanKPIs(props) {
     }
 
     const handleUpdateManualKPIActualValue = () => {
-        // nhờ a Gia đổi request thành 1 array[kpiDetails]
         let models = []
         let model = { id: 0, value: 0 }
         kpiDetails?.kpis.map(kpiDetail => {
@@ -205,22 +203,23 @@ function SalesmanKPIs(props) {
                 models.push(model)
                 console.log('kpiGroupId = ', kpiGroupId);
                 console.log('edited list = ', models);
-                updateKPIManual(kpiId, models).then(res => {
-                    refreshPage(kpiGroupId)
+            }
+        })
+        updateKPIManual(kpiId, models).then(res => {
+            refreshPage(kpiGroupId)
 
-                    enqueueSnackbar('Updated Salesman evaluation successfully', { variant: 'success' })
-                }).catch((error) => {
-                    if (error.response) {
-                        console.log(error)
-                        history.push({
-                            pathname: '/errors',
-                            state: { error: error.response.status },
-                        })
-                    }
-
-                    enqueueSnackbar('Updated Salesman evaluation failed', { variant: 'error' })
+            enqueueSnackbar('Updated Salesman evaluation successfully', { variant: 'success' })
+            onClose()
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error)
+                history.push({
+                    pathname: '/errors',
+                    state: { error: error.response.status },
                 })
             }
+
+            enqueueSnackbar('Updated Salesman evaluation failed', { variant: 'error' })
         })
 
         // onClose()
@@ -287,7 +286,7 @@ function SalesmanKPIs(props) {
                         {/**KPI Cards */}
                         <Grid item container spacing={2} xs={12} sm={12} md={7} lg={7}>
                             {/**Manual KPIs */}
-                            <Grid item xs={5} sm={5} md={5} lg={5}>
+                            <Grid item xs={5} sm={5} md={5} lg={5} className={classes.KPIsZone}>
                                 {/* <Typography variant="button" color="textSecondary">Manual KPI</Typography> */}
                                 {manualKPIs.map((kpiPoint, index) => (
                                     <Card key={index} variant="outlined" className={classes.cardKPIs}>
@@ -345,7 +344,7 @@ function SalesmanKPIs(props) {
                                 ))}
                             </Grid>
                             {/**Auto KPIs */}
-                            <Grid item xs={6} sm={6} md={6} lg={6}>
+                            <Grid item xs={6} sm={6} md={6} lg={6} className={classes.KPIsZone}>
                                 {/* <Typography variant="button" color="textSecondary">Performance KPI</Typography> */}
                                 {autoKPIs.map((kpi, index) => (
                                     <Card key={index} variant="outlined" className={classes.cardKPIs}>

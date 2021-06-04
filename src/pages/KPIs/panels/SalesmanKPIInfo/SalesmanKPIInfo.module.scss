@@ -1,0 +1,37 @@
+@import '../../../../styles/Variables.module.scss';
+
+.criName {
+    font-size: 0.9rem;
+    font-weight: 600 !important;
+}
+.criWeight {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: $main-success;
+    margin-top: 0.5rem !important;
+}
+
+.icon {
+    padding: 0 !important;
+    margin: 0 !important;
+    .iconInfo {
+        width: 1rem !important;
+        height: 1rem !important;
+        color: $text-icon;
+        padding: 0 !important;
+        margin: 0 0 0 0.5rem !important;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+.gaugeChartCard {
+    width: 15rem;
+    height: 14.6rem;
+    padding-top: 0.5rem;
+    // border: 1px solid black;
+
+    .divider {
+        margin-bottom: 0.3rem;
+    }
+}
