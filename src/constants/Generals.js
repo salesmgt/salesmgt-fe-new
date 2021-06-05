@@ -38,6 +38,7 @@ export const taskStatusNames = {
     ongoing: 'Ongoing',
     success: 'Successful',
     failed: 'Failed',
+    notStart: 'Not Started',    // khi task chưa có PIC
 }
 
 export const serviceNames = {
@@ -51,7 +52,6 @@ export const serviceStatusNames = {
     pending: 'pending',
     approved: 'approved',
     rejected: 'rejected',
-    // notStart: '',    // chỉ cần null là đc rồi chứ nhỉ? khỏi cần 1 status riêng cho nó   ==> Bỏ
 }
 
 export const kpiStatusNames = {

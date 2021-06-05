@@ -241,7 +241,56 @@ function SuggestionQuickView(props) {
                             </Grid>
                             <Grid item xs={12} sm={12} md={12} lg={12}>
                                 <Typography variant="body2" className={classes.txtCriInfoHeader}>
-                                    1/ Number of assigned tasks
+                                    1/ Experiences
+                                </Typography>
+                                <div className={classes.txtCriInfo}>
+                                    <Grid container>
+                                        <Grid item container xs={12}>
+                                            <Grid item xs={1}></Grid>
+                                            <Grid item xs={8}>First time:</Grid>
+                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+3</span></Grid>
+                                        </Grid>
+                                        <Grid item container xs={12}>
+                                            <Grid item xs={1}></Grid>
+                                            <Grid item xs={8}>From the 2nd time:</Grid>
+                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+1</span></Grid>
+                                        </Grid>
+                                        {/* <Grid item container xs={12}>
+                                            <Typography variant="body2"></Typography>
+                                            <span style={{ color: '#4caf50', fontWeight: 500 }}>+1.5</span>
+                                        </Grid> */}
+                                    </Grid>
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Typography variant="body2" className={classes.txtCriInfoHeader}>
+                                    2/ Distance
+                                </Typography>
+                                <div className={classes.txtCriInfo}>
+                                    <Grid container>
+                                        <Grid item container xs={12}>
+                                            <Grid item xs={1}></Grid>
+                                            <Grid item xs={8}>In same ward:</Grid>
+                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+2</span></Grid>
+                                        </Grid>
+                                        <Grid item container xs={12}>
+                                            <Grid item xs={1}></Grid>
+                                            <Grid item xs={8}>In same district:</Grid>
+                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+1.5</span></Grid>
+                                        </Grid>
+                                        <Grid item container xs={12}>
+                                            <Grid item xs={1}></Grid>
+                                            <Grid item xs={8}>Nearly:</Grid>
+                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+1</span></Grid>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Typography variant="body2" className={classes.txtCriInfoHeader}>
+                                    3/ Number of assigned tasks
                                 </Typography>
                                 <div className={classes.txtCriInfo}>
                                     <Grid container>
@@ -263,53 +312,8 @@ function SuggestionQuickView(props) {
                                     </Grid>
                                 </div>
                             </Grid>
-                            <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <Typography variant="body2" className={classes.txtCriInfoHeader}>
-                                    2/ Distance
-                                </Typography>
-                                <div className={classes.txtCriInfo}>
-                                    <Grid container>
-                                        <Grid item container xs={12}>
-                                            <Grid item xs={1}></Grid>
-                                            <Grid item xs={8}>In same ward:</Grid>
-                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+3</span></Grid>
-                                        </Grid>
-                                        <Grid item container xs={12}>
-                                            <Grid item xs={1}></Grid>
-                                            <Grid item xs={8}>In same district:</Grid>
-                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+2</span></Grid>
-                                        </Grid>
-                                        <Grid item container xs={12}>
-                                            <Grid item xs={1}></Grid>
-                                            <Grid item xs={8}>Nearly:</Grid>
-                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+1.5</span></Grid>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <Typography variant="body2" className={classes.txtCriInfoHeader}>
-                                    3/ Experiences
-                                </Typography>
-                                <div className={classes.txtCriInfo}>
-                                    <Grid container>
-                                        <Grid item container xs={12}>
-                                            <Grid item xs={1}></Grid>
-                                            <Grid item xs={8}>First time:</Grid>
-                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+4</span></Grid>
-                                        </Grid>
-                                        <Grid item container xs={12}>
-                                            <Grid item xs={1}></Grid>
-                                            <Grid item xs={8}>From the 2nd time:</Grid>
-                                            <Grid item xs={3}><span style={{ color: '#4caf50', fontWeight: 500 }}>+2</span></Grid>
-                                        </Grid>
-                                        {/* <Grid item container xs={12}>
-                                            <Typography variant="body2"></Typography>
-                                            <span style={{ color: '#4caf50', fontWeight: 500 }}>+1.5</span>
-                                        </Grid> */}
-                                    </Grid>
-                                </div>
-                            </Grid>
+
+
                         </Grid>
                     </CardContent>
                 </Collapse>

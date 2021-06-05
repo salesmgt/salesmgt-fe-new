@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Filters, Tables } from './components'
-import { columns } from './KPIsConfig'
+import { getColumns } from './KPIsConfig'
 import { useKPI } from './hooks/KPIContext'
 import { getKPIGroups, getMyKPIGroups } from './KPIsServices'
 import { Loading } from '../../components'
@@ -12,6 +12,7 @@ import classes from './KPIs.module.scss'
 function KPIs() {
     const history = useHistory()
     const { user } = useAuth()
+    const columns = getColumns(user.roles[0])
     const { params } = useKPI()
     const { listFilters, column, direction, searchKey } = params
 
@@ -38,7 +39,7 @@ function KPIs() {
         getMyKPIGroups(column, direction, searchKey, listFilters, username).then(data => {
             if (isMounted) {
                 setData(data)
-                console.log(`KPIs của ${username} nè: `, data)
+                // console.log(`KPIs của ${username} nè: `, data)
             }
         }).catch((error) => {
             if (error.response) {

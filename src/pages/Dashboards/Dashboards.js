@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+
 function Dashboards() {
     const styles = useStyles()
     const { toggleButtonOptions } = Consts
@@ -46,7 +47,7 @@ function Dashboards() {
     const [data4Blocks, setData4Blocks] = useState()
     const [data4ServiceColumn, setData4ServiceColumn] = useState()
     const [data4CustomerPie, setData4CustomerPie] = useState()
-    const [data4CustomerMap, setData4CustomerMap] = useState()
+    const [data4CustomerMap, setData4CustomerMap] = useState([])
     const [data4Ranking, setData4Ranking] = useState([])
 
     let isMounted = true
@@ -71,6 +72,13 @@ function Dashboards() {
             isMounted = false
         };
     }, [])
+
+    // useEffect(() => {
+    //     getData4CustomerPie('pie', 'school-status')
+    //     return () => {
+    //         isMounted = false
+    //     };
+    // }, [])
 
 
     const [years, setYears] = useState([])
@@ -150,6 +158,39 @@ function Dashboards() {
             isMounted = false
         };
     }, [])
+
+
+    // const [districts, setDistricts] = useState([]);
+    // const promise = DashboardsServices.fetchDistrictsData();
+    // useEffect(() => {
+    //     promise.then(data => {
+    //         setData4CustomerMap(data.api)
+
+    //         data.file.json().then(json => {
+    //             setDistricts(json.features)
+    //         })
+    //     });
+    // }, []);
+
+
+    // const getData = () => {
+    //     fetch('districts.json', {
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json'
+    //         }
+    //     }).then(function (response) {
+    //         console.log(response)
+    //         return response.json();
+    //     }).then(function (myJson) {
+    //         console.log(myJson);
+    //     });
+    // }
+    // useEffect(() => {
+    //     getData()
+    // }, [])
+
+    //============================================================================
 
     const [viewServiceBy, setViewServiceBy] = useState("Sales");
     const handleChangeViewServiceBy = (event, option) => {
@@ -496,7 +537,13 @@ function Dashboards() {
                                         {/** Customers Map Chart */}
                                         <Grid item xs={12} sm={8} md={8} lg={8}>
                                             <Card className={classes.panelMap} variant="elevation" elevation={4}>
-                                                Customer in each district (HCM Map)
+                                                <Typography className={classes.title}>
+                                                    Number of Customers by Districts in HCMC <br />
+                                                    (until {parseDateToString(new Date(), 'DD/MM/YYYY')})
+                                                </Typography>
+                                                <div className={classes.mapPanel}>
+                                                    <MapCharts />
+                                                </div>
                                             </Card>
                                         </Grid>
 

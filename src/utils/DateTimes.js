@@ -4,10 +4,10 @@ export const parseDateToString = (date, format) => {
     return moment(date).format(format);
 }
 
-export const isInDateRange = (fromDate, toDate, startDate, endDate) => {
-
-    return false
-}
+// export const compareDate = (date1, date2) => {
+//     if (date1 )
+//     return false
+// }
 
 export const calculateDatesGap = (day1, day2, returnAs) => {
     /** Note:
@@ -40,3 +40,35 @@ export const calculateSchoolYear = () => {
         return null
     }
 }
+
+export const calculateSomeDateSchoolYear = (someDate) => {
+    const thisYear = someDate.getFullYear()
+    const thisMonth = someDate.getMonth()
+
+    // Từ tháng 5 năm nay tới tháng 5 năm sau: đi sales cho các tasks theo năm học sau
+    // nên report cũng tính là năm học sau.
+    if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
+        return `${thisYear}-${thisYear + 1}`
+    } else if (4 <= thisMonth < 11) {
+        return `${thisYear - 1}-${thisYear}`
+    } else {
+        return null
+    }
+}
+
+// Sai sai
+// export const isInThisSchoolYear = (today) => {
+//     const thisSchoolYear = calculateSchoolYear()
+//     const someDateSchoolYear = calculateSomeDateSchoolYear(new Date('2021-16-07 00:00:00'))
+
+//     console.log('thisSchoolYear = ', thisSchoolYear);
+//     console.log('someDateSchoolYear = ', someDateSchoolYear);
+
+//     // if (0 <= thisMonth < 4) {   // Jan = 0, May = 4
+//     //     console.log('yessss');
+//     //     return true
+//     // } else if (4 <= thisMonth < 11) {
+//     //     console.log('noooo');
+//     //     return false
+//     // } else return null
+// }

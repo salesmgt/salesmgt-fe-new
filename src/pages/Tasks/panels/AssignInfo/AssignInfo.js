@@ -178,8 +178,8 @@ function AssignInfo(props) {
         switch (purpose) {
             case purposeNames.purp1:
                 return <Chip label={purpose} className={classes.chipSalesMoi} />
-            case purposeNames.purp2:
-                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            // case purposeNames.purp2:
+            //     return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
             case purposeNames.purp4:
@@ -228,7 +228,7 @@ function AssignInfo(props) {
                         />
                     )
                 }
-            case purposeNames.purp2:  // Theo dõi
+            // case purposeNames.purp2:  // Theo dõi
             case purposeNames.purp3:  // Chăm sóc
                 if (openConfirmCompleteDialog2) {
                     return (
@@ -1008,13 +1008,13 @@ function AssignInfo(props) {
                                                         {renderButtonName(task?.purpose, task?.services)}
                                                     </Button>
                                                     {/* {renderConfirmTaskCompleteDialog()} */}
-                                                    {!task?.services || task?.services?.length === 0 && (
-                                                        <Button order={2} variant="contained" className={classes.btnFail}
-                                                            onClick={() => setOpenConfirmFailDialog(true)}
-                                                        >
-                                                            Mark as failed
+                                                    {/* {!task?.services || task?.services?.length === 0 && ( */}
+                                                    <Button order={2} variant="contained" className={classes.btnFail}
+                                                        onClick={() => setOpenConfirmFailDialog(true)}
+                                                    >
+                                                        Mark as failed
                                                         </Button>
-                                                    )}
+                                                    {/* )} */}
                                                     {handleMarkComplete(task?.purpose)}
                                                     {handleMarkFail()}
                                                 </Box>

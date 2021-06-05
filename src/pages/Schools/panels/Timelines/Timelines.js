@@ -77,8 +77,8 @@ function Timelines() {
         switch (purpose) {
             case purposeNames.purp1:
                 return <Chip label={purpose} className={classes.chipSalesMoi} />
-            case purposeNames.purp2:
-                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            // case purposeNames.purp2:
+            //     return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
             case purposeNames.purp4:
@@ -89,6 +89,8 @@ function Timelines() {
                 return <Chip label={purpose} /> // #5c21f3
         }
     }
+
+    // console.log('timeline item: ', timeline)
 
     // Sao hàm này bị infinity loop nhỉ?
     // const updateSchoolYear = (itemSchoolYear) => {
@@ -166,9 +168,11 @@ function Timelines() {
                                                                 <div className={classes.tlnContentChild}>
                                                                     <Typography variant="subtitle2" color="textSecondary">
                                                                         <b>{labels.result} </b>
-                                                                        {item?.result
-                                                                            ? <span className={classes.rsSuccess}>Successful</span>
-                                                                            : <span className={classes.rsFailed}>Failed</span>
+                                                                        {item?.result !== 'TBD' && item?.result === 'successful' &&
+                                                                            <span className={classes.rsSuccess}>Successful</span>
+                                                                        }
+                                                                        {item?.result !== 'TBD' && item?.result === 'failed' &&
+                                                                            <span className={classes.rsFailed}>Failed</span>
                                                                         }
                                                                     </Typography>
                                                                 </div>

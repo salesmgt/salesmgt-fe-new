@@ -48,7 +48,7 @@ const DialogTitleWithIconClose = withStyles(stylesTitle)((props) => {
 });
 
 function ConfirmApprove(props) {
-    const { open, onClose, KPI, refreshPage } = props
+    const { open, onClose, onCloseCreateDialog, KPI, refreshPage } = props
     const { headers, operations } = Consts
     let kpiData = null
     console.log('open rồi nè');
@@ -125,11 +125,12 @@ function ConfirmApprove(props) {
                     pathname: '/errors',
                     state: { error: error.response.status },
                 })
+                enqueueSnackbar("Created KPI group failed", { variant: 'error' })
             }
-            enqueueSnackbar("Created KPI group failed", { variant: 'error' })
         })
 
         onClose();
+        onCloseCreateDialog()
     }
 
     return (

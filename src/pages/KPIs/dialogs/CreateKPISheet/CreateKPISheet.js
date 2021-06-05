@@ -137,6 +137,7 @@ function CreateKPISheet(props) {
 
     const handleCloseDialog = () => {
         setKPI(defaultKPI)
+        setActiveStep(0)
         onClose()
     }
 
@@ -234,6 +235,7 @@ function CreateKPISheet(props) {
                                             setOpenConfirmDialog(false) // close confirmDialog
                                             // onClose()   // close createDialog
                                         }}
+                                        onCloseCreateDialog={handleCloseDialog}
                                         KPI={KPI}
                                         refreshPage={refreshAPI}
                                     />

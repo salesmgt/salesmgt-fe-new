@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Choropleth from "react-leaflet-choropleth";
-import { Map } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import Legends from "./Legends";
+import Maps from './Maps';
+import { getDashboards } from '../../../pages/Dashboards/DashboardsServices';
 
 const style = {
     fillColor: "#F28F3B",
@@ -12,48 +13,103 @@ const style = {
     fillOpacity: 0.5,
 };
 
-const ChoroplethMap = ({ geojson }) => {
+const MapCharts = () => {
+    const [districts, setDistricts] = useState(null);
+    const [data4Blocks, setData4Blocks] = useState(null);
 
-    const distNames = geojson["features"].map((dist) => dist.properties.localname)
-    console.log(distNames)
+    async function fetchProfileData() {
+        return Promise.all([
+            getDashboards('map'),
 
-    return (
-        <Map style={{ height: "100vh" }} zoom={10} center={[10.817396238910442, 106.69106344134427]}>
-            <Choropleth
-                data={geojson}
-                valueProperty={(feature) => feature.properties.localname}
-                scale={['#b3cde0', '#011f4b']}
-                steps={7}
-                mode='e'
-                style={style}
-                onEachFeature={(feature, layer) => layer.bindPopup(feature.properties.localname)}
-            />
-        </Map>
-    );
-};
-
-const Covid19 = () => {
-    const [districts, setDistricts] = useState();
-    const getData = () => {
-        fetch("districts.json", {
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-        })
-            .then(function (response) {
-                console.log(response);
-                return response.json();
+            fetch("../districts.json", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
             })
-            .then(function (myJson) {
-                console.log(myJson);
-                setDistricts(myJson);
-            });
-    };
+        ]).then(([api, file]) => {
+            // console.log('file = ', file);
+            return { api, file };
+        })
+    }
+    const promise = fetchProfileData();
 
-    useEffect(getData, []);
+    // useEffect(() => {
+    //     promise.then(data => {
+    //         setData4Blocks(data.api)
 
-    return <div>{districts && <ChoroplethMap geojson={districts} />}</div>;
-};
+    //         data.file.json().then(json => {
+    //             setDistricts(json.features)
+    //         })
 
-export default Covid19;
+    //     });
+
+    useEffect(() => {
+        promise.then(data => {
+            setData4Blocks(data.api)
+
+            data.file.json().then(json => {
+                setDistricts(json.features)
+            })
+
+        });
+    }, []);
+
+    if (!districts) {
+        return null
+    }
+
+    if (!data4Blocks) {
+        return null
+    }
+
+    const item = [{
+        title: '21+',
+        color: '#4527a0',
+        textColor: 'white'
+
+    },
+    {
+        title: '5 - 20',
+        color: '#9575cd',
+        textColor: 'white'
+    },
+    {
+        title: '1 - 4',
+        color: '#d1c4e9',
+        textColor: 'black'
+
+    },
+    {
+        title: '0',
+        color: '#ede7f6',
+        textColor: 'black'
+
+    }]
+    const convert = () => {
+        let list = []
+        if (districts.length > 0 && data4Blocks.length > 0) {
+            districts.forEach(dist => {
+                data4Blocks.forEach(data => {
+                    if (dist.properties.localname === data.name) {
+                        dist.properties.value = data.value
+                        dist.properties.total = data.totalSchool
+                        list.push(dist)
+                    }
+                })
+            })
+        }
+        return list
+    }
+    const test = convert()
+    return (
+        <>
+            <div>{test && <Maps geojson={test} />}
+            </div>
+            <div>{<Legends item={item.reverse()} />}
+            </div>
+        </>
+    )
+}
+
+export default MapCharts;

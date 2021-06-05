@@ -24,10 +24,11 @@ import ConfirmUnassign from '../../../dialogs/ConfirmUnassign/ConfirmUnassign'
 import CreateServices from '../../../dialogs/CreateServices/CreateServices'
 import { useTask } from '../../../hooks/TaskContext'
 import { Consts } from '../../../TasksConfig'
-import { roleNames, statusNames, taskResultNames } from '../../../../../constants/Generals'
+import { purposeNames, roleNames, statusNames, taskResultNames } from '../../../../../constants/Generals'
 // import PropTypes from 'prop-types'
 import Assign from '../../../dialogs/Assign/Assign'
 import classes from './MenuOptions.module.scss'
+import { isInThisSchoolYear } from '../../../../../utils/DateTimes'
 
 function MenuOptions(props) {
     const { data, refreshAPI, setNotify } = props
@@ -51,7 +52,7 @@ function MenuOptions(props) {
         // pathName: `${url}/${data.id}`,
     }
 
-    // console.log('task data: ', data);
+    console.log('task data: ', data);
 
     const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget)
@@ -194,7 +195,7 @@ function MenuOptions(props) {
                 </MenuItem> */}
 
                 {user.roles[0] === roleNames.salesman && data?.schoolStatus !== statusNames.pending
-                    && data?.result !== taskResultNames.successful &&
+                    && data?.purpose !== purposeNames.purp3 && data?.result === 'TBD' &&    //  || (!isInThisSchoolYear(new Date()))
                     (
                         <div>
                             <MenuItem onClick={handleOpenServices}>
