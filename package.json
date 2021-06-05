@@ -42,7 +42,7 @@
         "react-hook-form": "^6.15.4",
         "react-icons": "^4.2.0",
         "react-image-file-resizer": "^0.4.2",
-        "react-leaflet": "^2.7.0",
+        "react-leaflet": "^2.8.0",
         "react-leaflet-choropleth": "^2.0.1",
         "react-material-ui-carousel": "^2.2.6",
         "react-native-progress-bar-classic": "^1.2.1",

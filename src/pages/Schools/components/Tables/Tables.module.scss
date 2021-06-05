@@ -1,75 +1,75 @@
 @import '../../../../styles/Variables.module.scss';
 
 .wrapper {
-  border-radius: $default-radius;
-  background-color: $common-white;
-  overflow-y: auto;
+    border-radius: $default-radius;
+    background-color: $common-white;
+    overflow-y: auto;
 }
 
 .container {
-  height: 73.2vh;
-  overflow-y: auto;
+    height: 73.2vh;
+    overflow-y: auto;
 }
 
 .table {
-  padding: 0;
+    padding: 0;
 
-  .tHead {
-    height: 3rem !important;
-  }
-
-  .tHeadCell {
-    background-color: $light-primary;
-    color: $common-white;
-    font-weight: bold;
-    font-size: large;
-  }
-
-  .tBody {
-    .tBodyRow {
-      height: 50;
+    .tHead {
+        height: 3rem !important;
     }
 
-    .tBodyCell {
-      padding: 0.1rem 1rem
-    }
-    .tCellInactive {
-      @extend .tBodyCell;
-      color: $grey-400;
-      font-style: italic;
-      text-decoration: line-through $grey-400;
+    .tHeadCell {
+        background-color: $light-primary;
+        color: $common-white;
+        font-weight: bold;
+        font-size: large;
     }
 
-    .noRecord {
-      color: gray !important;
-      font-style: italic;
-      font-size: 1.3em
-    }
-    
-    .tCellSchoolName {
-      @extend .tBodyCell;
-      font-size: 0.925rem;
-    }
-    .tCellInactiveSchoolName {
-      @extend .tCellSchoolName;
-      @extend .tCellInactive;
-    }
+    .tBody {
+        .tBodyRow {
+            height: 50;
+        }
 
-    .picName {
-      font-size: 0.875rem !important;
+        .tBodyCell {
+            padding: 0.1rem 1rem;
+        }
+        .tCellInactive {
+            @extend .tBodyCell;
+            color: $grey-400;
+            font-style: italic;
+            text-decoration: line-through $grey-400;
+        }
+
+        .noRecord {
+            color: gray !important;
+            font-style: italic;
+            font-size: 1.3em;
+        }
+
+        .tCellSchoolName {
+            @extend .tBodyCell;
+            font-size: 0.925rem;
+        }
+        .tCellInactiveSchoolName {
+            @extend .tCellSchoolName;
+            @extend .tCellInactive;
+        }
+
+        .picName {
+            font-size: 0.875rem !important;
+        }
     }
-  }
 }
 
 .sortLabel {
-  color: #ffffff; 
+    color: #ffffff;
 }
 .sortLabel.active {
-      color: #ffffff; 
+    color: #ffffff;
 }
 
 .paging {
-  flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 // .chipInactive {
@@ -80,8 +80,8 @@
 // }
 
 .chipLead {
-  background-color: $trust !important;
-  color: $common-white !important;
+    background-color: $trust !important;
+    color: $common-white !important;
 }
 // .chipLeadInactive {
 //   @extend .chipLead;
@@ -89,8 +89,12 @@
 // }
 
 .chipCustomer {
-  background-color: $clarity !important;
-  color: $common-white !important;
+    background-color: $clarity !important;
+    color: $common-white !important;
+}
+.chipPotential {
+    background-color: $memory !important;
+    color: $common-white !important;
 }
 // .chipCustomerInactive {
 //   @extend .chipCustomer;
@@ -98,10 +102,10 @@
 // }
 
 .itemText {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 .iconTimeline {
-  font-size: 1.65rem;
-  // color: $text-icon !important;
+    font-size: 1.65rem;
+    // color: $text-icon !important;
 }

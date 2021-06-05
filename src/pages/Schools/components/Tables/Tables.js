@@ -237,6 +237,8 @@ function Tables(props) {
             case statusNames.pending:   // #5c21f3
                 return <Chip label={status} />
             // return <Chip label={status} disabled={!isActive} className={isActive ? null : classes.chipInactive} />
+            case statusNames.potential:
+                return <Chip label={status} className={classes.chipPotential} />
             default:
                 break
         }

@@ -14,7 +14,7 @@ export const statusNames = {
     lead: 'Chưa hợp tác',
     customer: 'Đang hợp tác',
     pending: 'Ngưng hợp tác',
-    potential: 'Tiềm năng'
+    potential: 'Tiềm năng',
 }
 
 export const schoolLevelNames = {
@@ -23,7 +23,7 @@ export const schoolLevelNames = {
     thpt: 'THPT',
     th_thcs: 'Tiểu học - THCS',
     thcs_thpt: 'THCS - THPT',
-    th_thcs_thpt: 'Tiểu học - THCS - THPT'
+    th_thcs_thpt: 'Tiểu học - THCS - THPT',
 }
 
 // Đây là gtrị nhận lên từ BE
@@ -57,17 +57,17 @@ export const serviceStatusNames = {
 export const kpiStatusNames = {
     applying: 'Being applied',
     expired: 'Expired',
-    disable: 'Disable'
+    disable: 'Disable',
 }
 
 export const kpiDetailTypes = {
     auto: 'auto',
-    manual: 'manual'
+    manual: 'manual',
 }
 
 export const purposeNames = {
     purp1: 'Sales mới',
-    purp2: 'Theo dõi',
+    // purp2: 'Theo dõi',
     purp3: 'Chăm sóc',
     purp4: 'Tái ký hợp đồng',
     purp5: 'Ký mới hợp đồng',
@@ -83,7 +83,7 @@ export const suggestedReasons = {
     fewTask: 'Few tasks',
     quiteManyTask: 'Quite many tasks',
     manyTask: 'Many tasks',
-    fullTask: 'Full tasks'
+    fullTask: 'Full tasks',
 }
 
 //==========================================================================
@@ -98,7 +98,7 @@ export const milkNames = {
     eduLvls: 'eduLvls',
     types: 'types',
     // scales: 'scales',
-    status: 'status',   // schoolStatus
+    status: 'status', // schoolStatus
     roles: 'roles',
     schYears: 'schYears',
     salesPurps: 'salesPurps',
