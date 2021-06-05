@@ -19,10 +19,9 @@ function LinearProgressBars(props) {
 
         // console.log('daysPassed = ', daysPassed);
         // console.log('duration = ', duration);
-
         if (daysPassed * 100 / duration > 100)
             return 100
-        if (duration === 0 || daysPassed * 100 / duration < 0)
+        if (!date1 || !date2 || duration === 0 || daysPassed * 100 / duration < 0)
             return 0
         return daysPassed * 100 / duration
     }

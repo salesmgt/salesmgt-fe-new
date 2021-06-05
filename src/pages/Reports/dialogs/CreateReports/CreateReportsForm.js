@@ -43,6 +43,7 @@ import {
     FUTURE_PLAN,
 } from '../DialogConfig'
 import { useReport } from '../../hooks/ReportContext'
+import { useSnackbar } from 'notistack'
 import classes from './CreateReports.module.scss'
 
 const clientSchema = yup.object().shape({
@@ -90,6 +91,7 @@ function CreateReportsForm(props) {
 
     const { user } = useAuth()
     const history = useHistory()
+    const { enqueueSnackbar } = useSnackbar()
 
     const { params } = useReport()
     const { listFilters, page, limit, column, direction, searchKey } = params
@@ -386,23 +388,28 @@ function CreateReportsForm(props) {
 
                 // Chưa báo đc snackbars chỗ này
                 if (!String(data).includes('already submitted') && !String(data).includes('Created 0 records')) {
-                    setNotify({
-                        isOpen: true,
-                        message: 'Created successfully.',
-                        type: 'success',
-                    })
+                    enqueueSnackbar("Created Report successfully", { variant: 'success' })
+
+                    // setNotify({
+                    //     isOpen: true,
+                    //     message: 'Created successfully.',
+                    //     type: 'success',
+                    // })
                 } else if (String(data).includes('already submitted')) {
-                    setNotify({
-                        isOpen: true,
-                        message: `Created failed. ${data} today.`,
-                        type: 'error',
-                    })
+                    enqueueSnackbar("Created Report failed. ${data} today.", { variant: 'error' })
+
+                    // setNotify({
+                    //     isOpen: true,
+                    //     message: `Created failed. ${data} today.`,
+                    //     type: 'error',
+                    // })
                 } else {
-                    setNotify({
-                        isOpen: true,
-                        message: 'Created failed.',
-                        type: 'error',
-                    })
+                    enqueueSnackbar("Created Report failed", { variant: 'error' })
+                    // setNotify({
+                    //     isOpen: true,
+                    //     message: 'Created failed.',
+                    //     type: 'error',
+                    // })
                 }
                 refreshAPI(page, limit, column, direction, searchKey, listFilters)
 
@@ -416,11 +423,12 @@ function CreateReportsForm(props) {
                         state: { error: error.response.status },
                     })
                 }
-                setNotify({
-                    isOpen: true,
-                    message: 'Created failed.',
-                    type: 'error',
-                })
+                enqueueSnackbar("Created Report failed", { variant: 'error' })
+                // setNotify({
+                //     isOpen: true,
+                //     message: 'Created failed.',
+                //     type: 'error',
+                // })
                 handleCloseDialog()
             })
     }

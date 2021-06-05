@@ -56,7 +56,7 @@ function SortableTableHeaders(props) {
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
                         align={col.key === 'no' ? 'center' : 'left'}
-                        width={col.width}
+                        width={role !== roleNames.salesman ? col.width1 : col.width2}
                     >
                         {col?.sortable ? (
                             <MuiTableSortLabel
@@ -131,7 +131,7 @@ function Tables(props) {
                         direction={direction}
                         column={column}
                         onRequestSort={onSortBy}
-                    // role={user.roles[0]}
+                        role={user.roles[0]}
                     />
 
                     <TableBody className={classes.tBody}>
@@ -152,13 +152,15 @@ function Tables(props) {
                                             textToHighlight={row?.groupName}
                                         />
                                     </TableCell>
-                                    <TableCell className={classes.tBodyCell}>
-                                        <AvatarGroup max={5}>
-                                            {row?.size.map((avatar, index) => (
-                                                <Avatar key={index} src={avatar} />
-                                            ))}
-                                        </AvatarGroup>
-                                    </TableCell>
+                                    {user.roles[0] !== roleNames.salesman &&
+                                        <TableCell className={classes.tBodyCell}>
+                                            <AvatarGroup max={5}>
+                                                {row?.size.map((avatar, index) => (
+                                                    <Avatar key={index} src={avatar} />
+                                                ))}
+                                            </AvatarGroup>
+                                        </TableCell>
+                                    }
                                     <TableCell className={classes.tBodyCellDuration}>
                                         {parseDateToString(row?.startDate, 'DD-MM-YYYY')}
                                     </TableCell>

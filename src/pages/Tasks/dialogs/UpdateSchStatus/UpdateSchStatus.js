@@ -23,6 +23,9 @@ import {
     Tooltip,
     ClickAwayListener,
     Box,
+    FormHelperText,
+    OutlinedInput,
+    FormControl,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import moment from 'moment'
@@ -43,6 +46,7 @@ import { suggestPrice } from '../../../../utils/Suggestions';
 import { schoolLevelNames, serviceNames } from '../../../../constants/Generals'
 import { IoInformationCircleSharp } from 'react-icons/io5'
 import classes from './UpdateSchStatus.module.scss'
+import NumberFormat from 'react-number-format'
 
 const clientSchema = yup.object().shape({
     classNumber: yup.number('Number of classes must be a number')
@@ -327,6 +331,7 @@ function UpdateSchStatus(props) {
         // alert(JSON.stringify(model))
     }
 
+    // Tạm đóng
     // const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => { //, time
     //     let estimateSales = currencyFormatter.format(0)
     //     // const duration = calculateDatesGap(new Date(time[0]), new Date(time[1]), 'M')
@@ -513,8 +518,31 @@ function UpdateSchStatus(props) {
                                         control={control}
                                         render={({ value, onChange }) => (
                                             <Grid container>
-                                                <Grid item xs={12} sm={12} md={10} lg={10}>
-                                                    <TextField
+                                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                                    <FormControl variant="outlined" required>
+                                                        <InputLabel htmlFor="component-disabled">{fields.price.title}</InputLabel>
+                                                        <NumberFormat
+                                                            {...props}
+                                                            id="component-disabled"
+                                                            value={value}
+                                                            customInput={OutlinedInput}
+                                                            // customInput={() => <OutlinedInput {...props} label={fields.price.title} required />}
+                                                            // suffix={'₫'}
+                                                            isNumericString
+                                                            type="text"
+                                                            thousandSeparator={'.'}
+                                                            decimalSeparator={','}
+                                                            onValueChange={({ floatValue: val }) => {
+                                                                onChange(val)
+                                                                suggestPrice(val, setPriceSuggestions)
+                                                            }}
+                                                        />
+                                                        <FormHelperText className={errors?.pricePerSlot ? classes.helper : classes.normal}>
+                                                            {errors?.pricePerSlot ? errors?.pricePerSlot?.message
+                                                                : fields.price.helper}
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    {/* <TextField
                                                         className={classes.txtPrice}
                                                         label={fields.price.title}
                                                         variant="outlined"
@@ -542,7 +570,7 @@ function UpdateSchStatus(props) {
                                                             errors?.pricePerSlot?.message
                                                             : fields.price.helper
                                                         }
-                                                    />
+                                                    /> */}
                                                 </Grid>
                                                 <Grid item xs={12} sm={12} md={12} lg={12}>
                                                     {priceSuggestions.map(suggestion => (

@@ -225,8 +225,8 @@ function CreatePreviewDialogForm(props) {
         switch (purpose) {
             case purposeNames.purp1:
                 return <Chip label={purpose} className={classes.chipSalesMoi} />
-            case purposeNames.purp2:
-                return <Chip label={purpose} className={classes.chipTheoDoi} />
+            // case purposeNames.purp2:
+            //     return <Chip label={purpose} className={classes.chipTheoDoi} />
             case purposeNames.purp3:
                 return <Chip label={purpose} className={classes.chipChamSoc} />
             case purposeNames.purp4:

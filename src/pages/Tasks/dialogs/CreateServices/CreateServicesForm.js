@@ -199,40 +199,40 @@ function CreateServicesForm(props) {
         // )
 
         const updateStatus2Cust = (status) => {
-            const statusModel = {
-                schoolStatus: statusNames.customer,
-            }
+            // const statusModel = {
+            //     schoolStatus: statusNames.customer,
+            // }
 
-            if (status === statusNames.lead) {
-                TasksServices.updateStatus(schoolId, statusModel)
-                    .then((res) => {
-                        // setNotify({
-                        //     isOpen: true,
-                        //     message: "Updated School's status successfully",
-                        //     type: 'success',
-                        // })
-                        enqueueSnackbar(messages.updatedSuccess, {
-                            variant: 'success',
-                        })
-                    })
-                    .catch((error) => {
-                        if (error.response) {
-                            console.log(error)
-                            history.push({
-                                pathname: '/errors',
-                                state: { error: error.response.status },
-                            })
-                        }
-                        // setNotify({
-                        //     isOpen: true,
-                        //     message: "Updated School's status failed",
-                        //     type: 'error',
-                        // })
-                        enqueueSnackbar(messages.updatedError, {
-                            variant: 'error',
-                        })
-                    })
-            }
+            // if (status === statusNames.lead) {
+            //     TasksServices.updateStatus(schoolId, statusModel)
+            //         .then((res) => {
+            //             // setNotify({
+            //             //     isOpen: true,
+            //             //     message: "Updated School's status successfully",
+            //             //     type: 'success',
+            //             // })
+            //             enqueueSnackbar(messages.updatedSuccess, {
+            //                 variant: 'success',
+            //             })
+            //         })
+            //         .catch((error) => {
+            //             if (error.response) {
+            //                 console.log(error)
+            //                 history.push({
+            //                     pathname: '/errors',
+            //                     state: { error: error.response.status },
+            //                 })
+            //             }
+            //             // setNotify({
+            //             //     isOpen: true,
+            //             //     message: "Updated School's status failed",
+            //             //     type: 'error',
+            //             // })
+            //             enqueueSnackbar(messages.updatedError, {
+            //                 variant: 'error',
+            //             })
+            //         })
+            // }
         }
 
         TasksServices.createServices(model)
@@ -253,7 +253,7 @@ function CreateServicesForm(props) {
                 //     message: 'Proposed a service successfully',
                 //     type: 'success',
                 // })
-                enqueueSnackbar(messages.createdSuccess, {
+                enqueueSnackbar('Created service successfully', {
                     variant: 'success',
                 })
 
@@ -275,7 +275,7 @@ function CreateServicesForm(props) {
                 //     message: 'Proposed a service failed',
                 //     type: 'error',
                 // })
-                enqueueSnackbar(messages.createdError, {
+                enqueueSnackbar('Created service failed', {
                     variant: 'error',
                 })
             })
@@ -283,6 +283,7 @@ function CreateServicesForm(props) {
         // alert(JSON.stringify(model))
     }
 
+    // Tạm đóng
     const calculateEstimateSales = (pricePerSlot, slotNumber, classNumber) => { //, time
         // console.log('CreateServices: duration = ', time);
         let estimateSales = currencyFormatter.format(0)
