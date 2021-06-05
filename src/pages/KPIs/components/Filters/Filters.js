@@ -24,6 +24,8 @@ import {
 } from '../../../../constants/Filters'
 import { Consts } from '../../KPIsConfig'
 import CreateKPISheet from '../../dialogs/CreateKPISheet/CreateKPISheet';
+import { roleNames } from '../../../../constants/Generals'
+import { useAuth } from '../../../../hooks/AuthContext';
 import styles from './Filters.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -144,6 +146,7 @@ function Filters(props) {
     const classes = useStyles()
     const { refreshAPI } = props
     const { operations, filters } = Consts
+    const { user } = useAuth()
 
     //Use states which have been declared in the KPIContext
     const { params, dispatchParams, criteria, status, kpiStatuses, setFilter } = useKPI()
@@ -221,23 +224,25 @@ function Filters(props) {
                             onChange={handleSearch}
                         />
                     </Box>
-                    <Box className={classes.flexItem}>
-                        <Tooltip title={operations.create}>
-                            <Button
-                                className={classes.btn}
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => setOpenCreateDialog(true)}
-                            >
-                                <MdAdd fontSize="large" />
-                            </Button>
-                        </Tooltip>
-                        <CreateKPISheet
-                            open={openCreateDialog}
-                            onClose={() => setOpenCreateDialog(false)}
-                            refreshPage={refreshAPI}
-                        />
-                    </Box>
+                    {user.roles[0] === roleNames.manager && (
+                        <Box className={classes.flexItem}>
+                            <Tooltip title={operations.create}>
+                                <Button
+                                    className={classes.btn}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => setOpenCreateDialog(true)}
+                                >
+                                    <MdAdd fontSize="large" />
+                                </Button>
+                            </Tooltip>
+                            <CreateKPISheet
+                                open={openCreateDialog}
+                                onClose={() => setOpenCreateDialog(false)}
+                                refreshPage={refreshAPI}
+                            />
+                        </Box>
+                    )}
                 </Box>
                 <MuiAccordionDetails>
                     <Grid container>
