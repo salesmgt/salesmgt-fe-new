@@ -21,9 +21,9 @@ export function getPurpsByStatus(schStatus, salesPurps) {
 
     switch (schStatus) {
         case statusNames.lead:
-            return [purps[0], purps[1]]
+            return [purps[0]]
         case statusNames.customer:
-            return [purps[2], purps[3], purps[4]]
+            return [purps[1], purps[2], purps[3]]
         case statusNames.pending:
         default:
             return purps

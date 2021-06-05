@@ -12,52 +12,52 @@
 }
 
 .container {
-//   height: 46vh; // 100%
-  height: fit-content;
-  max-height: 46vh;
-  overflow-y: auto;
-  border-radius: $default-radius;
+    //   height: 46vh; // 100%
+    height: fit-content;
+    max-height: 46vh;
+    overflow-y: auto;
+    border-radius: $default-radius;
 
-  .table {
-    padding: 0;
+    .table {
+        padding: 0;
 
-    .tHeadCell {
-      background-color: $light-primary; // !important
-      color: $common-white;
-      font-weight: bold;
-      font-size: larger;
-    }
-    // .tHeadCellNo {
-    //     @extend .tHeadCell;
-    //     width: 1rem;
-    // }
-    // .tHeadCellName {
-    //     @extend .tHeadCell;
-    //     width: 14rem;
-    // }
-    // .tHeadCellPic {
-    //     @extend .tHeadCell;
-    //     width: 14rem;
-    // }
-    // .tHeadCellPurpose {
-    //     @extend .tHeadCell;
-    //     width: 11.5rem;
-    // }
-    // .tHeadCellNote {
-    //     @extend .tHeadCell;
-    //     width: 11rem;
-    // }
+        .tHeadCell {
+            background-color: $light-primary; // !important
+            color: $common-white;
+            font-weight: bold;
+            font-size: larger;
+        }
+        // .tHeadCellNo {
+        //     @extend .tHeadCell;
+        //     width: 1rem;
+        // }
+        // .tHeadCellName {
+        //     @extend .tHeadCell;
+        //     width: 14rem;
+        // }
+        // .tHeadCellPic {
+        //     @extend .tHeadCell;
+        //     width: 14rem;
+        // }
+        // .tHeadCellPurpose {
+        //     @extend .tHeadCell;
+        //     width: 11.5rem;
+        // }
+        // .tHeadCellNote {
+        //     @extend .tHeadCell;
+        //     width: 11rem;
+        // }
 
-    .tBody {
-      .tBodyCell {          
-        padding: 0.1rem 1rem;
-        // justify-content: center !important;
+        .tBody {
+            .tBodyCell {
+                padding: 0.1rem 1rem;
+                // justify-content: center !important;
+            }
+        }
     }
-    }
-  }
 }
 
-.btnSave {    
+.btnSave {
     color: $main-info !important;
     &:hover {
         color: $dark-info !important;
@@ -66,60 +66,59 @@
         color: $divider !important;
     }
 }
-.icon{
-  float: right;
-  padding: 0.5% !important;
+.icon {
+    float: right;
+    padding: 0.5% !important;
 }
-.popover{
-  padding: .3% !important;
+.popover {
+    padding: 0.3% !important;
 }
-.tBodyRow{
+.tBodyRow {
     cursor: pointer;
     text-decoration-line: line-through;
-    
-  }
+}
 
 .title {
-  font-weight: 600;
-  color: $secondary-text;
-  font-size: 1.2rem !important;
-  padding: 1.6rem 0.5rem 0 0;
+    font-weight: 600;
+    color: $secondary-text;
+    font-size: 1.2rem !important;
+    padding: 1.6rem 0.5rem 0 0;
 }
 
 .chipLead {
-  background-color: $trust !important;
-  color: $common-white !important;
+    background-color: $trust !important;
+    color: $common-white !important;
 }
 .chipCustomer {
-  background-color: $clarity !important;
-  color: $common-white !important;
+    background-color: $clarity !important;
+    color: $common-white !important;
 }
-// .chipTiemNang {
-//   background-color: $trust !important;
-//   color: $common-white !important;
-// }
+.chipPotential {
+    background-color: $memory !important;
+    color: $common-white !important;
+}
 
 .chipSalesMoi {
-  background-color: $clarity !important;
-  color: $common-white !important;
+    background-color: $clarity !important;
+    color: $common-white !important;
 }
 .chipTheoDoi {
-  background-color: $energy !important;
-  color: $common-white !important;
+    background-color: $energy !important;
+    color: $common-white !important;
 }
 // .chipTiemNang {
 //   background-color: $trust !important;
 //   color: $common-white !important;
 // }
 .chipChamSoc {
-  background-color: $compassion !important;
-  color: $common-white !important;
+    background-color: $compassion !important;
+    color: $common-white !important;
 }
 .chipTaiKy {
-  background-color: $memory !important;
-  color: $common-white !important;
+    background-color: $memory !important;
+    color: $common-white !important;
 }
 .chipKyMoi {
-  background-color: $creative !important;
-  color: $common-white !important;
+    background-color: $creative !important;
+    color: $common-white !important;
 }

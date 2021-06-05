@@ -98,15 +98,15 @@
   @extend .chipSalesMoi;
   @extend .chipInactive;
 }
-.chipTheoDoi {
-  @extend .chip;
-  background-color: $energy !important;
-  color: $common-white !important;
-}
-.chipTheoDoiInactive {
-  @extend .chipTheoDoi;
-  @extend .chipInactive;
-}
+// .chipTheoDoi {
+//   @extend .chip;
+//   background-color: $energy !important;
+//   color: $common-white !important;
+// }
+// .chipTheoDoiInactive {
+//   @extend .chipTheoDoi;
+//   @extend .chipInactive;
+// }
 // .chipTiemNang {
 //   @extend .chip;
 //   background-color: $trust !important;

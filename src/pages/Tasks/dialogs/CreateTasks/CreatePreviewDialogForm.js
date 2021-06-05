@@ -21,12 +21,16 @@ import {
     Select,
     MenuItem,
     Box,
-    Tooltip
+    Tooltip,
 } from '@material-ui/core'
 import { MdClose } from 'react-icons/md'
 import { previewColumns } from './CreateTasksConfig'
 import { Consts, schoolYearSubTitle } from '../DialogConfig'
-import { statusNames, purposeNames, milkNames } from '../../../../constants/Generals'
+import {
+    statusNames,
+    purposeNames,
+    milkNames,
+} from '../../../../constants/Generals'
 import * as Milk from '../../../../utils/Milk'
 // import { useAuth } from '../../../../hooks/AuthContext'
 import { useApp } from '../../../../hooks/AppContext'
@@ -35,7 +39,10 @@ import { getPurpsByStatus } from '../../../../utils/Sortings'
 import { createTasks } from '../../TasksServices'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from 'mui-pickers-v3'
 import DateFnsUtils from '@date-io/date-fns'
-import { parseDateToString, calculateSchoolYear } from '../../../../utils/DateTimes'
+import {
+    parseDateToString,
+    calculateSchoolYear,
+} from '../../../../utils/DateTimes'
 import classes from './CreatePreviewDialogForm.module.scss'
 
 //===============Set max-height for dropdown list===============
@@ -69,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     menuItemSelected: {},
     autoComplete: {
         width: 260,
-        marginLeft: '0.5rem'
+        marginLeft: '0.5rem',
     },
     itemPIC: {
         padding: 0,
@@ -101,12 +108,14 @@ function CreatePreviewDialogForm(props) {
     // const [deadline, setDeadline] = useState(new Date(new Date().getFullYear(), 8, 30))
 
     const { salesPurps } = useApp()
-    const { params } = useTaskForm()  //, dispatchParams, setFilter
+    const { params } = useTaskForm() //, dispatchParams, setFilter
     const { page, limit, column, direction, searchKey, listFilters } = params
 
     const schoolYear = calculateSchoolYear()
 
-    const bakSalesPurps = salesPurps ? salesPurps : Milk.getMilk(milkNames.salesPurps)
+    const bakSalesPurps = salesPurps
+        ? salesPurps
+        : Milk.getMilk(milkNames.salesPurps)
     const purpsByStatus = getPurpsByStatus(schoolStatus, bakSalesPurps)
 
     // const modifyRowsState = () => {
@@ -126,26 +135,39 @@ function CreatePreviewDialogForm(props) {
     //     setRowsState(array)
     // }
     // modifyRowsState()
-    console.log('Preview Dialog:   rowsState = ', rowsState);
+    console.log('Preview Dialog:   rowsState = ', rowsState)
 
     const handleSubmit = () => {
         let array = []
-        console.log('handleSubmit(): rowsState = ', rowsState);
+        console.log('handleSubmit(): rowsState = ', rowsState)
 
         rowsState.map((item) => {
             item = {
                 ...item,
                 purpose: purpose,
                 schoolYear: schoolYear,
-                endDate: parseDateToString(item?.endDate ? item?.endDate : new Date(new Date().getFullYear(), 8, 30), 'YYYY-MM-DD HH:mm:ss')
-            }   // , schoolId: item.id
+                endDate: parseDateToString(
+                    item?.endDate
+                        ? item?.endDate
+                        : new Date(new Date().getFullYear(), 8, 30),
+                    'YYYY-MM-DD HH:mm:ss'
+                ),
+            } // , schoolId: item.id
             array.push(item)
         })
-        console.log('handleSubmit(): array = ', array);
-        createTasks(array).then(res => {
+        console.log('handleSubmit(): array = ', array)
+        createTasks(array).then((res) => {
             // console.log('Created. res = ', res);
-            setRowsState([]);
-            refreshAPI(schoolYear, page, limit, column, direction, searchKey, listFilters)
+            setRowsState([])
+            refreshAPI(
+                schoolYear,
+                page,
+                limit,
+                column,
+                direction,
+                searchKey,
+                listFilters
+            )
             onClose()
         })
 
@@ -193,13 +215,15 @@ function CreatePreviewDialogForm(props) {
 
         // console.log('After ----- editingRow = ', editingRow)
 
-        const index = rowsState.findIndex((obj) => obj.schoolId === row.schoolId)
+        const index = rowsState.findIndex(
+            (obj) => obj.schoolId === row.schoolId
+        )
         // console.log('deadline of index = ', index);
         //const item ={...rowsState[index],note: e.target.value}
         let array = [...rowsState]
         array[index] = {
             ...array[index],
-            endDate: newDate
+            endDate: newDate,
         }
         setRowsState(array)
         // setOneRow({ ...row, endDate: newDate })
@@ -213,8 +237,8 @@ function CreatePreviewDialogForm(props) {
                 return <Chip label={status} className={classes.chipCustomer} />
             // case statusNames.ngungHT:
             //     return <Chip label={status} className={classes.chipCustomer} />
-            // case statusNames.potential:  // tiem nang
-            //     return <Chip label={status} className={classes.chipCustomer} />
+            case statusNames.potential: // tiem nang
+                return <Chip label={status} className={classes.chipPotential} />
             default:
                 break
             // return <Chip label={status} />
@@ -257,13 +281,21 @@ function CreatePreviewDialogForm(props) {
             <DialogContent className={classes.wrapper}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Box display="flex" flexDirection="row" flexWrap="nowrap">
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            flexWrap="nowrap"
+                        >
                             <Box flexGrow={1}>
                                 <FormControl className={styles.formControl}>
-                                    <InputLabel>{fields.purpose.label}</InputLabel>
+                                    <InputLabel>
+                                        {fields.purpose.label}
+                                    </InputLabel>
                                     <Select
                                         value={purpose || ''}
-                                        onChange={(event) => setPurpose(event.target.value)}
+                                        onChange={(event) =>
+                                            setPurpose(event.target.value)
+                                        }
                                         MenuProps={MenuProps}
                                     >
                                         <MenuItem
@@ -271,7 +303,8 @@ function CreatePreviewDialogForm(props) {
                                             className={styles.option}
                                             classes={{
                                                 root: styles.menuItemRoot,
-                                                selected: styles.menuItemSelected,
+                                                selected:
+                                                    styles.menuItemSelected,
                                             }}
                                         >
                                             {fields.purpose.options.none}
@@ -294,7 +327,10 @@ function CreatePreviewDialogForm(props) {
                                 </FormControl>
                             </Box>
                             <Box>
-                                <Typography variant="subtitle1" className={classes.title}>
+                                <Typography
+                                    variant="subtitle1"
+                                    className={classes.title}
+                                >
                                     {schoolYearSubTitle(schoolYear)}
                                 </Typography>
                             </Box>
@@ -304,8 +340,15 @@ function CreatePreviewDialogForm(props) {
                         <Typography variant="subtitle1">
                             List of assigned schools:
                         </Typography>
-                        <TableContainer className={classes.container} component={Paper}>
-                            <Table className={classes.table} stickyHeader size="small">
+                        <TableContainer
+                            className={classes.container}
+                            component={Paper}
+                        >
+                            <Table
+                                className={classes.table}
+                                stickyHeader
+                                size="small"
+                            >
                                 <TableHead>
                                     <TableRow className={classes.tHead}>
                                         {previewColumns.map((col) => (
@@ -323,10 +366,14 @@ function CreatePreviewDialogForm(props) {
                                 <TableBody className={classes.tBody}>
                                     {rowsState?.map((row, index) => (
                                         <TableRow key={row?.schoolId}>
-                                            <TableCell className={classes.tBodyCell}>
+                                            <TableCell
+                                                className={classes.tBodyCell}
+                                            >
                                                 {index + 1}
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
+                                            <TableCell
+                                                className={classes.tBodyCell}
+                                            >
                                                 <ListItemText
                                                     primary={`${row?.educationalLevel} ${row?.name}`}
                                                     secondary={row?.district}
@@ -338,30 +385,72 @@ function CreatePreviewDialogForm(props) {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
-                                                {row?.status && setStatusChipColor(row?.status)}
+                                            <TableCell
+                                                className={classes.tBodyCell}
+                                            >
+                                                {row?.status &&
+                                                    setStatusChipColor(
+                                                        row?.status
+                                                    )}
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
-                                                {purpose && setPurposeChipColor(purpose)}
+                                            <TableCell
+                                                className={classes.tBodyCell}
+                                            >
+                                                {purpose &&
+                                                    setPurposeChipColor(
+                                                        purpose
+                                                    )}
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
-                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <TableCell
+                                                className={classes.tBodyCell}
+                                            >
+                                                <MuiPickersUtilsProvider
+                                                    utils={DateFnsUtils}
+                                                >
                                                     <KeyboardDatePicker
                                                         format="dd/MM/yyyy"
-                                                        minDate={new Date(new Date().getTime() + (24 * 60 * 60 * 1000))}
+                                                        minDate={
+                                                            new Date(
+                                                                new Date().getTime() +
+                                                                    24 *
+                                                                        60 *
+                                                                        60 *
+                                                                        1000
+                                                            )
+                                                        }
                                                         disablePast
                                                         allowKeyboardControl
                                                         disableToolbar
                                                         variant="inline"
-                                                        value={row?.endDate ? row?.endDate : new Date(new Date().getFullYear(), 8, 30)}
-                                                        onChange={(newDate) => handleDeadlineChange(newDate, row)}
+                                                        value={
+                                                            row?.endDate
+                                                                ? row?.endDate
+                                                                : new Date(
+                                                                      new Date().getFullYear(),
+                                                                      8,
+                                                                      30
+                                                                  )
+                                                        }
+                                                        onChange={(newDate) =>
+                                                            handleDeadlineChange(
+                                                                newDate,
+                                                                row
+                                                            )
+                                                        }
                                                     />
                                                 </MuiPickersUtilsProvider>
                                             </TableCell>
-                                            <TableCell className={classes.tBodyCell}>
+                                            <TableCell
+                                                className={classes.tBodyCell}
+                                            >
                                                 <Tooltip title="Remove">
                                                     <IconButton
-                                                        onClick={(e) => handleOnRemove(e, row)}
+                                                        onClick={(e) =>
+                                                            handleOnRemove(
+                                                                e,
+                                                                row
+                                                            )
+                                                        }
                                                     >
                                                         <MdClose />
                                                     </IconButton>

@@ -276,6 +276,8 @@ function Tables(props) {
                 return <Chip label={status} className={classes.chipLead} />
             case statusNames.customer:
                 return <Chip label={status} className={classes.chipCustomer} />
+            case statusNames.potential:
+                return <Chip label={status} className={classes.chipPotential} />
             default:
                 return <Chip label={status} />
         }

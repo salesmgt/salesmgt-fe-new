@@ -139,20 +139,30 @@ function SortableTableHeaders(props) {
                         key={col.key}
                         className={classes.tHeadCell}
                         sortDirection={column === col.key ? direction : false}
-                        align={(col.key === 'no' || col.key === 'task.user.username') ? 'center' : 'left'}
-                        width={role === roleNames.manager ? col.width1 : col.width2}
+                        align={
+                            col.key === 'no' || col.key === 'task.user.username'
+                                ? 'center'
+                                : 'left'
+                        }
+                        width={
+                            role === roleNames.manager ? col.width1 : col.width2
+                        }
                     >
                         {col?.sortable ? (
                             <MuiTableSortLabel
                                 active={column === col.key}
-                                direction={column === col.key ? direction : 'asc'}
-                                onClick={() => createSortHandler(col, direction)}
+                                direction={
+                                    column === col.key ? direction : 'asc'
+                                }
+                                onClick={() =>
+                                    createSortHandler(col, direction)
+                                }
                             >
                                 {col.name}
                             </MuiTableSortLabel>
-                        ) :
+                        ) : (
                             col.name
-                        }
+                        )}
                     </TableCell>
                 ))}
             </TableRow>
@@ -249,7 +259,7 @@ function Tables(props) {
             case serviceStatusNames.pending:
                 return <Chip label={status} className={classes.chipPending} />
             default:
-                break;
+                break
         }
     }
 
@@ -277,7 +287,10 @@ function Tables(props) {
                                     key={row?.id}
                                     className={classes.tBodyRow}
                                 >
-                                    <TableCell className={classes.tableCell} align='center'>
+                                    <TableCell
+                                        className={classes.tableCell}
+                                        align="center"
+                                    >
                                         {params.page * params.limit + index + 1}
                                     </TableCell>
                                     <TableCell className={classes.tBodyCell}>
@@ -292,12 +305,16 @@ function Tables(props) {
                                         <ListItemText
                                             primary={
                                                 <>
-                                                    {row?.educationLevel} {' '}
+                                                    {row?.educationLevel}{' '}
                                                     <Highlighter
                                                         highlightClassName="YourHighlightClass"
-                                                        searchWords={[params.searchKey]}
+                                                        searchWords={[
+                                                            params.searchKey,
+                                                        ]}
                                                         autoEscape={true}
-                                                        textToHighlight={row?.schoolName}
+                                                        textToHighlight={
+                                                            row?.schoolName
+                                                        }
                                                     />
                                                 </>
                                             }
@@ -311,31 +328,53 @@ function Tables(props) {
                                     {user.roles[0] === roleNames.manager && (
                                         <TableCell>
                                             {row?.fullName && (
-                                                <ListItem className={classes.itemPIC}>
+                                                <ListItem
+                                                    className={classes.itemPIC}
+                                                >
                                                     <ListItemAvatar>
-                                                        <Avatar src={row?.avatar} />
+                                                        <Avatar
+                                                            src={row?.avatar}
+                                                        />
                                                     </ListItemAvatar>
                                                     <ListItemText
-                                                        className={classes.picName}
+                                                        className={
+                                                            classes.picName
+                                                        }
                                                         primary={
                                                             <Highlighter
                                                                 highlightClassName="YourHighlightClass"
-                                                                searchWords={[params.searchKey]}
-                                                                autoEscape={true}
-                                                                textToHighlight={row?.fullName || ''}
+                                                                searchWords={[
+                                                                    params.searchKey,
+                                                                ]}
+                                                                autoEscape={
+                                                                    true
+                                                                }
+                                                                textToHighlight={
+                                                                    row?.fullName ||
+                                                                    ''
+                                                                }
                                                             />
                                                         }
                                                         secondary={
                                                             <Highlighter
                                                                 highlightClassName="YourHighlightClass"
-                                                                searchWords={[params.searchKey]}
-                                                                autoEscape={true}
-                                                                textToHighlight={row?.username || ''}
+                                                                searchWords={[
+                                                                    params.searchKey,
+                                                                ]}
+                                                                autoEscape={
+                                                                    true
+                                                                }
+                                                                textToHighlight={
+                                                                    row?.username ||
+                                                                    ''
+                                                                }
                                                             />
                                                         }
                                                         classes={{
-                                                            primary: styles.itemTextPrimary,
-                                                            secondary: styles.itemTextSecondary,
+                                                            primary:
+                                                                styles.itemTextPrimary,
+                                                            secondary:
+                                                                styles.itemTextSecondary,
                                                         }}
                                                     />
                                                 </ListItem>
@@ -357,7 +396,10 @@ function Tables(props) {
                                     {/* )}
                                     </TableCell> */}
                                     <TableCell className={classes.tBodyCell}>
-                                        {row?.status && setServiceStatusChipColor(row?.status)}
+                                        {row?.status &&
+                                            setServiceStatusChipColor(
+                                                row?.status
+                                            )}
                                     </TableCell>
                                     {/* <TableCell className={classes.tBodyCell}>
                                         {row?.approveDate ? parseDateToString(row?.approveDate, 'DD-MM-YYYY') : ''}
